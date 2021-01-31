@@ -1,0 +1,76 @@
+<div class="magnetism">
+    <mat-checkbox (change)="enableGridMagnetism($event.checked)" [checked]="isMagnetismEnabled">Magnétisme</mat-checkbox>
+    <hr />
+    <p class="alignmentTitle">point aimenté:</p>
+    <div class="container-fluid">
+        <div class="row">
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_TOP_LEFT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_TOP_LEFT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_TOP_CENTER_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_TOP_CENTER_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_TOP_RIGHT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_TOP_RIGHT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+        </div>
+        <div class="row">
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_CENTER_LEFT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_CENTER_LEFT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_CENTER_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_CENTER_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_CENTER_RIGHT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_CENTER_RIGHT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+        </div>
+        <div class="row">
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_BOTTOM_LEFT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_BOTTOM_LEFT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_BOTTOM_CENTER_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_BOTTOM_CENTER_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+            <input
+                type="radio"
+                class="alignment"
+                [value]="this.alignmentNames.ALIGN_BOTTOM_RIGHT_NAME"
+                [checked]="currentAlignment.includes(this.alignmentNames.ALIGN_BOTTOM_RIGHT_NAME)"
+                (change)="onAlignmentChange($event)"
+            />
+        </div>
+    </div>
+</div>

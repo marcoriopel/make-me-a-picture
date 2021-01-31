@@ -1,0 +1,27 @@
+<div class="container">
+    <app-sidebar></app-sidebar>
+    <app-attribute-panel></app-attribute-panel>
+    <div #workSpace id="workSpace">
+        <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
+        <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
+
+        <div
+            [id]="canvasResizingPoints.VERTICAL"
+            class="canvasResizePoint"
+            [ngStyle]="{ 'top.px': previewSize.y - 3, 'left.px': previewSize.x / 2 - 3 }"
+            (mousedown)="onMouseDown($event)"
+        ></div>
+        <div
+            [id]="canvasResizingPoints.VERTICAL_AND_HORIZONTAL"
+            class="canvasResizePoint"
+            [ngStyle]="{ 'top.px': previewSize.y - 9, 'left.px': previewSize.x - 3 }"
+            (mousedown)="onMouseDown($event)"
+        ></div>
+        <div
+            [id]="canvasResizingPoints.HORIZONTAL"
+            class="canvasResizePoint"
+            [ngStyle]="{ 'top.px': previewSize.y / 2 - 15, 'left.px': previewSize.x - 3 }"
+            (mousedown)="onMouseDown($event)"
+        ></div>
+    </div>
+</div>

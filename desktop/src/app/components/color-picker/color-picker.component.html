@@ -1,0 +1,74 @@
+<div class="color-picker">
+    <h4>Couleur</h4>
+    <div class="color-selection-container">
+        <div>
+            <p>Couleur principale</p>
+            <div class="choice-container">
+                <input
+                    class="color-input"
+                    #primary
+                    id="primary"
+                    type="color"
+                    [value]="this.primaryColor"
+                    (change)="this.changePrimaryColor($event.target.value)"
+                />
+                <div id="sliderDetails">
+                    <button class="grid-element" (click)="decrementPrimaryOpacity()">-</button>
+                    <input
+                        class="opacity-input grid-element"
+                        id="primary-opacity"
+                        (change)="this.changePrimaryOpacity($event.target.value, $event)"
+                        [(ngModel)]="this.primaryOpacity"
+                        type="text"
+                        [min]="0"
+                        [max]="100"
+                        (focus)="onFocus()"
+                        (focusout)="onFocusOut()"
+                    />
+                    <button class="grid-element" (click)="incrementPrimaryOpacity()">+</button>
+                </div>
+            </div>
+
+            <p>Couleur secondaire</p>
+            <div class="choice-container">
+                <input
+                    class="color-input"
+                    #secondary
+                    id="secondary"
+                    type="color"
+                    [value]="this.secondaryColor"
+                    (change)="this.changeSecondaryColor($event.target.value)"
+                />
+                <div id="sliderDetails">
+                    <button class="grid-element" (click)="decrementSecondaryOpacity()">-</button>
+                    <input
+                        class="opacity-input grid-element"
+                        id="secondary-opacity"
+                        (change)="this.changeSecondaryOpacity($event.target.value, $event)"
+                        [(ngModel)]="this.secondaryOpacity"
+                        type="text"
+                        [min]="0"
+                        max="100"
+                        (focus)="onFocus()"
+                        (focusout)="onFocusOut()"
+                    />
+                    <button class="grid-element" (click)="incrementSecondaryOpacity()">+</button>
+                </div>
+            </div>
+        </div>
+
+        <mat-icon id="swap-button" (click)="this.swapColors()">swap_vert</mat-icon>
+    </div>
+
+    <hr />
+    <p>Récemment utilisée</p>
+    <div class="previous-color">
+        <button
+            *ngFor="let color of colors"
+            class="color"
+            [ngStyle]="{ 'background-color': color }"
+            (click)="this.restorePreviousColor(color, true)"
+            (contextmenu)="this.restorePreviousColor(color, false)"
+        ></button>
+    </div>
+</div>

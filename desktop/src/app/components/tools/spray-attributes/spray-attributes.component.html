@@ -1,0 +1,31 @@
+<div id="sprayAttributes">
+    <h2 class="toolName">{{ sprayService.name }}</h2>
+    <hr />
+    <app-slider
+        title="Diamètre du jet"
+        [min]="sprayService.minToolWidth"
+        [max]="sprayService.maxToolWidth"
+        [step]="1"
+        [value]="toolWidth"
+        (valueChange)="changeWidth($event)"
+    >
+    </app-slider>
+    <app-slider
+        title="Diamètre des gouttes"
+        [min]="sprayService.minDotWidth"
+        [max]="sprayService.maxDotWidth"
+        [step]="1"
+        [value]="dotWidth"
+        (valueChange)="changeDotWidth($event)"
+    >
+    </app-slider>
+    <app-slider
+        title="Émission par seconde"
+        [min]="sprayService.minFrequency"
+        [max]="sprayService.maxFrequency"
+        [step]="1"
+        [value]="sprayFrequency"
+        (valueChange)="changeSprayFrequency($event)"
+    >
+    </app-slider>
+</div>

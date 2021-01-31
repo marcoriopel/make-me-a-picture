@@ -1,0 +1,52 @@
+<div id="textAttributes">
+    <h2 class="toolName">{{ textService.name }}</h2>
+    <hr />
+    <p>Police</p>
+    <mat-form-field appearance="fill">
+        <mat-select (selectionChange)="this.changeFont($event.value)" [value]="fontStyle.GEORGIA">
+            <mat-option [value]="fontStyle.GEORGIA">Georgia</mat-option>
+            <mat-option [value]="fontStyle.ARIAL">Arial</mat-option>
+            <mat-option [value]="fontStyle.TIME_NEW_ROMAN">Times New Roman</mat-option>
+            <mat-option [value]="fontStyle.VERDANA">Verdana</mat-option>
+            <mat-option [value]="fontStyle.COURIER_NEW">Courier New</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <hr />
+    <p>Taille</p>
+    <div id="sizeDetail">
+        <input
+            #textSizeInput
+            type="text"
+            [(value)]="textSize"
+            (change)="changeSize($event.target.value)"
+            [min]="minTextSize"
+            [max]="maxTextSize"
+            (keydown)="onKeyDown($event)"
+            (focus)="onFocus()"
+            (focusout)="onFocusOut()"
+        />
+        <div>
+            <button (click)="changeSize(textSize - 1)">-</button>
+            <button (click)="changeSize(textSize + 1)">+</button>
+        </div>
+    </div>
+    <hr />
+    <p>Style</p>
+    <div id="style">
+        <mat-checkbox #italic (change)="this.changeItalic(italic.checked)">Italique</mat-checkbox>
+        <mat-checkbox #gras (change)="this.changeBoldText(gras.checked)">Gras</mat-checkbox>
+    </div>
+    <hr />
+    <p>Alignement</p>
+    <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle value="start" (change)="this.changeAlignment($event.value)" checked>
+            <mat-icon>format_align_left</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="center" (change)="this.changeAlignment($event.value)">
+            <mat-icon>format_align_center</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="end" (change)="this.changeAlignment($event.value)">
+            <mat-icon>format_align_right</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+</div>

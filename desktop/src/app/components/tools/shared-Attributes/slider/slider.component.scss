@@ -1,0 +1,65 @@
+#slider {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+#sliderDetails {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: 80%;
+    justify-content: space-between;
+}
+
+#sliderDetails input {
+    width: 30%;
+    line-height: 20px;
+}
+
+#sliderDetails button {
+    width: 26px;
+    line-height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+mat-slider {
+    padding-top: 0;
+    height: 30px;
+    bottom: 10px;
+}
+
+p {
+    margin: 10px 0px 0px 0px;
+    font-size: 12px;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+}
+
+input {
+    background-color: #f0f0f0;
+    cursor: context-menu;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-width: 1px;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-size: 15px;
+    text-align: center;
+    outline: n;
+}
+
+.topBorder {
+    margin: 0;
+}
+
+.bottomBorder {
+    margin: 1em 0 0 0;
+}

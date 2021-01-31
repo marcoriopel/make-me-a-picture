@@ -1,0 +1,47 @@
+<div class="grid">
+    <hr class="finalBorder" />
+    <h4>Grille</h4>
+
+    <mat-checkbox (change)="changeGridView($event.checked)" [checked]="isEnabled">Afficher grille</mat-checkbox>
+    <hr />
+
+    <div id="section">
+        <p>Grosseur Carrés</p>
+        <div class="attributeContainer">
+            <input
+                type="text"
+                [(value)]="currentSquareSize"
+                (change)="changeGridSize($event.target.value)"
+                [min]="minSquareSize"
+                [max]="maxSquareSize"
+                (focus)="onFocus()"
+                (focusout)="onFocusOut()"
+            />
+            <div>
+                <button (click)="changeGridSize(currentSquareSize - 5)">-</button>
+                <button (click)="changeGridSize(currentSquareSize + 5)">+</button>
+            </div>
+        </div>
+        <hr class="bottomBorder" />
+    </div>
+
+    <div id="section">
+        <p>Opacité des lignes</p>
+        <div class="attributeContainer">
+            <input
+                type="text"
+                [(value)]="currentOpacity"
+                (change)="changeOpacity($event.target.value)"
+                [min]="minOpacity"
+                [max]="maxOpacity"
+                (focus)="onFocus()"
+                (focusout)="onFocusOut()"
+            />
+            <div>
+                <button (click)="changeOpacity(currentOpacity - 5)">-</button>
+                <button (click)="changeOpacity(currentOpacity + 5)">+</button>
+            </div>
+        </div>
+        <hr class="bottomBorder finalBorder" />
+    </div>
+</div>

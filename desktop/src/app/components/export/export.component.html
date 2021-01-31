@@ -1,0 +1,93 @@
+<div #exportModal class="exporting">
+    <div class="imageContainer">
+        <h1>Exportation du dessin</h1>
+        <img id="image" [src]="imagesrc" height="200px" width="300px" *ngIf="imagesrc !== ''" />
+        <div>
+            <form class="export" autocomplete="off" [formGroup]="ownerForm">
+                <label>Fichier: </label>
+                <mat-form-field appearance="fill">
+                    <mat-label>Nom du dessin</mat-label>
+                    <input
+                        matInput
+                        #name
+                        type="text"
+                        id="name"
+                        [required]="true"
+                        formControlName="name"
+                        (keyup)="this.changeName(name.value)"
+                        placeholder="Ex: Forêt Boréal"
+                    />
+                    <mat-hint class="mat-hint">Max 15 charactères</mat-hint>
+                    <mat-error *ngIf="hasNameError('name', 'required')">Nom est requis</mat-error>
+                    <mat-error *ngIf="hasNameError('name', 'maxlength')">Nom est trop long. (max. 15 charactères)</mat-error>
+                </mat-form-field>
+            </form>
+        </div>
+    </div>
+
+    <div class="Section">
+        <label>Filtre</label>
+        <div class="radioContainer">
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.NONE" (change)="this.changeFilter($event)" checked />
+            <label>Aucun filtre</label>
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.BLACK_AND_WHITE" (change)="this.changeFilter($event)" />
+            <label>Noir et blanc</label>
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.SEPHIA" (change)="this.changeFilter($event)" />
+            <label>Sepia</label>
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.SATURATE" (change)="this.changeFilter($event)" />
+            <label>Saturer</label>
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.INVERT" (change)="this.changeFilter($event)" />
+            <label>Inverser</label>
+            <input type="radio" name="typeOfFilter" [value]="filterStyles.BLUR" (change)="this.changeFilter($event)" />
+            <label>Embrouiller</label>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="Section">
+        <label>Format d'exportation</label>
+        <div class="radioContainer">
+            <select name="extension" (change)="this.getImageUrl($event)" [value]="0">
+                <option [value]="0">PNG</option>
+                <option [value]="1">JPEG</option>
+            </select>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="Section">
+        <!--  this code was inspired by code found on : https://stackoverflow.com/questions/55752234/how-to-validate-email-address-from-a-mat-inputangular-material -->
+        <label> email</label><br />
+        <form [formGroup]="userForm" #formDirective="ngForm">
+            <div class="form-control">
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Email Address</mat-label>
+                    <input
+                        matInput
+                        autocomplete="off"
+                        placeholder="votre_email@polymtl.ca"
+                        type="email"
+                        [(ngModel)]="this.emailAddress"
+                        formControlName="email"
+                        class="form-input-field"
+                        pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+                    />
+                    <mat-error *ngIf="userForm.get('email')?.hasError('required')"> Un courriel est requis </mat-error>
+                    <mat-error *ngIf="userForm.get('email')?.hasError('email')">Courriel invalide </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+
+    <hr />
+
+    <div mat-dialog-actions>
+        <button mat-button [disabled]="!ownerForm.valid || isExportButtonDisabled" id="export" (click)="exportLocally()">
+            Exporter sur ordinateur
+        </button>
+        <button mat-button [disabled]="!userForm.valid || isSendMailButtonDisabled" id="sendMail" (click)="sendMail()">Envoyer par email</button>
+        <button mat-button color="warn" mat-dialog-close>Fermer</button>
+    </div>
+</div>

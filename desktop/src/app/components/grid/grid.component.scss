@@ -1,0 +1,79 @@
+.grid {
+    font-size: 12px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    background: rgba(219, 55, 111, 0.12);
+    border-radius: 3%;
+    padding: 0 5px 0 5px;
+}
+
+.section {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+h4 {
+    margin: 5px 5px 0px 5px;
+    color: #db376f;
+    align-self: center;
+    font-weight: bold;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+    margin: 0;
+}
+
+mat-checkbox {
+    margin: 0px 5px 5px 5px;
+}
+
+.attributeContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: 80%;
+    justify-content: space-between;
+}
+
+.attributeContainer input {
+    width: 30%;
+    line-height: 20px;
+}
+
+.attributeContainer button {
+    width: 26px;
+    line-height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+p {
+    margin: 5px 0px 0px 0px;
+    font-size: 12px;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+}
+
+.finalBorder {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    height: 0px;
+    border-radius: 50px;
+}
+
+.bottomBorder {
+    margin: 1em 0 0 0;
+}

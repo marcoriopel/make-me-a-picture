@@ -1,0 +1,117 @@
+<div class="carousel">
+    <h1 mat-dialog-title>Carrousel de dessin</h1>
+    <div *ngIf="!gotImages">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div *ngIf="databaseMetadata.length > 0 && gotImages" class="search">
+        <mat-card class="tags-card">
+            <h3 mat-dialog-title>Filtrage par tags</h3>
+            <mat-form-field class="tag-list">
+                <mat-chip-list #chipList aria-label="Tag selection">
+                    <mat-chip *ngFor="let tag of tags" [selectable]="selectable" [removable]="removable" (removed)="removeTag(tag)">
+                        {{ tag }}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input
+                        #tag
+                        type="text"
+                        id="tag"
+                        [disabled]="this.maxTags"
+                        (keyup)="this.currentTagInput(tag.value)"
+                        (keydown)="this.currentTagInput(tag.value)"
+                        on-focus="disableEvents()"
+                        on-focusout="enableEvents()"
+                        placeholder="Tags:"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addTag($event)"
+                    />
+                </mat-chip-list>
+                <mat-error *ngIf="hasSpaceTagError(tag.value)">Pas d'espace</mat-error>
+                <mat-error *ngIf="hasLengthTagError(tag.value)">L'étiquette est trop longue. (max. 15 charactères)</mat-error>
+                <mat-hint>- Pas d'espace, <br />- Max 15 charactères <br />- Max 5 étiquettes</mat-hint>
+                <div class="maxTags-notification" *ngIf="maxTags">Nombre maximum d'étiquettes</div>
+            </mat-form-field>
+        </mat-card>
+        <mat-card class="slider">
+            <p>{{ filteredMetadata.length }} dessin(s) trouvé(s)</p>
+            <div *ngIf="visibleDrawingsIndexes.length > 2" class="mat-parent">
+                <button class="control prev" (click)="onPreviousClick()">
+                    <span class="arrow left"></span>
+                </button>
+                <ng-container *ngFor="let drawingIndex of visibleDrawingsIndexes; let carouselPosition = index">
+                    <mat-card
+                        [id]="carouselPosition"
+                        (click)="onPreviewClick(carouselPosition)"
+                        [ngClass]="{ 'selected-drawing': carouselPosition === drawingOfInterest, 'mat-child': carouselPosition != drawingOfInterest }"
+                    >
+                        <p class="name">{{ filteredMetadata[drawingIndex].name }}</p>
+                        <div class="image-container">
+                            <img class="image" [src]="IMAGE_BASE_PATH + filteredMetadata[drawingIndex].fileName" />
+                        </div>
+                        <button *ngIf="carouselPosition === drawingOfInterest" class="remove" mat-button (click)="deleteDrawing()">Supprimer</button>
+                        <div><u>TAGS</u></div>
+                        <div *ngIf="isArray(filteredMetadata[drawingIndex]); else oneTag" class="preview-tags">
+                            <i *ngFor="let tag of filteredMetadata[drawingIndex].tags"> {{ tag }} <br /></i>
+                        </div>
+                        <ng-template #oneTag class="preview-tags">
+                            <i> {{ filteredMetadata[drawingIndex].tags }} <br /></i>
+                        </ng-template>
+                    </mat-card>
+                </ng-container>
+                <button class="control next" (click)="onNextClick()">
+                    <span class="arrow right"></span>
+                </button>
+            </div>
+            <div *ngIf="visibleDrawingsIndexes.length === 2" class="mat-parent">
+                <button class="control prev" (click)="onClickTwoDrawings()">
+                    <span class="arrow left"></span>
+                </button>
+                <ng-container *ngFor="let drawingIndex of visibleDrawingsIndexes; let carouselPosition = index">
+                    <mat-card
+                        [id]="carouselPosition"
+                        (click)="onPreviewClick(carouselPosition)"
+                        [ngClass]="{ 'selected-drawing': carouselPosition === drawingOfInterest, 'mat-child': carouselPosition != drawingOfInterest }"
+                    >
+                        <p class="name">{{ filteredMetadata[drawingIndex].name }}</p>
+                        <div class="image-container">
+                            <img class="image" [src]="IMAGE_BASE_PATH + filteredMetadata[drawingIndex].fileName" />
+                        </div>
+                        <button *ngIf="carouselPosition === drawingOfInterest" class="remove" mat-button (click)="deleteDrawing()">Supprimer</button>
+                        <div><u>TAGS</u></div>
+                        <div *ngIf="isArray(filteredMetadata[drawingIndex]); else oneTag" class="preview-tags">
+                            <i *ngFor="let tag of filteredMetadata[drawingIndex].tags"> {{ tag }} <br /></i>
+                        </div>
+                        <ng-template #oneTag class="preview-tags">
+                            <i> {{ filteredMetadata[drawingIndex].tags }} <br /></i>
+                        </ng-template>
+                    </mat-card>
+                </ng-container>
+                <button class="control next" (click)="onClickTwoDrawings()">
+                    <span class="arrow right"></span>
+                </button>
+            </div>
+            <div *ngIf="visibleDrawingsIndexes.length === 1" class="mat-parent">
+                <mat-card (click)="loadSelectedDrawing(0)" class="selected-drawing">
+                    <p class="name">{{ filteredMetadata[0].name }}</p>
+                    <div class="image-container">
+                        <img class="image" [src]="IMAGE_BASE_PATH + filteredMetadata[0].fileName" />
+                    </div>
+                    <button class="remove" mat-button (click)="deleteDrawing()">Supprimer</button>
+                    <u>TAGS</u>
+                    <div *ngIf="isArray(filteredMetadata[0]); else oneTag" class="preview-tags">
+                        <i *ngFor="let tag of filteredMetadata[0].tags"> {{ tag }} <br /></i>
+                    </div>
+                    <ng-template #oneTag class="preview-tags">
+                        <i> {{ filteredMetadata[0].tags }} <br /></i>
+                    </ng-template>
+                </mat-card>
+            </div>
+        </mat-card>
+    </div>
+    <div *ngIf="databaseMetadata.length == 0 && gotImages">Aucun dessin en sauvegarde</div>
+</div>
+<div mat-dialog-actions>
+    <button class="close" color="warn" mat-button mat-dialog-close>Fermer</button>
+</div>

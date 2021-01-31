@@ -1,0 +1,21 @@
+<svg  xmlns="http://www.w3.org/2000/svg">
+  <filter id="pattern1" x="-50%" y="-50%" width="200%" height="200%">
+    <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="2" result="turbulence" style="opacity: 0.5;" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="3" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+  <filter id="pattern2" x="-50%" y="-50%" width="200%" height="200%">
+    <feTurbulence type="turbulence" baseFrequency="0.3" numOctaves="2" result="turbulence" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="12" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+  <filter id="pattern3" x="-50%" y="-50%" width="200%" height="200%">
+    <feTurbulence type="turbulence" baseFrequency="0.05" numOctaves="3" result="turbulence" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="12" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+  <filter id="pattern4" x="-50%" y="-50%" width="200%" height="200%">
+    <feTurbulence type="turbulence" baseFrequency="0.7" numOctaves="2" result="turbulence" />
+    <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="6" xChannelSelector="R" yChannelSelector="G" />
+  </filter>
+  <filter id="pattern5" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+  </filter>
+</svg>

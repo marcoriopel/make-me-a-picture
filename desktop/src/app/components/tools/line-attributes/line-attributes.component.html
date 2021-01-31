@@ -1,0 +1,22 @@
+<div id="lineAttributes">
+    <h2 class="toolName">{{ lineService.name }}</h2>
+    <hr />
+    <app-slider
+        title="Épaisseur Ligne"
+        [min]="lineService.minToolWidth"
+        [max]="lineService.maxToolWidth"
+        [step]="1"
+        [value]="toolWidth"
+        (valueChange)="changeLineWidth($event)"
+    ></app-slider>
+
+    <app-slider
+        title="Diamètre Point Jonction"
+        [min]="lineService.minToolWidth"
+        [max]="lineService.maxToolWidth"
+        [step]="1"
+        [value]="dotWith"
+        (valueChange)="changeDotWidth($event)"
+    ></app-slider>
+    <mat-checkbox (change)="changeJunctionPoint($event.checked)" [checked]="isDot">Afficher jonction</mat-checkbox>
+</div>

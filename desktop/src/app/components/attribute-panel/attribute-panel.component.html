@@ -1,0 +1,28 @@
+<div class="attribute-panel">
+    <div class="container" *ngIf="toolSelectionService.currentTool">
+        <app-pencil-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.PENCIL_TOOL_NAME"> </app-pencil-attributes>
+        <app-pen-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.PEN_TOOL_NAME"> </app-pen-attributes>
+        <app-brush-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.BRUSH_TOOL_NAME"> </app-brush-attributes>
+        <app-spray-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.SPRAY_TOOL_NAME"> </app-spray-attributes>
+        <app-stamp-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.STAMP_TOOL_NAME"></app-stamp-attributes>
+        <app-square-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.SQUARE_TOOL_NAME"> </app-square-attributes>
+        <app-circle-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.CIRCLE_TOOL_NAME"> </app-circle-attributes>
+        <app-line-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.LINE_TOOL_NAME"> </app-line-attributes>
+        <app-fill-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.FILL_TOOL_NAME"> </app-fill-attributes>
+        <app-eraser-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.ERASER_TOOL_NAME"> </app-eraser-attributes>
+        <app-text-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.TEXT_TOOL_NAME"> </app-text-attributes>
+        <app-polygone-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.POLYGONE_TOOL_NAME"></app-polygone-attributes>
+        <app-circle-selection-attributes
+            *ngIf="toolSelectionService.currentTool.name === this.toolNames.CIRCLE_SELECTION_TOOL_NAME"
+        ></app-circle-selection-attributes>
+        <app-square-selection-attributes
+            *ngIf="toolSelectionService.currentTool.name === this.toolNames.SQUARE_SELECTION_TOOL_NAME"
+        ></app-square-selection-attributes>
+        <app-magic-wand-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.MAGIC_WAND_TOOL_NAME"> </app-magic-wand-attributes>
+        <app-pipette-attributes *ngIf="toolSelectionService.currentTool.name === this.toolNames.PIPETTE_TOOL_NAME"> </app-pipette-attributes>
+    </div>
+    <div id="modifiers">
+        <app-grid></app-grid>
+        <app-color-picker></app-color-picker>
+    </div>
+</div>

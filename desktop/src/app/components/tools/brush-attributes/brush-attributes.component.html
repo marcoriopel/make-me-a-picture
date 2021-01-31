@@ -1,0 +1,39 @@
+<div id="brushAttributes">
+    <h2 class="toolName">{{ brushService.name }}</h2>
+    <hr />
+    <app-slider
+        title="Épaisseur Ligne"
+        [min]="brushService.minToolWidth"
+        [max]="brushService.maxToolWidth"
+        [step]="1"
+        [value]="toolWidth"
+        (valueChange)="changeWidth($event)"
+    >
+    </app-slider>
+    <div id="patterns">
+        <label>
+            <input type="radio" id="pattern1" name="patterns" (change)="setPattern(this.patternNames.FIRST_PATTERN)" checked />
+            <img src="/assets/pattern1.png" />
+        </label>
+
+        <label>
+            <input type="radio" name="patterns" (change)="setPattern(this.patternNames.SECOND_PATTERN)" />
+            <img src="/assets/pattern2.png" />
+        </label>
+
+        <label>
+            <input type="radio" name="patterns" (change)="setPattern(this.patternNames.THIRD_PATTERN)" />
+            <img src="/assets/pattern3.png" />
+        </label>
+
+        <label>
+            <input type="radio" name="patterns" (change)="setPattern(this.patternNames.FOURTH_PATTERN)" />
+            <img src="/assets/pattern4.png" />
+        </label>
+
+        <label>
+            <input type="radio" name="patterns" (change)="setPattern(this.patternNames.FIFTH_PATTERN)" />
+            <img src="/assets/pattern5.png" />
+        </label>
+    </div>
+</div>

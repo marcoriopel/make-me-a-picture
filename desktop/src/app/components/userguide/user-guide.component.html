@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Guide d'utilisation</h1>
+<div mat-dialog-content [@.disabled]="disableAnimation">
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">edit</mat-icon>
+                Dessiner
+            </ng-template>
+            <app-drawing-detail></app-drawing-detail>
+        </mat-tab>
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">bubble_chart</mat-icon>
+                Divers
+            </ng-template>
+            <app-general-detail></app-general-detail>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<div mat-dialog-actions>
+    <button mat-button_wrapper mat-button color="warn" mat-dialog-close>Fermer</button>
+</div>

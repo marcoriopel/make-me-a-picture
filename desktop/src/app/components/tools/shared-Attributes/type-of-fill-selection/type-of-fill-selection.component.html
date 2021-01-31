@@ -1,0 +1,35 @@
+<div class="typeOfFill">
+    <p class="title">Type de tracé</p>
+    <div class="radioContainer">
+        <label>
+            <input
+                type="radio"
+                name="typeOfFill"
+                [value]="fillStyles.FILL_AND_BORDER"
+                (change)="this.changeValue($event)"
+                [checked]="this.currentFillStyle === fillStyles.FILL_AND_BORDER"
+            />
+            <p>Plein avec contour</p>
+        </label>
+        <label>
+            <input
+                type="radio"
+                name="typeOfFill"
+                [value]="fillStyles.FILL"
+                (change)="this.changeValue($event)"
+                [checked]="this.currentFillStyle === fillStyles.FILL"
+            />
+            <p>Plein</p>
+        </label>
+        <label>
+            <input
+                type="radio"
+                name="typeOfFill"
+                [value]="fillStyles.BORDER"
+                (change)="this.changeValue($event)"
+                [checked]="this.currentFillStyle === fillStyles.BORDER"
+            />
+            <p>Contour</p>
+        </label>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+.saving {
+    display: flex;
+    flex-flow: column;
+
+    height: 110%;
+    width: auto;
+}
+
+.chip-list {
+    padding-bottom: 30px;
+    margin-top: 30px;
+}
+
+.maxTags-notification {
+    text-transform: uppercase;
+}
+
+.longTag-notification {
+    color: red;
+}
+
+.placeholder {
+    font-size: 15px;
+}

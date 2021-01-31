@@ -1,0 +1,49 @@
+img {
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+    border: 2px solid #555;
+}
+
+.imageContainer {
+    align-self: center;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.Section {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.exporting {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+}
+
+mat-form-field {
+    margin-right: 10px;
+}
+
+h1 {
+    text-align: center;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+    margin: 0;
+}
+
+.export {
+    display: flex;
+}
+
+.sendMail {
+    display: flex;
+}

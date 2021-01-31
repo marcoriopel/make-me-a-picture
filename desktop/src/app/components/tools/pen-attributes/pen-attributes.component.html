@@ -1,0 +1,14 @@
+<div id="penAttributes">
+    <h2 class="toolName">{{ penService.name }}</h2>
+    <hr />
+    <app-slider
+        title="Épaisseur Ligne"
+        [min]="penService.minToolWidth"
+        [max]="penService.maxToolWidth"
+        [step]="1"
+        [value]="toolWidth"
+        (valueChange)="changeWidth($event)"
+    >
+    </app-slider>
+    <app-slider title="Angle" [min]="0" [max]="180" [step]="1" [value]="angle" (valueChange)="changeAngle($event)"> </app-slider>
+</div>

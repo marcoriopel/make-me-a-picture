@@ -1,0 +1,50 @@
+<div class="saving">
+    <h1 mat-dialog-title>Sauvegarde du dessin</h1>
+    <form class="saving" autocomplete="off" [formGroup]="ownerForm">
+        <mat-form-field appearance="fill" floatLabel="floatLabelControl.value">
+            <mat-label>Nom du dessin</mat-label>
+            <input
+                matInput
+                #name
+                type="text"
+                id="name"
+                [required]="true"
+                formControlName="name"
+                (keyup)="this.changeName(name.value)"
+                placeholder="Ex: Forêt Boréal"
+            />
+            <mat-hint class="mat-hint" align="end">Pas plus de 15 charactères de long.</mat-hint>
+            <mat-error *ngIf="hasError('name', 'required')">Nom est requis</mat-error>
+            <mat-error *ngIf="hasError('name', 'maxlength')">Nom est trop long (max 15 charactères)</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="chip-list">
+            <mat-placeholder class="placeholder">Étiquettes du dessin:</mat-placeholder>
+            <mat-chip-list #chipList aria-label="Tag selection">
+                <mat-chip *ngFor="let tag of tags" (removed)="removeTag(tag)">
+                    {{ tag }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input
+                    #tag
+                    type="text"
+                    id="tag"
+                    [disabled]="this.maxTags"
+                    (keyup)="this.currentTagInput(tag.value)"
+                    (keydown)="this.currentTagInput(tag.value)"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addTag($event)"
+                />
+            </mat-chip-list>
+            <mat-error *ngIf="hasTagError(tag.value)">L'étiquette est trop longue. (max. 15 charactères)</mat-error>
+            <mat-hint align="end">Max 5 étiquettes - Max 15 char./étiquette.</mat-hint>
+            <div class="maxTags-notification" *ngIf="maxTags">Nombre maximum d'étiquettes</div>
+        </mat-form-field>
+    </form>
+    <div mat-dialog-actions>
+        <button mat-button [disabled]="!ownerForm.valid || isSaveButtonDisabled" id="save" (click)="addDrawing()">Sauvegarder</button>
+        <button mat-button color="warn" mat-dialog-close>Fermer</button>
+    </div>
+</div>

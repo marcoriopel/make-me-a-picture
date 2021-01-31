@@ -1,0 +1,19 @@
+#sprayAttributes {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding: 0 5px 0 5px;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+    margin: 0;
+}
+
+.toolName {
+    margin: 5px;
+}

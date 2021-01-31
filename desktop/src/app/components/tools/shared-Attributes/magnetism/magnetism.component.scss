@@ -1,0 +1,38 @@
+.magnetism {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 100%;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+    margin: 0;
+}
+
+.magnetism input {
+    margin: 5px;
+}
+
+.magnetism p {
+    margin-bottom: 5px;
+}
+.alignment {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+}
+
+.alignmentTitle {
+    margin-top: 10px;
+}
+
+mat-checkbox {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

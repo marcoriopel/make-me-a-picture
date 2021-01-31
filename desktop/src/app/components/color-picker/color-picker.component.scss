@@ -1,0 +1,82 @@
+.color-picker {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+    font-size: 12px;
+    padding: 0 5px 0 5px;
+}
+
+.color-selection-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.choice-container {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.color-input {
+    margin: 0 10;
+    width: 30px;
+}
+
+hr {
+    border: 0;
+    clear: both;
+    display: block;
+    width: 96%;
+    background-color: #cfcfcf;
+    height: 1px;
+    margin-top: 10px;
+}
+
+h4 {
+    margin: 5px 5px 0px 5px;
+    color: black;
+    align-self: center;
+    font-weight: bold;
+}
+
+.opacity-input {
+    width: 23px;
+}
+
+.previous-color {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+.color {
+    height: 23px;
+    width: 23px;
+    background-color: red;
+    display: grid;
+    margin: 3px;
+    border: none;
+    border-radius: 15%;
+    outline: none;
+    cursor: pointer;
+}
+
+.choice-container .grid-element {
+    margin-left: 5px;
+}
+
+#sliderDetails {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+#swap-button {
+    position: relative;
+    top: 10px;
+    align-self: center;
+    height: 40%;
+    width: 15px;
+    cursor: pointer;
+}
+
+p {
+    margin: 0;
+}
