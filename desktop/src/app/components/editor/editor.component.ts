@@ -9,8 +9,8 @@ import {
     MINIMUM_WORKSPACE_WIDTH,
 } from '@app/ressources/global-variables/global-variables';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
-import { ResizeDrawingService } from '@app/services/resize-drawing/resize-drawing.service';
 import { ToolSelectionService } from '@app/services/tool-selection/tool-selection.service';
+
 @Component({
     selector: 'app-editor',
     templateUrl: './editor.component.html',
@@ -32,11 +32,7 @@ export class EditorComponent implements AfterViewInit {
     constructor(
         public hotkeyService: HotkeyService,
         public toolSelectionService: ToolSelectionService,
-        public resizeDrawingService: ResizeDrawingService,
     ) {
-        this.resizeDrawingService.workSpaceSize = this.workSpaceSize;
-        this.resizeDrawingService.previewSize = this.previewSize;
-        this.resizeDrawingService.canvasSize = this.canvasSize;
     }
 
     ngAfterViewInit(): void {
@@ -50,7 +46,6 @@ export class EditorComponent implements AfterViewInit {
             this.previewDiv.style.borderColor = '#09acd9';
             this.previewDiv.style.borderStyle = 'dashed';
             this.previewDiv.style.position = 'absolute';
-            this.resizeDrawingService.setDefaultCanvasSize();
         });
     }
 
@@ -69,17 +64,14 @@ export class EditorComponent implements AfterViewInit {
 
     onMouseDown(event: MouseEvent): void {
         this.previewDiv.style.display = 'block';
-        this.resizeDrawingService.onMouseDown(event);
     }
 
     @HostListener('mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        this.resizeDrawingService.resizeCanvas(event);
     }
 
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.resizeDrawingService.onMouseUp();
         this.previewDiv.style.display = 'none';
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Brush, Ellipse, Eraser, Fill, Line, Pencil, Polygone, Rectangle, Resize, Selection, Stamp } from '@app/classes/tool-properties';
+import { Eraser, Fill, Pencil, Selection} from '@app/classes/tool-properties';
 import { Vec2 } from '@app/classes/vec2';
 import { MAX_PERCENTAGE } from '@app/ressources/global-variables/global-variables';
 import { Observable, Subject } from 'rxjs';
@@ -17,8 +17,8 @@ export class DrawingService {
     canvas: HTMLCanvasElement;
     gridCanvas: HTMLCanvasElement;
     previewCanvas: HTMLCanvasElement;
-    undoStack: (Pencil | Brush | Eraser | Polygone | Line | Resize | Fill | Rectangle | Ellipse | Selection | Stamp)[] = [];
-    redoStack: (Pencil | Brush | Eraser | Polygone | Line | Resize | Fill | Rectangle | Ellipse | Selection | Stamp)[] = [];
+    undoStack: (Pencil | Eraser)[] = [];
+    redoStack: (Pencil | Eraser)[] = [];
     isToolInUse: Subject<boolean> = new Subject<boolean>();
 
     setGrid(): void {
@@ -75,7 +75,7 @@ export class DrawingService {
         this.clearCanvas(this.previewCtx);
     }
 
-    updateStack(modification: Pencil | Brush | Eraser | Polygone | Line | Resize | Fill | Rectangle | Ellipse | Selection | Stamp): void {
+    updateStack(modification: Pencil | Eraser): void {
         this.undoStack.push(modification);
         if (this.redoStack.length) {
             this.redoStack = [];

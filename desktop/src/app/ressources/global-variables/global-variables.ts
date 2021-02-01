@@ -1,6 +1,6 @@
 // Global variables are stored here
-export const MINIMUM_CANVAS_WIDTH = 250;
-export const MINIMUM_CANVAS_HEIGHT = 250;
+export const MINIMUM_CANVAS_WIDTH = 700;
+export const MINIMUM_CANVAS_HEIGHT = 700;
 export const MINIMUM_WORKSPACE_WIDTH = 500;
 export const MINIMUM_WORKSPACE_HEIGHT = 500;
 export const ZOOM_RADIUS = 75;
