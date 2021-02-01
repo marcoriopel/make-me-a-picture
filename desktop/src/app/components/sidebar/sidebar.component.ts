@@ -15,9 +15,6 @@ import { takeUntil } from 'rxjs/operators';
     styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild('cutButton', { read: ElementRef }) cutButton: ElementRef;
-    @ViewChild('copyButton', { read: ElementRef }) copyButton: ElementRef;
-    @ViewChild('pasteButton', { read: ElementRef }) pasteButton: ElementRef;
     @ViewChild('undo', { read: ElementRef }) undoButton: ElementRef;
     @ViewChild('redo', { read: ElementRef }) redoButton: ElementRef;
     destroy$: Subject<boolean> = new Subject<boolean>();

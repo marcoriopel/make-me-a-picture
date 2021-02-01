@@ -23,10 +23,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
-import { DrawingDetailComponent } from './components/drawing-detail/drawing-detail.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
-import { GeneralDetailComponent } from './components/general-detail/general-detail.component';
 import { GridComponent } from './components/grid/grid.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -42,8 +40,6 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
         SidebarComponent,
         DrawingComponent,
         MainPageComponent,
-        DrawingDetailComponent,
-        GeneralDetailComponent,
         AttributePanelComponent,
         EraserAttributesComponent,
         PencilAttributesComponent,

@@ -132,12 +132,4 @@ export class ColorPickerComponent {
         const rgba: string = 'rgba(' + r + ',' + g + ',' + b + ',' + (opacity / MAX_OPACITY).toString() + ')';
         return rgba;
     }
-
-    onFocus(): void {
-        this.hotkeyService.isHotkeyEnabled = false;
-    }
-
-    onFocusOut(): void {
-        this.hotkeyService.isHotkeyEnabled = true;
-    }
 }

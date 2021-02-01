@@ -60,16 +60,6 @@ export class ToolSelectionService {
 
     selectItem(toolName: string): void {
         switch (toolName) {
-            case this.sidebarElements.NEW_DRAWING_NAME:
-                break;
-            case this.sidebarElements.CAROUSEL_NAME:
-                break;
-            case this.sidebarElements.SAVE_SERVER_NAME:
-                break;
-            case this.sidebarElements.EXPORT_DRAWING_NAME:
-                break;
-            case this.sidebarElements.SELECT_ALL:
-                break;
             case this.sidebarElements.UNDO:
                 this.undo();
                 break;
@@ -121,10 +111,6 @@ export class ToolSelectionService {
 
     currentToolMouseEnter(event: MouseEvent): void {
         this.currentTool.onMouseEnter(event);
-    }
-
-    currentToolWheelEvent(event: WheelEvent): void {
-        this.currentTool.onWheelEvent(event);
     }
 
     getCurrentTool(): Observable<string> {

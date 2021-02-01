@@ -27,11 +27,7 @@ export abstract class Tool {
 
     onKeyDown(event: KeyboardEvent): void {}
 
-    onKeyPress(event: KeyboardEvent): void {}
-
     onKeyUp(event: KeyboardEvent): void {}
-
-    onWheelEvent(event: WheelEvent): void {}
 
     getPositionFromMouse(event: MouseEvent): Vec2 {
         return { x: event.offsetX, y: event.offsetY };
