@@ -1,0 +1,22 @@
+.chat-bar {
+    height: 100vh;
+    width: 400px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    overflow-y: hidden;
+}
+
+.sending-zone {
+    position: fixed;
+    bottom: 0;
+    margin: 30px;
+}
+
+#sending-button {
+    margin: 10px;
+}
+
+.message-list {
+    margin: 30px;
+}

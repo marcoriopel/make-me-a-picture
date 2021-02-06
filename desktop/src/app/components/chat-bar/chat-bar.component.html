@@ -1,0 +1,14 @@
+<div class="chat-bar">
+
+    <div class="message-list">
+        <div *ngFor="let message of chat">
+            <p>{{message}}</p>
+        </div>        
+    </div>
+
+    <div class="sending-zone">
+        <input #box type="text">
+        <button id="sending-button" (click)="sendMessage(box.value)">Envoyer</button>        
+    </div>
+    
+</div>
