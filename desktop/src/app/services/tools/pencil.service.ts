@@ -56,7 +56,6 @@ export class PencilService extends Tool {
         }
         this.mouseDown = false;
         this.clearPath();
-        this.drawingService.autoSave();
     }
 
     onMouseMove(event: MouseEvent): void {

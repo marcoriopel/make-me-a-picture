@@ -1,15 +1,13 @@
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MAXIMUM_NUMBER_OF_COLORS, MAX_OPACITY } from '@app/ressources/global-variables/global-variables';
-import { MAXIMUM_RGBA_VALUE } from '@app/ressources/global-variables/rgba';
 import { ColorSelectionService } from '@app/services/color-selection/color-selection.service';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
-import { PipetteService } from '@app/services/tools/pipette.service';
 @Component({
     selector: 'app-color-picker',
     templateUrl: './color-picker.component.html',
     styleUrls: ['./color-picker.component.scss'],
 })
-export class ColorPickerComponent implements AfterViewInit {
+export class ColorPickerComponent {
     @ViewChild('primary', { read: ElementRef }) primaryColorElement: ElementRef;
     @ViewChild('secondary', { read: ElementRef }) secondaryColorElement: ElementRef;
     primaryColor: string = '#000000';
@@ -20,7 +18,7 @@ export class ColorPickerComponent implements AfterViewInit {
     primaryOpacity: number = MAX_OPACITY;
     secondaryOpacity: number = MAX_OPACITY;
 
-    constructor(public colorSelectionService: ColorSelectionService, public hotkeyService: HotkeyService, public pipetteService: PipetteService) {
+    constructor(public colorSelectionService: ColorSelectionService, public hotkeyService: HotkeyService) {
         // Initial values for the colors on application opening
         this.colorSelectionService.setPrimaryColor(this.hexToRGBA(this.primaryColor, this.primaryOpacity));
         this.colorSelectionService.setSecondaryColor(this.hexToRGBA(this.secondaryColor, this.secondaryOpacity));
@@ -133,28 +131,5 @@ export class ColorPickerComponent implements AfterViewInit {
         const b: number = parseInt(color.slice(SLICING_START_B), SLICING_END);
         const rgba: string = 'rgba(' + r + ',' + g + ',' + b + ',' + (opacity / MAX_OPACITY).toString() + ')';
         return rgba;
-    }
-
-    ngAfterViewInit(): void {
-        this.pipetteService.primaryColor.subscribe((data: string[]) => {
-            this.changePrimaryColor(data[0]);
-            this.primaryOpacity = Math.round((Number(data[1]) / MAXIMUM_RGBA_VALUE) * MAX_OPACITY);
-            const primary = this.primaryColorElement.nativeElement;
-            primary.value = data[0];
-        });
-        this.pipetteService.secondaryColor.subscribe((data: string[]) => {
-            this.changeSecondaryColor(data[0]);
-            this.secondaryOpacity = Math.round((Number(data[1]) / MAXIMUM_RGBA_VALUE) * MAX_OPACITY);
-            const secondary = this.secondaryColorElement.nativeElement;
-            secondary.value = data[0];
-        });
-    }
-
-    onFocus(): void {
-        this.hotkeyService.isHotkeyEnabled = false;
-    }
-
-    onFocusOut(): void {
-        this.hotkeyService.isHotkeyEnabled = true;
     }
 }
