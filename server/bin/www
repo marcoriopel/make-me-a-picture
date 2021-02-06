@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+let socketapi = require("../socketapi");
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +21,9 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+// Socket implementation from https://stackoverflow.com/questions/24609991/using-socket-io-in-express-4-and-express-generators-bin-www?answertab=active#tab-top
+socketapi.io.attach(server);
 
 /**
  * Listen on provided port, on all network interfaces.
