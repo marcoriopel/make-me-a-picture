@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Code from https://medium.com/swlh/kotlin-chat-tutorial-the-clean-way-fca8f754aeb3 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:bottomRightRadius="18dp"
