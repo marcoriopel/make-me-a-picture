@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "redeploy": "ssh -i \"C:\\sshkey.pem\" ubuntu@ec2-18-217-235-167.us-east-2.compute.amazonaws.com './redeploy.sh'"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -16,5 +17,8 @@
     "socket.io": "^3.1.1",
     "swagger-jsdoc": "^5.0.1",
     "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
