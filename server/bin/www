@@ -24,12 +24,12 @@ var server = http.createServer(app);
 
 // Socket implementation from https://stackoverflow.com/questions/24609991/using-socket-io-in-express-4-and-express-generators-bin-www?answertab=active#tab-top
 socketapi.io.attach(server);
-
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
+console.log('Server started on port ' + port);
 server.on('error', onError);
 server.on('listening', onListening);
 
