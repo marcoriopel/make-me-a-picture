@@ -14,13 +14,13 @@ export class ChatBarComponent implements OnInit {
   socket: Socket;
 
   constructor() {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('http://18.217.235.167:3000/');
   }
 
 
   ngOnInit(): void {
     this.socket.on("connect", () => {
-      console.log(this.socket.id); // x8WIv7-mJelg7on_ALbx
+      console.log(this.socket.id);
     });
 
     this.socket.on('message', (text: string) => {
