@@ -22,6 +22,7 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
+import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
@@ -43,6 +44,7 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
         AttributePanelComponent,
         EraserAttributesComponent,
         PencilAttributesComponent,
+        ChatBarComponent,
         SliderComponent,
         ColorPickerComponent
     ],
@@ -76,4 +78,4 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
     providers: [],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
