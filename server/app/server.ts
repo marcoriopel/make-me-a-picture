@@ -10,24 +10,24 @@ export class Server {
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(@inject(TYPES.Application) private application: Application) {}
+    constructor(@inject(TYPES.Application) private application: Application) { }
 
     init(): void {
         this.application.app.set('port', this.appPort);
 
         this.server = http.createServer(this.application.app);
-
+        this.socketIoConfig();
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
     }
 
     private socketIoConfig(): void {
-        const io = new socketio.Server(this.server);
+        const io = new socketio.Server(this.server, ({ cors: { origin: "*" } }));
 
         io.on("connection", function (socket: any) {
             console.log("A user connected");
-        
+
             socket.on('message', (message: any) => {
                 console.log(message);
                 io.emit('message', `${socket.id.substr(0, 2)} said ${message}`);
