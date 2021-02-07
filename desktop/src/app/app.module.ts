@@ -33,7 +33,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
 import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
-import { LoginComponent } from './components/login/login.component'
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AvatarComponent } from './components/avatar/avatar.component'
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -52,6 +54,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
         SliderComponent,
         ColorPickerComponent,
         LoginComponent,
+        RegisterComponent,
+        AvatarComponent,
         NavbarComponent
     ],
     imports: [

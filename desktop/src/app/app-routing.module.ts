@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EditorComponent } from './components/editor/editor.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { AuthGuard } from '@app/auth.guard';
 
 const routes: Routes = [
@@ -10,7 +11,8 @@ const routes: Routes = [
     { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
     { path: 'editor', component: EditorComponent, canActivate: [AuthGuard] },
     { path: 'login' , component: LoginComponent },
-    { path: '**', redirectTo: '/home', canActivate: [AuthGuard] },
+    { path: 'register' , component: RegisterComponent },
+    { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({
