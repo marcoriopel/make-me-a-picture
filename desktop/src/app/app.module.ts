@@ -33,7 +33,6 @@ import { EraserAttributesComponent } from './components/tools/eraser-attributes/
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
 import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
 import { LoginComponent } from './components/login/login.component'
-import { TokenInterceptorService } from '@app/services/token-interceptor/token-interceptor.service';
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
