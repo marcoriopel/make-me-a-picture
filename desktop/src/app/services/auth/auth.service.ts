@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  private loginUrl = "http://localhost:3000/api/auth/user"
+  private loginUrl = "http://localhost:3000/api/authenticate"
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -25,7 +25,7 @@ export class AuthService {
     return !!localStorage.getItem('token') // We need to verify with the server if the token is valid
   }
 
-  getToken(){
+  getToken() {
     return localStorage.getItem('token');
   }
 }

@@ -16,14 +16,13 @@ export class UserCredentialsModel {
             console.error(e);
         }
     }
-    
+
     async loginUser(username) {
         try {
             await this.databaseModel.client.db().collection("logged-users").insertOne({ 'username': username });
         } catch (e) {
             console.error(e);
         }
-        console.log("We are on the moon");
     }
 
     async logoutUser(username) {
@@ -33,7 +32,15 @@ export class UserCredentialsModel {
             console.error(e);
         }
         console.log("Logout successfull");
-    }    
+    }
+
+    async registerUser(userInfo) {
+        try {
+            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': userInfo.username, 'password': userInfo.password });
+        } catch (e) {
+            console.error(e);
+        }
+    }
 }
 
 

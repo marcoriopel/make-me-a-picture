@@ -23,4 +23,18 @@ export class AuthService {
         return false;
     }
 
+    async registerUser(userInfo) {
+        try {
+            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
+            if (!user) {
+                await this.userCredentialsModel.registerUser(userInfo);
+                return true;
+            }
+        } catch (e) {
+            console.error(e);
+            return false;
+        }
+        return false;
+    }
+
 }
