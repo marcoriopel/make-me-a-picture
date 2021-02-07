@@ -32,7 +32,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
 import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
-import { LoginComponent } from './components/login/login.component'
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AvatarComponent } from './components/avatar/avatar.component'
 
 @NgModule({
     declarations: [
@@ -48,7 +50,9 @@ import { LoginComponent } from './components/login/login.component'
         ChatBarComponent,
         SliderComponent,
         ColorPickerComponent,
-        LoginComponent
+        LoginComponent,
+        RegisterComponent,
+        AvatarComponent
     ],
     imports: [
         BrowserModule,

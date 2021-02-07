@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '@app/classes/user';
+import { User, NewUser } from '@app/classes/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,4 +14,10 @@ export class AuthService {
   login(user: User) {
     return this.http.post<any>(this.loginUrl, user)
   }
+
+  register(user: NewUser) {
+    console.log(user);
+    return true;
+  }
+
 }
