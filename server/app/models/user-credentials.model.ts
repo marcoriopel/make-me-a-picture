@@ -5,11 +5,13 @@ import { TYPES } from '@app/types';
 @injectable()
 export class UserCredentialsModel {
 
-    constructor(@inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel) {}
+    constructor(@inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel) {
+        this.databaseModel = DatabaseModel.getInstance();
+    }
 
     async getLoginInfo(username) {
         try {
-            return this.databaseModel.client.db().collection("user-login").findOne({ 'username': username });
+            return await this.databaseModel.client.db().collection("user-credentials").findOne({ 'username': username });
         } catch (e) {
             console.error(e);
         }
@@ -26,7 +28,7 @@ export class UserCredentialsModel {
 
     async logoutUser(username) {
         try {
-            await this.databaseModel.client.db().collection("logged_users").deleteOne({ 'username': username });
+            await this.databaseModel.client.db().collection("logged-users").deleteOne({ 'username': username });
         } catch (e) {
             console.error(e);
         }

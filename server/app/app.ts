@@ -22,6 +22,7 @@ export class Application {
         this.swaggerConfig();
         this.config();
 
+        this.databaseModel = DatabaseModel.getInstance();
         this.databaseModel.startDB();
         this.bindRoutes();
     }
@@ -58,7 +59,7 @@ export class Application {
     }
 
     bindRoutes(): void {
-        this.app.use('/api/login', this.authController.router);
+        this.app.use('/api/auth', this.authController.router);
         this.errorHandling();
     }
 

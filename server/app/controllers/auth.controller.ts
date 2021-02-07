@@ -2,7 +2,7 @@ import { AuthService } from '@app/services/auth.service';
 import { TYPES } from '@app/types';
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { jwt } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 @injectable()
 export class AuthController {
