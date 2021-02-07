@@ -17,6 +17,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,7 +36,9 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AvatarComponent } from './components/avatar/avatar.component'
-
+import { AuthService } from './services/auth/auth.service';
+import { AuthGuard } from './auth.guard';
+import { NavbarComponent } from './components/navbar/navbar.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -52,7 +55,8 @@ import { AvatarComponent } from './components/avatar/avatar.component'
         ColorPickerComponent,
         LoginComponent,
         RegisterComponent,
-        AvatarComponent
+        AvatarComponent,
+        NavbarComponent
     ],
     imports: [
         BrowserModule,
@@ -79,9 +83,10 @@ import { AvatarComponent } from './components/avatar/avatar.component'
         ReactiveFormsModule,
         MatCheckboxModule,
         MatInputModule,
+        MatToolbarModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [],
+    providers: [AuthService, AuthGuard,],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
