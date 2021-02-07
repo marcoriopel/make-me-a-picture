@@ -31,7 +31,8 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
-import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component'
+import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
+import { LoginComponent } from './components/login/login.component'
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
         PencilAttributesComponent,
         ChatBarComponent,
         SliderComponent,
-        ColorPickerComponent
+        ColorPickerComponent,
+        LoginComponent
     ],
     imports: [
         BrowserModule,
