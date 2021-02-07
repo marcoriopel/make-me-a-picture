@@ -17,6 +17,7 @@ import android.content.Intent
 
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.ui.chat.ChatActivity
+import com.example.prototype_mobile.ui.signin.SingInActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
         val username = findViewById<EditText>(R.id.username)
         val login = findViewById<Button>(R.id.login)
+        val signin = findViewById<Button>(R.id.signIn)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -83,6 +85,10 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString())
             }
 
+        signin.setOnClickListener {
+            val intent = Intent(this, SingInActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
