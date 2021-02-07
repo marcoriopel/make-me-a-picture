@@ -42,7 +42,7 @@ export class AuthController {
           res.status(200).send({ token });
         }
         else {
-          res.sendStatus(403);
+          res.sendStatus(401);
         }
       });
     });
