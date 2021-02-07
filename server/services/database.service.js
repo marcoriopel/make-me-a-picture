@@ -11,4 +11,14 @@ async function startDB() {
     console.log("We are on the moon");
 }
 
-module.exports = { startDB };
+async function loginUser(userInfo) {
+    try {
+        await client.db().collection("logged_users").insertOne({ 'username': userInfo.username, "password": userInfo.password });
+    } catch (e) {
+        console.error(e);
+    }
+    console.log("We are on the moon");
+
+}
+
+module.exports = { startDB, loginUser };

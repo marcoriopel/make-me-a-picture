@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var databaseService = require('.././services/database.service');
 
 /* GET REQUESTS */
 router.get('/', () => {
@@ -8,7 +9,9 @@ router.get('/', () => {
 
 
 /* POST REQUESTS */
-
+router.post('/login', (req, res) => {
+  databaseService.loginUser(req.body);
+});
 
 /* PUT REQUESTS */
 
