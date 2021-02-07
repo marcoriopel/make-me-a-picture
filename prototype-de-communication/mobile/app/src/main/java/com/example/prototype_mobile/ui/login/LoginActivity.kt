@@ -9,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import android.content.Intent
 
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.ui.chat.ChatActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -86,17 +87,20 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(model: LoggedInUserView) {
        // val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
+       val displayName = model.displayName
         // TODO : initiate successful logged in experience
-//        Toast.makeText(
-//                applicationContext,
-//                "$welcome $displayName",
-//                Toast.LENGTH_LONG
-//        ).show()
+        val intent = Intent(this, ChatActivity::class.java);
+        intent.putExtra("USERNAME", displayName);
+        startActivity(intent)
+        Toast.makeText(
+                applicationContext,
+                "Bienvenue $displayName",
+                Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
-        //Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 }
 
