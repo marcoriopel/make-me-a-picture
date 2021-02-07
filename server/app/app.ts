@@ -5,7 +5,7 @@ import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
 
 import { TYPES } from './types';
-import { LoginController } from '@app/controllers/login.controller';
+import { AuthController } from '@app/controllers/auth.controller';
 import { DatabaseModel } from './models/database.model';
 
 @injectable()
@@ -14,7 +14,7 @@ export class Application {
     app: express.Application;
 
     constructor(
-        @inject(TYPES.LoginController) private loginController: LoginController, 
+        @inject(TYPES.AuthController) private authController: AuthController, 
         @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel 
         ) {
         this.app = express();
@@ -58,7 +58,7 @@ export class Application {
     }
 
     bindRoutes(): void {
-        this.app.use('/api/login', this.loginController.router);
+        this.app.use('/api/login', this.authController.router);
         this.errorHandling();
     }
 

@@ -23,10 +23,7 @@ export class Server {
     }
 
     private socketIoConfig(): void {
-        let http = require("http").Server(this.application.app);
-        // set up socket.io and bind it to our
-        // http server.
-        let io = require("socket.io")(http);
+        const io = new socketio.Server(this.server);
 
         io.on("connection", function (socket: any) {
             console.log("A user connected");
