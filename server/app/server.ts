@@ -2,7 +2,7 @@ import * as http from 'http';
 import { inject, injectable } from 'inversify';
 import { Application } from './app';
 import { TYPES } from './types';
-import { socketapi } from './socketapi';
+import * as socketio from "socket.io";
 
 @injectable()
 export class Server {
@@ -16,11 +16,26 @@ export class Server {
         this.application.app.set('port', this.appPort);
 
         this.server = http.createServer(this.application.app);
-        socketapi.io.attach(this.server);
 
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
+    }
+
+    private socketIoConfig(): void {
+        let http = require("http").Server(this.application.app);
+        // set up socket.io and bind it to our
+        // http server.
+        let io = require("socket.io")(http);
+
+        io.on("connection", function (socket: any) {
+            console.log("A user connected");
+        
+            socket.on('message', (message: any) => {
+                console.log(message);
+                io.emit('message', `${socket.id.substr(0, 2)} said ${message}`);
+            });
+        });
     }
 
     private normalizePort(val: number | string): number | string | boolean {

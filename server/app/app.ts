@@ -3,8 +3,9 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
-import { LoginController } from '@app/controllers/login.controller';
+
 import { TYPES } from './types';
+import { LoginController } from '@app/controllers/login.controller';
 import { DatabaseModel } from './models/database.model';
 
 @injectable()
@@ -18,10 +19,34 @@ export class Application {
         ) {
         this.app = express();
 
+        this.swaggerConfig();
         this.config();
 
         this.databaseModel.startDB();
         this.bindRoutes();
+    }
+
+    private swaggerConfig(): void {
+        const swaggerUi = require('swagger-ui-express');
+        const swaggerJSDoc = require('swagger-jsdoc');
+
+        const swaggerDefinition = {
+            openapi: '3.0.0',
+            info: {
+              title: 'Express API for JSONPlaceholder',
+              version: '1.0.0',
+            },
+          };
+          
+        const options = {
+            swaggerDefinition,
+            // Paths to files containing OpenAPI definitions
+            apis: ['./controllers/*.js'],
+        };
+
+        const swaggerSpec = swaggerJSDoc(options);
+
+        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); 
     }
 
     private config(): void {
