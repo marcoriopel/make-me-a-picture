@@ -11,7 +11,7 @@ export class AuthService {
 
     async loginUser(userInfo) {
         try {
-            const user = await this.userCredentialsModel.getLoginInfo(userInfo.username);
+            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
             if (user && user.password == userInfo.password) {
                 await this.userCredentialsModel.loginUser(userInfo.username);;
                 return true;

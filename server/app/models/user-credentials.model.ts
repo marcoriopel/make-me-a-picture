@@ -9,7 +9,7 @@ export class UserCredentialsModel {
         this.databaseModel = DatabaseModel.getInstance();
     }
 
-    async getLoginInfo(username) {
+    async getCredentials(username) {
         try {
             return await this.databaseModel.client.db().collection("user-credentials").findOne({ 'username': username });
         } catch (e) {

@@ -33,16 +33,23 @@ export class Application {
 
         const swaggerDefinition = {
             openapi: '3.0.0',
+            swaggerURL: '/swagger',
             info: {
-              title: 'Express API for JSONPlaceholder',
+              title: 'API for the best application ever',
               version: '1.0.0',
             },
+            servers: [
+                {
+                  url: 'http://localhost:3000',
+                  description: 'Development server',
+                },
+              ], 
           };
           
         const options = {
             swaggerDefinition,
             // Paths to files containing OpenAPI definitions
-            apis: ['./controllers/*.js'],
+            apis: ['./app/controllers/*.ts'],
         };
 
         const swaggerSpec = swaggerJSDoc(options);
