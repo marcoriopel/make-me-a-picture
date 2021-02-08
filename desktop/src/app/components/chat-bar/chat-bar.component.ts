@@ -20,7 +20,7 @@ export class ChatBarComponent implements OnInit {
   socket: Socket;
 
   constructor(private formBuilder: FormBuilder) {
-    this.socket = io('http://18.217.235.167:3000/:3000/');
+    this.socket = io('http://localhost:3000/');
   }
 
   ngOnInit(): void {

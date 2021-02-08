@@ -12,7 +12,7 @@
     "lint": "ng lint --type-check --format stylish",
     "lint:fix": "npm run lint -- --fix",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/LogoDark.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/LogoDark.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Guess & Draw\"",    
+    "package-win": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/LogoDark.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Guess & Draw\"",
     "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/LogoDark.png --prune=true --out=release-builds"
   },
   "private": true,
@@ -28,6 +28,7 @@
     "@angular/platform-browser-dynamic": "~10.0.9",
     "@angular/router": "~10.0.9",
     "@material/textfield": "^10.0.0",
+    "electron-packager": "^15.2.0",
     "rxjs": "~6.5.5",
     "socket.io-client": "^3.1.1",
     "tslib": "^2.0.0",
