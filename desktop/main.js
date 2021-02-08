@@ -4,10 +4,20 @@ const path = require("path");
 
 let mainWindow
 
+const iconPathPlatform = process.platform !== 'darwin'
+  ? 'src/assets/icons/LogoLight.ico'
+  : 'src/assets/icons/LogoLight.icns';
+
+const iconPath = app.isPackaged
+  ? path.join(process.resourcesPath, iconPathPlatform)
+  : path.join(__dirname, iconPathPlatform);
+
+  
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    // icon: iconPath,
     webPreferences: {
       nodeIntegration: true
     }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User, NewUser } from '@app/classes/user';
+import { User } from '@app/classes/user';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   private loginUrl = "http://18.217.235.167:3000/api/auth/authenticate"
+  private registerUrl = "http://18.217.235.167:3000/api/auth/register"
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -16,9 +17,9 @@ export class AuthService {
     return this.http.post<any>(this.loginUrl, user)
   }
 
-  register(user: NewUser) {
+  register(user: User) {
     console.log(user);
-    return true;
+    return this.http.post<any>(this.registerUrl, user);
   }
 
   logoutUser() {

@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
       username: this.form.value.username,
       password: this.form.value.password
     }
+    console.log(user);
     this.authService.login(user)
       .subscribe(
         res => {
@@ -33,7 +34,11 @@ export class LoginComponent implements OnInit {
           console.log(res);
           this.router.navigate(['/home']);
         },
-        err => console.log(err)
+        err => {
+          console.log(err)
+          this.form.get('username')?.setErrors({'notValid': true});
+          this.form.get('password')?.setErrors({'notValid': true});
+        }
       )
     
   }

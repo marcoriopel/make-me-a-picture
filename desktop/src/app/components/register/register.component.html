@@ -1,5 +1,3 @@
-<p>register works!</p>
-
 <mat-card>
     <mat-card-content>
       <form [formGroup]="userRegistrationForm" novalidate>
@@ -20,9 +18,9 @@
         </mat-form-field>
         
         <mat-form-field class="full-width-input">
-          <input matInput placeholder="Username" formControlName="username" required>
+          <input matInput placeholder="Username" formControlName="username" name="username" required>
           <mat-error>
-              {{errors.name}}
+            {{errors.name}}
           </mat-error>
         </mat-form-field>
         
