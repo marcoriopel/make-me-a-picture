@@ -1,22 +1,82 @@
+* {
+  box-sizing: border-box
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 10px;
+}
+
 .chat-bar {
-    height: 100vh;
-    width: 400px;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  width:400px;
+  height: 80%;
+}
+
+.container{
+  width: 100%;
+  margin:fit-content 0 auto;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.chat-container{
+    height: 400px;
+    overflow: auto;
+}
+
+.message{
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: space-between;
+    padding: 10px 20px;
+
+    p{
+      margin: 0px 10px;
+    }
+}
+
+.reverse{
+  flex-direction: row-reverse;
+}
+
+.avatar{
+  width: 10%;
+  align-self: flex-start;
+}
+
+.send-message-form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+
+  input{
+    flex-grow: 1;
+    border: none;
+    font-size: 16px;
+    padding: 6px 10px;
+    outline: none;
+    border-radius: 20px;
+    background-color: rgb(235, 235, 235);
+  }
+  button{
+    margin: 5px;
+    width: 7%;
+    height: 26px;
+    border: 0px;
+    cursor: pointer;
     background-color: white;
-    overflow-y: hidden;
-}
-
-.sending-zone {
-    position: fixed;
-    bottom: 0;
-    margin: 30px;
-}
-
-#sending-button {
-    margin: 10px;
-}
-
-.message-list {
-    margin: 30px;
-}
+    background-image: url(../../../assets/img/paper_plane.png);
+    background-size: cover;
+    outline: none;
+  }
+} 
