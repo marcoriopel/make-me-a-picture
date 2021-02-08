@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
+import com.android.volley.RequestQueue
 import com.example.prototype_mobile.data.LoginRepository
 import com.example.prototype_mobile.data.Result
 
@@ -17,9 +18,9 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String) {
+    fun login(username: String, password: String, queue: RequestQueue) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username)
+        val result = loginRepository.login(username, password, queue)
 
         if (result is Result.Success) {
             _loginResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
@@ -28,7 +29,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    fun loginDataChanged(username: String) {
+    fun loginDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         }

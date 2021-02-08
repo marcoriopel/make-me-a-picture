@@ -16,6 +16,7 @@ import android.widget.Toast
 import android.content.Intent
 
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.data.RequestQueueSingleton
 import com.example.prototype_mobile.ui.chat.ChatActivity
 import com.example.prototype_mobile.ui.signup.SingUpActivity
 
@@ -29,12 +30,14 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val username = findViewById<EditText>(R.id.username)
+        val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
         val signin = findViewById<Button>(R.id.signUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
+
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -65,7 +68,8 @@ class LoginActivity : AppCompatActivity() {
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                    username.text.toString()
+                    username.text.toString(),
+                password.text.toString()
             )
         }
 
@@ -82,7 +86,8 @@ class LoginActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString())
+                val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
+                loginViewModel.login(username.text.toString(), password.text.toString(), queue)
             }
 
         signin.setOnClickListener {
