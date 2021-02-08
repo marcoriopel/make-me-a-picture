@@ -34,7 +34,11 @@ export class LoginComponent implements OnInit {
           console.log(res);
           this.router.navigate(['/home']);
         },
-        err => console.log(err)
+        err => {
+          console.log(err)
+          this.form.get('username')?.setErrors({'notValid': true});
+          this.form.get('password')?.setErrors({'notValid': true});
+        }
       )
     
   }

@@ -46,10 +46,6 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-  get username() {
-    return this.userRegistrationForm.get('username')
-  }
-
   async register() { 
     const user: User = {
       username: this.userRegistrationForm.value.username,
@@ -60,12 +56,11 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem('token', res.token);
         console.log('res: ' + res);
         this.router.navigate(['/home']);
-        //   // set information
+        // set information
       },
       err => {
         console.log(err);
         this.userRegistrationForm.get('username')?.setErrors({'forbiddenName': true});
-        console.log('allo');
       }
     )
   }
