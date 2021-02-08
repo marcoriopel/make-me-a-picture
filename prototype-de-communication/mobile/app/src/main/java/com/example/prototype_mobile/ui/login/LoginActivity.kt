@@ -18,6 +18,7 @@ import android.content.Intent
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.data.RequestQueueSingleton
 import com.example.prototype_mobile.ui.chat.ChatActivity
+import com.example.prototype_mobile.ui.signup.SingUpActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -31,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
+        val signin = findViewById<Button>(R.id.signUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -88,6 +90,10 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString(), applicationContext)
             }
 
+        signin.setOnClickListener {
+            val intent = Intent(this, SingUpActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {

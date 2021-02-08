@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.data.LoginDataSource
 import com.example.prototype_mobile.data.LoginRepository
 
+
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
  * Required given LoginViewModel has a non-empty constructor
