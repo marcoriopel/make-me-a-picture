@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.data
 
+import android.content.Context
 import com.android.volley.RequestQueue
 import com.example.prototype_mobile.data.model.LoggedInUser
 
@@ -28,9 +29,9 @@ class LoginRepository(val dataSource: LoginDataSource) {
         dataSource.logout()
     }
 
-    fun login(username: String, password: String, queue: RequestQueue): Result<LoggedInUser> {
+    fun login(username: String, password: String, context: Context): Result<LoggedInUser> {
         // handle login
-        val result = dataSource.login(username, password, queue)
+        val result = dataSource.login(username, password, context)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)

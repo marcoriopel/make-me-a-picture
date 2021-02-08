@@ -10,7 +10,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Prototype_mobile">
+        android:theme="@style/Theme.Prototype_mobile"
+        android:usesCleartextTraffic="true">
+
         <activity android:name=".ui.chat.ChatActivity"></activity>
         <activity
             android:name=".ui.login.LoginActivity"

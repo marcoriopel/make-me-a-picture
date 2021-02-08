@@ -1,11 +1,12 @@
 package com.example.prototype_mobile.data
 
+import android.R.attr
+import android.accounts.AccountManager.KEY_PASSWORD
 import android.content.*
+import android.widget.Toast
 import com.android.volley.*
 import com.android.volley.toolbox.*
 import com.example.prototype_mobile.data.model.LoggedInUser
-import org.json.JSONException
-import org.json.JSONObject
 import java.io.IOException
 
 
@@ -14,28 +15,28 @@ import java.io.IOException
  */
 class LoginDataSource() {
 
-    fun login(username: String, password: String, queue: RequestQueue): Result<LoggedInUser> {
+    fun login(username: String, password: String, applicationContext: Context): Result<LoggedInUser> {
         try {
             // TODO: handle loggedInUser authentication
             // Instantiate the RequestQueue.
-
-            val url = "http://18.217.235.167:3000/"
+            val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
+            val url = "http://18.217.235.167:3000/api/auth/authenticate"
             var userId: String = ""
-            val postData = JSONObject()
-            try {
-                postData.put("username", username)
-                postData.put("password", password)
-            } catch (e: JSONException) {
-                e.printStackTrace()
+            val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
+                Response.Listener<String>() { response ->
+                        Toast.makeText(applicationContext, response, Toast.LENGTH_LONG).show()
+                },
+                 Response.ErrorListener() { error ->
+                        Toast.makeText(applicationContext, error.toString(), Toast.LENGTH_LONG)
+                            .show()
+                }) {
+                override fun getParams(): Map<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
+                    params["username"] = username
+                    params["password"] = password
+                    return params
+                }
             }
-            // Request a string response from the provided URL.
-            val stringRequest = JsonObjectRequest(Request.Method.POST, url, postData,
-                Response.Listener<JSONObject>() { response: JSONObject? ->
-                    userId = response.toString()
-
-                },  Response.ErrorListener() { error -> error.printStackTrace();
-
-                });
 
             // Add the request to the RequestQueue.
             queue.add(stringRequest)
