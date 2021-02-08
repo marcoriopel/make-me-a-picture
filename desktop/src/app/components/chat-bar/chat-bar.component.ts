@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { FormBuilder } from '@angular/forms';
 import { io, Socket } from "socket.io-client";
 
@@ -20,12 +21,13 @@ export class ChatBarComponent implements OnInit {
   socket: Socket;
 
   constructor(private formBuilder: FormBuilder) {
-    this.socket = io('http://localhost:3000/');
+    this.socket = io(environment.socket_url);
   }
 
   ngOnInit(): void {
     this.socket.on("connect", () => {
-      console.log(this.socket.id);
+      const jwt = localStorage.getItem('token');
+      this.socket.emit('message', {"token": jwt});
     });
 
     this.socket.on('message', (message: any) => {
@@ -35,7 +37,7 @@ export class ChatBarComponent implements OnInit {
       } else {
         isUsersMessage = false;
       }
-      this.chat.push({"text": message.text,"isUsersMessage": isUsersMessage});
+      this.chat.push({"username": message.username, "text": message.text, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
     });
   }
 
@@ -49,7 +51,8 @@ export class ChatBarComponent implements OnInit {
       this.messageForm.reset();
       return;
     } 
-    this.socket.emit('message', this.messageForm.value.message);
+    const jwt = localStorage.getItem('token');
+    this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt});
     this.messageForm.reset();
   }
 

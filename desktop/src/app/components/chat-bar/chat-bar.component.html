@@ -4,11 +4,17 @@
             <div *ngFor="let message of chat">
                 <div class="message reverse" *ngIf="message.isUsersMessage == true">
                     <img class="avatar" src="../../../assets/img/profileIcon.svg">
-                    <p>{{message.text}}</p>
+                    <div class="message-text-container">
+                        <p class="username">{{message.username}}</p>
+                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
+                    </div>
                 </div>
                 <div class="message" *ngIf="message.isUsersMessage == false">
                     <img class="avatar" src="../../../assets/img/profileIcon.svg">
-                    <p>{{message.text}}</p>                    
+                    <div class="message-text-container">
+                        <p class="username">{{message.username}}</p>
+                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
+                    </div>                  
                 </div>
                 {{onNewMessage()}}
             </div>

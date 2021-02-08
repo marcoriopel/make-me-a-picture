@@ -33,6 +33,16 @@
     overflow: auto;
 }
 
+.message-text-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.username{
+  font-size: 10px;
+  color: gray;
+}
+
 .message{
     display: flex;
     justify-content: flex-start;
@@ -46,6 +56,7 @@
 
 .reverse{
   flex-direction: row-reverse;
+  text-align: right;
 }
 
 .avatar{

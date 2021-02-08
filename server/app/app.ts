@@ -13,6 +13,7 @@ export class Application {
     private readonly internalError: number = 500;
     app: express.Application;
 
+
     constructor(
         @inject(TYPES.AuthController) private authController: AuthController, 
         @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel 
@@ -64,6 +65,7 @@ export class Application {
         this.app.use(cookieParser());
         this.app.use(cors());
     }
+
 
     bindRoutes(): void {
         this.app.use('/api/auth', this.authController.router);
