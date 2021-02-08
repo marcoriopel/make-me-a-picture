@@ -1,42 +1,48 @@
 package com.example.prototype_mobile.data
 
-import com.example.prototype_mobile.data.model.LoggedInUser
-import java.io.IOException
+import android.content.*
 import com.android.volley.*
 import com.android.volley.toolbox.*
-import android.view.View
-import android.widget.Toast
-import android.content.*
+import com.example.prototype_mobile.data.model.LoggedInUser
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-class LoginDataSource {
+class LoginDataSource() {
 
-    fun login(username: String): Result<LoggedInUser> {
+    fun login(username: String, password: String, queue: RequestQueue): Result<LoggedInUser> {
         try {
             // TODO: handle loggedInUser authentication
             // Instantiate the RequestQueue.
-            val queue = Volley.newRequestQueue(applicationContext)
-            val url = "https://18.217.235.167:3000/"
 
+            val url = "http://18.217.235.167:3000/"
+            var userId: String = ""
+            val postData = JSONObject()
+            try {
+                postData.put("username", username)
+                postData.put("password", password)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
             // Request a string response from the provided URL.
-            val stringRequest = StringRequest(Request.Method.POST, url,
-                    Response.Listener<String> { response ->
-                        // Display the first 500 characters of the response string.
-                        Toast.makeText(
-                                applicationContext,
-                                "Response is: ${response.substring(0, 500)}",
-                                Toast.LENGTH_LONG
-                        ).show()
-                    },
-                    Response.ErrorListener { textView.text = "That didn't work!" })
+            val stringRequest = JsonObjectRequest(Request.Method.POST, url, postData,
+                Response.Listener<JSONObject>() { response: JSONObject? ->
+                    userId = response.toString()
+
+                },  Response.ErrorListener() { error -> error.printStackTrace();
+
+                });
 
             // Add the request to the RequestQueue.
             queue.add(stringRequest)
 
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), username)
-            return Result.Success(fakeUser)
+
+            val user = LoggedInUser(userId, username)
+            return Result.Success(user)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }
