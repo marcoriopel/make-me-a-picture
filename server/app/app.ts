@@ -3,7 +3,6 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
-
 import { TYPES } from './types';
 import { AuthController } from '@app/controllers/auth.controller';
 import { DatabaseModel } from './models/database.model';
@@ -15,7 +14,7 @@ export class Application {
 
 
     constructor(
-        @inject(TYPES.AuthController) private authController: AuthController, 
+        @inject(TYPES.AuthController) private authController: AuthController,
         @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel 
         ) {
         this.app = express();

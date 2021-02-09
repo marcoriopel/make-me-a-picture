@@ -13,7 +13,6 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
 
     container.bind(TYPES.Server).to(Server);
     container.bind(TYPES.Application).to(Application);
-
     container.bind(TYPES.AuthController).to(AuthController);
     container.bind(TYPES.AuthService).to(AuthService);
     container.bind(TYPES.TokenService).to(TokenService)

@@ -3,7 +3,6 @@ import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
-import * as jwt from 'jsonwebtoken';
 import {
   ReasonPhrases,
   StatusCodes,
@@ -46,7 +45,9 @@ export class AuthController {
       this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          let user = req.body.username;
+          const user = req.bpdy.username;
+          // TODO: Add user to ther userConnected[]
+
           let token = this.tokenService.generateAccesToken(user);
           res.status(StatusCodes.OK).send({ token });
         }
@@ -79,7 +80,10 @@ export class AuthController {
       this.authService.registerUser(req.body.username, req.body.password).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          let token = this.tokenService.generateAccesToken(req.body.username)
+          const user = req.bpdy.username;
+          // TODO: Add user to the userConnected[]
+          
+          let token = this.tokenService.generateAccesToken(user);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -88,21 +92,17 @@ export class AuthController {
       });
     });
 
-    this.router.post('/test', (req: Request, res: Response) => {
-      // this.tokenService.authentifiateToken(req, res, (user: any) => {
-          // console.log("Controlled section acceded by :" + user);
-          res.sendStatus(StatusCodes.ACCEPTED);
-      // });
-    });
-
     /**
-     * Logout of the app
+     * Logout from the app
+     * + Exemple d'utilisation de lock une route avec un token
      */
-    // this.router.post('/logout', (req: Request, res: Response) => {
-    //     // this.tokenService.getTokenInfo()
-    //     // this.refreshTokens = this.refreshTokens.filter((token: string) => token !== req.body.token);
-    //     res.sendStatus(204);
-    // });
+    this.router.post('/logout', (req: Request, res: Response) => {
+      this.tokenService.authentifiateToken(req, res, (user: any) => {
+          //TODO: Remove user from the userConnected[]
+
+          res.sendStatus(StatusCodes.ACCEPTED);
+      });
+    });
     
   }
 }

@@ -16,7 +16,7 @@ export class TokenService {
      */
     public getTokenInfo(token) {
         try {
-            return jwt.verify(token, 'secretKey');
+            return jwt.verify(token, 'secretKey'); // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
         } catch(err) {
             // err
         } 
@@ -28,7 +28,7 @@ export class TokenService {
      * @returns encrypted token
      */
     public generateAccesToken(user: any): any {
-        return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+        return jwt.sign(user, 'secretKey'); // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
     }
 
     /** 
@@ -38,23 +38,22 @@ export class TokenService {
      * @param next: NextFunction to exec if the token is valid
      */
     public authentifiateToken(req: Request, res: Response, next: NextFunction): any {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token === undefined) { return res.sendStatus(401); }
-    jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
-        if (err) { return res.sendStatus(403); }
-        next(user);
-    });
+        console.log('test');
+        const token = req.headers['authorization'];
+        if (token === undefined) { return res.sendStatus(401); }
+        jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+            if (err) { return res.sendStatus(403); }
+            next(user);
+        });
+    }
 
-    // /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    // * Logout of the app
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    // router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
-    //     console.log(req.body.token);
-    //     this.refreshTokens = this.refreshTokens.filter((token: string) => token !== req.body.token);
-    //     res.sendStatus(STATUS.NoContent);
-    // });
-}
+    public asAccess(req: Request, res: Response) {
+        const token = req.headers['authorization'];
+        if (token === undefined) { return res.sendStatus(401); }
+        jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+            if (err) { return res.sendStatus(403); }
+        });
+    }
 
 }
 
