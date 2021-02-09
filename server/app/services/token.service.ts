@@ -7,7 +7,7 @@ import { UserCredentialsModel } from '@app/models/user-credentials.model';
 @injectable()
 export class TokenService {
 
-    constructor() {}
+    constructor() { }
 
     /**
      * Extract the data from a jwt
@@ -17,9 +17,9 @@ export class TokenService {
     public getTokenInfo(token) {
         try {
             return jwt.verify(token, 'secretKey'); // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
-        } catch(err) {
+        } catch (err) {
             // err
-        } 
+        }
     }
 
     /**
@@ -37,10 +37,10 @@ export class TokenService {
      * @param res: Response if the token is not valid
      * @param next: NextFunction to exec if the token is valid
      */
-    public authentifiateToken(req: Request, res: Response, next: NextFunction): any {
+    public authenticateToken(req: Request, res: Response, next: NextFunction): any {
         console.log('test');
         const token = req.headers['authorization'];
-        if (token === undefined) { return res.sendStatus(401); }
+        if (!token) { return res.sendStatus(401); }
         jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
             if (err) { return res.sendStatus(403); }
             next(user);
@@ -49,7 +49,7 @@ export class TokenService {
 
     public asAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
-        if (token === undefined) { return res.sendStatus(401); }
+        if (!token) { return res.sendStatus(401); }
         jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
             if (err) { return res.sendStatus(403); }
         });

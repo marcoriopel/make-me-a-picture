@@ -18,7 +18,6 @@ export class AuthService {
   }
 
   register(user: User) {
-    console.log(user);
     return this.http.post<any>(this.registerUrl, user);
   }
 
