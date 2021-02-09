@@ -3,6 +3,10 @@ import { TYPES } from '@app/types';
 import { Router } from 'express';
 import { inject, injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
+import {
+  ReasonPhrases,
+  StatusCodes,
+} from 'http-status-codes';
 
 
 @injectable()
@@ -35,14 +39,13 @@ export class AuthController {
      *           type: string
      */
     this.router.post('/authenticate', (req, res) => {
-      this.authService.loginUser(req.body).then((response) => {
+      this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
-          let payload = { subject: res.insertId }
-          let token = jwt.sign(payload, 'secretKey')
-          res.status(200).send({ token });
+          let token = jwt.sign(req.body.username, 'secretKey')
+          res.status(StatusCodes.OK).send({ token });
         }
         else {
-          res.sendStatus(401);
+          res.sendStatus(StatusCodes.UNAUTHORIZED);
         }
       });
     });
@@ -67,16 +70,20 @@ export class AuthController {
      *           type: string
      */
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req.body).then((response) => {
+      this.authService.registerUser(req.body.username, req.body.password).then((response) => {
         if (response) {
-          let payload = { subject: res.insertId }
-          let token = jwt.sign(payload, 'secretKey')
-          res.status(200).send({ token });
+          let token = jwt.sign(req.body.username, 'secretKey')
+          res.status(StatusCodes.OK).send({ token });
         }
         else {
-          res.sendStatus(403);
+          res.sendStatus(StatusCodes.FORBIDDEN);
         }
       });
     });
+
+
+    
   }
 }
+
+

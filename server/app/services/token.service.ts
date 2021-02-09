@@ -5,38 +5,14 @@ import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
 
 @injectable()
-export class JWTService {
+export class TokenService {
 
 
     constructor(@inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel) {
     }
 
-    async loginUser(userInfo) {
-        try {
-            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
-            if (user && user.password == userInfo.password) {
-                await this.userCredentialsModel.loginUser(userInfo.username);;
-                return true;
-            }
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-        return false;
-    }
-
-    async registerUser(userInfo) {
-        try {
-            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
-            if (!user) {
-                await this.userCredentialsModel.registerUser(userInfo);
-                return true;
-            }
-        } catch (e) {
-            console.error(e);
-            return false;
-        }
-        return false;
+    public getTokenInfo(token) {
+        r
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -58,10 +34,10 @@ export class JWTService {
         next(user);
     });
 
-            /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-        * Logout of the app
-        * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-       router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Logout of the app
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    router.post('/logout', (req: Request, res: Response, next: NextFunction) => {
         console.log(req.body.token);
         this.refreshTokens = this.refreshTokens.filter((token: string) => token !== req.body.token);
         res.sendStatus(STATUS.NoContent);

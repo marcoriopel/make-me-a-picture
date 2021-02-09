@@ -3,6 +3,8 @@ import { inject, injectable } from 'inversify';
 import { Application } from './app';
 import { TYPES } from './types';
 import * as socketio from "socket.io";
+import * as jwt from 'jsonwebtoken';
+import { setTokenSourceMapRange } from 'typescript';
 
 @injectable()
 export class Server {
@@ -27,10 +29,18 @@ export class Server {
 
         io.on("connection", function (socket: any) {
             console.log("A user connected");
-
             socket.on('message', (message: any) => {
-                console.log(message);
-                io.emit('message', `${socket.id.substr(0, 2)} said ${message}`);
+                try {
+                    var user = jwt.verify(message.token, 'secretKey');
+                    if (message.text) {
+                        io.emit('message', {"id": socket.id, "username": user, "text": message.text, "textColor": "#000000"});
+                    } else {
+                        let welcomeMessage = user + " joined the conversation";
+                        io.emit('message', {"id": socket.id, "username": user, "text": welcomeMessage, "textColor": "#00BFFF"});
+                    }
+                } catch(err) {
+                    // err
+                }   
             });
         });
     }

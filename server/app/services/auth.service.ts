@@ -9,11 +9,11 @@ export class AuthService {
     constructor(@inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel) {
     }
 
-    async loginUser(userInfo) {
+    async loginUser(username: string, password: string) {
         try {
-            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
-            if (user && user.password == userInfo.password) {
-                await this.userCredentialsModel.loginUser(userInfo.username);;
+            const user = await this.userCredentialsModel.getCredentials(username);
+            if (user && user.password == password) {
+                await this.userCredentialsModel.loginUser(username);;
                 return true;
             }
         } catch (e) {
@@ -23,11 +23,11 @@ export class AuthService {
         return false;
     }
 
-    async registerUser(userInfo) {
+    async registerUser(username: string, password: string) {
         try {
-            const user = await this.userCredentialsModel.getCredentials(userInfo.username);
+            const user = await this.userCredentialsModel.getCredentials(username);
             if (!user) {
-                await this.userCredentialsModel.registerUser(userInfo);
+                await this.userCredentialsModel.registerUser(username, password);
                 return true;
             }
         } catch (e) {

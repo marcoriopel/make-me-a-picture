@@ -34,9 +34,9 @@ export class UserCredentialsModel {
         console.log("Logout successfull");
     }
 
-    async registerUser(userInfo) {
+    async registerUser(username: string, password: string) {
         try {
-            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': userInfo.username, 'password': userInfo.password });
+            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': username, 'password': password });
         } catch (e) {
             console.error(e);
         }
