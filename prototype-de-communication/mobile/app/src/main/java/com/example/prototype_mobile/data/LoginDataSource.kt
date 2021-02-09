@@ -1,14 +1,8 @@
 package com.example.prototype_mobile.data
 
 import android.content.Context
-import android.widget.Toast
-import com.android.volley.Response
 import com.example.prototype_mobile.data.model.LoggedInUser
-import okhttp3.FormBody
-import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.*
-import java.io.IOException
 
 
 /**
@@ -31,7 +25,7 @@ class LoginDataSource() {
 
             val call: Call = client.newCall(request)
             val response: okhttp3.Response = call.execute()
-            val user = LoggedInUser(response.body().toString(), username)
+            val user = LoggedInUser(response.body()!!.string(), username)
 
             return if(response.code() == 200) {
                 Result.Success(user)
