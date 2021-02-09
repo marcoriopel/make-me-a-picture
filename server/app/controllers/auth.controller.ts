@@ -1,6 +1,7 @@
 import { AuthService } from '@app/services/auth.service';
+import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
-import { Router } from 'express';
+import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
 import {
@@ -13,7 +14,10 @@ import {
 export class AuthController {
   router: Router;
 
-  constructor(@inject(TYPES.AuthService) private authService: AuthService) {
+  constructor(
+    @inject(TYPES.TokenService) private tokenService: TokenService,
+    @inject(TYPES.AuthService) private authService: AuthService
+  ) {
     this.configureRouter();
   }
 
@@ -41,7 +45,9 @@ export class AuthController {
     this.router.post('/authenticate', (req, res) => {
       this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
-          let token = jwt.sign(req.body.username, 'secretKey')
+          // TODO: Generate Json object with an interface to pass to the token generator
+          let user = req.body.username;
+          let token = this.tokenService.generateAccesToken(user);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -72,7 +78,8 @@ export class AuthController {
     this.router.post('/register', (req, res) => {
       this.authService.registerUser(req.body.username, req.body.password).then((response) => {
         if (response) {
-          let token = jwt.sign(req.body.username, 'secretKey')
+          // TODO: Generate Json object with an interface to pass to the token generator
+          let token = this.tokenService.generateAccesToken(req.body.username)
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -81,7 +88,21 @@ export class AuthController {
       });
     });
 
+    this.router.post('/test', (req: Request, res: Response) => {
+      // this.tokenService.authentifiateToken(req, res, (user: any) => {
+          // console.log("Controlled section acceded by :" + user);
+          res.sendStatus(StatusCodes.ACCEPTED);
+      // });
+    });
 
+    /**
+     * Logout of the app
+     */
+    // this.router.post('/logout', (req: Request, res: Response) => {
+    //     // this.tokenService.getTokenInfo()
+    //     // this.refreshTokens = this.refreshTokens.filter((token: string) => token !== req.body.token);
+    //     res.sendStatus(204);
+    // });
     
   }
 }
