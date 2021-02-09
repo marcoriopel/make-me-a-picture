@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Prototype_mobile"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.signup.SingUpActivity"></activity>
+        <activity android:name=".ui.signup.SingUpActivity" />
         <activity android:name=".ui.chat.ChatActivity" />
         <activity
             android:name=".ui.login.LoginActivity"
