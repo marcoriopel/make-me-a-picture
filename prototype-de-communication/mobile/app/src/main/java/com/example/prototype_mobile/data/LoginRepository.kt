@@ -3,12 +3,27 @@ package com.example.prototype_mobile.data
 import android.content.Context
 import com.example.prototype_mobile.data.model.LoggedInUser
 
+
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
 class LoginRepository(val dataSource: LoginDataSource) {
+    companion object {
+        private var instance: LoginRepository? = null
+
+        fun getInstance(datasource: LoginDataSource): LoginRepository? {
+            if (instance == null) {
+                synchronized(LoginRepository::class.java) {
+                    if (instance == null) {
+                        instance = LoginRepository(datasource)
+                    }
+                }
+            }
+            return instance
+        }
+    }
 
     // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null

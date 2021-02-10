@@ -1,5 +1,5 @@
 package com.example.prototype_mobile
 
-data class Message (val userName : String, val messageContent : String, var viewType : Int)
-data class initialData (val userName : String)
-data class SendMessage(val userName : String, val messageContent: String)
+data class Message (val username : String, val text : String, val textColor: String)
+data class initialData (val token : String)
+data class SendMessage(val text: String, val token: String)
