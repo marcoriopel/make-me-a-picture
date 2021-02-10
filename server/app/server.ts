@@ -35,7 +35,7 @@ export class Server {
         io.on("connection", (socket: any) => {
             socket.on('message', (message: any) => {
                 try {
-                    var user = jwt.verify(message.token, 'secretKey');
+                    const user = this.tokenService.getTokenInfo(message.token);;
                     if (message.text) {
                         io.emit('message', { "id": socket.id, "username": user, "text": message.text, "textColor": "#000000" });
                     } else {

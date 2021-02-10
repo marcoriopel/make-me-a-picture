@@ -19,7 +19,7 @@ export class TokenService {
      */
     public getTokenInfo(token) {
         try {
-            return jwt.verify(token, 'secretKey'); // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+            return jwt.verify(token, process.env.ACCES_TOKEN_SECRET);
         } catch (err) {
             // err
         }
@@ -31,7 +31,7 @@ export class TokenService {
      * @returns encrypted token
      */
     public generateAccesToken(user: any): any {
-        return jwt.sign(user, 'secretKey'); // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+        return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
     }
 
     /** 
@@ -41,10 +41,9 @@ export class TokenService {
      * @param next: NextFunction to exec if the token is valid
      */
     public authenticateToken(req: Request, res: Response, next: NextFunction): any {
-        console.log('test');
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
             if (err) { return res.sendStatus(403); }
             next(user);
         });
@@ -53,7 +52,7 @@ export class TokenService {
     public asAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, 'secretKey', (err: any, user: any): any => { // TODO: CHANGE WITH process.env.ACCES_TOKEN_SECRET
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
             if (err) { return res.sendStatus(403); }
         });
     }
