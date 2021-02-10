@@ -3,6 +3,7 @@ package com.example.prototype_mobile.data
 import android.content.Context
 import com.example.prototype_mobile.data.model.LoggedInUser
 import okhttp3.*
+import org.json.JSONObject
 
 
 /**
@@ -25,7 +26,10 @@ class LoginDataSource() {
 
             val call: Call = client.newCall(request)
             val response: okhttp3.Response = call.execute()
-            val user = LoggedInUser(response.body()!!.string(), username)
+            val jsonData: String = response.body()!!.string()
+            val Jobject = JSONObject(jsonData)
+            val Jarray = Jobject.getString("token")
+            val user = LoggedInUser(Jarray.toString(), username)
 
             return if(response.code() == 200) {
                 Result.Success(user)
