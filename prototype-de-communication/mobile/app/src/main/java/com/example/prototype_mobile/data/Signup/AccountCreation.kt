@@ -1,4 +1,3 @@
 package com.example.prototype_mobile.data.Signup
 
-class AccountCreation {
-}
+data class AccountCreation(val userId: String, val displayName: String)
