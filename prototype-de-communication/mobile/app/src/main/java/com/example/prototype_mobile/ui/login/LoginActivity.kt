@@ -16,7 +16,6 @@ import android.widget.Toast
 import android.content.Intent
 
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.data.RequestQueueSingleton
 import com.example.prototype_mobile.ui.chat.ChatActivity
 import com.example.prototype_mobile.ui.signup.SingUpActivity
 
@@ -59,36 +58,24 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 updateUiWithUser(loginResult.success)
+                //Complete and destroy login activity once successful
+                setResult(Activity.RESULT_OK)
+                finish()
             }
-            setResult(Activity.RESULT_OK)
 
-            //Complete and destroy login activity once successful
-            finish()
         })
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                password.text.toString()
+                    username.text.toString()
             )
         }
 
+        login.setOnClickListener {
+            loading.visibility = View.VISIBLE
 
-//            setOnEditorActionListener { _, actionId, _ ->
-//                when (actionId) {
-//                    EditorInfo.IME_ACTION_DONE ->
-//                        loginViewModel.login(
-//                                username.text.toString()
-//                        )
-//                }
-//                false
-//            }
-
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
-                loginViewModel.login(username.text.toString(), password.text.toString(), queue)
-            }
+            loginViewModel.login(username.text.toString(), password.text.toString(), applicationContext)
+        }
 
         signin.setOnClickListener {
             val intent = Intent(this, SingUpActivity::class.java)

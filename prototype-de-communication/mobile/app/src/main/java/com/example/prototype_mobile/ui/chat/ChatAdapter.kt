@@ -41,17 +41,16 @@ class ChatRoomAdapter(val context : Context, val chatList : ArrayList<Message>) 
     }
 
     override fun getItemViewType(position: Int): Int {
-        return chatList[position].viewType
+        return 1
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val messageData  = chatList[position]
-        val userName = messageData.userName;
-        val content = messageData.messageContent;
-        val viewType = messageData.viewType;
+        val userName = messageData.username;
+        val content = messageData.text;
+        val viewType = 1
 
         when(viewType) {
-
             CHAT_MINE -> {
                 holder.message.setText(content)
             }

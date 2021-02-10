@@ -16,11 +16,12 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(
-                    loginRepository = LoginRepository(
-                            dataSource = LoginDataSource()
-                    )
-            ) as T
+            return LoginRepository.getInstance(LoginDataSource()
+            )?.let {
+                LoginViewModel(
+                        loginRepository = it
+                )
+            } as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

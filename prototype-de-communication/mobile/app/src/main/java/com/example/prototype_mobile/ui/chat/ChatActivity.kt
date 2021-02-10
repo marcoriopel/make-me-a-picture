@@ -4,6 +4,7 @@ import com.example.prototype_mobile.R
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -12,17 +13,18 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import com.example.prototype_mobile.*
+import com.example.prototype_mobile.data.LoginDataSource
+import com.example.prototype_mobile.data.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
-    val TAG = ChatActivity::class.java.simpleName
-
     lateinit var mSocket: Socket;
-    lateinit var userName: String;
     private lateinit var binding: ActivityChatBinding;
 
     val gson: Gson = Gson()
+    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
+    val token = LoginRepository.getInstance(LoginDataSource())!!.user!!.token
 
     //For setting the recyclerView.
     val chatList: ArrayList<Message> = arrayListOf();
@@ -33,15 +35,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_chat)
 
-        binding.send.setOnClickListener(this)
-
-
-        //Get the nickname and roomname from entrance activity.
-        try {
-            userName = intent.getStringExtra("USERNAME")!!
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val send = findViewById<ImageView>(R.id.send)
+        send.setOnClickListener { sendMessage() }
 
         //Set Chatroom RecyclerView adapter
         chatRoomAdapter = ChatRoomAdapter(this, chatList);
@@ -53,18 +48,18 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         //Let's connect to our Chat room! :D
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
-            mSocket = IO.socket("https://18.217.235.167:3000/")
-            Log.d("success", mSocket.id())
+            mSocket = IO.socket("http://18.217.235.167:3000/")
 
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("fail", "Failed to connect")
         }
 
-        mSocket.connect()
         //Register all the listener and callbacks here.
         mSocket.on(Socket.EVENT_CONNECT, onConnect)
-        mSocket.on("updateChat", onUpdateChat) // To update if someone send a message to chatroom
+        mSocket.on("message", onUpdateChat) // To update if someone send a message to chatroom
+
+        mSocket.connect()
     }
 
 
@@ -72,26 +67,23 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     var onConnect = Emitter.Listener {
         //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
-        //send userName and roomName so that they can join the room.
-        val data = initialData(userName)
-        val jsonData = gson.toJson(data) // Gson changes data object to Json type.
-        mSocket.emit("subscribe", jsonData)
+        //Send token to advise that we are connected
+        val jsonData = gson.toJson(initialData(token)) // Gson changes data object to Json type.
+        mSocket.emit("message", jsonData)
     }
 
     var onUpdateChat = Emitter.Listener {
         val chat: Message = gson.fromJson(it[0].toString(), Message::class.java)
-        chat.viewType = MessageType.CHAT_PARTNER.index
         addItemToRecyclerView(chat)
     }
 
 
     private fun sendMessage() {
         val content = binding.editText.text.toString()
-        val sendData = SendMessage(userName, content)
-        val jsonData = gson.toJson(sendData)
-        mSocket.emit("newMessage", jsonData)
+        val dataJson = gson.toJson(SendMessage(content, token))
+        mSocket.emit("message", dataJson)
 
-        val message = Message(userName, content, MessageType.CHAT_MINE.index)
+        val message = Message(myUsername, content, "1")
         addItemToRecyclerView(message)
     }
 
@@ -116,7 +108,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        val data = initialData(userName)
+        val data = initialData(token)
         val jsonData = gson.toJson(data)
 
         //Before disconnecting, send "unsubscribe" event to server so that
