@@ -48,7 +48,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         //Let's connect to our Chat room! :D
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
-            mSocket = IO.socket("http://18.217.235.167:3000/")
+            mSocket = IO.socket("http://10.0.2.2:3000/")
+            Log.d("socket" ,"Socket connected")
 
         } catch (e: Exception) {
             e.printStackTrace()
