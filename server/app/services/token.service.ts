@@ -1,14 +1,17 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
-import { TYPES } from '@app/types';
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
 
 @injectable()
 export class TokenService {
+    private static instance: TokenService;
 
-    constructor() { }
-
+    public static getInstance(): TokenService {
+        if (!TokenService.instance) {
+            TokenService.instance = new TokenService();
+        }
+        return TokenService.instance;
+    }
     /**
      * Extract the data from a jwt
      * @param token: jwt token

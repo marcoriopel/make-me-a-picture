@@ -18,6 +18,7 @@ export class AuthController {
     @inject(TYPES.AuthService) private authService: AuthService
   ) {
     this.configureRouter();
+    this.tokenService = TokenService.getInstance();
   }
 
   private configureRouter(): void {

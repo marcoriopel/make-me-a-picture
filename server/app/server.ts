@@ -5,6 +5,7 @@ import { TYPES } from './types';
 import * as socketio from "socket.io";
 import * as jwt from 'jsonwebtoken';
 import { setTokenSourceMapRange } from 'typescript';
+import { TokenService } from './services/token.service';
 
 @injectable()
 export class Server {
@@ -12,7 +13,11 @@ export class Server {
     private readonly baseDix: number = 10;
     private server: http.Server;
 
-    constructor(@inject(TYPES.Application) private application: Application) { }
+    constructor(
+        @inject(TYPES.TokenService) private tokenService: TokenService,
+        @inject(TYPES.Application) private application: Application) {
+        this.tokenService = TokenService.getInstance();
+    }
 
     init(): void {
         this.application.app.set('port', this.appPort);
