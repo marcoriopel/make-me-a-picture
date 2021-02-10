@@ -2,8 +2,7 @@ package com.example.prototype_mobile.ui.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.data.LoginDataSource
-import com.example.prototype_mobile.data.LoginRepository
+import com.example.prototype_mobile.data.Signup.SignupDataSource
 
 
 /**
@@ -16,9 +15,8 @@ class SignUpViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
             return SignUpViewModel(
-                loginRepository = LoginRepository(
-                    dataSource = LoginDataSource()
-                )
+                signupDataSource = SignupDataSource()
+
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -8,6 +8,8 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.ui.login.LoginViewModel
 
 class SingUpActivity : AppCompatActivity() {
+    private lateinit var signupViewModel: SignUpViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -18,9 +20,12 @@ class SingUpActivity : AppCompatActivity() {
         val passwordSignInConfirm = findViewById<EditText>(R.id.passwordSignConfirm)
 
         val signInViewModel = ViewModelProvider(this, SignUpViewModelFactory())
-            .get(LoginViewModel::class.java)
+            .get(SignUpViewModel::class.java)
 
-        fun CreateAccount() {}
+
+        signupViewModel = ViewModelProvider(this, SignUpViewModelFactory())
+            .get(SignUpViewModel::class.java)
+
 
     }
 }
