@@ -2,15 +2,19 @@ package com.example.prototype_mobile.ui.signup
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.MimeTypeFilter.matches
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.ui.chat.ChatActivity
+import com.example.prototype_mobile.ui.login.LoggedInUserView
 import com.example.prototype_mobile.ui.login.LoginViewModel
 import java.util.regex.Matcher
 import java.util.regex.Matcher.*
@@ -47,11 +51,36 @@ class SingUpActivity : AppCompatActivity() {
                 username.error = getString(loginState.usernameError)
             }
         })
+
+        signupViewModel.signupResult.observe(this@SingUpActivity, Observer {
+            val loginResult = it ?: return@Observer
+            if (loginResult.success != null) {
+                updateUiWithUser(loginResult.success)
+                //Complete and destroy login activity once successful
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        })
+
+
         signup.setOnClickListener {
             println("signup button clicked")
            // val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
             signInViewModel.createAccount(username.text.toString(), passwordSignUp.text.toString())
         }
 
+    }
+    private fun updateUiWithUser(model: LoggedInUserView) {
+        // val welcome = getString(R.string.welcome)
+        val displayName = model.displayName
+        // TODO : initiate successful logged in experience
+        val intent = Intent(this, ChatActivity::class.java);
+        intent.putExtra("USERNAME", displayName);
+        startActivity(intent)
+        Toast.makeText(
+            applicationContext,
+            "Bienvenue $displayName",
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

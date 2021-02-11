@@ -11,7 +11,7 @@ import org.json.JSONObject
  */
 class LoginDataSource() {
 
-    fun login(username: String, password: String, applicationContext: Context): Result<LoggedInUser> {
+    fun login(username: String, password: String): Result<LoggedInUser> {
         try {
             val client = OkHttpClient()
             val formBody: RequestBody = FormBody.Builder()

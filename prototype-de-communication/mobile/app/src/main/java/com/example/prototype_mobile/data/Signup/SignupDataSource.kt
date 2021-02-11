@@ -7,6 +7,8 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.prototype_mobile.data.Result
 import com.example.prototype_mobile.data.model.LoggedInUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -17,8 +19,8 @@ import java.io.IOException
 
 class SignupDataSource() {
 
-    fun createAccount(username: String, password: String): Result<LoggedInUser> {
-        try {
+    suspend fun createAccount(username: String, password: String): Result<LoggedInUser> {
+        return withContext(Dispatchers.IO) {
             val client = OkHttpClient()
             val formBody: RequestBody = FormBody.Builder()
                 .add("username", username)
@@ -38,14 +40,12 @@ class SignupDataSource() {
             val Jarray = Jobject.getString("token")
             val user = LoggedInUser(Jarray.toString(), username)
 
-            return if (response.code() == 200) {
+             if (response.code() == 200) {
                 println("L'utilisateur a ete creer")
                 Result.Success(user)
             } else {
                 Result.Error("Erreur dans le mot de passe ou le nom d'utilisateur")
             }
-        } catch (e: Throwable) {
-            return Result.Error("La requête n'a pas pu être envoyée.")
         }
     }
 

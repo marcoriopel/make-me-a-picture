@@ -17,7 +17,8 @@ class SignUpViewModelFactory : ViewModelProvider.Factory {
             return SignUpViewModel(
                 signupDataSource = SignupDataSource()
 
-            ) as T
+                )
+             as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
