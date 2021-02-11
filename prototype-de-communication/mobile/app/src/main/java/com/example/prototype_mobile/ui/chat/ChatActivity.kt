@@ -16,6 +16,10 @@ import com.example.prototype_mobile.*
 import com.example.prototype_mobile.data.LoginDataSource
 import com.example.prototype_mobile.data.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -49,6 +53,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         binding.recyclerView.layoutManager = layoutManager
 
         //Let's connect to our Chat room! :D
+        }
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             mSocket = IO.socket("http://10.0.2.2:3000/")
@@ -69,6 +74,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     var onConnect = Emitter.Listener {
         //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
         //Send token to advise that we are connected
+        Log.d("Socket - ", "Connected")
         val jsonData = gson.toJson(initialData(token)) // Gson changes data object to Json type.
         mSocket.emit("message", jsonData)
     }

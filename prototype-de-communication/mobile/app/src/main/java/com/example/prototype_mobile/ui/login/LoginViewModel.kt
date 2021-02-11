@@ -24,7 +24,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
         // can be launched in a separate asynchronous job
         val result : Deferred<Result<LoggedInUser>> = GlobalScope.async { loginRepository.login(username, password, context) }
 
-        runBlocking {
+        GlobalScope.launch(Dispatchers.Main) {
             val r = result.await()
             if (r is Result.Success) {
                 _loginResult.value =
