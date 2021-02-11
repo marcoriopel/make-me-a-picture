@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.ui.signup
 
 import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,7 +11,6 @@ import androidx.core.content.MimeTypeFilter.matches
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.data.RequestQueueSingleton
 import com.example.prototype_mobile.ui.login.LoginViewModel
 import java.util.regex.Matcher
 import java.util.regex.Matcher.*
@@ -48,9 +48,9 @@ class SingUpActivity : AppCompatActivity() {
             }
         })
         signup.setOnClickListener {
-            println("true")
-            val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
-            signInViewModel.createAccount(username.text.toString(), passwordSignUp.text.toString(), queue)
+            println("signup button clicked")
+           // val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
+            signInViewModel.createAccount(username.text.toString(), passwordSignUp.text.toString(),applicationContext)
         }
 
     }

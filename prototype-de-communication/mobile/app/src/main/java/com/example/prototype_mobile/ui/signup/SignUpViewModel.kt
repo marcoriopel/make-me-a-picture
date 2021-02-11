@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.ui.signup
 
+import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,9 +28,9 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
     private val _signupResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _signupResult
 
-    fun createAccount(username:String, password: String, queue:RequestQueue) {
+    fun createAccount(username:String, password: String, applicationContext: Context) {
         // can be launched in a separate asynchronous job
-        val result = signupDataSource.createAccount(username, password, queue)
+        val result = signupDataSource.createAccount(username, password, applicationContext)
 
         if (result is Result.Success) {
             _signupResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
