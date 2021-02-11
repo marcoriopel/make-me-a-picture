@@ -4,11 +4,11 @@ import com.example.prototype_mobile.R
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.example.prototype_mobile.data.model.MessageType
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
@@ -23,11 +23,12 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding;
 
     val gson: Gson = Gson()
-    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
+//    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
+    val myUsername = "gui123"
     val token = LoginRepository.getInstance(LoginDataSource())!!.user!!.token
 
     //For setting the recyclerView.
-    val chatList: ArrayList<Message> = arrayListOf();
+    var chatList: MutableList<Message> = mutableListOf() ;
     lateinit var chatRoomAdapter: ChatRoomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         chatRoomAdapter = ChatRoomAdapter(this, chatList);
         binding.recyclerView.adapter = chatRoomAdapter;
 
+        addItemToRecyclerView(Message("Gui", "It's Working!"))
+
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
 
@@ -49,8 +52,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             mSocket = IO.socket("http://10.0.2.2:3000/")
-            Log.d("socket" ,"Socket connected")
-
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("fail", "Failed to connect")
@@ -59,10 +60,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         //Register all the listener and callbacks here.
         mSocket.on(Socket.EVENT_CONNECT, onConnect)
         mSocket.on("message", onUpdateChat) // To update if someone send a message to chatroom
-
         mSocket.connect()
-    }
 
+    }
 
     // <----- Callback functions ------->
 
@@ -74,30 +74,26 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     var onUpdateChat = Emitter.Listener {
-        val chat: Message = gson.fromJson(it[0].toString(), Message::class.java)
-        addItemToRecyclerView(chat)
+        val messageReceive: MessageReceive  = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
+        val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text)
+        addItemToRecyclerView(messageToDisplay)
     }
 
 
     private fun sendMessage() {
-        val content = binding.editText.text.toString()
-        val dataJson = gson.toJson(SendMessage(content, token))
-        mSocket.emit("message", dataJson)
-
-        val message = Message(myUsername, content, "1")
-        addItemToRecyclerView(message)
+        val msg = findViewById<EditText>(R.id.editText).text.toString()
+        mSocket.emit("message", gson.toJson(SendMessage(msg, token)))
     }
 
     private fun addItemToRecyclerView(message: Message) {
-
-        //Since this function is inside of the listener,
-        //You need to do it on UIThread!
-        runOnUiThread {
+        // Since this function is inside of the listener,
+        // You need to do it on UIThread!
+//        runOnUiThread {
             chatList.add(message)
-            chatRoomAdapter.notifyItemInserted(chatList.size)
-            binding.editText.setText("")
-            binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
-        }
+            chatRoomAdapter.notifyItemInserted(chatList.size - 1)
+//            binding.editText.setText("")
+//            binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
+//        }
     }
 
 

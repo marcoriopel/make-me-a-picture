@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Message
 
-class ChatRoomAdapter(val context : Context, val chatList : ArrayList<Message>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){
+class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){
 
     val CHAT_MINE = 0
     val CHAT_PARTNER = 1
@@ -38,6 +38,11 @@ class ChatRoomAdapter(val context : Context, val chatList : ArrayList<Message>) 
 
     override fun getItemCount(): Int {
         return chatList.size
+    }
+
+    fun addMessage(message: Message) {
+        chatList.add(message)
+        notifyItemInserted(chatList.size - 1)
     }
 
     override fun getItemViewType(position: Int): Int {
