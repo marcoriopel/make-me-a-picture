@@ -20,8 +20,8 @@ class LoginDataSource() {
                     .build()
 
             val request: Request = Request.Builder()
-                .url("http://10.0.2.2:3000/api/auth/authenticate")
-                    //.url("http://18.217.235.167:3000/api/auth/authenticate")
+                //.url("http://10.0.2.2:3000/api/auth/authenticate")
+                    .url("http://18.217.235.167:3000/api/auth/authenticate")
                     .post(formBody)
                     .build()
 

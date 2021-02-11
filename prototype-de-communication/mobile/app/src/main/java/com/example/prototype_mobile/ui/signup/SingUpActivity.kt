@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.ui.chat.ChatActivity
 import com.example.prototype_mobile.ui.login.LoggedInUserView
+import com.example.prototype_mobile.ui.login.LoginActivity
 import com.example.prototype_mobile.ui.login.LoginViewModel
 import java.util.regex.Matcher
 import java.util.regex.Matcher.*
@@ -72,15 +73,8 @@ class SingUpActivity : AppCompatActivity() {
     }
     private fun updateUiWithUser(model: LoggedInUserView) {
         // val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
         // TODO : initiate successful logged in experience
-        val intent = Intent(this, ChatActivity::class.java);
-        intent.putExtra("USERNAME", displayName);
+        val intent = Intent(this, LoginActivity::class.java);
         startActivity(intent)
-        Toast.makeText(
-            applicationContext,
-            "Bienvenue $displayName",
-            Toast.LENGTH_LONG
-        ).show()
     }
 }

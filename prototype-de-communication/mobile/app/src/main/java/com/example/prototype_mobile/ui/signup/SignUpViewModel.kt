@@ -41,21 +41,18 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
 
     fun createAccount(username:String, password: String) {
         // can be launched in a separate asynchronous job
-        viewModelScope.launch(IO)
+        viewModelScope.launch()
         {
             val result: Result<LoggedInUser> = try {
                 signupDataSource.createAccount(username, password)
             } catch (e: Exception) {
                 Result.Error("Network request failed")
             }
-
             when(result) {
                 is Result.Success<LoggedInUser>
                     ->  _signupResult.value =  LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
                 else -> println("Erreur de creation de compte")
-
             }
-
 
         }
 
