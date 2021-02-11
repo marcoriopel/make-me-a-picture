@@ -22,7 +22,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
     fun login(username: String, password: String, context: Context) {
         // can be launched in a separate asynchronous job
-        val result : Deferred<Result<LoggedInUser>> = GlobalScope.async { loginRepository.login(username, password, context) }
+        val result : Deferred<Result<LoggedInUser>> = GlobalScope.async { loginRepository.login(username, password) }
 
         GlobalScope.launch(Dispatchers.Main) {
             val r = result.await()
