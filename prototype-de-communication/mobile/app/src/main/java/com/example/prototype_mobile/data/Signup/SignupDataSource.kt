@@ -17,7 +17,7 @@ import java.io.IOException
 
 class SignupDataSource() {
 
-    fun createAccount(username: String, password: String, applicationContext: Context): Result<LoggedInUser> {
+    fun createAccount(username: String, password: String): Result<LoggedInUser> {
         try {
             val client = OkHttpClient()
             val formBody: RequestBody = FormBody.Builder()

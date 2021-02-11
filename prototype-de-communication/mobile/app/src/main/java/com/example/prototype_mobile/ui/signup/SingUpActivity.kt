@@ -50,7 +50,7 @@ class SingUpActivity : AppCompatActivity() {
         signup.setOnClickListener {
             println("signup button clicked")
            // val queue = RequestQueueSingleton.getInstance(applicationContext).requestQueue
-            signInViewModel.createAccount(username.text.toString(), passwordSignUp.text.toString(),applicationContext)
+            signInViewModel.createAccount(username.text.toString(), passwordSignUp.text.toString())
         }
 
     }
