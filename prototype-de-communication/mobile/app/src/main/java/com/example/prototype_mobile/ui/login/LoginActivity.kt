@@ -31,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.username)
         val password = findViewById<EditText>(R.id.password)
         val login = findViewById<Button>(R.id.login)
-        val signin = findViewById<Button>(R.id.signUp)
+        val signup = findViewById<Button>(R.id.signUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
@@ -74,10 +74,10 @@ class LoginActivity : AppCompatActivity() {
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
 
-            loginViewModel.login(username.text.toString(), password.text.toString(), applicationContext)
+            loginViewModel.login(username.text.toString(), password.text.toString())
         }
 
-        signin.setOnClickListener {
+        signup.setOnClickListener {
             val intent = Intent(this, SingUpActivity::class.java)
             startActivity(intent)
         }
@@ -86,9 +86,7 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: LoggedInUserView) {
        // val welcome = getString(R.string.welcome)
        val displayName = model.displayName
-        // TODO : initiate successful logged in experience
         val intent = Intent(this, ChatActivity::class.java);
-        intent.putExtra("USERNAME", displayName);
         startActivity(intent)
         Toast.makeText(
                 applicationContext,

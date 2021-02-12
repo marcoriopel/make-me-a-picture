@@ -24,11 +24,10 @@ import kotlinx.coroutines.runBlocking
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var mSocket: Socket;
-    private lateinit var binding: ActivityChatBinding;
+    private lateinit var binding: ActivityChatBinding
 
     val gson: Gson = Gson()
-//    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
-    val myUsername = "gui123"
+    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
     val token = LoginRepository.getInstance(LoginDataSource())!!.user!!.token
 
     //For setting the recyclerView.
@@ -38,22 +37,20 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_chat)
+        val view = binding.root
+        setContentView(view)
 
-        val send = findViewById<ImageView>(R.id.send)
-        send.setOnClickListener { sendMessage() }
+        binding.send.setOnClickListener { sendMessage() }
 
         //Set Chatroom RecyclerView adapter
         chatRoomAdapter = ChatRoomAdapter(this, chatList);
         binding.recyclerView.adapter = chatRoomAdapter;
 
-        addItemToRecyclerView(Message("Gui", "It's Working!"))
-
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
 
         //Let's connect to our Chat room! :D
-        }
+
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             mSocket = IO.socket("http://10.0.2.2:3000/")
@@ -66,7 +63,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         mSocket.on(Socket.EVENT_CONNECT, onConnect)
         mSocket.on("message", onUpdateChat) // To update if someone send a message to chatroom
         mSocket.connect()
-
     }
 
     // <----- Callback functions ------->
@@ -81,7 +77,10 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive  = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
-        val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text)
+        var messageType = 0;
+        if (mSocket.id() != messageReceive.id)
+            messageType = 1
+        val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text, messageType)
         addItemToRecyclerView(messageToDisplay)
     }
 
@@ -94,12 +93,12 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private fun addItemToRecyclerView(message: Message) {
         // Since this function is inside of the listener,
         // You need to do it on UIThread!
-//        runOnUiThread {
-            chatList.add(message)
-            chatRoomAdapter.notifyItemInserted(chatList.size - 1)
-//            binding.editText.setText("")
-//            binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
-//        }
+       runOnUiThread {
+           chatList.add(message)
+           chatRoomAdapter.notifyItemInserted(chatList.size - 1)
+           binding.editText.setText("")
+           binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
+        }
     }
 
 
