@@ -35,13 +35,17 @@ export class Server {
         io.on("connection", (socket: any) => {
             socket.on('message', (message: any) => {
                 try {
-                    const user = this.tokenService.getTokenInfo(message.token);;
-                    if (message.text) {
-                        io.emit('message', { "id": socket.id, "username": user, "text": message.text, "textColor": "#000000" });
-                    } else {
-                        const welcomeMessage = user + " joined the conversation";
-                        io.emit('message', { "id": socket.id, "username": user, "text": welcomeMessage, "textColor": "#00BFFF" });
+                    if (!(message instanceof Object)) {
+                        message = JSON.parse(message)
                     }
+                    var user = jwt.verify(message.token, process.env.ACCES_TOKEN_SECRET);
+                    
+                    if (message.text) {​​​​
+                        io.emit('message', {​​​​ "id": socket.id, "username": user, "text": message.text, "textColor": "#000000" }​​​​);
+                    }​​​​ else {​​​​
+                        const welcomeMessage = user + " joined the conversation";
+                        io.emit('message', {​​​​ "id": socket.id, "username": user, "text": welcomeMessage, "textColor": "#00BFFF" }​​​​);
+                    }​​​​
                 } catch (err) {
                     // err
                 }
