@@ -17,8 +17,10 @@
         android:layout_marginBottom="14dp"
         app:layout_constraintBottom_toTopOf="@id/editText"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/topbar" />
+        app:layout_constraintTop_toBottomOf="@id/topbar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/editText"
@@ -30,7 +32,7 @@
         android:background="@drawable/chat_edittext_bg"
         android:ems="10"
         android:fontFamily="@font/mont_extralight"
-        android:hint="send message.."
+        android:hint="Aa"
         android:inputType="text"
         android:paddingStart="15dp"
         android:paddingTop="3dp"
