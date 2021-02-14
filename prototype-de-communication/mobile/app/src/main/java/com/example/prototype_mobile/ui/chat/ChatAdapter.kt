@@ -19,6 +19,8 @@ class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>
 
         Log.d("chatlist size",chatList.size.toString())
         var view : View? = null
+        val messageData  = chatList[chatList.size - 1]
+        val viewType = messageData.messageType;
         when(viewType){
 
             0 ->{
@@ -53,11 +55,12 @@ class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>
         val messageData  = chatList[position]
         val userName = messageData.username;
         val content = messageData.text;
-        val viewType = 1
+        val viewType = messageData.messageType;
 
         when(viewType) {
             CHAT_MINE -> {
                 holder.message.setText(content)
+                holder.userName.setText(userName)
             }
             CHAT_PARTNER ->{
                 holder.userName.setText(userName)
