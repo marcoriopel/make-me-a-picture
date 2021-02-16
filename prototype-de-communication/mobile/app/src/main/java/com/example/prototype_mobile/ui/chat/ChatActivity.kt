@@ -53,7 +53,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
-            mSocket = IO.socket("http://10.0.2.2:3000/")
+            mSocket = IO.socket("http://18.217.235.167:3000/")
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("fail", "Failed to connect")
@@ -77,9 +77,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive  = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
-        var messageType = 0;
-        if (mSocket.id() != messageReceive.id)
-            messageType = 1
+        var messageType = 1;
+        if (myUsername == messageReceive.username)
+            messageType = 0
         val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text, messageType)
         addItemToRecyclerView(messageToDisplay)
     }
@@ -87,7 +87,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendMessage() {
         val msg = findViewById<EditText>(R.id.editText).text.toString()
-        mSocket.emit("message", gson.toJson(SendMessage(msg, token)))
+        if (msg != "")
+            mSocket.emit("message", gson.toJson(SendMessage(msg, token)))
     }
 
     private fun addItemToRecyclerView(message: Message) {

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/chat_partner_bg"
+
             android:fontFamily="@font/mont_light"
             android:maxWidth="190dp"
             android:paddingStart="10dp"

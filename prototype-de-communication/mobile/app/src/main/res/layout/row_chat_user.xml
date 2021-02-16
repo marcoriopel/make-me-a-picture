@@ -34,7 +34,6 @@
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:fontFamily="@font/mont_light"
-            android:background="@drawable/chat_user_bg"
             android:maxWidth="190dp"
             android:paddingStart="10dp"
             android:paddingTop="1dp"
