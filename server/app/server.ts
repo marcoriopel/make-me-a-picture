@@ -42,9 +42,6 @@ export class Server {
                     
                     if (message.text) {​​​​
                         io.emit('message', {​​​​ "id": socket.id, "username": user, "text": message.text, "textColor": "#000000" }​​​​);
-                    }​​​​ else {​​​​
-                        const welcomeMessage = user + " joined the conversation";
-                        io.emit('message', {​​​​ "id": socket.id, "username": user, "text": welcomeMessage, "textColor": "#00BFFF" }​​​​);
                     }​​​​
                 } catch (err) {
                     // err

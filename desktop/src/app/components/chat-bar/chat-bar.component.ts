@@ -25,10 +25,10 @@ export class ChatBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.socket.on("connect", () => {
-      const jwt = localStorage.getItem('token');
-      this.socket.emit('message', {"token": jwt});
-    });
+    // this.socket.on("connect", () => {
+    //   const jwt = localStorage.getItem('token');
+    //   this.socket.emit('message', {"token": jwt});
+    // });
 
     this.socket.on('message', (message: any) => {
       let isUsersMessage: boolean = false;
