@@ -48,9 +48,12 @@
     justify-content: flex-start;
     align-items: center;
     padding: 10px 20px;
+    overflow-wrap: break-word;
 
     p{
       margin: 0px 10px;
+      overflow-wrap: break-word;
+      width:300px;
     }
 }
 
