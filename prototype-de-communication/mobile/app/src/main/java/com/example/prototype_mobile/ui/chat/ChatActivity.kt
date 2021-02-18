@@ -54,6 +54,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             mSocket = IO.socket("http://18.217.235.167:3000/")
+            // mSocket = IO.socket("http://10.0.2.2:3000/")
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("fail", "Failed to connect")
@@ -71,8 +72,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
         //Send token to advise that we are connected
         Log.d("Socket - ", "Connected")
-        val jsonData = gson.toJson(initialData(token)) // Gson changes data object to Json type.
-        mSocket.emit("message", jsonData)
+
     }
 
     var onUpdateChat = Emitter.Listener {
