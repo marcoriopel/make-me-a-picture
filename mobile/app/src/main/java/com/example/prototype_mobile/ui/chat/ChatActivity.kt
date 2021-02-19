@@ -76,7 +76,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         var messageType = 1;
         if (myUsername == messageReceive.username)
             messageType = 0
-        val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text, messageType)
+        val messageToDisplay: Message = Message(messageReceive.username, messageReceive.text, messageReceive.timeStamp, messageType)
         addItemToRecyclerView(messageToDisplay)
     }
 

@@ -55,7 +55,7 @@ class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val messageData  = chatList[position]
-        val userName = messageData.username;
+        val userName = messageData.username + "-" + messageData.timeStamp;
         val content = messageData.text;
         val viewType = messageData.messageType;
 
