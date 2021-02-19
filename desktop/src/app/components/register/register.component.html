@@ -4,21 +4,21 @@
         <h2>Register</h2>
 
         <mat-form-field class="full-width-input">
-          <input matInput placeholder="Firsname" formControlName="firstname" required>
+          <input matInput placeholder="Prénom" formControlName="firstname" required>
           <mat-error>
             {{errors.name}}
           </mat-error>
         </mat-form-field>
 
         <mat-form-field class="full-width-input">
-          <input matInput placeholder="Name" formControlName="name" required>
+          <input matInput placeholder="Nom" formControlName="name" required>
           <mat-error>
             {{errors.name}}
           </mat-error>
         </mat-form-field>
         
         <mat-form-field class="full-width-input">
-          <input matInput placeholder="Username" formControlName="username" name="username" required>
+          <input matInput placeholder="Nom d'utilisateur" formControlName="username" name="username" required>
           <mat-error>
             {{errors.name}}
           </mat-error>
@@ -26,21 +26,21 @@
         
         <div formGroupName="passwordGroup">
           <mat-form-field>
-              <input matInput placeholder="Password" type="password" formControlName="password">
+              <input matInput placeholder="Mot de passe" type="password" formControlName="password">
               <mat-error>
                   {{errors.password}}
               </mat-error>
           </mat-form-field>
       
           <mat-form-field>
-              <input matInput placeholder="Confirm password" type="password" formControlName="confirmPassword" [errorStateMatcher]="confirmValidParentMatcher">
+              <input matInput placeholder="Confirmation mot de passe" type="password" formControlName="confirmPassword" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                   {{errors.confirmPassword}}
               </mat-error>
           </mat-form-field>
       </div>
-  
-        <button mat-raised-button [disabled]="userRegistrationForm.invalid" (click)="register()">Register</button>
+      <p> Vous avez déjà un compte? <a routerLink="/login"> Connexion </a> </p>
+      <button mat-raised-button [disabled]="userRegistrationForm.invalid" (click)="register()">Register</button>
         
       </form>
     </mat-card-content>

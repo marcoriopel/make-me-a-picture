@@ -40,10 +40,10 @@ export const regExps: { [key: string]: RegExp } = {
  * Collection of reusable error messages
  */
 export const errorMessages: { [key: string]: string } = {
-    name: 'Username invalid or already taken',
-    password: 'Password must be between 7 and 15 characters, and contain at least one number and special character',
-    confirmPassword: 'Passwords must match',
-    usernameExist: 'Username already use'
+    name: "Nom d'utilisateur invalide ou déjà pris",
+    password: 'Le mot de passe doit être entre 7 et 15 caractères et contenir au moins un chiffre et un caractère spécial',
+    confirmPassword: 'Les mots de passe doivent correspondrent',
+    usernameExist: "Nom d'utilisateur déjà pris"
 };
 
 
