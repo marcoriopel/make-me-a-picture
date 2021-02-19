@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -16,11 +15,8 @@ import com.example.prototype_mobile.*
 import com.example.prototype_mobile.data.LoginDataSource
 import com.example.prototype_mobile.data.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 
+// This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var mSocket: Socket;

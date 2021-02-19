@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Message
 
+// This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
+
 class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){
 
     val CHAT_MINE = 0
