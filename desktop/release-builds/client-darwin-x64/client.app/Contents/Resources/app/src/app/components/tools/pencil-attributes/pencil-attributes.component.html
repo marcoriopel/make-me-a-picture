@@ -1,0 +1,13 @@
+<div id="pencilAttributes">
+    <h2 class="toolName">{{ pencilService.name }}</h2>
+    <hr />
+    <app-slider
+        title="Épaisseur Ligne"
+        [min]="pencilService.minToolWidth"
+        [max]="pencilService.maxToolWidth"
+        [step]="1"
+        [value]="toolWidth"
+        (valueChange)="changeWidth($event)"
+    >
+    </app-slider>
+</div>

@@ -62,11 +62,6 @@
   text-align: right;
 }
 
-.avatar{
-  width: 10%;
-  align-self: flex-start;
-}
-
 .send-message-form{
   display: flex;
   justify-content: space-between;
@@ -96,13 +91,11 @@
 } 
 
 .avatar {
+  width: 10%;
+  align-self: flex-start;
   margin: 5px;
   width: 30px;
   height: 30px;
-  border: 0px;
   background-color: white;
   background: url(../../../assets/img/profileIcon.svg) no-repeat top left;
-  background-size: cover;
-  border: none;
-  outline: none;
 }

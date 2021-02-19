@@ -1,0 +1,27 @@
+<div class="chat-bar">
+    <div class="container">
+        <div #chatContainer class="chat-container">
+            <div *ngFor="let message of chat">
+                <div class="message reverse" *ngIf="message.isUsersMessage == true">
+                    <img class="avatar" href="../../../assets/img/profileIcon.svg">
+                    <div class="message-text-container">
+                        <p class="username">{{message.username}}</p>
+                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
+                    </div>
+                </div>
+                <div class="message" *ngIf="message.isUsersMessage == false">
+                    <img class="avatar"> 
+                    <div class="message-text-container">
+                        <p class="username">{{message.username}}</p>
+                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
+                    </div>                  
+                </div>
+                {{onNewMessage()}}
+            </div>
+        </div>
+        <form [formGroup]="messageForm" class="send-message-form" (ngSubmit)="onSubmit()">
+            <input type="text" placeholder="Aa" formControlName="message">
+            <button type="submit"></button>
+        </form>
+    </div>    
+</div>

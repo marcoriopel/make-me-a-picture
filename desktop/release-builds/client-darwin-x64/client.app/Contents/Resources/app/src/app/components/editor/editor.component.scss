@@ -1,0 +1,28 @@
+.container {
+    height: 100%;
+    display: flex;
+}
+
+#workSpace {
+    background-color: #3b3737;
+    overflow: auto;
+    flex: 1 1 auto;
+}
+
+.drawing {
+    display: grid;
+    width: min-content;
+    outline: none;
+}
+
+#previewDiv {
+    position: relative;
+}
+
+.canvasResizePoint {
+    position: relative;
+    height: 6px;
+    width: 6px;
+    background-color: #09acd9;
+    cursor: pointer;
+}

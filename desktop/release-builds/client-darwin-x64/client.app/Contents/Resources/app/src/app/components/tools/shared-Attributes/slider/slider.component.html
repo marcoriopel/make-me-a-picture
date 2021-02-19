@@ -1,0 +1,13 @@
+<div id="slider">
+    <!-- <hr class="topBorder" /> -->
+    <p>{{ title }}</p>
+    <mat-slider [min]="min" [max]="max" [step]="step" [(value)]="value" (change)="this.changeValue()"> </mat-slider>
+    <div id="sliderDetails">
+        <input type="text" [(value)]="value" (change)="this.changeValue()" [min]="min" [max]="max" readonly />
+        <div>
+            <button (click)="decrement()">-</button>
+            <button (click)="increment()">+</button>
+        </div>
+    </div>
+    <hr class="bottomBorder" />
+</div>
