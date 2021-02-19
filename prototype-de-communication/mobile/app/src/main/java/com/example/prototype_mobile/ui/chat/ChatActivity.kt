@@ -85,6 +85,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         val msg = findViewById<EditText>(R.id.editText).text.toString()
         if (msg != "")
             mSocket.emit("message", gson.toJson(SendMessage(msg, token)))
+        binding.editText.setText("")
     }
 
     private fun addItemToRecyclerView(message: Message) {
@@ -93,7 +94,6 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
        runOnUiThread {
            chatList.add(message)
            chatRoomAdapter.notifyItemInserted(chatList.size - 1)
-           binding.editText.setText("")
            binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
         }
     }
