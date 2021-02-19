@@ -1,0 +1,26 @@
+mat-card {
+    width: 50%;
+    max-width: 400px;
+    text-align: center;
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+mat-form-field {
+    display: block;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #5fa6d8;
+    color: white
+}
+
+.container {
+    height: 100%;
+    position: relative;
+}

@@ -17,11 +17,13 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
+import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
@@ -30,8 +32,13 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
-import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component'
-
+import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AvatarComponent } from './components/avatar/avatar.component'
+import { AuthService } from './services/auth/auth.service';
+import { AuthGuard } from './auth.guard';
+import { NavbarComponent } from './components/navbar/navbar.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -43,8 +50,13 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
         AttributePanelComponent,
         EraserAttributesComponent,
         PencilAttributesComponent,
+        ChatBarComponent,
         SliderComponent,
-        ColorPickerComponent
+        ColorPickerComponent,
+        LoginComponent,
+        RegisterComponent,
+        AvatarComponent,
+        NavbarComponent
     ],
     imports: [
         BrowserModule,
@@ -71,9 +83,10 @@ import { PencilAttributesComponent } from './components/tools/pencil-attributes/
         ReactiveFormsModule,
         MatCheckboxModule,
         MatInputModule,
+        MatToolbarModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [],
+    providers: [AuthService, AuthGuard,],
     bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
