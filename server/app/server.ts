@@ -41,7 +41,12 @@ export class Server {
                     var user = jwt.verify(message.token, process.env.ACCES_TOKEN_SECRET);
                     
                     if (message.text) {​​​​
-                        io.emit('message', {​​​​ "id": socket.id, "username": user, "text": message.text, "textColor": "#000000" }​​​​);
+                        let date: Date = new Date();
+                        let hours: string = date.getHours().toString().length == 1 ? "0" + date.getHours().toString() : date.getHours().toString();
+                        let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
+                        let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
+                        let timeStamp: string = hours + ":" + minutes + ":" + seconds;
+                        io.emit('message', {​​​​ "id": socket.id, "username": user, "text": message.text, "timeStamp":timeStamp, "textColor": "#000000" }​​​​);
                     }​​​​
                 } catch (err) {
                     // err
