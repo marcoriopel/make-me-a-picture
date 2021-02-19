@@ -41,7 +41,6 @@ class SignupDataSource() {
             val user = LoggedInUser(Jarray.toString(), username)
 
              if (response.code() == 200) {
-                println("L'utilisateur a ete creer")
                 Result.Success(user)
             } else {
                 Result.Error("Erreur dans le mot de passe ou le nom d'utilisateur")
