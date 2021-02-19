@@ -1,8 +1,10 @@
 {
   "name": "client",
   "version": "0.0.0",
+  "main": "main.js",
   "scripts": {
     "start": "ng serve --open",
+    "start:electron": "ng build --base-href ./ && electron .",
     "format": "prettier --config ../.prettierrc.yaml --write \"src/**/*\"",
     "build": "ng build",
     "test": "ng test",
@@ -35,6 +37,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "electron": "^11.2.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",

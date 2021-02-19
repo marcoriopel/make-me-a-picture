@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import { ResizeDrawingService } from '@app/services/resize-drawing/resize-drawing.service';
 import { ToolSelectionService } from '@app/services/tool-selection/tool-selection.service';
 
 @Component({
@@ -24,7 +23,6 @@ export class DrawingComponent implements AfterViewInit {
     constructor(
         private drawingService: DrawingService,
         public toolSelectionService: ToolSelectionService,
-        public resizeDrawingService: ResizeDrawingService,
     ) {}
 
     ngAfterViewInit(): void {
@@ -62,10 +60,6 @@ export class DrawingComponent implements AfterViewInit {
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.toolSelectionService.currentToolMouseEnter(event);
-    }
-    @HostListener('mousewheel', ['$event'])
-    onMouseWheel(event: WheelEvent): void {
-        this.toolSelectionService.currentToolWheelEvent(event);
     }
 
     get width(): number {

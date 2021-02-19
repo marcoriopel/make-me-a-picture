@@ -22,39 +22,15 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
-import { CarouselComponent } from './components/carousel/carousel.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
-import { DrawingDetailComponent } from './components/drawing-detail/drawing-detail.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
-import { ExportComponent } from './components/export/export.component';
-import { GeneralDetailComponent } from './components/general-detail/general-detail.component';
 import { GridComponent } from './components/grid/grid.component';
-import { LoadSelectedDrawingAlertComponent } from './components/load-selected-drawing-alert/load-selected-drawing-alert.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { NewDrawingModalComponent } from './components/new-drawing-modal/new-drawing-modal.component';
-import { SavingComponent } from './components/saving/saving.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { BrushAttributesComponent } from './components/tools/brush-attributes/brush-attributes.component';
-import { CircleAttributesComponent } from './components/tools/circle-attributes/circle-attributes.component';
-import { CircleSelectionAttributesComponent } from './components/tools/circle-selection-attributes/circle-selection-attributes.component';
 import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
-import { FillAttributesComponent } from './components/tools/fill-attributes/fill-attributes.component';
-import { LineAttributesComponent } from './components/tools/line-attributes/line-attributes.component';
-import { MagicWandAttributesComponent } from './components/tools/magic-wand-attributes/magic-wand-attributes.component';
-import { PenAttributesComponent } from './components/tools/pen-attributes/pen-attributes.component';
-import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
-import { PipetteAttributesComponent } from './components/tools/pipette-attributes/pipette-attributes.component';
-import { PolygoneAttributesComponent } from './components/tools/polygone-attributes/polygone-attributes.component';
-import { MagnetismComponent } from './components/tools/shared-Attributes/magnetism/magnetism.component';
 import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
-import { TypeOfFillSelectionComponent } from './components/tools/shared-Attributes/type-of-fill-selection/type-of-fill-selection.component';
-import { SprayAttributesComponent } from './components/tools/spray-attributes/spray-attributes.component';
-import { SquareAttributesComponent } from './components/tools/square-attributes/square-attributes.component';
-import { SquareSelectionAttributesComponent } from './components/tools/square-selection-attributes/square-selection-attributes.component';
-import { StampAttributesComponent } from './components/tools/stamp-attributes/stamp-attributes.component';
-import { TextComponent } from './components/tools/text-attributes/text-attributes.component';
-import { UserGuideComponent } from './components/userguide/user-guide.component';
+import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component'
 
 @NgModule({
     declarations: [
@@ -62,38 +38,13 @@ import { UserGuideComponent } from './components/userguide/user-guide.component'
         GridComponent,
         EditorComponent,
         SidebarComponent,
-        MagicWandAttributesComponent,
         DrawingComponent,
         MainPageComponent,
-        UserGuideComponent,
-        LoadSelectedDrawingAlertComponent,
-        UserGuideComponent,
-        DrawingDetailComponent,
-        GeneralDetailComponent,
         AttributePanelComponent,
-        BrushAttributesComponent,
-        CircleAttributesComponent,
         EraserAttributesComponent,
-        LineAttributesComponent,
         PencilAttributesComponent,
         SliderComponent,
-        SquareAttributesComponent,
-        NewDrawingModalComponent,
-        ColorPickerComponent,
-        TypeOfFillSelectionComponent,
-        PipetteAttributesComponent,
-        FillAttributesComponent,
-        SavingComponent,
-        CarouselComponent,
-        ExportComponent,
-        PolygoneAttributesComponent,
-        SquareSelectionAttributesComponent,
-        CircleSelectionAttributesComponent,
-        PenAttributesComponent,
-        SprayAttributesComponent,
-        TextComponent,
-        StampAttributesComponent,
-        MagnetismComponent,
+        ColorPickerComponent
     ],
     imports: [
         BrowserModule,
@@ -121,7 +72,7 @@ import { UserGuideComponent } from './components/userguide/user-guide.component'
         MatCheckboxModule,
         MatInputModule,
     ],
-    entryComponents: [UserGuideComponent, MainPageComponent],
+    entryComponents: [MainPageComponent],
     providers: [],
     bootstrap: [AppComponent],
 })
