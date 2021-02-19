@@ -37,7 +37,7 @@ export class ChatBarComponent implements OnInit {
       } else {
         isUsersMessage = false;
       }
-      this.chat.push({"username": message.username, "text": message.text, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
+      this.chat.push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
     });
   }
 
