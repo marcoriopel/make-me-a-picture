@@ -15,14 +15,15 @@ const iconPath = app.isPackaged
   
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
     // icon: iconPath,
     webPreferences: {
       nodeIntegration: true
     }
+    
   })
 
+  mainWindow.maximize();
+  mainWindow.removeMenu();
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, `/dist/index.html`),
@@ -30,6 +31,7 @@ function createWindow () {
       slashes: true
     })
   );
+  
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 

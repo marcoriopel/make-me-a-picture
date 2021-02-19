@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
       username: this.form.value.username,
       password: this.form.value.password
     }
-    console.log(user);
     this.authService.login(user)
       .subscribe(
         res => {
@@ -36,6 +35,7 @@ export class LoginComponent implements OnInit {
         },
         err => {
           console.log(err)
+          alert("Mauvais nom d'utilisateur ou mot de passe")
           this.form.get('username')?.setErrors({'notValid': true});
           this.form.get('password')?.setErrors({'notValid': true});
         }
