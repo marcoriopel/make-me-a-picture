@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fait moi un dessin</string>
+    <string name="app_name">Fais-moi un dessin</string>
     <!-- Strings related to login -->
     <string name="prompt_username">Pseudonyme</string>
     <string name="prompt_password">Mot de passe</string>
