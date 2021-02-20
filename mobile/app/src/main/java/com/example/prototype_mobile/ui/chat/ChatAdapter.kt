@@ -21,8 +21,6 @@ class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>
 
         Log.d("chatlist size",chatList.size.toString())
         var view : View? = null
-        val messageData  = chatList[chatList.size - 1]
-        val viewType = messageData.messageType;
         when(viewType){
 
             0 ->{
@@ -50,7 +48,7 @@ class ChatRoomAdapter(val context : Context, val chatList : MutableList<Message>
     }
 
     override fun getItemViewType(position: Int): Int {
-        return 1
+        return chatList[position].messageType
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
