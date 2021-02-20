@@ -20,33 +20,33 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.userRegistrationForm = this.fb.group({
-        firstname: ['', [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(128)
+      firstname: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(128)
       ]],
-        name: ['', [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(128)
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(128)
       ]],
-        username: ['', [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(128),
-          forbiddenNameValidator
+      username: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(128),
+        forbiddenNameValidator
       ]],
-        passwordGroup: this.fb.group({
-          password: ['', [
-              Validators.required
-              // Validators.pattern(regExps.password)
-          ]],
-          confirmPassword: ['', Validators.required]
-      }, { validator: CustomValidators.childrenEqual})
+      passwordGroup: this.fb.group({
+        password: ['', [
+          Validators.required
+          // Validators.pattern(regExps.password)
+        ]],
+        confirmPassword: ['', Validators.required]
+      }, { validator: CustomValidators.childrenEqual })
     });
   }
 
-  async register() { 
+  async register() {
     const user: User = {
       username: this.userRegistrationForm.value.username,
       password: this.userRegistrationForm.value.passwordGroup.password
@@ -54,13 +54,14 @@ export class RegisterComponent implements OnInit {
     this.authService.register(user).subscribe(
       res => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('username', this.userRegistrationForm.value.username);
         console.log('res: ' + res);
         this.router.navigate(['/home']);
         // set information
       },
       err => {
         console.log(err);
-        this.userRegistrationForm.get('username')?.setErrors({'forbiddenName': true});
+        this.userRegistrationForm.get('username')?.setErrors({ 'forbiddenName': true });
       }
     )
   }
