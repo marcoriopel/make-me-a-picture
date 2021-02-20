@@ -42,7 +42,9 @@ export class Server {
                     
                     if (message.text) {​​​​
                         let date: Date = new Date();
-                        let hours: string = (date.getHours() - 5).toString().length == 1 ? "0" + (date.getHours() - 5).toString() : (date.getHours() - 5).toString();
+                        let tmpHour: number = date.getHours() + (date.getTimezoneOffset()/60) - 5;
+                        if (tmpHour <  0){tmpHour += 24}
+                        let hours: string = tmpHour.toString().length == 1 ? "0" + tmpHour.toString() : tmpHour.toString();
                         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
                         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
                         let timeStamp: string = hours + ":" + minutes + ":" + seconds;

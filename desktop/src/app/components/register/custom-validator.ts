@@ -41,8 +41,8 @@ export const regExps: { [key: string]: RegExp } = {
  */
 export const errorMessages: { [key: string]: string } = {
     name: "Nom d'utilisateur invalide ou déjà pris",
-    password: 'Le mot de passe doit être entre 7 et 15 caractères et contenir au moins un chiffre et un caractère spécial',
-    confirmPassword: 'Les mots de passe doivent correspondrent',
+    password: 'Le mot de passe doit être entre 7 et 15 caractères et doit contenir au moins un chiffre et un caractère spécial',
+    confirmPassword: 'Ces mots de passe ne correspondent pas. Veuillez réessayer.',
     usernameExist: "Nom d'utilisateur déjà pris"
 };
 
