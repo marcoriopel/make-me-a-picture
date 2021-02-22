@@ -9,6 +9,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.signup.SignupDataSource
 import com.example.prototype_mobile.model.connection.login.LoggedInUser
+import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.connection.login.LoggedInUserView
 import com.example.prototype_mobile.view.connection.login.LoginFormState
 import com.example.prototype_mobile.viewmodel.connection.login.LoginResult
@@ -35,7 +36,7 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
         viewModelScope.launch()
         {
             val result: Result<LoggedInUser> = try {
-                signupDataSource.createAccount(username, password)
+                signupDataSource.createAccount(username, StringUtil.hashSha256(password))
             } catch (e: Exception) {
                 Result.Error("Network request failed")
             }

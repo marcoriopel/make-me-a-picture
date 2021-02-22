@@ -1,7 +1,7 @@
-package com.example.prototype_mobile.model.Signup
+package com.example.prototype_mobile.model.connection.signup
 
 import com.example.prototype_mobile.model.Result
-import com.example.prototype_mobile.model.model.LoggedInUser
+import com.example.prototype_mobile.model.connection.login.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Call

@@ -1,6 +1,7 @@
-package com.example.prototype_mobile.model
+package com.example.prototype_mobile.model.connection.login
 
-import com.example.prototype_mobile.model.model.LoggedInUser
+import com.example.prototype_mobile.model.HttpRequestDrawGuess
+import com.example.prototype_mobile.model.Result
 import okhttp3.Response
 import org.json.JSONObject
 
@@ -75,7 +76,7 @@ class LoginRepository(val httpRequest: HttpRequestDrawGuess) {
             val Jobject = JSONObject(jsonData)
             val Jarray = Jobject.getString("token")
             val user = LoggedInUser(Jarray.toString(), username)
-            return  Result.Success(user)
+            return Result.Success(user)
         } else {
             return Result.Error("Erreur dans le mot de passe ou le nom d'utilisateur")
         }
