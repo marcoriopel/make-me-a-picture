@@ -32,6 +32,7 @@ export class AuthService {
             const user = await this.userCredentialsModel.getCredentials(username);
             if (!user) {
                 await this.userCredentialsModel.registerUser(username, password, name, surname, avatar);
+                await this.addUserToLogCollection(username, true);
                 return true;
             }
         } catch (e) {
