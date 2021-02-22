@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.ui.chat
+package com.example.prototype_mobile.view.chat
 
 import com.example.prototype_mobile.R
 import android.os.Bundle
@@ -12,8 +12,8 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import com.example.prototype_mobile.*
-import com.example.prototype_mobile.data.LoginDataSource
-import com.example.prototype_mobile.data.LoginRepository
+import com.example.prototype_mobile.model.HttpRequestDrawGuess
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
 
 // This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
@@ -23,8 +23,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding
 
     val gson: Gson = Gson()
-    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
-    val token = LoginRepository.getInstance(LoginDataSource())!!.user!!.token
+    val myUsername = LoginRepository.getInstance()!!.user!!.displayName
+    val token = LoginRepository.getInstance()!!.user!!.token
 
     //For setting the recyclerView.
     var chatList: MutableList<Message> = mutableListOf() ;

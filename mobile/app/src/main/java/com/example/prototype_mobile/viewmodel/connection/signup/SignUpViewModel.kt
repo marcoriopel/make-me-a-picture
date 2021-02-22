@@ -1,27 +1,19 @@
-package com.example.prototype_mobile.ui.signup
+package com.example.prototype_mobile.viewmodel.connection.signup
 
-import android.content.Context
-import android.content.Intent
 import android.util.Patterns
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.volley.RequestQueue
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.data.LoginRepository
-import com.example.prototype_mobile.data.Result
-import com.example.prototype_mobile.data.Signup.SignupDataSource
-import com.example.prototype_mobile.data.model.LoggedInUser
-import com.example.prototype_mobile.ui.chat.ChatActivity
-import com.example.prototype_mobile.ui.login.LoggedInUserView
-import com.example.prototype_mobile.ui.login.LoginFormState
-import com.example.prototype_mobile.ui.login.LoginResult
-import kotlinx.coroutines.Dispatchers.IO
+import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.signup.SignupDataSource
+import com.example.prototype_mobile.model.connection.login.LoggedInUser
+import com.example.prototype_mobile.util.StringUtil
+import com.example.prototype_mobile.view.connection.login.LoggedInUserView
+import com.example.prototype_mobile.view.connection.login.LoginFormState
+import com.example.prototype_mobile.viewmodel.connection.login.LoginResult
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
 
 //https://developer.android.com/kotlin/coroutines
 
@@ -44,7 +36,7 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
         viewModelScope.launch()
         {
             val result: Result<LoggedInUser> = try {
-                signupDataSource.createAccount(username, password)
+                signupDataSource.createAccount(username, StringUtil.hashSha256(password))
             } catch (e: Exception) {
                 Result.Error("Network request failed")
             }
@@ -55,17 +47,11 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
             }
 
         }
-
-        /*if (result is Result.Success) {
-            _signupResult.value = LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _signupResult.value = LoginResult(error = R.string.login_failed)
-        }*/
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun loginDataChanged(username: String) {
         if (!isUserNameValid(username)) {
-            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username_password)
         }
         else {
             _signupForm.value = LoginFormState(isDataValid = true)

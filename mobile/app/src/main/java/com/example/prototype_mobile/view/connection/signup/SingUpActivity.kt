@@ -1,26 +1,19 @@
-package com.example.prototype_mobile.ui.signup
+package com.example.prototype_mobile.view.connection.signup
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
-import androidx.core.content.MimeTypeFilter.matches
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.ui.chat.ChatActivity
-import com.example.prototype_mobile.ui.login.LoggedInUserView
-import com.example.prototype_mobile.ui.login.LoginActivity
-import com.example.prototype_mobile.ui.login.LoginViewModel
-import java.util.regex.Matcher
+import com.example.prototype_mobile.view.connection.login.LoggedInUserView
+import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.viewmodel.connection.signup.SignUpViewModel
+import com.example.prototype_mobile.viewmodel.connection.signup.SignUpViewModelFactory
 import java.util.regex.Matcher.*
-import java.util.regex.Pattern.matches
-import kotlin.math.log
 
 class SingUpActivity : AppCompatActivity() {
     private lateinit var signupViewModel: SignUpViewModel

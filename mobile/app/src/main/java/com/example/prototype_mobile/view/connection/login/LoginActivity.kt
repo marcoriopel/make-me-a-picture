@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.view.connection.login
 
 import android.app.Activity
 import android.content.Intent
@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.ui.chat.ChatActivity
-import com.example.prototype_mobile.ui.signup.SingUpActivity
+import com.example.prototype_mobile.view.chat.ChatActivity
+import com.example.prototype_mobile.view.connection.signup.SingUpActivity
+import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
+import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
 
 class LoginActivity : AppCompatActivity() {
@@ -49,8 +51,8 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
-
             loading.visibility = View.GONE
+
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
@@ -69,6 +71,12 @@ class LoginActivity : AppCompatActivity() {
             )
         }
 
+        password.afterTextChanged {
+            loginViewModel.loginDataChanged(
+                    password.text.toString()
+            )
+        }
+
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
 
@@ -82,7 +90,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-       // val welcome = getString(R.string.welcome)
        val displayName = model.displayName
         val intent = Intent(this, ChatActivity::class.java);
         startActivity(intent)
