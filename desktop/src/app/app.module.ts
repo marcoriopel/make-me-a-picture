@@ -39,6 +39,7 @@ import { AvatarComponent } from './components/avatar/avatar.component'
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { NgxElectronModule } from 'ngx-electron';
 @NgModule({
     declarations: [
         AppComponent,
@@ -84,6 +85,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
         MatCheckboxModule,
         MatInputModule,
         MatToolbarModule,
+        NgxElectronModule,
     ],
     entryComponents: [MainPageComponent],
     providers: [AuthService, AuthGuard,],

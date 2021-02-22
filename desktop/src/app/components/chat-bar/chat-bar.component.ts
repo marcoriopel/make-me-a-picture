@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { FormBuilder } from '@angular/forms';
 import { io, Socket } from "socket.io-client";
-
+import { ElectronService } from "ngx-electron";
 @Component({
   selector: 'app-chat-bar',
   templateUrl: './chat-bar.component.html',
@@ -10,7 +10,6 @@ import { io, Socket } from "socket.io-client";
 })
 
 export class ChatBarComponent implements OnInit {
-
   @ViewChild("chatContainer") chatContainer: ElementRef;
 
   messageForm = this.formBuilder.group({
@@ -20,7 +19,7 @@ export class ChatBarComponent implements OnInit {
   chat: any[] = [];
   socket: Socket;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private electronService: ElectronService) {
     this.socket = io(environment.socket_url);
   }
 
@@ -50,6 +49,18 @@ export class ChatBarComponent implements OnInit {
     const jwt = localStorage.getItem('token');
     this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt});
     this.messageForm.reset();
+  }
+
+  changeWindow(): void {
+    // const chatWindow = new this.electronService.remote.BrowserWindow({width:800, height:600});
+    // chatWindow.loadURL('hhtps://google.com');
+    var BrowserWindow = this.electronService.remote.BrowserWindow
+    var win = new BrowserWindow({
+      width: 600,
+      height: 840,
+      resizable: false,
+    })
+    win.loadURL('file://' + __dirname + '/index.html#/chat');
   }
 
 }
