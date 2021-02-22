@@ -1,6 +1,5 @@
 import { UserCredentialsModel } from '@app/models/user-credentials.model';
 import { TYPES } from '@app/types';
-import { Router } from 'express';
 import { inject, injectable } from 'inversify';
 
 @injectable()
