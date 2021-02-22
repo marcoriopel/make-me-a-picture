@@ -51,7 +51,7 @@ class SignUpViewModel(private val signupDataSource: SignupDataSource) : ViewMode
 
     fun loginDataChanged(username: String) {
         if (!isUserNameValid(username)) {
-            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username_password)
+            _signupForm.value = LoginFormState(usernameError = R.string.invalid_username)
         }
         else {
             _signupForm.value = LoginFormState(isDataValid = true)
