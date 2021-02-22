@@ -17,6 +17,28 @@
             {{errors.name}}
           </mat-error>
         </mat-form-field>
+
+        <mat-radio-group
+          class="full-width-input" (change)="logValue()" formControlName="avatar">
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar1)">
+            <app-avatar #avatar1></app-avatar>
+          </mat-radio-button>
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar2)">
+            <app-avatar #avatar2></app-avatar>
+          </mat-radio-button>
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar3)">
+            <app-avatar #avatar3></app-avatar>
+          </mat-radio-button>
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar4)">
+            <app-avatar #avatar4></app-avatar>
+          </mat-radio-button>
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar5)">
+            <app-avatar #avatar5></app-avatar>
+          </mat-radio-button>
+          <mat-radio-button [value]="this.getAvatarColors(this.avatar6)">
+            <app-avatar #avatar6></app-avatar>
+          </mat-radio-button>
+        </mat-radio-group>
         
         <mat-form-field class="full-width-input">
           <input matInput placeholder="Nom d'utilisateur" formControlName="username" name="username" required>
