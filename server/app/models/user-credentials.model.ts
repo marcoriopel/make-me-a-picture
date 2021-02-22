@@ -20,7 +20,7 @@ export class UserCredentialsModel {
 
     async logUser(username, timeStamp, isLogin) {
         try {
-            await this.databaseModel.client.db().collection("user-logs").insertOne({ 'username': username, 'isLogin': true, 'timeStamp': timeStamp });
+            await this.databaseModel.client.db().collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timeStamp': timeStamp });
         } catch (e) {
             console.error(e);
         }
