@@ -1,11 +1,14 @@
 import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 
 @injectable()
 export class AuthService {
 
-    constructor(@inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel) {
+    constructor(
+        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
+        @inject(TYPES.UserLogsModel) private userLogsModel: UserLogsModel) {
     }
 
     async loginUser(username: string, password: string) {
@@ -24,7 +27,7 @@ export class AuthService {
 
     async addUserToLogCollection(username: string, isLogin: boolean) {
         const date: Date = new Date();
-        await this.userCredentialsModel.logUser(username, date.getTime(), isLogin);
+        await this.userLogsModel.logUser(username, date.getTime(), isLogin);
     }
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {

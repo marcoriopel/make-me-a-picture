@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { DatabaseModel } from '@app/models/database.model'
 import { TYPES } from '@app/types';
-import { isJsxClosingElement } from 'typescript';
 
 @injectable()
 export class UserCredentialsModel {
@@ -13,14 +12,6 @@ export class UserCredentialsModel {
     async getCredentials(username) {
         try {
             return await this.databaseModel.client.db().collection("user-credentials").findOne({ 'username': username });
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async logUser(username, timeStamp, isLogin) {
-        try {
-            await this.databaseModel.client.db().collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timeStamp': timeStamp });
         } catch (e) {
             console.error(e);
         }
