@@ -8,14 +8,11 @@
         </mat-error> -->
         <mat-form-field class="full-width-input">
           <input matInput placeholder="Nom d'utilisateur" formControlName="username" required>
-          <mat-error>
-            Veuillez entrer un nom d'utilisateur valide
-          </mat-error>
         </mat-form-field>
         <mat-form-field class="full-width-input">
           <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
           <mat-error>
-            Veuillez entrer un mot de passe valide
+            Veuillez entrer un mot de passe valide pour cet utilisateur
           </mat-error>
         </mat-form-field>  
         <p> Vous n'avez pas de compte? <a routerLink="/register"> Créer un compte </a> </p>
