@@ -44,9 +44,7 @@ export class AuthController {
       this.authService.registerUser(req.body.username, req.body.password, req.body.name, req.body.surname, req.body.avatar).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          const username = req.body.username;
-          this.authService.addUserToLogCollection(username, true)
-          const token = this.tokenService.generateAccesToken(username);
+          const token = this.tokenService.generateAccesToken(req.body.username);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
