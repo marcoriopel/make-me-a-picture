@@ -12,6 +12,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import com.example.prototype_mobile.*
+import com.example.prototype_mobile.data.HttpRequestDrawGuess
 import com.example.prototype_mobile.data.LoginDataSource
 import com.example.prototype_mobile.data.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
@@ -23,8 +24,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding
 
     val gson: Gson = Gson()
-    val myUsername = LoginRepository.getInstance(LoginDataSource())!!.user!!.displayName
-    val token = LoginRepository.getInstance(LoginDataSource())!!.user!!.token
+    val myUsername = LoginRepository.getInstance(HttpRequestDrawGuess())!!.user!!.displayName
+    val token = LoginRepository.getInstance(HttpRequestDrawGuess())!!.user!!.token
 
     //For setting the recyclerView.
     var chatList: MutableList<Message> = mutableListOf() ;

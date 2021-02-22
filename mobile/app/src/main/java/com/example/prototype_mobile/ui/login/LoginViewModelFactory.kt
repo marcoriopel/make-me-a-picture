@@ -3,6 +3,7 @@ package com.example.prototype_mobile.ui.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.prototype_mobile.data.HttpRequestDrawGuess
 import com.example.prototype_mobile.data.LoginDataSource
 import com.example.prototype_mobile.data.LoginRepository
 
@@ -16,7 +17,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginRepository.getInstance(LoginDataSource()
+            return LoginRepository.getInstance(HttpRequestDrawGuess()
             )?.let {
                 LoginViewModel(
                         loginRepository = it
