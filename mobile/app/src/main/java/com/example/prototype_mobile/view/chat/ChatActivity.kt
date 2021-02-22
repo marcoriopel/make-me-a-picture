@@ -23,8 +23,8 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding
 
     val gson: Gson = Gson()
-    val myUsername = LoginRepository.getInstance(HttpRequestDrawGuess())!!.user!!.displayName
-    val token = LoginRepository.getInstance(HttpRequestDrawGuess())!!.user!!.token
+    val myUsername = LoginRepository.getInstance()!!.user!!.displayName
+    val token = LoginRepository.getInstance()!!.user!!.token
 
     //For setting the recyclerView.
     var chatList: MutableList<Message> = mutableListOf() ;

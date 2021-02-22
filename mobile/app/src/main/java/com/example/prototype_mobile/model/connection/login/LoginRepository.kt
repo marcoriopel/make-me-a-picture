@@ -11,15 +11,15 @@ import org.json.JSONObject
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val httpRequest: HttpRequestDrawGuess) {
+class LoginRepository() {
     companion object {
         private var instance: LoginRepository? = null
 
-        fun getInstance(httpRequest: HttpRequestDrawGuess): LoginRepository? {
+        fun getInstance(): LoginRepository? {
             if (instance == null) {
                 synchronized(LoginRepository::class.java) {
                     if (instance == null) {
-                        instance = LoginRepository(httpRequest)
+                        instance = LoginRepository()
                     }
                 }
             }
@@ -51,7 +51,7 @@ class LoginRepository(val httpRequest: HttpRequestDrawGuess) {
          val mapLogin = HashMap<String, String>()
          mapLogin["username"] = username
          mapLogin["password"] = password
-         val response = httpRequest.httpRequest("/api/auth/authenticate", mapLogin)
+         val response = HttpRequestDrawGuess.httpRequest("/api/auth/authenticate", mapLogin)
 
 
          val result = analyseLoginAnswer(response, username)

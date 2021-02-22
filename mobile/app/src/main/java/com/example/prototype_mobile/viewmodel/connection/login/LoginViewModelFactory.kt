@@ -15,7 +15,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginRepository.getInstance(HttpRequestDrawGuess()
+            return LoginRepository.getInstance(
             )?.let {
                 LoginViewModel(
                         loginRepository = it
