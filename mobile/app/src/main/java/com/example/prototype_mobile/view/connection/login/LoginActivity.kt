@@ -47,6 +47,10 @@ class LoginActivity : AppCompatActivity() {
             if (loginState.usernameError != null) {
                 username.error = getString(loginState.usernameError)
             }
+
+            if (loginState.passwordError != null) {
+                password.error = getString(loginState.passwordError)
+            }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
@@ -66,20 +70,15 @@ class LoginActivity : AppCompatActivity() {
         })
 
         username.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                    username.text.toString()
-            )
+            loginViewModel.loginDataChanged(username.text.toString(), false)
         }
 
         password.afterTextChanged {
-            loginViewModel.loginDataChanged(
-                    password.text.toString()
-            )
+            loginViewModel.loginDataChanged(password.text.toString(), true)
         }
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-
             loginViewModel.login(username.text.toString(), password.text.toString())
         }
 
