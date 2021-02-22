@@ -16,12 +16,12 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(user: User) {
-    // hash password
     user.password = enc.Base64.stringify(SHA256(user.password))
     return this.http.post<any>(this.loginUrl, user);
   }
 
   register(user: User) {
+    user.password = enc.Base64.stringify(SHA256(user.password))
     return this.http.post<any>(this.registerUrl, user);
   }
 
