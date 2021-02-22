@@ -1,101 +1,38 @@
-* {
-  box-sizing: border-box
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  // background: grey;
-  // border-radius: 10px;
-}
-
 .chat-bar {
-  display: flex;
+  position: absolute;
+  width: 380px;
+  height: 92.5%;
+  right: 0px;
+  top: 66px;
+
+  /* Gray 5 */
+  background: #E0E0E0;
+}
+
+.chat-button {
+  width: 90%;
+  height: 60px;
+  margin: 5%;
+  top: 102px;
+  //   /* Gray 6 */
+  background: #F2F2F2;
+  border-radius: 50px;
+
+  // text
+  text-align: center;
+  vertical-align: middle;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 58px;
+  color: #000000;
+}
+
+.chat {
+  position: absolute;
   margin: auto;
-  justify-content: center;
-  align-items: center;
-  width:400px;
-  height: 80%;
-}
-
-.container{
-  width: 100%;
-  margin:fit-content 0 auto;
-  border: solid 1px #ccc;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.chat-container{
-    height: 400px;
-    overflow: auto;
-}
-
-.message-text-container{
-  display: flex;
-  flex-direction: column;
-}
-
-.username{
-  font-size: 10px;
-  color: gray;
-}
-
-.message{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 10px 20px;
-    overflow-wrap: break-word;
-
-    p{
-      margin: 0px 10px;
-      overflow-wrap: break-word;
-      width:250px;
-    }
-}
-
-.reverse{
-  flex-direction: row-reverse;
-  text-align: right;
-}
-
-.send-message-form{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px;
-
-  input{
-    flex-grow: 1;
-    border: none;
-    font-size: 16px;
-    padding: 6px 10px;
-    outline: none;
-    border-radius: 20px;
-    background-color: rgb(235, 235, 235);
-  }
-  button{
-    margin: 5px;
-    width: 7%;
-    height: 26px;
-    border: 0px;
-    cursor: pointer;
-    background-color: white;
-    background-image: url(../../../assets/img/paper_plane.png);
-    background-size: cover;
-    outline: none;
-  }
-} 
-
-.avatar {
-  width: 10%;
-  align-self: flex-start;
-  margin: 5px;
-  width: 30px;
-  height: 30px;
-  background-color: white;
-  background: url(../../../assets/img/profileIcon.svg) no-repeat top left;
+  width: 90%;
+  padding: 5%;
+  bottom: 0%;
 }

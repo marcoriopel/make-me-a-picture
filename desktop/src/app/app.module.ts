@@ -39,6 +39,8 @@ import { AvatarComponent } from './components/avatar/avatar.component'
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ChatService } from './services/chat/chat.service';
+import { ChatComponent } from './components/chat/chat.component'
 @NgModule({
     declarations: [
         AppComponent,
@@ -56,7 +58,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
         LoginComponent,
         RegisterComponent,
         AvatarComponent,
-        NavbarComponent
+        NavbarComponent,
+        ChatComponent
     ],
     imports: [
         BrowserModule,
@@ -86,7 +89,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
         MatToolbarModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard,],
+    providers: [AuthService, AuthGuard, ChatService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
