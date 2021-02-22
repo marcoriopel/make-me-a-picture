@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { User } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-// import { sha256 } from 'crypto-js/sha256';
 import { SHA256, enc } from 'crypto-js'
 
 @Injectable({
