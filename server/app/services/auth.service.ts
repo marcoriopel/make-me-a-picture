@@ -12,7 +12,7 @@ export class AuthService {
         try {
             const user = await this.userCredentialsModel.getCredentials(username);
             if (user && user.password == password) {
-                await this.userCredentialsModel.loginUser(username);;
+                this.addUserToLogCollection(username, true);
                 return true;
             }
         } catch (e) {
@@ -20,6 +20,11 @@ export class AuthService {
             return false;
         }
         return false;
+    }
+
+    async addUserToLogCollection(username: string, isLogin: boolean) {
+        const date: Date = new Date();
+        await this.userCredentialsModel.logUser(username, date.getTime(), isLogin);
     }
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
