@@ -12,7 +12,7 @@ export class AuthService {
         try {
             const user = await this.userCredentialsModel.getCredentials(username);
             if (user && user.password == password) {
-                this.addUserToLogCollection(username, true);
+                await this.addUserToLogCollection(username, true);
                 return true;
             }
         } catch (e) {

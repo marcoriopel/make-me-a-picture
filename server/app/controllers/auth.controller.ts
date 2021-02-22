@@ -27,10 +27,7 @@ export class AuthController {
       this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          const user = req.body.username;
-          // TODO: Add user to ther userConnected[]
-
-          const token = this.tokenService.generateAccesToken(user);
+          const token = this.tokenService.generateAccesToken(req.body.username);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -53,13 +50,8 @@ export class AuthController {
       });
     });
 
-    /**
-     * Logout from the app
-     * + Exemple d'utilisation de lock une route avec un token
-     */
     this.router.post('/logout', (req: Request, res: Response) => {
       this.tokenService.authenticateToken(req, res, (username: any) => {
-        //TODO: Remove user from the userConnected[]
         this.authService.addUserToLogCollection(username, false)
         res.sendStatus(StatusCodes.ACCEPTED);
       });
