@@ -38,7 +38,6 @@ export class AuthController {
 
 
     this.router.post('/register', (req, res) => {
-      console.log(req.body);
       this.authService.registerUser(req.body.username, req.body.password, req.body.name, req.body.surname, req.body.avatar).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
