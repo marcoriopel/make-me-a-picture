@@ -23,11 +23,11 @@ export class AuthService {
         return false;
     }
 
-    async registerUser(username: string, password: string) {
+    async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
             const user = await this.userCredentialsModel.getCredentials(username);
             if (!user) {
-                await this.userCredentialsModel.registerUser(username, password);
+                await this.userCredentialsModel.registerUser(username, password, name, surname, avatar);
                 return true;
             }
         } catch (e) {
