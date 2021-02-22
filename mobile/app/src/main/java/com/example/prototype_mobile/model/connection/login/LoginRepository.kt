@@ -1,9 +1,6 @@
-package com.example.prototype_mobile.data
+package com.example.prototype_mobile.model
 
-import android.content.Context
-import com.example.prototype_mobile.data.model.LoggedInUser
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import com.example.prototype_mobile.model.model.LoggedInUser
 import okhttp3.Response
 import org.json.JSONObject
 

@@ -1,14 +1,15 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.viewmodel.connection.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
 import androidx.lifecycle.viewModelScope
-import com.example.prototype_mobile.data.LoginRepository
-import com.example.prototype_mobile.data.Result
+import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.data.model.LoggedInUser
+import com.example.prototype_mobile.model.connection.login.LoggedInUser
+import com.example.prototype_mobile.view.connection.login.LoggedInUserView
+import com.example.prototype_mobile.view.connection.login.LoginFormState
 import kotlinx.coroutines.*
 
 class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
@@ -32,21 +33,13 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
         }
     }
 
-    fun loginDataChanged(username: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+    fun loginDataChanged(loginData: String) {
+        if (!loginData.isNotBlank()) {
+            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username_password)
         }
         else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }
 
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
-        } else {
-            username.isNotBlank()
-        }
-    }
 }

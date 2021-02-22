@@ -1,4 +1,6 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.viewmodel.connection.login
+
+import com.example.prototype_mobile.view.connection.login.LoggedInUserView
 
 /**
  * Authentication result : success (user details) or error message.

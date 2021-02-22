@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.ui.chat
+package com.example.prototype_mobile.view.chat
 
 import android.content.Context
 import android.util.Log

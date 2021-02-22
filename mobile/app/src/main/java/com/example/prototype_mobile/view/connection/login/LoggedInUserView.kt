@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.view.connection.login
 
 /**
  * User details post authentication that is exposed to the UI

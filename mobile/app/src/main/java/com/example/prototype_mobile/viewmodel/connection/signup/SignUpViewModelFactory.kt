@@ -1,8 +1,8 @@
-package com.example.prototype_mobile.ui.signup
+package com.example.prototype_mobile.viewmodel.connection.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.data.Signup.SignupDataSource
+import com.example.prototype_mobile.model.connection.signup.SignupDataSource
 
 
 /**

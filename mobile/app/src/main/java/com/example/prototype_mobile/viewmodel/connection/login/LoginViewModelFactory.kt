@@ -1,11 +1,9 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.viewmodel.connection.login
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.data.HttpRequestDrawGuess
-import com.example.prototype_mobile.data.LoginDataSource
-import com.example.prototype_mobile.data.LoginRepository
+import com.example.prototype_mobile.model.HttpRequestDrawGuess
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 
 
 /**

@@ -1,10 +1,8 @@
-package com.example.prototype_mobile.data
+package com.example.prototype_mobile.model
 
-import com.example.prototype_mobile.data.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
-import org.json.JSONObject
 
 class HttpRequestDrawGuess {
     suspend fun httpRequest(urlPath: String, parameters: HashMap<String, String>): Response {

@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.ui.login
+package com.example.prototype_mobile.view.connection.login
 
 /**
  * Data validation state of the login form.

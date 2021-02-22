@@ -1,21 +1,14 @@
-package com.example.prototype_mobile.data.Signup
+package com.example.prototype_mobile.model.Signup
 
-import android.content.Context
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.example.prototype_mobile.data.Result
-import com.example.prototype_mobile.data.model.LoggedInUser
+import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Call
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
-import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 
 class SignupDataSource() {
 
