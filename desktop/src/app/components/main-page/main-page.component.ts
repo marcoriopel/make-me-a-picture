@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
     selector: 'app-main-page',
@@ -8,5 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class MainPageComponent {
     readonly title: string = 'PolyDessin';
-    constructor(public dialog: MatDialog) {}
+    isAv: boolean = false;
+    constructor(public dialog: MatDialog, public chatService: ChatService) {
+    }
+
 }

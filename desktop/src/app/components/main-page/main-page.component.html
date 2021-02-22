@@ -1,2 +1,2 @@
 <app-navbar></app-navbar>
-<app-chat-bar></app-chat-bar>
+<app-chat-bar *ngIf="!chatService.isChatInExternalWindow"></app-chat-bar>

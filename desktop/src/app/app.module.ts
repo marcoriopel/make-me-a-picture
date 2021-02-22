@@ -40,6 +40,8 @@ import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgxElectronModule } from 'ngx-electron';
+import { ChatService } from './services/chat/chat.service';
+import { ChatComponent } from './components/chat/chat.component'
 @NgModule({
     declarations: [
         AppComponent,
@@ -57,7 +59,8 @@ import { NgxElectronModule } from 'ngx-electron';
         LoginComponent,
         RegisterComponent,
         AvatarComponent,
-        NavbarComponent
+        NavbarComponent,
+        ChatComponent
     ],
     imports: [
         BrowserModule,
@@ -88,7 +91,7 @@ import { NgxElectronModule } from 'ngx-electron';
         NgxElectronModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard,],
+    providers: [AuthService, AuthGuard, ChatService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

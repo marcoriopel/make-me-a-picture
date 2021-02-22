@@ -35,10 +35,8 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home']);
         },
         err => {
-          console.log(err)
-          alert("Mauvais nom d'utilisateur ou mot de passe")
-          this.form.get('username')?.setErrors({'notValid': true});
-          this.form.get('password')?.setErrors({'notValid': true});
+          if (err.error == "Unauthorized")
+            this.form.get('password')?.setErrors({'notValid': true});
         }
       )
     

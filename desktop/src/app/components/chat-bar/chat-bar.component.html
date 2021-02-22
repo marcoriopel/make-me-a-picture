@@ -1,29 +1,15 @@
-<button (click)="changeWindow()">Chat window</button>
-
 <div class="chat-bar">
-    <div class="container">
-        <div #chatContainer class="chat-container">
-            <div *ngFor="let message of chat">
-                <div class="message reverse" *ngIf="message.isUsersMessage == true">
-                    <div class="avatar"></div>
-                    <div class="message-text-container">
-                        <p class="username">{{message.username}} - {{message.timeStamp}}</p>
-                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
-                    </div>
-                </div>
-                <div class="message" *ngIf="message.isUsersMessage == false">
-                    <div class="avatar"></div>
-                    <div class="message-text-container">
-                        <p class="username">{{message.username}} - {{message.timeStamp}}</p>
-                        <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
-                    </div>                  
-                </div>
-                {{onNewMessage()}}
+    <button class="window-button" (click)="openExternalWindow()">
+        <i class="far fa-clone"></i>
+    </button>
+    
+    <div #chatContainer class="chat-container">
+        <div *ngFor="let chat of this.chatService.chatList">
+            <div class="chat-button" (click)="changeChat(chat.url)">
+                <p>{{chat.name}}</p>
             </div>
         </div>
-        <form [formGroup]="messageForm" class="send-message-form" (ngSubmit)="onSubmit()">
-            <input type="text" placeholder="Aa" formControlName="message">
-            <button type="submit"></button>
-        </form>
-    </div>    
+    </div>
+    <hr>
+    <app-chat class="chat"></app-chat>
 </div>

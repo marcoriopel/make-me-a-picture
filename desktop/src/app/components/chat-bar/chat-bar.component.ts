@@ -3,6 +3,8 @@ import { environment } from '../../../environments/environment';
 import { FormBuilder } from '@angular/forms';
 import { io, Socket } from "socket.io-client";
 import { ElectronService } from "ngx-electron";
+import { ChatService } from '@app/services/chat/chat.service'
+
 @Component({
   selector: 'app-chat-bar',
   templateUrl: './chat-bar.component.html',
@@ -19,25 +21,17 @@ export class ChatBarComponent implements OnInit {
   chat: any[] = [];
   socket: Socket;
 
-  constructor(private formBuilder: FormBuilder, private electronService: ElectronService) {
+  constructor(private formBuilder: FormBuilder, private electronService: ElectronService, public chatService: ChatService) {
     this.socket = io(environment.socket_url);
+    this.chatService.connectToChat(environment.socket_url);
+  }
+  
+  changeChat(url: any): void {
+    this.chatService.unbindMessage();
+    this.chatService.connectToChat(url);
   }
 
   ngOnInit(): void {
-     this.socket.on('message', (message: any) => {
-      let isUsersMessage: boolean = false;
-      const username = localStorage.getItem('username');
-      if (message.username === username) {
-        isUsersMessage = true
-      } else {
-        isUsersMessage = false;
-      }
-      this.chat.push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
-    });
-  }
-
-  onNewMessage(): void {
-    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
 
@@ -51,16 +45,19 @@ export class ChatBarComponent implements OnInit {
     this.messageForm.reset();
   }
 
-  changeWindow(): void {
-    // const chatWindow = new this.electronService.remote.BrowserWindow({width:800, height:600});
-    // chatWindow.loadURL('hhtps://google.com');
-    var BrowserWindow = this.electronService.remote.BrowserWindow
-    var win = new BrowserWindow({
+  openExternalWindow(): void {
+    this.chatService.isChatInExternalWindow = true;
+    let BrowserWindow = this.electronService.remote.BrowserWindow
+    let chatWindow = new BrowserWindow({
       width: 600,
       height: 840,
       resizable: false,
     })
-    win.loadURL('file://' + __dirname + '/index.html#/chat');
+    chatWindow.loadURL('file://' + __dirname + '/index.html#/chat');
+
+    chatWindow.on('close', () => {
+      this.chatService.isChatInExternalWindow = false;
+    })
   }
 
 }
