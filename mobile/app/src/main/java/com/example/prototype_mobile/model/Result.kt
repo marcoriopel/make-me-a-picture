@@ -7,7 +7,7 @@ package com.example.prototype_mobile.model
 sealed class Result<out T : Any> {
 
     data class Success<out T : Any>(val data: T) : Result<T>()
-    data class Error(val exception: String) : Result<Nothing>()
+    data class Error(val exception: Int) : Result<Nothing>()
 
     override fun toString(): String {
         return when (this) {

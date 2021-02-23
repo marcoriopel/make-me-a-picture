@@ -13,8 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.chat.ChatActivity
-import com.example.prototype_mobile.view.connection.signup.SingUpActivity
+import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
@@ -79,22 +80,22 @@ class LoginActivity : AppCompatActivity() {
 
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-            loginViewModel.login(username.text.toString(), password.text.toString())
+            loginViewModel.login(username.text.toString(), StringUtil.hashSha256(password.text.toString()))
         }
 
         signup.setOnClickListener {
-            val intent = Intent(this, SingUpActivity::class.java)
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-       val displayName = model.displayName
+    private fun updateUiWithUser(username: String) {
         val intent = Intent(this, ChatActivity::class.java);
         startActivity(intent)
         Toast.makeText(
                 applicationContext,
-                "Bienvenue $displayName",
+                "Bienvenue $username",
                 Toast.LENGTH_LONG
         ).show()
     }

@@ -1,8 +1,8 @@
-package com.example.prototype_mobile.viewmodel.connection.signup
+package com.example.prototype_mobile.viewmodel.connection.sign_up
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.model.connection.signup.SignupDataSource
+import com.example.prototype_mobile.model.connection.sign_up.SignUpRepository
 
 
 /**
@@ -14,11 +14,7 @@ class SignUpViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
-            return SignUpViewModel(
-                signupDataSource = SignupDataSource()
-
-                )
-             as T
+            return SignUpViewModel(SignUpRepository()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
