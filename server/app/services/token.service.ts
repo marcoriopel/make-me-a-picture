@@ -43,13 +43,13 @@ export class TokenService {
     public authenticateToken(req: Request, res: Response, next: NextFunction): any {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, username: any): any => {
             if (err) { return res.sendStatus(403); }
-            next(user);
+            next(username);
         });
     }
 
-    public asAccess(req: Request, res: Response) {
+    public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {

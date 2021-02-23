@@ -17,26 +17,9 @@ export class UserCredentialsModel {
         }
     }
 
-    async loginUser(username) {
+    async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
-            await this.databaseModel.client.db().collection("logged-users").insertOne({ 'username': username });
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async logoutUser(username) {
-        try {
-            await this.databaseModel.client.db().collection("logged-users").deleteOne({ 'username': username });
-        } catch (e) {
-            console.error(e);
-        }
-        console.log("Logout successfull");
-    }
-
-    async registerUser(username: string, password: string) {
-        try {
-            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': username, 'password': password });
+            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar });
         } catch (e) {
             console.error(e);
         }

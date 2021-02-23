@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
-import { User } from '@app/classes/user';
+import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
 
@@ -20,15 +20,15 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.userRegistrationForm = this.fb.group({
-        firstname: ['', [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(128)
+      firstname: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(128)
       ]],
-        name: ['', [
-          Validators.required,
-          Validators.minLength(1),
-          Validators.maxLength(128)
+      name: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(128)
       ]],
       avatar: ['', [
         Validators.required,
@@ -39,35 +39,35 @@ export class RegisterComponent implements OnInit {
           Validators.maxLength(128),
           forbiddenNameValidator
       ]],
-        passwordGroup: this.fb.group({
-          password: ['', [
-              Validators.required
-              // Validators.pattern(regExps.password)
-          ]],
-          confirmPassword: ['', Validators.required]
-      }, { validator: CustomValidators.childrenEqual})
+      passwordGroup: this.fb.group({
+        password: ['', [
+          Validators.required
+          // Validators.pattern(regExps.password)
+        ]],
+        confirmPassword: ['', Validators.required]
+      }, { validator: CustomValidators.childrenEqual })
     });
   }
 
-  logValue() {
-    console.log(this.userRegistrationForm.value.avatar);
-  }
-
-  async register() { 
-    const user: User = {
+  async register() {
+    const user: NewUser = {
       username: this.userRegistrationForm.value.username,
-      password: this.userRegistrationForm.value.passwordGroup.password
+      password: this.userRegistrationForm.value.passwordGroup.password,
+      surname: this.userRegistrationForm.value.name,
+      name: this.userRegistrationForm.value.firstname,
+      avatar: this.userRegistrationForm.value.avatar
     }
     this.authService.register(user).subscribe(
       res => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('username', this.userRegistrationForm.value.username);
         console.log('res: ' + res);
         this.router.navigate(['/home']);
         // set information
       },
       err => {
         console.log(err);
-        this.userRegistrationForm.get('username')?.setErrors({'forbiddenName': true});
+        this.userRegistrationForm.get('username')?.setErrors({ 'forbiddenName': true });
       }
     )
   }
