@@ -63,15 +63,17 @@ export class ChatService {
   }
 
   private connectToNewChat(name: string, url: string): void {
+    // TODO (Feature 85-90): try catch for non existant server
     const index = this.chatListComplet.push({name: name, url: url, socket: io(url), messages: []});
     this.index = index - 1;
     this.chatList.push(name);
-    // TODO: Get history
+    // TODO (Waiting for server side): Get history
     this.bindMessage(index - 1);
   }
 
   private bindMessage(index: number): void {
     this.chatListComplet[index]["socket"].on('message', (message: any) => {
+      // TODO (Feature 85-90): Catch error if socket not connected
       const username = localStorage.getItem('username');
       this.chatListComplet[index]["messages"].push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": message.username === username ? true: false, "textColor": message.textColor});
     });
