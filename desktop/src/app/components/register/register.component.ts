@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
-import { User } from '@app/classes/user';
+import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
 
@@ -47,9 +47,12 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
-    const user: User = {
+    const user: NewUser = {
       username: this.userRegistrationForm.value.username,
-      password: this.userRegistrationForm.value.passwordGroup.password
+      password: this.userRegistrationForm.value.passwordGroup.password,
+      surname: this.userRegistrationForm.value.name,
+      name: this.userRegistrationForm.value.firstname,
+      avatar: 1 // TODO
     }
     this.authService.register(user).subscribe(
       res => {
