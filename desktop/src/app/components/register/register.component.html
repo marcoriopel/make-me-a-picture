@@ -2,7 +2,10 @@
   <mat-card>
     <mat-card-content>
       <form [formGroup]="userRegistrationForm" novalidate>
-        <h2>Register</h2>
+        <div class="formHeader">
+            <img src="../../../assets/icons/png/LogoDark.png" alt="logo" class="logo">
+            <h2>Inscription</h2>
+        </div>
 
         <mat-form-field class="full-width-input">
           <input matInput placeholder="Prénom" formControlName="firstname" required>
@@ -18,34 +21,12 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-radio-group
-          class="full-width-input" (change)="logValue()" formControlName="avatar">
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar1)">
-            <app-avatar #avatar1></app-avatar>
-          </mat-radio-button>
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar2)">
-            <app-avatar #avatar2></app-avatar>
-          </mat-radio-button>
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar3)">
-            <app-avatar #avatar3></app-avatar>
-          </mat-radio-button>
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar4)">
-            <app-avatar #avatar4></app-avatar>
-          </mat-radio-button>
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar5)">
-            <app-avatar #avatar5></app-avatar>
-          </mat-radio-button>
-          <mat-radio-button [value]="this.getAvatarColors(this.avatar6)">
-            <app-avatar #avatar6></app-avatar>
-          </mat-radio-button>
-        </mat-radio-group>
-        
         <mat-form-field class="full-width-input">
           <input matInput placeholder="Nom d'utilisateur" formControlName="username" name="username" required>
           <mat-error>
             {{errors.name}}
           </mat-error>
-        </mat-form-field>
+        </mat-form-field>        
         
         <div formGroupName="passwordGroup">
           <mat-form-field>
@@ -62,8 +43,31 @@
               </mat-error>
           </mat-form-field>
       </div>
+
+      <mat-radio-group
+          class="full-width-input" (change)="logValue()" formControlName="avatar">
+          <mat-radio-button [value]="0">
+            <img src="../../../assets/img/avatar0.png" alt="Avatar0" class="avatar">
+          </mat-radio-button>
+          <mat-radio-button [value]="1">
+            <img src="../../../assets/img/avatar1.png" alt="Avatar1" class="avatar">
+          </mat-radio-button>
+          <mat-radio-button [value]="2">
+            <img src="../../../assets/img/avatar2.png" alt="Avatar2" class="avatar">
+          </mat-radio-button>
+          <mat-radio-button [value]="3">
+            <img src="../../../assets/img/avatar3.png" alt="Avatar3" class="avatar">
+          </mat-radio-button>
+          <mat-radio-button [value]="4">
+            <img src="../../../assets/img/avatar4.png" alt="Avatar4" class="avatar">
+          </mat-radio-button>
+          <mat-radio-button [value]="5">
+            <img src="../../../assets/img/avatar5.png" alt="Avatar5" class="avatar">
+          </mat-radio-button>
+      </mat-radio-group>
+
       <p> Vous avez déjà un compte? <a routerLink="/login"> Connexion </a> </p>
-      <button mat-raised-button [disabled]="userRegistrationForm.invalid" (click)="register()">Register</button>
+      <button mat-raised-button [disabled]="userRegistrationForm.invalid" (click)="register()">S'inscrire</button>
         
       </form>
     </mat-card-content>

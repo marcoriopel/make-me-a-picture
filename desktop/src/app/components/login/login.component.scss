@@ -9,6 +9,18 @@ mat-card {
     transform: translate(-50%, -50%);
 }
 
+.formHeader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1em;
+
+    h2{
+        margin: 0% 10% 0% 0%;
+        flex-grow: 1;
+    }
+}
+
 mat-form-field {
     display: block;
 }
@@ -21,4 +33,9 @@ button {
 .container {
     height: 100%;
     position: relative;
+}
+
+.logo {
+    width: 10%;
+    height: 10%;
 }

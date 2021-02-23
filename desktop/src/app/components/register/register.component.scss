@@ -10,6 +10,18 @@ mat-card {
     transform: translate(-50%, -50%);
 }
 
+.formHeader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 1em;
+
+    h2{
+        margin: 0% 10% 0% 0%;
+        flex-grow: 1;
+    }
+}
+
 mat-form-field {
     display: block;
     margin-bottom: 10px;
@@ -28,6 +40,7 @@ button {
 .mat-radio-group{
     display: flex;
     justify-content: space-around;
+    padding-bottom: 1.25em;
 }
 
 :host ::ng-deep .mat-radio-container{
@@ -35,7 +48,8 @@ button {
 }
 
 :host ::ng-deep .mat-radio-label-content{
-    padding-left: 0px;
+    padding: 0px;
+    display: flex;
 }
 
 .mat-radio-button {
@@ -48,4 +62,14 @@ button {
     border-width: 3px;
     padding: 2px;
     border-radius: 70%;
+}
+
+.logo {
+    width: 10%;
+    height: 10%;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
 }

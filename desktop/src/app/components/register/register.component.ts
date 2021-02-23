@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
 import { User } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
-import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
   selector: 'app-register',
@@ -12,13 +11,6 @@ import { AvatarComponent } from '../avatar/avatar.component';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-
-  @ViewChild('avatar1') avatar1: AvatarComponent;
-  @ViewChild('avatar2') avatar2: AvatarComponent;
-  @ViewChild('avatar3') avatar3: AvatarComponent;
-  @ViewChild('avatar4') avatar4: AvatarComponent;
-  @ViewChild('avatar5') avatar5: AvatarComponent;
-  @ViewChild('avatar6') avatar6: AvatarComponent;
 
   userRegistrationForm: FormGroup;
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
@@ -55,14 +47,6 @@ export class RegisterComponent implements OnInit {
           confirmPassword: ['', Validators.required]
       }, { validator: CustomValidators.childrenEqual})
     });
-  }
-
-  getAvatarColors(element: AvatarComponent){
-    return {
-      background: element.backgroundColor,
-      head: element.headColor,
-      body: element.bodyColor
-    }
   }
 
   logValue() {
