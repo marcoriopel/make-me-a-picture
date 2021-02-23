@@ -4,6 +4,7 @@ import { AuthService } from '@app/services/auth/auth.service';
 import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ export class RegisterComponent implements OnInit {
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   errors = errorMessages;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private chatService: ChatService) { }
 
   ngOnInit(): void {
     this.userRegistrationForm = this.fb.group({
@@ -60,7 +61,7 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem('username', this.userRegistrationForm.value.username);
         console.log('res: ' + res);
         this.router.navigate(['/home']);
-        // set information
+        this.chatService.connect();
       },
       err => {
         console.log(err);
