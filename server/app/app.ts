@@ -15,46 +15,15 @@ export class Application {
 
     constructor(
         @inject(TYPES.AuthController) private authController: AuthController,
-        @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel 
-        ) {
+        @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel
+    ) {
         this.app = express();
 
-        this.swaggerConfig();
         this.config();
 
         this.databaseModel = DatabaseModel.getInstance();
         this.databaseModel.startDB();
         this.bindRoutes();
-    }
-
-    private swaggerConfig(): void {
-        const swaggerUi = require('swagger-ui-express');
-        const swaggerJSDoc = require('swagger-jsdoc');
-
-        const swaggerDefinition = {
-            openapi: '3.0.0',
-            swaggerURL: '/swagger',
-            info: {
-              title: 'API for the best application ever',
-              version: '1.0.0',
-            },
-            servers: [
-                {
-                  url: 'http://localhost:3000',
-                  description: 'Development server',
-                },
-              ], 
-          };
-          
-        const options = {
-            swaggerDefinition,
-            // Paths to files containing OpenAPI definitions
-            apis: ['./app/controllers/*.ts'],
-        };
-
-        const swaggerSpec = swaggerJSDoc(options);
-
-        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); 
     }
 
     private config(): void {

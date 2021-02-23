@@ -6,5 +6,6 @@ export const TYPES = {
     TokenService: Symbol('TokenService'),
     AuthService: Symbol('AuthService'),
     DatabaseModel: Symbol('DatabaseModel'),
-    UserCredentialsModel: Symbol('UserCredentialsModel')
+    UserCredentialsModel: Symbol('UserCredentialsModel'),
+    UserLogsModel: Symbol('UserLogsModel')
 };
