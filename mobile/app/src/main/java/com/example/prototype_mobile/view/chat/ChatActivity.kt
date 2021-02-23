@@ -12,7 +12,6 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import com.example.prototype_mobile.*
-import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.databinding.ActivityChatBinding
 
@@ -23,7 +22,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityChatBinding
 
     val gson: Gson = Gson()
-    val myUsername = LoginRepository.getInstance()!!.user!!.displayName
+    val myUsername = LoginRepository.getInstance()!!.user!!.username
     val token = LoginRepository.getInstance()!!.user!!.token
 
     //For setting the recyclerView.
@@ -107,7 +106,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        val data = initialData(token)
+        val data = InitialData(token)
         val jsonData = gson.toJson(data)
 
         //Before disconnecting, send "unsubscribe" event to server so that
