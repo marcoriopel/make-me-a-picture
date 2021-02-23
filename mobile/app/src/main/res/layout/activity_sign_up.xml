@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="225dp"
         android:ems="10"
-        android:hint="@string/nom_d_utilisateur"
+        android:hint="@string/prompt_username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/editTextTextPersonName"
         app:layout_constraintStart_toStartOf="@+id/editTextTextPersonName"
