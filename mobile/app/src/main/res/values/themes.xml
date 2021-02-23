@@ -14,4 +14,9 @@
         <!-- Customize your theme here. -->
         <item name="titleTextColor">@color/white</item>
     </style>
+
+    <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/poly_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
 </resources>
