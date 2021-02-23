@@ -1,7 +1,9 @@
 package com.example.prototype_mobile.model.connection.login
 
+import com.example.prototype_mobile.LoggedInUser
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import okhttp3.Response
 import org.json.JSONObject
 
@@ -72,13 +74,13 @@ class LoginRepository() {
 
     fun analyseLoginAnswer(response: Response, username: String): Result<LoggedInUser> {
         val jsonData: String = response.body()!!.string()
-        if(response.code() == 200) {
+        if(response.code() == ResponseCode.OK.code) {
             val Jobject = JSONObject(jsonData)
             val Jarray = Jobject.getString("token")
             val user = LoggedInUser(Jarray.toString(), username)
             return Result.Success(user)
         } else {
-            return Result.Error("Erreur dans le mot de passe ou le nom d'utilisateur")
+            return Result.Error(response.code())
         }
     }
 }
