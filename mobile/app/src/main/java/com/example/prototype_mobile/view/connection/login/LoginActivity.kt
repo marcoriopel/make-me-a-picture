@@ -12,9 +12,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.ActivityLoginBinding
-import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.chat.ChatActivity
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
