@@ -4,9 +4,9 @@ export interface User {
 }
 
 export interface NewUser {
-    firstname: string;
+    surname: string;
     name: string;
     username: string;
     password: string;
-    avatar: null;
+    avatar: number;
 }

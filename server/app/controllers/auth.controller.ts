@@ -24,36 +24,24 @@ export class AuthController {
     this.router = Router();
 
     this.router.post('/authenticate', (req, res) => {
-      this.authService.loginUser(req.body.username, req.body.password).then((response) => {
-        if (response) {
-          // TODO: Generate Json object with an interface to pass to the token generator
-          const token = this.tokenService.generateAccesToken(req.body.username);
-          res.status(StatusCodes.OK).send({ token });
-        }
-        else {
-          res.sendStatus(StatusCodes.UNAUTHORIZED);
-        }
+      this.authService.loginUser(req, res, (username: any) => {
+        const token = this.tokenService.generateAccesToken(username);
+        res.status(StatusCodes.OK).send({ token });
       });
     });
 
 
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req.body.username, req.body.password, req.body.name, req.body.surname, req.body.avatar).then((response) => {
-        if (response) {
-          // TODO: Generate Json object with an interface to pass to the token generator
-          const token = this.tokenService.generateAccesToken(req.body.username);
-          res.status(StatusCodes.OK).send({ token });
-        }
-        else {
-          res.sendStatus(StatusCodes.FORBIDDEN);
-        }
+      this.authService.registerUser(req, res, (username: any) => {
+        const token = this.tokenService.generateAccesToken(username);
+        res.status(StatusCodes.OK).send({ token });
       });
     });
 
     this.router.post('/logout', (req: Request, res: Response) => {
       this.tokenService.authenticateToken(req, res, (username: any) => {
         this.authService.addUserToLogCollection(username, false)
-        res.sendStatus(StatusCodes.ACCEPTED);
+        res.sendStatus(StatusCodes.OK);
       });
     });
 
