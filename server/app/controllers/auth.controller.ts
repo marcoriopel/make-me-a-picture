@@ -27,8 +27,9 @@ export class AuthController {
       this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
+          const avatar: number = response.avatar;
           const token = this.tokenService.generateAccesToken(req.body.username);
-          res.status(StatusCodes.OK).send({ token });
+          res.status(StatusCodes.OK).send({ token, avatar });
         }
         else {
           res.sendStatus(StatusCodes.UNAUTHORIZED);
@@ -41,8 +42,9 @@ export class AuthController {
       this.authService.registerUser(req.body.username, req.body.password, req.body.name, req.body.surname, req.body.avatar).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
+          const avatar: number = response.avatar;
           const token = this.tokenService.generateAccesToken(req.body.username);
-          res.status(StatusCodes.OK).send({ token });
+          res.status(StatusCodes.OK).send({ token, avatar });
         }
         else {
           res.sendStatus(StatusCodes.FORBIDDEN);

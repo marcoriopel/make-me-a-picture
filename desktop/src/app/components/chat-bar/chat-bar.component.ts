@@ -33,7 +33,7 @@ export class ChatBarComponent implements OnInit {
       } else {
         isUsersMessage = false;
       }
-      this.chat.push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
+      this.chat.push({"username": message.username, "avatar": message.avatar, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
     });
   }
 
@@ -41,14 +41,14 @@ export class ChatBarComponent implements OnInit {
     this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
   }
 
-
   onSubmit(): void {
     if(this.messageForm.value.message == "" || this.messageForm.value.message == null){
       this.messageForm.reset();
       return;
     } 
     const jwt = localStorage.getItem('token');
-    this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt});
+    const avatar = parseInt(localStorage.getItem('avatar') as string);
+    this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt, "avatar": avatar});
     this.messageForm.reset();
   }
 

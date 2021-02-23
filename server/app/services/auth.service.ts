@@ -16,7 +16,7 @@ export class AuthService {
             const user = await this.userCredentialsModel.getCredentials(username);
             if (user && user.password == password) {
                 await this.addUserToLogCollection(username, true);
-                return true;
+                return user;
             }
         } catch (e) {
             console.error(e);
@@ -36,7 +36,7 @@ export class AuthService {
             if (!user) {
                 await this.userCredentialsModel.registerUser(username, password, name, surname, avatar);
                 await this.addUserToLogCollection(username, true);
-                return true;
+                return user;
             }
         } catch (e) {
             console.error(e);

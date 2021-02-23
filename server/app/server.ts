@@ -47,7 +47,7 @@ export class Server {
                         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
                         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
                         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-                        io.emit('message', { "id": socket.id, "username": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+                        io.emit('message', { "id": socket.id, "username": user, "avatar": message.avatar, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
                     }
                 } catch (err) {
                     // err
