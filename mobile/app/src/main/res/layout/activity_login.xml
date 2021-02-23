@@ -18,38 +18,39 @@
         android:text="Connexion"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
+        android:textSize="32dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="76dp"
         />
 
     <EditText
         android:id="@+id/username"
-        android:maxLength="126"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/connexion"
+        android:layout_centerInParent="true"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="24dp"
         android:autofillHints="@string/prompt_username"
         android:hint="@string/prompt_username"
         android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true"
-        android:layout_below="@+id/connexion"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:maxLength="126"
+        android:selectAllOnFocus="true" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="200dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/username"
+        android:layout_centerInParent="true"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="24dp"
         android:autofillHints="@string/prompt_password"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
-        android:selectAllOnFocus="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:selectAllOnFocus="true" />
 
     <Button
         android:id="@+id/login"
@@ -79,8 +80,8 @@
 
     <LinearLayout
         android:id="@+id/container2"
-        android:layout_width="288dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="49dp"
         android:layout_below="@+id/password"
         android:layout_centerHorizontal="true">
 
@@ -91,9 +92,8 @@
             android:layout_below="@+id/password"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Vous n'avez pas de compte?"
-            tools:layout_editor_absoluteX="40dp"
-            tools:layout_editor_absoluteY="256dp" />
+            android:layout_marginEnd="5dp"
+            android:text="Vous n'avez pas de compte?" />
 
         <TextView
             android:id="@+id/signUp"
