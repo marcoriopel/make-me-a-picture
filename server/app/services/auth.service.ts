@@ -22,11 +22,13 @@ export class AuthService {
                 await this.addUserToLogCollection(userInfo.username, true);
                 next(userInfo.username);
             }
+            else {
+                return res.sendStatus(StatusCodes.NOT_FOUND);
+            }
         }
         catch {
             return res.sendStatus(StatusCodes.BAD_REQUEST)
         }
-        return res.sendStatus(StatusCodes.NOT_FOUND);
     }
 
     async addUserToLogCollection(username: string, isLogin: boolean) {
@@ -53,12 +55,14 @@ export class AuthService {
                 await this.addUserToLogCollection(userInfo.username, true);
                 next(userInfo.username)
             }
+            else {
+                return res.sendStatus(StatusCodes.CONFLICT);
+            }
         }
         catch (e) {
             console.error(e);
             return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
-        return res.sendStatus(StatusCodes.CONFLICT);
     }
 
 }
