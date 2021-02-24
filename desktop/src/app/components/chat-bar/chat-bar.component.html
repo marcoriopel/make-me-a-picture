@@ -1,5 +1,7 @@
 <div class="chat-bar">
-    
+    <button *ngIf="this.isWindowButtonAvailable" class="window-button" (click)="openExternalWindow()">
+        <i class="far fa-window-restore"></i>
+    </button>
     <div #chatContainer class="chat-container">
         <div *ngFor="let chatName of this.chatService.getChatList()">
             <div class="chat-button" (click)="this.changeChat(chatName)">

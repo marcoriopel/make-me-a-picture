@@ -1,6 +1,6 @@
 <div class="chat-bar">
     <div class="container">
-        <div #chatContainer class="chat-container">
+        <div id="message-scroller" class="chat-container">
             <div *ngFor="let message of chatService.getChatMessages()">
                 <div class="message reverse" *ngIf="message.isUsersMessage">
                     <div class="avatar"></div>
