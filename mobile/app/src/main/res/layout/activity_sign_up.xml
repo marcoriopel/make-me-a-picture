@@ -10,10 +10,10 @@
         android:id="@+id/signUpPageTitle"
         android:layout_width="334dp"
         android:layout_height="46dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="42dp"
         android:text="@string/sign_up"
         android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,19 +27,6 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/usernameSignUp"
         app:layout_constraintStart_toStartOf="@+id/usernameSignUp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
-
-    <EditText
-        android:id="@+id/passwordConfirmSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:ems="10"
-        android:hint="@string/prompt_password_confirm"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/passwordSignUp"
-        app:layout_constraintStart_toStartOf="@+id/passwordSignUp"
         app:layout_constraintTop_toTopOf="parent"
         android:autofillHints="" />
 
@@ -60,14 +47,14 @@
         android:id="@+id/firstNameSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="78dp"
         android:layout_marginTop="117dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/prompt_firstname"
         android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/usernameSignUp"
@@ -82,24 +69,103 @@
         app:layout_constraintTop_toTopOf="parent"
         android:autofillHints="" />
 
+    <EditText
+        android:id="@+id/passwordConfirmSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="348dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/prompt_password_confirm"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/passwordSignUp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/passwordSignUp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/avatar0"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="744dp"
+        android:src="@drawable/avatar0"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp" />
+
+    <ImageView
+        android:id="@+id/avatar1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="684dp"
+        android:src="@drawable/avatar1"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/avatar0"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp"
+        app:layout_constraintVertical_bias="0.506" />
+
+    <ImageView
+        android:id="@+id/avatar2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="636dp"
+        android:src="@drawable/avatar2"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.441"
+        app:layout_constraintStart_toEndOf="@+id/avatar1"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp" />
+
+    <ImageView
+        android:id="@+id/avatar3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="592dp"
+        android:src="@drawable/avatar3"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.558"
+        app:layout_constraintStart_toEndOf="@+id/avatar2"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp"
+        app:layout_constraintVertical_bias="0.024" />
+
+    <ImageView
+        android:id="@+id/avatar4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="544dp"
+        android:src="@drawable/avatar4"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.432"
+        app:layout_constraintStart_toEndOf="@+id/avatar3"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp" />
+
+    <ImageView
+        android:id="@+id/avatar5"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="504dp"
+        android:src="@drawable/avatar5"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.354"
+        app:layout_constraintStart_toEndOf="@+id/avatar4"
+        app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp"
+        />
+
     <Button
         android:id="@+id/sendSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="429dp"
+        android:layout_marginTop="504dp"
         android:text="@string/send"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/Widget.App.Button"/>
 
-    <Button
-        android:id="@+id/loginSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:text="@string/back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

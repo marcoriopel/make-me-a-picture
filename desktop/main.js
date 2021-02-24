@@ -17,7 +17,8 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     // icon: iconPath,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true,
     }
     
   })
@@ -33,7 +34,7 @@ function createWindow () {
   );
   
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
