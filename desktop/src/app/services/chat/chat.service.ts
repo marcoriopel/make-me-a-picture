@@ -6,7 +6,7 @@ import { io } from "socket.io-client";
 })
 export class ChatService {
 
-  private completChatList: any[] = [];
+  private completeChatList: any[] = [];
   private index: number = 0;
   private chatList: string[] = [];
   private currentChat: string = "General";
@@ -18,7 +18,7 @@ export class ChatService {
 
   connect(): void {
     // Prevent double connection
-    if (this.completChatList.length == 0) {
+    if (this.completeChatList.length == 0) {
       this.connectToNewChat("General", "http://18.217.235.167:3000/" );
       this.connectToNewChat("Local", "http://localhost:3000/");
       this.setCurrentChat(this.chatList[0]);
@@ -26,18 +26,18 @@ export class ChatService {
   }
 
   disconnect(): void {
-    this.completChatList.forEach(chat => {
+    this.completeChatList.forEach(chat => {
       chat["socket"].off("message");
       delete chat["socket"];
     });
-    this.completChatList = [];
+    this.completeChatList = [];
     this.chatList = [];
     this.currentChat = '';
   }
 
   setCurrentChat(name: string): void {
-    for(let i=0; i<this.completChatList.length; i++) {
-      if (this.completChatList[i]["name"] == name) {
+    for(let i=0; i<this.completeChatList.length; i++) {
+      if (this.completeChatList[i]["name"] == name) {
         this.index = i;
         this.currentChat = name;
         break;
@@ -46,7 +46,7 @@ export class ChatService {
   }
 
   getChatMessages(): void {
-    return this.completChatList[this.index]["messages"];
+    return this.completeChatList[this.index]["messages"];
   }
 
   getChatList(): string[] {
@@ -59,7 +59,7 @@ export class ChatService {
 
   sendMessage(message:string): void {
     const jwt = localStorage.getItem('token');
-    this.completChatList[this.index]["socket"].emit('message', {"text": message,"token": jwt});
+    this.completeChatList[this.index]["socket"].emit('message', {"text": message,"token": jwt});
   }
 
   private connectToNewChat(name: string, url: string): void {
@@ -67,22 +67,22 @@ export class ChatService {
     const socket = io(url);
     socket.connect();
     console.log(socket.connected);
-    const index = this.completChatList.push({name: name, url: url, socket: io(url), messages: []});
+    const index = this.completeChatList.push({name: name, url: url, socket: io(url), messages: []});
     this.index = index - 1;
     // TODO (Waiting for server side): Get history
     this.bindMessage(index - 1, name);
   }
 
   private bindMessage(index: number, name: string): void {
-    this.completChatList[index]["socket"].on('connect', () => {
+    this.completeChatList[index]["socket"].on('connect', () => {
       this.chatList.push(name);
       this.setCurrentChat(name);
     });
 
-    this.completChatList[index]["socket"].on('message', (message: any) => {
+    this.completeChatList[index]["socket"].on('message', (message: any) => {
       // TODO (Feature 85-90): Catch error if socket not connected
       const username = localStorage.getItem('username');
-      this.completChatList[index]["messages"].push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": message.username === username ? true: false, "textColor": message.textColor});
+      this.completeChatList[index]["messages"].push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": message.username === username ? true: false, "textColor": message.textColor});
     });
   }
 
