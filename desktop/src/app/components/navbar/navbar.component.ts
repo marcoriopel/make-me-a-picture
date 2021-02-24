@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '@app/services/auth/auth.service';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +9,11 @@ import { AuthService } from '@app/services/auth/auth.service';
 })
 export class NavbarComponent {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private chatService: ChatService) { }
 
   logout(): void {
     this.authService.logoutUser();
+    this.chatService.disconnect();
   }
 
 }
