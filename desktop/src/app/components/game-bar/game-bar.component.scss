@@ -1,0 +1,171 @@
+.game-bar {
+    position: absolute;
+    width: 365px;
+    height: 95%;
+    left: 0px;
+    cursor: pointer;
+    /* Gray 5 */
+    background: #E0E0E0;
+}
+
+.classic-button {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #4AA7DD;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.classic-button:active {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #2f7197;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+
+.solo-button{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #8BC640;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.solo-button:active{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #66912e;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.coop-button{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #F89524;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.coop-button:active{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #b86e1a;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.create-button{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #BA2034;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.create-button:active{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    //   /* Gray 6 */
+    background: #8f1828;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.title {
+    margin-left: 10%;
+}
+
+hr {
+    width: 90%;
+}
+

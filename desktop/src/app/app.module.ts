@@ -43,6 +43,10 @@ import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.compon
 import { ChatComponent } from './components/chat/chat.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { ChatService } from './services/chat/chat.service';
+import { GameBarComponent } from './components/game-bar/game-bar.component';
+import { SearchGameService } from './services/search-game/search-game.service';
+import { GameMenuComponent } from './components/game-menu/game-menu.component';
+import { GameSearchComponent } from './components/game-search/game-search.component';
 
 @NgModule({
     declarations: [
@@ -63,7 +67,10 @@ import { ChatService } from './services/chat/chat.service';
         AvatarComponent,
         NavbarComponent,
         AvatarIconComponent,
-        ChatComponent
+        ChatComponent,
+        GameBarComponent,
+        GameMenuComponent,
+        GameSearchComponent
     ],
     imports: [
         BrowserModule,
@@ -94,7 +101,7 @@ import { ChatService } from './services/chat/chat.service';
         NgxElectronModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
