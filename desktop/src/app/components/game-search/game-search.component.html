@@ -1,21 +1,21 @@
 
-    <button class="game-type-button" (click)="filterGameType('classic')" [ngClass]="{'blue' : toggleClassic, 'white': !toggleClassic}">
+    <button class="game-type-button" (click)="filterGameType('classic')" [ngClass]="{'blue' : this.filter.get('classic'), 'white': !this.filter.get('classic')}">
         <img [src]="classicBlackImgRef" alt="avatar" class="logo"> 
     </button>   
 
-    <button class="game-type-button" (click)="filterGameType('sprint')" [ngClass]="{'green' : toggleSprint, 'white': !toggleSprint}">
+    <button class="game-type-button" (click)="filterGameType('sprint')" [ngClass]="{'blue' : this.filter.get('sprint'), 'white': !this.filter.get('sprint')}">
         <img [src]="sprintImgRef" alt="avatar" class="logo"> 
     </button>   
 
-    <button class="game-type-button" (click)="filterGameType('easy')" [ngClass]="{'orange' : toggleEasy, 'white': !toggleEasy}">
+    <button class="game-type-button" (click)="filterGameType('easy')" [ngClass]="{'green' : this.filter.get('easy'), 'white': !this.filter.get('easy')}">
         <img [src]="easyImgRef" alt="avatar" class="logo"> 
     </button>   
 
-    <button class="game-type-button" (click)="filterGameType('normal')" [ngClass]="{'red' : toggleNormal, 'white': !toggleNormal}">
+    <button class="game-type-button" (click)="filterGameType('normal')" [ngClass]="{'orange' : this.filter.get('normal'), 'white': !this.filter.get('normal')}">
         <img [src]="normalImgRef" alt="avatar" class="logo"> 
     </button>   
 
-    <button class="game-type-button" (click)="filterGameType('hard')" [ngClass]="{'blue' : toggleHard, 'white': !toggleHard}">
+    <button class="game-type-button" (click)="filterGameType('hard')" [ngClass]="{'red' : this.filter.get('hard'), 'white': !this.filter.get('hard')}">
         <img [src]="hardImgRef" alt="avatar" class="logo"> 
     </button>   
 

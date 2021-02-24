@@ -20,17 +20,22 @@ export class SearchGameService {
     this.displayList = this.gameList;
   }
 
-  filterType(type: string): void {
-    this.filter('type', type);
+  fetchGameList(): void {
+    // TODO
   }
 
-  filterName(name: string): void {
-    console.log(name);
-    this.filter('name', name);
+  displayAllGame(): void {
+    this.displayList = this.gameList;
   }
 
-  filterDifficulty(difficulty: string): void {
-    this.filter('difficulty', difficulty);
+  filterName(gameName: string): void {
+    console.log(gameName);
+    this.filter('name', gameName);
+  }
+
+  filterGame(filter: Map<string, boolean>): void {
+    // TODO
+    console.log("TODO");
   }
 
   private filter(key: string, value: string): void {

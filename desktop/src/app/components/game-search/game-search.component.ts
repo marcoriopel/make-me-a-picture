@@ -9,11 +9,14 @@ import { SearchGameService } from '@app/services/search-game/search-game.service
 })
 export class GameSearchComponent implements OnInit {
 
-  toggleClassic = true;
-  toggleSprint = true;
-  toggleEasy = true;
-  toggleNormal = true;
-  toggleHard = true;
+  private emptyOrSpaceRegex: string = "^\\s+$";
+  filter = new Map([
+    ["classic", true],
+    ["sprint", true],
+    ["easy", true],
+    ["normal", true],
+    ["hard", true]
+  ])
 
   sprintImgRef: string = "../../../assets/img/sprintLogo.png";
   classicBlackImgRef: string =  "../../../assets/img/classicLogoBlack.png";
@@ -28,31 +31,24 @@ export class GameSearchComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, public searchGameService: SearchGameService) { }
 
   ngOnInit(): void {
-    // TODO: Get game list
+    this.searchGameService.fetchGameList();
   }
 
-  filterGameType(type: string): void {
-    switch(type) {
-      case "classic":
-        this.toggleClassic = !this.toggleClassic;
-        break;
-      case "sprint":
-        this.toggleSprint = !this.toggleSprint;
-        break;
-      case "easy":
-        this.toggleEasy = !this.toggleEasy;
-        break;
-      case "normal":
-        this.toggleNormal = !this.toggleNormal;
-        break;
-      case "hard":
-        this.toggleHard = !this.toggleHard;
-        break;
+  filterGameType(filter: string): void {
+    // Change togle
+    this.filter.set(filter, !this.filter.get(filter));
+    // Filter game list
+    this.searchGameService.filterGame(this.filter);
+  }
+
+  filterName(gameName: any): void {
+    // Reset filter toggle
+    this.filter.forEach((value: boolean, key: string)=> {this.filter.set(key, true);});
+    if (gameName.match(this.emptyOrSpaceRegex) || !gameName) {
+      this.searchGameService.displayAllGame();
+    } else {
+      this.searchGameService.filterName(gameName);
     }
-  }
-
-  filterName(name: any): void {
-    this.searchGameService.filterName(name);
   }
 
 }
