@@ -6,11 +6,6 @@
     width: 10px;
   }
   
-  ::-webkit-scrollbar-thumb {
-    // background: grey;
-    // border-radius: 10px;
-  }
-  
   .chat-bar {
     display: flex;
     margin: auto;
@@ -80,7 +75,7 @@
     }
     button{
       margin: 5px;
-      width: 7%;
+      width: 8%;
       height: 26px;
       border: 0px;
       padding: auto;

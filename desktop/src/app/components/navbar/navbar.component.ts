@@ -13,7 +13,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.authService.logoutUser();
-    this.chatService.deconnect();
+    this.chatService.disconnect();
   }
 
 }

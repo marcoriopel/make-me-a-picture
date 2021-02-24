@@ -2,7 +2,7 @@
     <div class="container">
         <div #chatContainer class="chat-container">
             <div *ngFor="let message of chatService.getChatMessages()">
-                <div class="message reverse" *ngIf="message.isUsersMessage == true">
+                <div class="message reverse" *ngIf="message.isUsersMessage">
                     <div class="avatar"></div>
                     <div class="message-text-container">
                         <p class="username">{{message.username}} - {{message.timeStamp}}</p>
