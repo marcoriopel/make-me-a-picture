@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
 import { NewUser } from '@app/classes/user';
@@ -31,11 +31,14 @@ export class RegisterComponent implements OnInit {
         Validators.minLength(1),
         Validators.maxLength(128)
       ]],
-      username: ['', [
+      avatar: ['', [
         Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(128),
-        forbiddenNameValidator
+      ]],
+        username: ['', [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(128),
+          forbiddenNameValidator
       ]],
       passwordGroup: this.fb.group({
         password: ['', [
@@ -53,13 +56,13 @@ export class RegisterComponent implements OnInit {
       password: this.userRegistrationForm.value.passwordGroup.password,
       surname: this.userRegistrationForm.value.name,
       name: this.userRegistrationForm.value.firstname,
-      avatar: 1 // TODO
+      avatar: this.userRegistrationForm.value.avatar
     }
     this.authService.register(user).subscribe(
       res => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userRegistrationForm.value.username);
-        console.log('res: ' + res);
+        localStorage.setItem('avatar', res.avatar);
         this.router.navigate(['/home']);
         this.chatService.connect();
       },

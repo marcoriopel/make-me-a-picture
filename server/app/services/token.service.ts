@@ -27,11 +27,11 @@ export class TokenService {
 
     /**
      * Generate a new acces to the user
-     * @param user: Data to encryp in the jwt
+     * @param username: Data to encryp in the jwt
      * @returns encrypted token
      */
-    public generateAccesToken(user: any): any {
-        return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+    public generateAccesToken(username: string): any {
+        return jwt.sign(username, process.env.ACCES_TOKEN_SECRET);
     }
 
     /** 

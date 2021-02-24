@@ -6,6 +6,7 @@ import { inject, injectable } from 'inversify';
 import {
   StatusCodes,
 } from 'http-status-codes';
+import { UserInfo, AuthInfo } from '@app/classes/user';
 
 
 @injectable()
@@ -24,17 +25,19 @@ export class AuthController {
     this.router = Router();
 
     this.router.post('/authenticate', (req, res) => {
-      this.authService.loginUser(req, res, (username: any) => {
-        const token = this.tokenService.generateAccesToken(username);
-        res.status(StatusCodes.OK).send({ token });
+      this.authService.loginUser(req, res, (userInfo: UserInfo) => {
+        const token = this.tokenService.generateAccesToken(userInfo.username);
+          const avatar: number = userInfo.avatar;
+          res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
 
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req, res, (username: any) => {
-        const token = this.tokenService.generateAccesToken(username);
-        res.status(StatusCodes.OK).send({ token });
+      this.authService.registerUser(req, res, (userInfo: UserInfo) => {
+        const token = this.tokenService.generateAccesToken(userInfo.username);
+        const avatar: number = userInfo.avatar;
+        res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
