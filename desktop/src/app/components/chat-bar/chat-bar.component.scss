@@ -1,18 +1,18 @@
 .chat-bar {
-  position: absolute;
   width: 380px;
-  height: 92.5%;
-  right: 0px;
-  top: 66px;
-
+  height: 100%;
   /* Gray 5 */
   background: #E0E0E0;
+}
+
+.chat-container {
+  padding-top: 5%;
+  width: 100%;
 }
 
 .chat-button:active {
   width: 90%;
   height: 60px;
-  margin: 5%;
   top: 102px;
   //   /* Gray 6 */
   background: #F2F2F2;
@@ -32,7 +32,7 @@
 .chat-button {
   width: 90%;
   height: 60px;
-  margin: 5%;
+  margin: 0 auto;
   top: 102px;
   //   /* Gray 6 */
   background: #ffffff;
@@ -63,5 +63,10 @@ hr {
 
 .window-button {
   float: right;
-  margin-bottom: 200px;
+  border:none;
+  background-color: #E0E0E0;
+}
+
+.window-button:hover {
+  cursor: pointer;
 }

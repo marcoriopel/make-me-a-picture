@@ -1,6 +1,6 @@
 <div class="chat-bar">
-    <button class="window-button" (click)="openExternalWindow()">
-        <i class="far fa-clone"></i>
+    <button *ngIf="this.isWindowButtonAvailable" class="window-button" (click)="openExternalWindow()">
+        <i class="far fa-window-restore"></i>
     </button>
     <div #chatContainer class="chat-container">
         <div *ngFor="let chatName of this.chatService.getChatList()">

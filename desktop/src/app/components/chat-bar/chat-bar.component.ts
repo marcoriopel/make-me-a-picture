@@ -10,6 +10,8 @@ import { ChatService } from '@app/services/chat/chat.service'
 
 export class ChatBarComponent implements OnInit {
 
+  isWindowButtonAvailable: boolean = true;
+
   constructor(public chatService: ChatService, private electronService: ElectronService) {}
 
   changeChat(name: string): void {
@@ -17,18 +19,20 @@ export class ChatBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(!this.electronService.process){
+      this.isWindowButtonAvailable = false;
+    }
   }
 
   openExternalWindow(): void {
     this.chatService.isChatInExternalWindow = true;
     let BrowserWindow = this.electronService.remote.BrowserWindow
     let chatWindow = new BrowserWindow({
-      width: 600,
+      width: 384,
       height: 840,
       resizable: false,
     })
     chatWindow.loadURL('file://' + __dirname + '/index.html#/chat');
-
     chatWindow.on('close', () => {
       this.chatService.isChatInExternalWindow = false;
     })
