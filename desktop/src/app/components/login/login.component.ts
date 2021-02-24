@@ -37,8 +37,10 @@ export class LoginComponent implements OnInit {
           this.chatService.connect();
         },
         err => {
-          if (err.error == "Unauthorized")
+          if (err.error == "Not Found")
             this.form.get('password')?.setErrors({'notValid': true});
+          else
+            console.log(err.error);
         }
       )
     

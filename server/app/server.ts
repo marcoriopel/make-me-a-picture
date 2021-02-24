@@ -20,7 +20,6 @@ export class Server {
 
     init(): void {
         this.application.app.set('port', this.appPort);
-
         this.server = http.createServer(this.application.app);
         this.socketIoConfig();
         this.server.listen(this.appPort);
