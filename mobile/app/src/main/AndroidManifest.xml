@@ -15,7 +15,10 @@
         android:usesCleartextTraffic="true"
         >
 
-        <activity android:name="com.example.prototype_mobile.view.connection.sign_up.SignUpActivity" />
+        <activity
+            android:name="com.example.prototype_mobile.view.connection.sign_up.SignUpActivity"
+            android:screenOrientation="landscape"
+            />
         <activity android:name=".view.chat.ChatActivity" />
         <activity
             android:name="com.example.prototype_mobile.view.connection.login.LoginActivity"

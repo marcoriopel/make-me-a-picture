@@ -7,7 +7,7 @@ data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String)
 
 // Data class for the sign up
-data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String)
+data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String, val avatar: Int)
 
 // Data class for the login
 data class LoggedInUser(val token: String, val username: String)
