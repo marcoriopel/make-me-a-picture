@@ -12,9 +12,9 @@ export class SearchGameService {
     // TODO: Get game list
     this.gameList = [
       {name: 'Game 1', type: 'classic', difficulty: 'noraml'},
-      {name: 'Game 2', type: 'solo', difficulty: 'hard'},
-      {name: 'Game 3', type: 'coop', difficulty: 'easy'},
-      {name: 'Game 4', type: 'solo', difficulty: 'mushroom'},
+      {name: 'Game 2', type: 'sprint', difficulty: 'hard'},
+      {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
+      {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
       {name: 'Game 5', type: 'classic', difficulty: 'hard'},
     ]
     this.displayList = this.gameList;

@@ -1,15 +1,21 @@
 <div class="game-bar">
 
     <div class="classic-button" id (click)="classic()">
-        <p class="title"> Classique </p>
+        <p class="title"> Classique 
+            <img [src]="classicBlackImgRef" class="game-logo"> 
+        </p>
     </div>
 
     <div class="solo-button" (click)="sprintSolo()">
-        <p class="title"> Sprint Solo </p>
+        <p class="title"> Sprint Solo
+            <img [src]="sprintImgRef" class="game-logo">     
+        </p>
     </div>
 
     <div class="coop-button" (click)="sprintCoop()">
-        <p class="title"> Sprint Coop </p>
+        <p class="title"> Sprint Coop
+            <img [src]="sprintImgRef" class="game-logo">         
+        </p>
     </div>
 
     <div class="create-button" (click)="createWordImage()">

@@ -15,7 +15,7 @@
 }
 
 .white {
-    background-color: #F2F2F2;
+    background-color: #E0E0E0;
 }
 
 .title {
@@ -23,6 +23,7 @@
 }
 
 .game-type-button {
+    border: none;
     margin-left: 5%;
     margin-top: 2%;
     border-radius: 30px;
@@ -72,6 +73,12 @@
     font-size: 24px;
     color:  #F2F2F2;
     line-height: 58px;
+    
+    .game-logo {
+        float:right;
+        margin: 10px;
+        height: 40px;
+    }
 }
 
 .game-button:active{
@@ -93,3 +100,4 @@
     color:  #F2F2F2;
     line-height: 58px;
 }
+
