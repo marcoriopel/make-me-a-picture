@@ -2,12 +2,12 @@ package com.example.prototype_mobile.view.connection.sign_up
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
@@ -22,12 +22,14 @@ import java.util.regex.Matcher.*
 class SignUpActivity : AppCompatActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var binding: ActivitySignUpBinding
+    private var avatar = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        setAvatar()
 
         signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory())
             .get(SignUpViewModel::class.java)
@@ -45,7 +47,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.usernameSignUp.error = getString(signUpState.usernameError)
             }
             if (signUpState.passwordError != null) {
-            binding.passwordSignUp.error = getString(signUpState.passwordError)
+                binding.passwordSignUp.error = getString(signUpState.passwordError)
             }
             if (signUpState.passwordConfirmationError != null) {
                 binding.passwordConfirmSignUp.error = getString(signUpState.passwordConfirmationError)
@@ -68,13 +70,13 @@ class SignUpActivity : AppCompatActivity() {
             }
         })
 
-
         binding.sendSignUp.setOnClickListener {
             val formData = SignUpInfo(
                     binding.firstNameSignUp.text.toString(),
                     binding.lastNameSignUp.text.toString(),
                     binding.usernameSignUp.text.toString(),
-                    StringUtil.hashSha256(binding.passwordSignUp.text.toString()))
+                    StringUtil.hashSha256(binding.passwordSignUp.text.toString()),
+                    avatar)
 
             val isFormFilled = signUpViewModel.signUpDataVerification(
                     formData,
@@ -86,16 +88,20 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun onClick(p0: View?) {
-        when (p0!!.id) {
-            R.id.send -> chooseAvatar(p0)
+    private fun setAvatar() {
+        val avatarButtons = arrayOf(binding.avatar0, binding.avatar1, binding.avatar2, binding.avatar3, binding.avatar4, binding.avatar5)
+        val selectedAvatarsResources = arrayOf(R.drawable.avatar0_selected, R.drawable.avatar1_selected, R.drawable.avatar2_selected, R.drawable.avatar3_selected, R.drawable.avatar4_selected, R.drawable.avatar5_selected)
+        val avatarsResources = arrayOf(R.drawable.avatar0, R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4, R.drawable.avatar5)
+        avatarButtons[avatar].setImageResource(selectedAvatarsResources[avatar])
+
+        for (i in avatarButtons.indices) {
+            avatarButtons[i].setOnClickListener {
+                avatarButtons[avatar].setImageResource(avatarsResources[avatar])
+                avatar = i
+                avatarButtons[avatar].setImageResource(selectedAvatarsResources[avatar])
+            }
         }
     }
-
-    private fun chooseAvatar(id: View?) {
-
-    }
-
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
