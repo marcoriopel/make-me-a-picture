@@ -4,7 +4,7 @@ import * as socketio from "socket.io";
 
 
 @injectable()
-export class ChatService {
+export class ChatManagerService {
 
     constructor() {
     }

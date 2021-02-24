@@ -24,7 +24,7 @@ export class AuthController {
   private configureRouter(): void {
     this.router = Router();
 
-    this.router.post('/authenticate', (req, res) => {
+    this.router.post('/login', (req, res) => {
       this.authService.loginUser(req, res, (userInfo: UserInfo) => {
         const token = this.tokenService.generateAccesToken(userInfo.username);
           const avatar: number = userInfo.avatar;

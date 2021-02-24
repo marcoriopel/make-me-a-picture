@@ -3,11 +3,12 @@ export const TYPES = {
     Application: Symbol('Application'),
 
     AuthController: Symbol('AuthController'),
+    GamesController: Symbol('GamesController'),
 
     TokenService: Symbol('TokenService'),
     SocketService: Symbol('SocketService'),
     AuthService: Symbol('AuthService'),
-    ChatService: Symbol('ChatService'),
+    ChatManagerService: Symbol('ChatManagerService'),
 
     DatabaseModel: Symbol('DatabaseModel'),
     UserCredentialsModel: Symbol('UserCredentialsModel'),
