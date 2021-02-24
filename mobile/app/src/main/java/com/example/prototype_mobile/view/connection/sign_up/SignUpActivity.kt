@@ -5,10 +5,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.prototype_mobile.R
 import com.example.prototype_mobile.SignUpInfo
 import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
@@ -84,8 +86,18 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithUser(username: String) {
+    fun onClick(p0: View?) {
+        when (p0!!.id) {
+            R.id.send -> chooseAvatar(p0)
+        }
+    }
 
+    private fun chooseAvatar(id: View?) {
+
+    }
+
+
+    private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
         val intent = Intent(this, ChatActivity::class.java);
         startActivity(intent)
