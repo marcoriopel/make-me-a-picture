@@ -2,6 +2,7 @@ package com.example.prototype_mobile.view.connection.sign_up
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
@@ -22,12 +23,14 @@ import java.util.regex.Matcher.*
 class SignUpActivity : AppCompatActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var binding: ActivitySignUpBinding
+    private var avatar = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        setAvatar()
 
         signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory())
             .get(SignUpViewModel::class.java)
@@ -68,13 +71,13 @@ class SignUpActivity : AppCompatActivity() {
             }
         })
 
-
         binding.sendSignUp.setOnClickListener {
             val formData = SignUpInfo(
                     binding.firstNameSignUp.text.toString(),
                     binding.lastNameSignUp.text.toString(),
                     binding.usernameSignUp.text.toString(),
-                    StringUtil.hashSha256(binding.passwordSignUp.text.toString()))
+                    StringUtil.hashSha256(binding.passwordSignUp.text.toString()),
+                    avatar)
 
             val isFormFilled = signUpViewModel.signUpDataVerification(
                     formData,
@@ -86,16 +89,17 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun onClick(p0: View?) {
-        when (p0!!.id) {
-            R.id.send -> chooseAvatar(p0)
+    private fun setAvatar() {
+        val avatarButtons = arrayOf(binding.avatar0, binding.avatar1, binding.avatar2, binding.avatar3, binding.avatar4, binding.avatar5)
+        avatarButtons[avatar].setBackgroundColor(Color.parseColor("black"))
+        for (i in avatarButtons.indices) {
+            avatarButtons[i].setOnClickListener {
+                avatarButtons[avatar].setBackgroundColor(Color.parseColor("white"))
+                avatar = i
+                avatarButtons[avatar].setBackgroundColor(Color.parseColor("black"))
+            }
         }
     }
-
-    private fun chooseAvatar(id: View?) {
-
-    }
-
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
