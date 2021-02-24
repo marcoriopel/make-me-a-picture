@@ -1,9 +1,27 @@
-<app-navbar></app-navbar>
-<div class="container">
-    <app-sidebar></app-sidebar>
-    <app-attribute-panel></app-attribute-panel>
-    <div #workSpace id="workSpace">
-        <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
-        <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
+<div #workSpace id="draw-space">
+    <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
+    <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
+</div>
+<div id="tool-space">
+    <div class="colors">
+        <button class="individual-color add-button"><i class="fas fa-plus"></i></button>
+        <button
+        *ngFor="let color of previousColors"
+        class="individual-color"
+        [ngStyle]="{ 'background-color': color }"
+        (click)="this.setColor(color)"
+        ></button>
+    </div>
+    <!-- <mat-slider [min]="min" [max]="max" [step]="step" [(value)]="value" (change)="this.changeValue()"> </mat-slider> -->
+    <div class="slider">
+        <mat-slider></mat-slider>
+    </div>
+    <div class="tool-buttons-container">
+        <button class="tool-button" (click)="setPencil()"><i class="fas fa-pencil-alt fa-2x"></i></button>
+        <button class="tool-button" (click)="setEraser()"><i class="fas fa-eraser fa-2x"></i></button>
+        <button class="tool-button" (click)="this.undoRedoService.undo()"><i class="fas fa-undo fa-2x"></i></button>
+        <button class="tool-button" (click)="this.undoRedoService.redo()"><i class="fas fa-redo fa-2x"></i></button>
     </div>
 </div>
+
+

@@ -4,9 +4,7 @@
 }
 
 #workSpace {
-    background-color: #3b3737;
-    overflow: auto;
-    flex: 1 1 auto;
+    height: 95%;
 }
 
 .drawing {
@@ -26,3 +24,65 @@
     background-color: #09acd9;
     cursor: pointer;
 }
+
+#tool-space {
+    position: absolute;
+    top: 600px;
+    height: 100px;
+    width: 800px;
+    // background-color: powderblue;
+}
+
+.individual-color {
+    height: 28px;
+    width: 28px;
+    background-color: red;
+    // display: grid;
+    margin: 3px;
+    border: none;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+
+
+}
+
+.add-button {
+    background-color: #E0E0E0;
+    padding-top: 4px;
+}
+
+.colors {
+    padding-top: 20px;
+    padding-left: 50px;
+    width: 400px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
+}
+
+.slider {
+    padding-left: 50px;
+}
+
+mat-slider {
+    width: 386px;
+}
+
+.tool-buttons-container {
+    position: absolute;
+    display: grid;
+    grid-template-columns: auto auto;
+    right: 220px;
+    top: 10px;
+}
+
+.tool-button {
+    border:none;
+    background-color: #FFFFFF;
+    padding: 6px;
+    margin: 4px;
+    cursor: pointer;
+    border-radius: 16px;
+    outline: none;
+}
+

@@ -7,8 +7,10 @@ import {
     MINIMUM_WORKSPACE_HEIGHT,
     MINIMUM_WORKSPACE_WIDTH,
 } from '@app/ressources/global-variables/global-variables';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
 import { ToolSelectionService } from '@app/services/tool-selection/tool-selection.service';
+import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 
 @Component({
     selector: 'app-editor',
@@ -27,10 +29,28 @@ export class EditorComponent implements AfterViewInit {
 
     shortcutsArray: string[] = ['c', 'e', 'z', 'Z', 'g'];
 
+    pencilColor: string;
+    previousColors: string[] = [
+        "#EB5757",
+        "#F2994A",
+        "#F2C94C",
+        "#219653",
+        "#27AE60",
+        "#2F80ED",
+        "#2D9CDB",
+        "#56CCF2",
+        "#9B51E0",
+        "#BB6BD9",
+        "#231F20",
+    ]
+
     constructor(
         public hotkeyService: HotkeyService,
         public toolSelectionService: ToolSelectionService,
+        public drawingService: DrawingService,
+        public undoRedoService: UndoRedoService,
     ) {
+        this.drawingService.color = "#000000";
     }
 
     ngAfterViewInit(): void {
@@ -71,5 +91,18 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.previewDiv.style.display = 'none';
+    }
+
+    setColor(color: string){
+        this.drawingService.color = color;
+    }
+
+    setEraser(): void {
+        this.pencilColor = this.drawingService.color;
+        this.drawingService.color = "#FFFFFF"
+    }
+
+    setPencil(): void {
+        this.drawingService.color = this.pencilColor;
     }
 }

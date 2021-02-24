@@ -1,8 +1,8 @@
 // Global variables are stored here
-export const MINIMUM_CANVAS_WIDTH = 700;
-export const MINIMUM_CANVAS_HEIGHT = 700;
-export const MINIMUM_WORKSPACE_WIDTH = 700;
-export const MINIMUM_WORKSPACE_HEIGHT = 700;
+export const MINIMUM_CANVAS_WIDTH = 800;
+export const MINIMUM_CANVAS_HEIGHT = 600;
+export const MINIMUM_WORKSPACE_WIDTH = 800;
+export const MINIMUM_WORKSPACE_HEIGHT = 600;
 export const TOOLTIP_DELAY = 500;
 export const MAXIMUM_NUMBER_OF_COLORS = 10;
 export const MAX_OPACITY = 100;

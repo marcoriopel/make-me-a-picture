@@ -41,7 +41,8 @@ import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { ChatService } from './services/chat/chat.service';
-import { ChatComponent } from './components/chat/chat.component'
+import { ChatComponent } from './components/chat/chat.component';
+import { ImageCreationComponent } from './components/image-creation/image-creation.component'
 @NgModule({
     declarations: [
         AppComponent,
@@ -60,7 +61,8 @@ import { ChatComponent } from './components/chat/chat.component'
         RegisterComponent,
         AvatarComponent,
         NavbarComponent,
-        ChatComponent
+        ChatComponent,
+        ImageCreationComponent
     ],
     imports: [
         BrowserModule,
