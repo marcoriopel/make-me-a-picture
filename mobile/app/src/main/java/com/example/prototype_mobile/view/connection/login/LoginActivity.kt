@@ -12,9 +12,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.R
+import com.example.prototype_mobile.databinding.ActivityLoginBinding
+import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.chat.ChatActivity
-import com.example.prototype_mobile.view.connection.signup.SingUpActivity
+import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
@@ -22,17 +23,13 @@ import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFac
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_login)
-
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
-        val login = findViewById<Button>(R.id.login)
-        val signup = findViewById<Button>(R.id.signUp)
-        val loading = findViewById<ProgressBar>(R.id.loading)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
@@ -42,20 +39,20 @@ class LoginActivity : AppCompatActivity() {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
-            login.isEnabled = loginState.isDataValid
+            binding.login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+                binding.username.error = getString(loginState.usernameError)
             }
 
             if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
+                binding.password.error = getString(loginState.passwordError)
             }
         })
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
-            loading.visibility = View.GONE
+            binding.loading.visibility = View.GONE
 
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
@@ -69,32 +66,32 @@ class LoginActivity : AppCompatActivity() {
 
         })
 
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(username.text.toString(), false)
+        binding.username.afterTextChanged {
+            loginViewModel.loginDataChanged(binding.username.text.toString(), false)
         }
 
-        password.afterTextChanged {
-            loginViewModel.loginDataChanged(password.text.toString(), true)
+        binding.password.afterTextChanged {
+            loginViewModel.loginDataChanged(binding.password.text.toString(), true)
         }
 
-        login.setOnClickListener {
-            loading.visibility = View.VISIBLE
-            loginViewModel.login(username.text.toString(), password.text.toString())
+        binding.login.setOnClickListener {
+            binding.loading.visibility = View.VISIBLE
+            loginViewModel.login(binding.username.text.toString(), StringUtil.hashSha256(binding.password.text.toString()))
         }
 
-        signup.setOnClickListener {
-            val intent = Intent(this, SingUpActivity::class.java)
+        binding.signUp.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-       val displayName = model.displayName
+    private fun updateUiWithUser(username: String) {
         val intent = Intent(this, ChatActivity::class.java);
         startActivity(intent)
         Toast.makeText(
                 applicationContext,
-                "Bienvenue $displayName",
+                "Bienvenue $username",
                 Toast.LENGTH_LONG
         ).show()
     }

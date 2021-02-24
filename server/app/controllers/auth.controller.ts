@@ -4,7 +4,6 @@ import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import {
-  ReasonPhrases,
   StatusCodes,
 } from 'http-status-codes';
 
@@ -24,32 +23,11 @@ export class AuthController {
   private configureRouter(): void {
     this.router = Router();
 
-    /**
-     * @swagger
-     * /api/auth/authenticate:
-     *   post:
-     *     summary: Login user request
-     *     description: Send a post request to try to authenticate a user.
-     *     parameters:
-     *         - name: username
-     *           description: Your username
-     *           in: formData
-     *           required: true
-     *           type: string
-     *         - name: password
-     *           description: Your password
-     *           in: formData
-     *           required: true
-     *           type: string
-     */
     this.router.post('/authenticate', (req, res) => {
       this.authService.loginUser(req.body.username, req.body.password).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          const user = req.body.username;
-          // TODO: Add user to ther userConnected[]
-
-          const token = this.tokenService.generateAccesToken(user);
+          const token = this.tokenService.generateAccesToken(req.body.username);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -59,32 +37,11 @@ export class AuthController {
     });
 
 
-    /**
-     * @swagger
-     * /api/auth/register:
-     *   post:
-     *     summary: Register user request
-     *     description: Send a post request to try to register a user.
-     *     parameters:
-     *         - name: username
-     *           description: Your username
-     *           in: formData
-     *           required: true
-     *           type: string
-     *         - name: password
-     *           description: Your password
-     *           in: formData
-     *           required: true
-     *           type: string
-     */
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req.body.username, req.body.password).then((response) => {
+      this.authService.registerUser(req.body.username, req.body.password, req.body.name, req.body.surname, req.body.avatar).then((response) => {
         if (response) {
           // TODO: Generate Json object with an interface to pass to the token generator
-          const user = req.body.username;
-          // TODO: Add user to the userConnected[]
-
-          const token = this.tokenService.generateAccesToken(user);
+          const token = this.tokenService.generateAccesToken(req.body.username);
           res.status(StatusCodes.OK).send({ token });
         }
         else {
@@ -93,14 +50,9 @@ export class AuthController {
       });
     });
 
-    /**
-     * Logout from the app
-     * + Exemple d'utilisation de lock une route avec un token
-     */
     this.router.post('/logout', (req: Request, res: Response) => {
-      this.tokenService.authenticateToken(req, res, (user: any) => {
-        //TODO: Remove user from the userConnected[]
-
+      this.tokenService.authenticateToken(req, res, (username: any) => {
+        this.authService.addUserToLogCollection(username, false)
         res.sendStatus(StatusCodes.ACCEPTED);
       });
     });

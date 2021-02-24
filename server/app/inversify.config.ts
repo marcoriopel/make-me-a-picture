@@ -4,6 +4,7 @@ import { Container } from 'inversify';
 import { Application } from './app';
 import { Server } from './server';
 import { UserCredentialsModel } from './models/user-credentials.model';
+import { UserLogsModel } from './models/user-logs.model';
 import { TYPES } from './types';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
@@ -18,6 +19,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.TokenService).to(TokenService)
     container.bind(TYPES.DatabaseModel).to(DatabaseModel);
     container.bind(TYPES.UserCredentialsModel).to(UserCredentialsModel);
+    container.bind(TYPES.UserLogsModel).to(UserLogsModel);
     return container;
 };
 const myContainer = new Container();

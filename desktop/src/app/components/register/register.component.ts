@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
-import { User } from '@app/classes/user';
+import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,7 @@ export class RegisterComponent implements OnInit {
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   errors = errorMessages;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private chatService: ChatService) { }
 
   ngOnInit(): void {
     this.userRegistrationForm = this.fb.group({
@@ -47,9 +48,12 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
-    const user: User = {
+    const user: NewUser = {
       username: this.userRegistrationForm.value.username,
-      password: this.userRegistrationForm.value.passwordGroup.password
+      password: this.userRegistrationForm.value.passwordGroup.password,
+      surname: this.userRegistrationForm.value.name,
+      name: this.userRegistrationForm.value.firstname,
+      avatar: 1 // TODO
     }
     this.authService.register(user).subscribe(
       res => {
@@ -57,7 +61,7 @@ export class RegisterComponent implements OnInit {
         localStorage.setItem('username', this.userRegistrationForm.value.username);
         console.log('res: ' + res);
         this.router.navigate(['/home']);
-        // set information
+        this.chatService.connect();
       },
       err => {
         console.log(err);

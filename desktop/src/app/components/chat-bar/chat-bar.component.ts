@@ -1,7 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { FormBuilder } from '@angular/forms';
-import { io, Socket } from "socket.io-client";
+import { Component, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
 
@@ -12,37 +9,14 @@ import { ChatService } from '@app/services/chat/chat.service'
 })
 
 export class ChatBarComponent implements OnInit {
-  @ViewChild("chatContainer") chatContainer: ElementRef;
 
-  messageForm = this.formBuilder.group({
-    message: '',
-  })
+  constructor(public chatService: ChatService, private electronService: ElectronService) {}
 
-  chat: any[] = [];
-  socket: Socket;
-
-  constructor(private formBuilder: FormBuilder, private electronService: ElectronService, public chatService: ChatService) {
-    this.socket = io(environment.socket_url);
-    this.chatService.connectToChat(environment.socket_url);
-  }
-  
-  changeChat(url: any): void {
-    this.chatService.unbindMessage();
-    this.chatService.connectToChat(url);
+  changeChat(name: string): void {
+    this.chatService.setCurrentChat(name)
   }
 
   ngOnInit(): void {
-  }
-
-
-  onSubmit(): void {
-    if(this.messageForm.value.message == "" || this.messageForm.value.message == null){
-      this.messageForm.reset();
-      return;
-    } 
-    const jwt = localStorage.getItem('token');
-    this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt});
-    this.messageForm.reset();
   }
 
   openExternalWindow(): void {

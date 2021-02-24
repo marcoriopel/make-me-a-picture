@@ -18,12 +18,10 @@ export class ChatComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, public chatService: ChatService) {}
 
-  ngOnInit(): void {
-    // this.chatService.connectToChat(environment.socket_url);
-  }
+  ngOnInit(): void {}
 
-  connectToChat(url: string): void {
-    this.chatService.connectToChat(url);
+  connectToChat(name: string): void {
+    this.chatService.setCurrentChat(name);
   }
 
   onNewMessage(): void {

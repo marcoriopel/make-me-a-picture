@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.LoggedInUser
+import com.example.prototype_mobile.LoginResult
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.model.connection.login.LoggedInUser
-import com.example.prototype_mobile.util.StringUtil
-import com.example.prototype_mobile.view.connection.login.LoggedInUserView
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.view.connection.login.LoginFormState
 import kotlinx.coroutines.*
 
@@ -24,18 +24,22 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
         viewModelScope.launch {
-            val result : Result<LoggedInUser> = loginRepository.login(username, StringUtil.hashSha256(password))
+            val result : Result<LoggedInUser> = loginRepository.login(username, password)
             if (result is Result.Success) {
-                _loginResult.value =
-                        LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-            } else {
-                _loginResult.value = LoginResult(error = R.string.login_failed)
+                _loginResult.value = LoginResult(success = result.data.username)
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_FOUND.code -> _loginResult.value = LoginResult(error = R.string.login_failed)
+                    ResponseCode.BAD_REQUEST.code -> _loginResult.value = LoginResult(error = R.string.bad_request)
+                }
             }
         }
     }
 
     fun loginDataChanged(loginData: String, isPassword: Boolean) {
-        if (!loginData.isNotBlank()) {
+        if (loginData.isBlank()) {
             if (!isPassword) {
                 _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
             } else {

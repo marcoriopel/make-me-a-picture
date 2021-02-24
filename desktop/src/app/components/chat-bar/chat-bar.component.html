@@ -2,14 +2,13 @@
     <button class="window-button" (click)="openExternalWindow()">
         <i class="far fa-clone"></i>
     </button>
-    
     <div #chatContainer class="chat-container">
-        <div *ngFor="let chat of this.chatService.chatList">
-            <div class="chat-button" (click)="changeChat(chat.url)">
-                <p>{{chat.name}}</p>
+        <div *ngFor="let chatName of this.chatService.getChatList()">
+            <div class="chat-button" (click)="this.changeChat(chatName)">
+                <p>{{chatName}}</p>
             </div>
         </div>
     </div>
-    <hr>
+
     <app-chat class="chat"></app-chat>
 </div>
