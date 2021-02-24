@@ -40,6 +40,7 @@ import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.component';
+import { ChatComponent } from './components/chat/chat.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -58,7 +59,8 @@ import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.compon
         RegisterComponent,
         AvatarComponent,
         NavbarComponent,
-        AvatarIconComponent
+        AvatarIconComponent,
+        ChatComponent
     ],
     imports: [
         BrowserModule,

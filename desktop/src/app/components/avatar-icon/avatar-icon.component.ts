@@ -13,7 +13,6 @@ export class AvatarIconComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(typeof(this.avatar));
     switch(this.avatar){
       case 0 :
         this.avatarImgRef += "avatar0.png"
