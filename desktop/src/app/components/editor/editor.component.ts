@@ -60,6 +60,7 @@ export class EditorComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const workspaceElement: HTMLElement = this.workSpaceRef.nativeElement;
+            this.drawingService.gridCanvas.style.cursor = 'crosshair';
             this.workSpaceSize.x = workspaceElement.offsetWidth;
             this.workSpaceSize.y = workspaceElement.offsetHeight;
             this.previewDiv = this.previewDivRef.nativeElement;
