@@ -33,9 +33,18 @@ export class ChatBarComponent implements OnInit {
       resizable: false,
     })
     chatWindow.loadURL('file://' + __dirname + '/index.html#/chat');
+
+    let chatBar = document.getElementById('chat-bar');
+    if(chatBar){
+      chatBar.style.display = 'none';
+    }
+
     chatWindow.on('close', () => {
       this.chatService.isChatInExternalWindow = false;
+      let chatBar = document.getElementById('chat-bar');
+      if(chatBar){
+        chatBar.style.display = 'block';
+      }
     })
   }
-
 }
