@@ -22,17 +22,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
-import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
 import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { GridComponent } from './components/grid/grid.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
-import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
-import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AvatarComponent } from './components/avatar/avatar.component'
@@ -48,21 +42,15 @@ import { ImageCreationComponent } from './components/image-creation/image-creati
         AppComponent,
         GridComponent,
         EditorComponent,
-        SidebarComponent,
         DrawingComponent,
         MainPageComponent,
-        AttributePanelComponent,
-        EraserAttributesComponent,
-        PencilAttributesComponent,
         ChatBarComponent,
-        SliderComponent,
-        ColorPickerComponent,
         LoginComponent,
         RegisterComponent,
         AvatarComponent,
         NavbarComponent,
         ChatComponent,
-        ImageCreationComponent
+        ImageCreationComponent,
     ],
     imports: [
         BrowserModule,

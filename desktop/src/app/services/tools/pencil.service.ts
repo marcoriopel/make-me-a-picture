@@ -88,7 +88,7 @@ export class PencilService extends Tool {
         this.pencilData = {
             type: 'pencil',
             path: this.pathData,
-            lineWidth: this.width,
+            lineWidth: this.drawingService.lineWidth,
             primaryColor: this.drawingService.color,
         };
     }

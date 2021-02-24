@@ -20,7 +20,8 @@ export class DrawingService {
     redoStack: (Pencil | Eraser)[] = [];
     isToolInUse: Subject<boolean> = new Subject<boolean>();
     color: string;
-
+    lineWidth: number;
+    
     setGrid(): void {
         this.clearCanvas(this.gridCtx);
         const canvasWidth = this.canvas.width;

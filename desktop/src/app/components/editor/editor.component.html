@@ -4,7 +4,17 @@
 </div>
 <div id="tool-space">
     <div class="colors">
-        <button class="individual-color add-button"><i class="fas fa-plus"></i></button>
+        <button class="individual-color add-button">                
+            <input
+                class="color-input"
+                #primary
+                id="primary"
+                type="color"
+                [value]="this.pencilColor"
+                (change)="this.setColor($event.target.value)"
+            />
+            <i class="fas fa-plus"></i>
+        </button>
         <button
         *ngFor="let color of previousColors"
         class="individual-color"
@@ -12,9 +22,8 @@
         (click)="this.setColor(color)"
         ></button>
     </div>
-    <!-- <mat-slider [min]="min" [max]="max" [step]="step" [(value)]="value" (change)="this.changeValue()"> </mat-slider> -->
     <div class="slider">
-        <mat-slider></mat-slider>
+        <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
     </div>
     <div class="tool-buttons-container">
         <button class="tool-button" (click)="setPencil()"><i class="fas fa-pencil-alt fa-2x"></i></button>

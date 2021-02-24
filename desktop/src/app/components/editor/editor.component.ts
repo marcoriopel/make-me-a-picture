@@ -9,7 +9,6 @@ import {
 } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
-import { ToolSelectionService } from '@app/services/tool-selection/tool-selection.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 
 @Component({
@@ -21,6 +20,11 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingComponent', { static: false }) drawingComponent: DrawingComponent;
     @ViewChild('workSpace', { static: false }) workSpaceRef: ElementRef<HTMLDivElement>;
     @ViewChild('previewDiv', { static: false }) previewDivRef: ElementRef<HTMLDivElement>;
+
+    lineWidthMin: number = 1;
+    lineWidthMax: number = 100;
+    lineWidthStep: number = 1;
+    lineWidth: number = 10;
 
     workSpaceSize: Vec2 = { x: MINIMUM_WORKSPACE_WIDTH, y: MINIMUM_WORKSPACE_HEIGHT };
     previewSize: Vec2 = { x: MINIMUM_CANVAS_WIDTH, y: MINIMUM_CANVAS_HEIGHT };
@@ -46,11 +50,11 @@ export class EditorComponent implements AfterViewInit {
 
     constructor(
         public hotkeyService: HotkeyService,
-        public toolSelectionService: ToolSelectionService,
         public drawingService: DrawingService,
         public undoRedoService: UndoRedoService,
     ) {
         this.drawingService.color = "#000000";
+        this.drawingService.lineWidth = this.lineWidth;
     }
 
     ngAfterViewInit(): void {
@@ -65,19 +69,6 @@ export class EditorComponent implements AfterViewInit {
             this.previewDiv.style.borderStyle = 'dashed';
             this.previewDiv.style.position = 'absolute';
         });
-    }
-
-    @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        this.toolSelectionService.currentToolKeyUp(event);
-    }
-
-    @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent): void {
-        if (this.shortcutsArray.includes(event.key)) {
-            this.hotkeyService.onKeyDown(event);
-        }
-        this.toolSelectionService.currentToolKeyDown(event);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -104,5 +95,9 @@ export class EditorComponent implements AfterViewInit {
 
     setPencil(): void {
         this.drawingService.color = this.pencilColor;
+    }
+
+    changeLineWidth(): void {
+        this.drawingService.lineWidth = this.lineWidth;
     }
 }

@@ -17,14 +17,6 @@
     position: relative;
 }
 
-.canvasResizePoint {
-    position: relative;
-    height: 6px;
-    width: 6px;
-    background-color: #09acd9;
-    cursor: pointer;
-}
-
 #tool-space {
     position: absolute;
     top: 600px;
@@ -65,7 +57,7 @@
 }
 
 mat-slider {
-    width: 386px;
+    width: 400px;
 }
 
 .tool-buttons-container {
@@ -82,7 +74,17 @@ mat-slider {
     padding: 6px;
     margin: 4px;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 12px;
     outline: none;
 }
 
+.color-input {
+    -webkit-appearance: none;
+	border: none;
+    border-radius: 40%;
+    left: 53px;
+    top: 25px;
+    width: 23px;
+    position: absolute;
+    opacity: 0;
+}
