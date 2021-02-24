@@ -62,7 +62,7 @@ export class RegisterComponent implements OnInit {
       res => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userRegistrationForm.value.username);
-        console.log('res: ' + res);
+        localStorage.setItem('avatar', res.avatar);
         this.router.navigate(['/home']);
         this.chatService.connect();
       },

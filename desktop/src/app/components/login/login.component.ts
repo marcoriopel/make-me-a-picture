@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', res.token);
           localStorage.setItem('username', this.form.value.username);
           localStorage.setItem('avatar', res.avatar);
-          console.log(res);
           this.router.navigate(['/home']);
           this.chatService.connect();
         },

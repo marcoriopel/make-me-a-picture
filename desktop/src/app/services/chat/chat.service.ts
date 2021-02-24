@@ -60,6 +60,7 @@ export class ChatService {
   sendMessage(message:string): void {
     const jwt = localStorage.getItem('token');
     const avatar = parseInt(localStorage.getItem('avatar') as string);
+    console.log(avatar)
     this.completeChatList[this.index]["socket"].emit('message', {"text": message,"token": jwt, "avatar": avatar});
   }
 
@@ -84,6 +85,7 @@ export class ChatService {
       // TODO (Feature 85-90): Catch error if socket not connected
       const username = localStorage.getItem('username');
       const avatar: number = message.avatar;
+      console.log(avatar);
       this.completeChatList[index]["messages"].push({"username": message.username, "avatar": avatar, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": message.username === username ? true: false, "textColor": message.textColor});
     });
   }
