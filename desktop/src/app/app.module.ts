@@ -41,6 +41,9 @@ import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { NgxElectronModule } from 'ngx-electron';
+import { ChatService } from './services/chat/chat.service';
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -88,9 +91,10 @@ import { ChatComponent } from './components/chat/chat.component';
         MatCheckboxModule,
         MatInputModule,
         MatToolbarModule,
+        NgxElectronModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard,],
+    providers: [AuthService, AuthGuard, ChatService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 })
 export class ChatService {
 
+  public isChatInExternalWindow: boolean = false;
   private completeChatList: any[] = [];
   private index: number = 0;
   private chatList: string[] = [];
@@ -20,7 +21,7 @@ export class ChatService {
     // Prevent double connection
     if (this.completeChatList.length == 0) {
       this.connectToNewChat("General", "http://18.217.235.167:3000/" );
-      this.connectToNewChat("Local", "http://localhost:3000/");
+      // this.connectToNewChat("Local", "http://localhost:3000/");
       this.setCurrentChat(this.chatList[0]);
     }
   }
@@ -67,7 +68,6 @@ export class ChatService {
     // TODO (Feature 85-90): try catch for non existant server
     const socket = io(url);
     socket.connect();
-    console.log(socket.connected);
     const index = this.completeChatList.push({name: name, url: url, socket: io(url), messages: []});
     this.index = index - 1;
     // TODO (Waiting for server side): Get history

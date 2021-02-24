@@ -16,8 +16,7 @@ class SignUpRepository() {
         mapSignUp["password"] = signUpInfo.password
         mapSignUp["name"] = signUpInfo.firstName
         mapSignUp["surname"] = signUpInfo.lastName
-        //TODO: Add avatar
-        mapSignUp["avatar"] = "0"
+        mapSignUp["avatar"] = signUpInfo.avatar.toString()
         val response = HttpRequestDrawGuess.httpRequest("/api/auth/register", mapSignUp)
 
 

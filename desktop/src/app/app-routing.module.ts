@@ -5,9 +5,11 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AuthGuard } from '@app/auth.guard';
+import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
+    { path: 'chat', component: ChatBarComponent, canActivate: [AuthGuard] },
     { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
     { path: 'editor', component: EditorComponent, canActivate: [AuthGuard] },
     { path: 'login' , component: LoginComponent },
@@ -16,7 +18,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, {useHash: true})],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}
