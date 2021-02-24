@@ -25,7 +25,10 @@ export class ChatComponent implements OnInit {
   }
 
   onNewMessage(): void {
-    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+    let messageScroller = document.getElementById('message-scroller');
+    if(messageScroller){
+      messageScroller.scrollTop = messageScroller.scrollHeight;
+    }
   }
 
   onSubmit(): void {

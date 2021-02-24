@@ -9,7 +9,6 @@ import { ChatService } from '@app/services/chat/chat.service';
 })
 export class MainPageComponent {
     readonly title: string = 'PolyDessin';
-    isAv: boolean = false;
     constructor(public dialog: MatDialog, public chatService: ChatService) {
     }
 
