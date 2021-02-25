@@ -1,0 +1,29 @@
+<div class="game-bar">
+
+    <div id="classic-button" class="button" (click)="classic()">
+        <p class="title"> Classique 
+            <img [src]="classicBlackImgRef" class="game-logo"> 
+        </p>
+    </div>
+
+    <div id="solo-button" class="button" (click)="sprintSolo()">
+        <p class="title"> Sprint Solo
+            <img [src]="sprintImgRef" class="game-logo">     
+        </p>
+    </div>
+
+    <div id="coop-button" class="button" (click)="sprintCoop()">
+        <p class="title"> Sprint Coop
+            <img [src]="sprintImgRef" class="game-logo">         
+        </p>
+    </div>
+
+    <div id="create-button" class="button" (click)="createWordImage()">
+        <p class="title"> Créeation de mot image </p>
+    </div>
+
+    <hr>
+
+    <app-game-search></app-game-search>
+
+</div>
