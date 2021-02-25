@@ -1,7 +1,28 @@
 <div class="wrapper">
     <app-navbar></app-navbar>
     <div id="image-form">
+        <h2>Formulaire</h2>
+        <form class="form" [formGroup]="imageCreationForm">
+            <mat-form-field >
+                <input matInput placeholder="Mot" formControlName="wordName" required>
+            </mat-form-field>
 
+            <mat-form-field>
+                <mat-label>Difficulté</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let level of levels" [value]="level">
+                    {{level}}
+                    </mat-option>
+                </mat-select>                
+            </mat-form-field>
+
+            <mat-form-field >
+                <input matInput placeholder="Indice" formControlName="indice" required>
+            </mat-form-field>
+
+            <button mat-raised-button>Envoyer</button>
+
+        </form>
     </div>
     <div id="editor">
         <app-editor></app-editor>

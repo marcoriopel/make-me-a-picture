@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-image-creation',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageCreationComponent implements OnInit {
 
+  imageCreationForm: FormGroup;
+  levels = ['Facile', 'Moyen', 'Difficile'];
   constructor() { }
 
   ngOnInit(): void {
