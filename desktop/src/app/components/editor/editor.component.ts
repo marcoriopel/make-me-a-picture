@@ -53,7 +53,7 @@ export class EditorComponent implements AfterViewInit {
 
     shortcutsArray: string[] = ['c', 'z', 'Z', 'g'];
 
-    pencilColor: string = WHITE;
+    pencilColor: string = BLACK;
     previousColors: string[] = [
         RED,
         ORANGE,
