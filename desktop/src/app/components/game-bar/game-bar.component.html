@@ -1,24 +1,24 @@
 <div class="game-bar">
 
-    <div class="classic-button" id (click)="classic()">
+    <div id="classic-button" class="button" (click)="classic()">
         <p class="title"> Classique 
             <img [src]="classicBlackImgRef" class="game-logo"> 
         </p>
     </div>
 
-    <div class="solo-button" (click)="sprintSolo()">
+    <div id="solo-button" class="button" (click)="sprintSolo()">
         <p class="title"> Sprint Solo
             <img [src]="sprintImgRef" class="game-logo">     
         </p>
     </div>
 
-    <div class="coop-button" (click)="sprintCoop()">
+    <div id="coop-button" class="button" (click)="sprintCoop()">
         <p class="title"> Sprint Coop
             <img [src]="sprintImgRef" class="game-logo">         
         </p>
     </div>
 
-    <div class="create-button" (click)="createWordImage()">
+    <div id="create-button" class="button" (click)="createWordImage()">
         <p class="title"> Créeation de mot image </p>
     </div>
 

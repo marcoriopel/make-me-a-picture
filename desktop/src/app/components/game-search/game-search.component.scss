@@ -29,6 +29,9 @@
     border-radius: 30px;
     width: 50px;
     height: 50px;
+    border: none;
+    outline:none;
+    cursor: pointer;
     
     .logo {
         width: 100%;
@@ -73,6 +76,8 @@
     font-size: 24px;
     color:  #F2F2F2;
     line-height: 58px;
+    border: none;
+    outline:none;
     
     .sprint-logo {
         float:right;
@@ -105,5 +110,7 @@
     font-size: 24px;
     color:  #F2F2F2;
     line-height: 58px;
+    border: none;
+    outline:none;
 }
 
