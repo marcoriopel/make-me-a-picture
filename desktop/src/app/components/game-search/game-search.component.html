@@ -26,8 +26,8 @@
     <div *ngFor="let game of this.searchGameService.displayList">
         <div class="game-button">
             <p class="title"> {{game.name}} 
-                <img *ngIf="game.type == 'classic'" [src]="classicGreyImgRef" class="game-logo"> 
-                <img *ngIf="game.type == 'sprint'" [src]="sprintImgRef" class="game-logo"> 
+                <img *ngIf="game.type == 'classic'" [src]="classicGreyImgRef" class="classic-logo"> 
+                <img *ngIf="game.type == 'sprint'" [src]="sprintImgRef" class="sprint-logo"> 
             </p>
         </div>
     </div>
