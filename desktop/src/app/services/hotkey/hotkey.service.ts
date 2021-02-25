@@ -3,7 +3,6 @@ import { GRID_DECREASE_NAME, GRID_INCREASE_NAME, GRID_NAME } from '@app/ressourc
 import { SidebarElements, SIDEBAR_ELEMENTS } from '@app/ressources/global-variables/sidebar-elements';
 import { ToolNames, TOOL_NAMES } from '@app/ressources/global-variables/tool-names';
 import { Observable, Subject } from 'rxjs';
-import { DrawingService } from '../drawing/drawing.service';
 import { UndoRedoService } from '../undo-redo/undo-redo.service';
 
 @Injectable({
