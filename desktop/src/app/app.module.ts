@@ -33,10 +33,11 @@ import { AvatarComponent } from './components/avatar/avatar.component'
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.component';
+import { ChatComponent } from './components/chat/chat.component';
 import { NgxElectronModule } from 'ngx-electron';
 import { ChatService } from './services/chat/chat.service';
-import { ChatComponent } from './components/chat/chat.component';
-import { ImageCreationComponent } from './components/image-creation/image-creation.component'
+import { ImageCreationComponent } from './components/image-creation/image-creation.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -51,6 +52,8 @@ import { ImageCreationComponent } from './components/image-creation/image-creati
         NavbarComponent,
         ChatComponent,
         ImageCreationComponent,
+        AvatarIconComponent,
+        ChatComponent
     ],
     imports: [
         BrowserModule,

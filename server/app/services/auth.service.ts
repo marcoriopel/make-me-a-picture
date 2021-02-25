@@ -3,7 +3,7 @@ import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from "express";
-import { NewUser, User } from '@app/classes/user';
+import { UserInfo, AuthInfo } from '@app/classes/user';
 import { StatusCodes } from 'http-status-codes';
 
 @injectable()
@@ -16,11 +16,11 @@ export class AuthService {
 
     async loginUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
-            const userInfo: User = { 'username': req.body.username, 'password': req.body.password };
-            const userDB = await this.userCredentialsModel.getCredentials(userInfo.username);
-            if (userDB && userDB.password == userInfo.password) {
-                await this.addUserToLogCollection(userInfo.username, true);
-                next(userInfo.username);
+            const authInfo: AuthInfo = { 'username': req.body.username, 'password': req.body.password };
+            const userInfo: UserInfo = await this.userCredentialsModel.getCredentials(authInfo.username);
+            if (userInfo && userInfo.password == authInfo.password) {
+                await this.addUserToLogCollection(authInfo.username, true);
+                next(userInfo);
             }
             else {
                 return res.sendStatus(StatusCodes.NOT_FOUND);
@@ -37,9 +37,8 @@ export class AuthService {
     }
 
     async registerUser(req: Request, res: Response, next: NextFunction): Promise<any> {
-        let userInfo: NewUser;
         try {
-            userInfo = {
+            const userInfo : UserInfo = {
                 'surname': req.body.surname,
                 'name': req.body.name,
                 'username': req.body.username,
@@ -49,11 +48,11 @@ export class AuthService {
             if (!userInfo.avatar || !userInfo.surname || !userInfo.name || !userInfo.username || !userInfo.password || userInfo.avatar > 5 || userInfo.avatar < 0) {
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
-            const userDB = await this.userCredentialsModel.getCredentials(userInfo.username);
+            const userDB: UserInfo = await this.userCredentialsModel.getCredentials(userInfo.username);
             if (!userDB) {
                 await this.userCredentialsModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);
                 await this.addUserToLogCollection(userInfo.username, true);
-                next(userInfo.username)
+                next(userInfo)
             }
             else {
                 return res.sendStatus(StatusCodes.CONFLICT);

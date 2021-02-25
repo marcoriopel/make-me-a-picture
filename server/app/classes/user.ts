@@ -1,9 +1,9 @@
-export interface User {
+export interface AuthInfo {
     username: string;
     password: string;
 }
 
-export interface NewUser {
+export interface UserInfo {
     surname: string;
     name: string;
     username: string;

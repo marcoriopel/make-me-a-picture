@@ -27,11 +27,11 @@ export class TokenService {
 
     /**
      * Generate a new acces to the user
-     * @param user: Data to encryp in the jwt
+     * @param username: Data to encryp in the jwt
      * @returns encrypted token
      */
-    public generateAccesToken(user: any): any {
-        return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
+    public generateAccesToken(username: string): any {
+        return jwt.sign(username, process.env.ACCES_TOKEN_SECRET);
     }
 
     /** 
@@ -52,7 +52,7 @@ export class TokenService {
     public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, username: any): any => {
             if (err) { return res.sendStatus(403); }
         });
     }
