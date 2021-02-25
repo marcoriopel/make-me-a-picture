@@ -28,20 +28,23 @@
 .individual-color {
     height: 28px;
     width: 28px;
-    background-color: red;
     // display: grid;
     margin: 3px;
     border: none;
     border-radius: 50%;
     outline: none;
     cursor: pointer;
-
-
 }
 
 .add-button {
-    background-color: #E0E0E0;
-    padding-top: 4px;
+    height: 28px;
+    width: 80px;
+    // display: grid;
+    margin: 3px;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    cursor: pointer;
 }
 
 .colors {
@@ -57,14 +60,14 @@
 }
 
 mat-slider {
-    width: 400px;
+    width: 460px;
 }
 
 .tool-buttons-container {
     position: absolute;
     display: grid;
     grid-template-columns: auto auto;
-    right: 220px;
+    right: 150px;
     top: 10px;
 }
 
@@ -82,9 +85,11 @@ mat-slider {
     -webkit-appearance: none;
 	border: none;
     border-radius: 40%;
+    height: 30px;
     left: 53px;
-    top: 25px;
-    width: 23px;
+    top: 20px;
+    width: 80px;
     position: absolute;
+    cursor: pointer;
     opacity: 0;
 }

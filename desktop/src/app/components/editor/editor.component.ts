@@ -20,6 +20,8 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingComponent', { static: false }) drawingComponent: DrawingComponent;
     @ViewChild('workSpace', { static: false }) workSpaceRef: ElementRef<HTMLDivElement>;
     @ViewChild('previewDiv', { static: false }) previewDivRef: ElementRef<HTMLDivElement>;
+    @ViewChild('pencil', { static: false }) pencilRef: ElementRef<HTMLButtonElement>;
+    @ViewChild('eraser', { static: false }) eraserRef: ElementRef<HTMLButtonElement>;
 
     lineWidthMin: number = 1;
     lineWidthMax: number = 100;
@@ -33,7 +35,7 @@ export class EditorComponent implements AfterViewInit {
 
     shortcutsArray: string[] = ['c', 'e', 'z', 'Z', 'g'];
 
-    pencilColor: string;
+    pencilColor: string = '#000000';
     previousColors: string[] = [
         "#EB5757",
         "#F2994A",
@@ -60,6 +62,7 @@ export class EditorComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const workspaceElement: HTMLElement = this.workSpaceRef.nativeElement;
+            this.pencilRef.nativeElement.style.backgroundColor = '#BA2034'
             this.drawingService.gridCanvas.style.cursor = 'crosshair';
             this.workSpaceSize.x = workspaceElement.offsetWidth;
             this.workSpaceSize.y = workspaceElement.offsetHeight;
@@ -87,15 +90,22 @@ export class EditorComponent implements AfterViewInit {
 
     setColor(color: string){
         this.drawingService.color = color;
+        this.previousColors.pop();
+        this.previousColors.unshift(this.pencilColor);
+        this.pencilColor = color;
     }
 
     setEraser(): void {
         this.pencilColor = this.drawingService.color;
         this.drawingService.color = "#FFFFFF"
+        this.pencilRef.nativeElement.style.backgroundColor = '#FFFFFF'
+        this.eraserRef.nativeElement.style.backgroundColor = '#BA2034'
     }
 
     setPencil(): void {
         this.drawingService.color = this.pencilColor;
+        this.pencilRef.nativeElement.style.backgroundColor = '#BA2034'
+        this.eraserRef.nativeElement.style.backgroundColor = '#FFFFFF'
     }
 
     changeLineWidth(): void {
