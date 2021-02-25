@@ -4,10 +4,9 @@ import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
-import {
-  StatusCodes,
-} from 'http-status-codes';
-import { UserInfo, AuthInfo } from '@app/classes/user';
+import {StatusCodes} from 'http-status-codes';
+import { GameType } from '@app/ressources/variables/game-variables'
+import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user';
 
 
 @injectable()
@@ -27,9 +26,20 @@ export class GamesController {
     this.router = Router();
 
     this.router.post('/create', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (username: any) => { 
-            this.lobbyManagerService.create();
+        this.tokenService.authenticateToken(req, res, (username: any) => {
+            this.lobbyManagerService.create(req, res, (lobbyId: string) => {
+              res.status(StatusCodes.OK).send({ lobbyId })
+            });
         });
     });
+
+    this.router.post('/joinLobby', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (username: any) => {
+          this.lobbyManagerService.join(req, res, username, () => {
+            res.sendStatus(StatusCodes.OK)
+          });
+      });
+  });
+
   }
 }

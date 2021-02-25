@@ -9,6 +9,8 @@ export const TYPES = {
     SocketService: Symbol('SocketService'),
     AuthService: Symbol('AuthService'),
     ChatManagerService: Symbol('ChatManagerService'),
+    LobbyManagerService: Symbol('LobbyManagerService'),
+    GameManagerService: Symbol('GameManagerService'),
 
     DatabaseModel: Symbol('DatabaseModel'),
     UserCredentialsModel: Symbol('UserCredentialsModel'),

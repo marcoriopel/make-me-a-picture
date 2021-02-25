@@ -12,6 +12,7 @@ import { TokenService } from './services/token.service';
 import { SocketService } from './services/socket.service';
 import { ChatManagerService } from './services/chat-manager.service';
 import { LobbyManagerService } from './services/lobby-manager.service';
+import { GameManagerService } from './services/game-manager.service';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
@@ -27,6 +28,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.AuthService).to(AuthService);
     container.bind(TYPES.ChatManagerService).to(ChatManagerService);
     container.bind(TYPES.LobbyManagerService).to(LobbyManagerService);
+    container.bind(TYPES.GameManagerService).to(GameManagerService);
     
     container.bind(TYPES.DatabaseModel).to(DatabaseModel);
     container.bind(TYPES.UserCredentialsModel).to(UserCredentialsModel);
