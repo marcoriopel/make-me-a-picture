@@ -3,7 +3,7 @@ import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from "express";
-import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user';
+import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user.interface';
 import { StatusCodes } from 'http-status-codes';
 
 @injectable()

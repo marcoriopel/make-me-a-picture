@@ -1,4 +1,4 @@
-import { IncomingMessage } from '@app/ressources/interfaces/incoming-message';
+import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
 import { injectable } from 'inversify';
 import * as socketio from "socket.io";
 

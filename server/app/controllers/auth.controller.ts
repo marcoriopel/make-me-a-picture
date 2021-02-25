@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 import {
   StatusCodes,
 } from 'http-status-codes';
-import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user';
+import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user.interface';
 
 
 @injectable()

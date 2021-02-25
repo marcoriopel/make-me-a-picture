@@ -6,7 +6,7 @@ import * as socketio from "socket.io";
 import * as jwt from 'jsonwebtoken';
 import * as http from 'http';
 import { ChatManagerService } from './chat-manager.service';
-import { IncomingMessage } from '@app/ressources/interfaces/incoming-message';
+import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
 import { LobbyManagerService } from './lobby-manager.service';
 
 @injectable()

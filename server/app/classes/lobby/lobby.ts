@@ -7,8 +7,8 @@ export abstract class Lobby {
     players: string[];
 
     constructor(difficulty: number, gameName: string) {
-        difficulty = difficulty;
-        gameName = gameName;
+        this.difficulty = difficulty;
+        this.gameName = gameName;
      }
 
     startGame(): void{}

@@ -5,8 +5,6 @@ import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import {StatusCodes} from 'http-status-codes';
-import { GameType } from '@app/ressources/variables/game-variables'
-import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user';
 
 
 @injectable()
