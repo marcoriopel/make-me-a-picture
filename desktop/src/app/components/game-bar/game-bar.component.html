@@ -22,8 +22,9 @@
         <p class="title"> Création de mot image </p>
     </div>
 
-    <hr>
+    <hr [hidden]="hideSearchComponent">
 
-    <app-game-search></app-game-search>
+    <app-game-search [hidden]="hideSearchComponent"></app-game-search>
 
 </div>
+

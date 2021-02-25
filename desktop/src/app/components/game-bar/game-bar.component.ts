@@ -15,10 +15,12 @@ export class GameBarComponent {
 
   classic():void {
     console.log('Classic game selected');
+
   }
 
   sprintSolo():void {
     console.log('Sprint Solo game selected');
+
   }
 
   sprintCoop():void {
