@@ -26,6 +26,10 @@ export class PencilService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
         this.clearPath();
+        let mouseEvent = {
+            button: MouseButton.LEFT,
+        } as MouseEvent
+        this.onMouseUp(mouseEvent);
     }
 
     onMouseDown(event: MouseEvent): void {
