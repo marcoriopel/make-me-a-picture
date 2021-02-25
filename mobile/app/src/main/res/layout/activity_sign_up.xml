@@ -166,6 +166,6 @@
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/Widget.App.Button"/>
+        android:theme="@style/Widget.App.Button.Blue"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
