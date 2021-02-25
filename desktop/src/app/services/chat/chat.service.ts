@@ -84,7 +84,6 @@ export class ChatService {
       // TODO (Feature 85-90): Catch error if socket not connected
       const username = localStorage.getItem('username');
       const avatar: number = message.avatar;
-      console.log(avatar);
       this.completeChatList[index]["messages"].push({
         "username": message.username, 
         "avatar": avatar, 
