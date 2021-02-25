@@ -11,7 +11,7 @@ export class SearchGameService {
   constructor() {
     // TODO: Get game list
     this.gameList = [
-      {name: 'Game 1', type: 'classic', difficulty: 'noraml'},
+      {name: 'Game 1', type: 'classic', difficulty: 'normal'},
       {name: 'Game 2', type: 'sprint', difficulty: 'hard'},
       {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
       {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
