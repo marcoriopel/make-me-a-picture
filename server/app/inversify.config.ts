@@ -8,15 +8,22 @@ import { UserLogsModel } from './models/user-logs.model';
 import { TYPES } from './types';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
+import { SocketService } from './services/socket.service';
+import { ChatService } from './services/chat.service';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
 
     container.bind(TYPES.Server).to(Server);
     container.bind(TYPES.Application).to(Application);
+
     container.bind(TYPES.AuthController).to(AuthController);
+
+    container.bind(TYPES.TokenService).to(TokenService);
+    container.bind(TYPES.SocketService).to(SocketService);
     container.bind(TYPES.AuthService).to(AuthService);
-    container.bind(TYPES.TokenService).to(TokenService)
+    container.bind(TYPES.ChatService).to(ChatService);
+    
     container.bind(TYPES.DatabaseModel).to(DatabaseModel);
     container.bind(TYPES.UserCredentialsModel).to(UserCredentialsModel);
     container.bind(TYPES.UserLogsModel).to(UserLogsModel);
