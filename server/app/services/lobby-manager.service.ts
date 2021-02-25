@@ -23,25 +23,33 @@ export class LobbyManagerService {
     }
 
     create(req: Request, res: Response, next: NextFunction){
-        const lobbyId: string = uuid();
-        const lobbyInfo: lobbyInterface.LobbyCreation = req.body;
-        if(!lobbyInterface.validateLobbyCreation(lobbyInfo)){
+        const lobbyInfo: lobbyInterface.Lobby = req.body;
+        lobbyInfo.id = uuid();
+        if(!lobbyInterface.validateLobby(lobbyInfo)){
             return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
         switch(lobbyInfo.gameType) {
             case GameType.CLASSIC:
-                this.lobbies.set(lobbyId, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                this.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             case GameType.SOLO:
-                this.lobbies.set(lobbyId, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                this.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             case GameType.COOP:
-                this.lobbies.set(lobbyId, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                this.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             default:
                 return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
-        next(lobbyId)
+        next(lobbyInfo.id)
+    }
+
+    getLobbies(req: Request, res: Response, next: NextFunction): void {
+        let response: lobbyInterface.Lobby[] = [];
+        this.lobbies.forEach((lobby: Lobby, key:string,  map: Map<string, Lobby>) =>{
+            response.push({id: key, gameName: lobby.gameName,difficulty: lobby.difficulty, gameType: lobby.gameType});
+        })
+        next(response);
     }
 
     join(req: Request, res: Response, username: string, next: NextFunction): void {

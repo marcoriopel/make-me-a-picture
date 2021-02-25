@@ -1,3 +1,4 @@
+import { GameType } from '@app/ressources/variables/game-variables';
 import { injectable } from 'inversify';
 import { Lobby } from './lobby';
 
@@ -6,6 +7,7 @@ export class ClassicLobby extends Lobby {
     
     constructor(difficulty: number, gameName: string) {
         super(difficulty, gameName);
+        this.gameType = GameType.CLASSIC;
         console.log("Created classic game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
