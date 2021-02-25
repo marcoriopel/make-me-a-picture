@@ -29,5 +29,34 @@
 }
 
 .form {
+    margin-top: 50px;
     text-align: center;
 }
+
+
+#form-button {
+    margin-top: 20px;
+}
+
+#tip{
+    margin: auto;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    width: 80%;
+    background-color: white;
+    margin-top: 10px;
+}
+
+#tip input {
+    height: 30px;
+    background-color: white;
+    border-style: hidden;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#tip p {
+    margin:auto;
+}
+

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Fill, Pencil, Selection } from '@app/classes/tool-properties';
+import { Pencil} from '@app/classes/tool-properties';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from './drawing.service';
 
@@ -85,18 +85,18 @@ describe('DrawingService', () => {
     });
 
     it('should update stack on updateStack', () => {
-        service.undoStack = [];
+        service.strokeStack = [];
         const pencil: Pencil = { type: {} as string, path: {} as Vec2[], lineWidth: 1, primaryColor: 'black' };
         service.updateStack(pencil);
-        expect(service.undoStack.length).toEqual(1);
+        expect(service.strokeStack.length).toEqual(1);
     });
 
     it('should update stack on updateStack and clear redo stack', () => {
-        service.undoStack = [];
+        service.strokeStack = [];
         const pencil: Pencil = { type: {} as string, path: {} as Vec2[], lineWidth: 1, primaryColor: 'black' };
         service.redoStack.push(pencil);
         service.updateStack(pencil);
-        expect(service.undoStack.length).toEqual(1);
+        expect(service.strokeStack.length).toEqual(1);
         expect(service.redoStack.length).toEqual(0);
     });
 

@@ -1,28 +1,43 @@
 <div class="wrapper">
     <app-navbar></app-navbar>
     <div id="image-form">
-        <h2>Formulaire</h2>
         <form class="form" [formGroup]="imageCreationForm">
-            <mat-form-field >
-                <input matInput placeholder="Mot" formControlName="wordName" required>
+            <mat-form-field appearance="outline">
+                <mat-label>Mot</mat-label>
+                <input matInput placeholder="Mot" formControlName="word" required>
+                <mat-error>
+                    {{errorMessages.text}}
+                </mat-error>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field appearance="outline">
                 <mat-label>Difficulté</mat-label>
-                <mat-select>
+                <mat-select formControlName="level">
                     <mat-option *ngFor="let level of levels" [value]="level">
                     {{level}}
                     </mat-option>
                 </mat-select>                
             </mat-form-field>
 
-            <mat-form-field >
-                <input matInput placeholder="Indice" formControlName="indice" required>
-            </mat-form-field>
+            <form class="form" [formGroup]="tipsForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>Indice</mat-label>
+                    <input matInput placeholder="Indice" formControlName="tip" required>
+                    <mat-error>
+                        {{errorMessages.text}}
+                    </mat-error>
+                </mat-form-field>
+            </form>
 
-            <button mat-raised-button>Envoyer</button>
-
+            <button id="tip-button" mat-raised-button (click)="addTip()" [disabled]="tipsForm.invalid">Ajouter un indice suplémentaire</button>
+            <div id="tip" *ngFor="let tip of tips; let index = index">
+                <p>{{tip}}</p>
+                <input type="button" (click)="deleteTip(index)" value="X">
+            </div>
+            <button id="form-button" mat-raised-button (click)="sendForm()" [disabled]="imageCreationForm.invalid || !isTipListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
         </form>
+
+
     </div>
     <div id="editor">
         <app-editor></app-editor>

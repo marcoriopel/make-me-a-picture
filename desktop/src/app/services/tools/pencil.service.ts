@@ -74,7 +74,7 @@ export class PencilService extends Tool {
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Pencil): void {
         ctx.lineWidth = pencil.lineWidth;
-        ctx.strokeStyle = pencil.primaryColor;
+        ctx.strokeStyle = pencil.lineColor;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -90,10 +90,9 @@ export class PencilService extends Tool {
 
     private updatePencilData(): void {
         this.pencilData = {
-            type: 'pencil',
             path: this.pathData,
             lineWidth: this.drawingService.lineWidth,
-            primaryColor: this.drawingService.color,
+            lineColor: this.drawingService.color,
         };
     }
 

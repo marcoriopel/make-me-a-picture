@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Eraser, Pencil} from '@app/classes/tool-properties';
+import { Pencil} from '@app/classes/tool-properties';
 import { MAX_PERCENTAGE } from '@app/ressources/global-variables/global-variables';
 import { Observable, Subject } from 'rxjs';
 
@@ -16,8 +16,8 @@ export class DrawingService {
     canvas: HTMLCanvasElement;
     gridCanvas: HTMLCanvasElement;
     previewCanvas: HTMLCanvasElement;
-    undoStack: (Pencil | Eraser)[] = [];
-    redoStack: (Pencil | Eraser)[] = [];
+    strokeStack: Pencil[] = [];
+    redoStack: Pencil[] = [];
     isToolInUse: Subject<boolean> = new Subject<boolean>();
     color: string;
     lineWidth: number;
@@ -54,15 +54,15 @@ export class DrawingService {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    updateStack(modification: Pencil | Eraser): void {
-        this.undoStack.push(modification);
+    updateStack(modification: Pencil): void {
+        this.strokeStack.push(modification);
         if (this.redoStack.length) {
             this.redoStack = [];
         }
     }
 
     resetStack(): void {
-        this.undoStack = [];
+        this.strokeStack = [];
         this.redoStack = [];
     }
 }
