@@ -22,6 +22,27 @@ export const GRID_STEP = 5;
 export const DEFAULT_GRID_OPACITY = 100;
 export const TWO_DECIMAL_MULTIPLIER = 100;
 
+export const MIN_LINE_WIDTH = 1;
+export const MAX_LINE_WIDTH = 100;
+export const LINE_WIDTH_STEP = 1;
+export const INITIAL_LINE_WIDTH = 10;
+
+export const BLACK = '#000000';
+export const WHITE = '#FFFFFF';
+export const RED = '#EB5757';
+export const ORANGE = '#F2994A';
+export const YELLOW = '#F2C94C';
+export const DARK_GREEN = '#219653';
+export const LIGHT_GREEN = '#27AE60';
+export const DARK_BLUE = '#2F80ED';
+export const LIGHT_BLUE = '#2D9CDB';
+export const TURQUOISE = '#56CCF2';
+export const PURPLE = '#9B51E0';
+export const PINK = '#BB6BD9';
+export const DARK = '#231F20';
+export const POLY_RED = '#BA2034';
+
+
 
 export enum MouseButton {
     LEFT = 0,
