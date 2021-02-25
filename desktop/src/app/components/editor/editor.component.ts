@@ -90,8 +90,6 @@ export class EditorComponent implements AfterViewInit {
 
     setColor(color: string){
         this.drawingService.color = color;
-        this.previousColors.pop();
-        this.previousColors.unshift(this.pencilColor);
         this.pencilColor = color;
     }
 
