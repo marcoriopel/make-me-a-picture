@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ChatService } from "@app/services/chat/chat.service"
 
@@ -8,9 +8,12 @@ import { ChatService } from "@app/services/chat/chat.service"
   styleUrls: ['./chat.component.scss']
 })
 
-export class ChatComponent implements OnInit {
+export class ChatComponent {
 
   @ViewChild("chatContainer") chatContainer: ElementRef;
+  @ViewChild("input") input: ElementRef;
+
+  private onlySpaceRegExp = /^\s+$/;
 
   messageForm = this.formBuilder.group({
     message: '',
@@ -18,7 +21,6 @@ export class ChatComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, public chatService: ChatService) {}
 
-  ngOnInit(): void {}
 
   connectToChat(name: string): void {
     this.chatService.setCurrentChat(name);
@@ -26,13 +28,14 @@ export class ChatComponent implements OnInit {
 
   onNewMessage(): void {
     let messageScroller = document.getElementById('message-scroller');
-    if(messageScroller){
+    if(messageScroller) {
       messageScroller.scrollTop = messageScroller.scrollHeight;
     }
   }
 
   onSubmit(): void {
-    if(this.messageForm.value.message == "" || this.messageForm.value.message == null){
+    this.input.nativeElement.focus();
+    if(this.messageForm.value.message == "" || this.messageForm.value.message == null || this.messageForm.value.message.match(this.onlySpaceRegExp)){
       this.messageForm.reset();
       return;
     } 

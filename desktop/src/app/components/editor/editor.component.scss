@@ -4,9 +4,7 @@
 }
 
 #workSpace {
-    background-color: #3b3737;
-    overflow: auto;
-    flex: 1 1 auto;
+    height: 95%;
 }
 
 .drawing {
@@ -19,10 +17,79 @@
     position: relative;
 }
 
-.canvasResizePoint {
-    position: relative;
-    height: 6px;
-    width: 6px;
-    background-color: #09acd9;
+#tool-space {
+    position: absolute;
+    top: 600px;
+    height: 100px;
+    width: 800px;
+    // background-color: powderblue;
+}
+
+.individual-color {
+    height: 28px;
+    width: 28px;
+    // display: grid;
+    margin: 3px;
+    border: none;
+    border-radius: 50%;
+    outline: none;
     cursor: pointer;
+}
+
+.add-button {
+    height: 28px;
+    width: 80px;
+    // display: grid;
+    margin: 3px;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    cursor: pointer;
+}
+
+.colors {
+    padding-top: 20px;
+    padding-left: 50px;
+    width: 400px;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
+}
+
+.slider {
+    padding-left: 50px;
+}
+
+mat-slider {
+    width: 460px;
+}
+
+.tool-buttons-container {
+    position: absolute;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    right: 100px;
+    top: 10px;
+}
+
+.tool-button {
+    border:none;
+    background-color: #FFFFFF;
+    padding: 6px;
+    margin: 4px;
+    cursor: pointer;
+    border-radius: 12px;
+    outline: none;
+}
+
+.color-input {
+    -webkit-appearance: none;
+	border: none;
+    border-radius: 40%;
+    height: 30px;
+    left: 53px;
+    top: 20px;
+    width: 80px;
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
 }

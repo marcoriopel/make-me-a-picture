@@ -20,7 +20,7 @@
             </div>
         </div>
         <form [formGroup]="messageForm" class="send-message-form" (ngSubmit)="onSubmit()">
-            <input type="text" placeholder="Aa" formControlName="message">
+            <input #input type="text" placeholder="Aa" formControlName="message">
             <button type="submit"></button>
         </form>
     </div>    

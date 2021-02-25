@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Tool } from '@app/classes/tool';
-import { Eraser, Pencil } from '@app/classes/tool-properties';
+import { Pencil } from '@app/classes/tool-properties';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import { EraserService } from '@app/services/tools/eraser.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { Observable, Subject } from 'rxjs';
 
@@ -21,7 +20,6 @@ export class UndoRedoService extends Tool {
     constructor(
         public drawingService: DrawingService,
         public pencilService: PencilService,
-        public eraserService: EraserService,
     ) {
         super(drawingService);
         this.drawingService.getIsToolInUse().subscribe((value) => {
@@ -108,13 +106,10 @@ export class UndoRedoService extends Tool {
         }
     }
 
-    drawElement(element: Pencil | Eraser): void {
+    drawElement(element: Pencil): void {
         switch (element.type) {
             case 'pencil':
                 this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Pencil);
-                break;
-            case 'eraser':
-                this.eraserService.drawEraserStroke(this.drawingService.baseCtx, element as Eraser);
                 break;
         }
     }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
     DEFAULT_GRID_OPACITY,
     DEFAULT_GRID_SIZE,
@@ -7,7 +7,9 @@ import {
     MAX_GRID_SQUARE_SIZE,
     MIN_GRID_OPACITY,
     MIN_GRID_SQUARE_SIZE,
+    POLY_RED,
     TWO_DECIMAL_MULTIPLIER,
+    WHITE,
 } from '@app/ressources/global-variables/global-variables';
 import { GRID_DECREASE_NAME, GRID_INCREASE_NAME, GRID_NAME } from '@app/ressources/global-variables/grid-elements';
 import { DrawingService } from '@app/services/drawing/drawing.service';
@@ -18,6 +20,9 @@ import { HotkeyService } from '@app/services/hotkey/hotkey.service';
     styleUrls: ['./grid.component.scss'],
 })
 export class GridComponent {
+    @ViewChild('grid', { static: false }) gridRef: ElementRef<HTMLButtonElement>;
+
+  
     isEnabled: boolean = false;
     minSquareSize: number = MIN_GRID_SQUARE_SIZE;
     maxSquareSize: number = MAX_GRID_SQUARE_SIZE;
@@ -35,8 +40,8 @@ export class GridComponent {
         this.hotkeyService.getKey().subscribe((toolName) => {
             switch (toolName) {
                 case GRID_NAME: {
-                    if (this.isEnabled) this.changeGridView(false);
-                    else this.changeGridView(true);
+                    if (this.isEnabled) this.changeGridView();
+                    else this.changeGridView();
                     break;
                 }
                 case GRID_INCREASE_NAME: {
@@ -58,13 +63,18 @@ export class GridComponent {
         });
     }
 
-    changeGridView(isEnabled: boolean): void {
-        this.isEnabled = isEnabled;
-        this.drawingService.isGridEnabled = isEnabled;
-        if (isEnabled) this.drawingService.setGrid();
-        else this.drawingService.clearCanvas(this.drawingService.gridCtx);
+    changeGridView(): void {
+        this.isEnabled = !this.isEnabled;
+        this.drawingService.isGridEnabled = this.isEnabled;
+        if (this.isEnabled){ 
+            this.drawingService.setGrid();
+            this.gridRef.nativeElement.style.backgroundColor = POLY_RED;
+        }
+        else {
+            this.drawingService.clearCanvas(this.drawingService.gridCtx);
+            this.gridRef.nativeElement.style.backgroundColor = WHITE;
+        }
     }
-
     changeGridSize(newSize: number): void {
         newSize = Number(newSize);
         if (isNaN(newSize) || newSize < MIN_GRID_SQUARE_SIZE || newSize > MAX_GRID_SQUARE_SIZE || newSize.toString() === '') {

@@ -1,9 +1,35 @@
-<app-navbar></app-navbar>
-<div class="container">
-    <app-sidebar></app-sidebar>
-    <app-attribute-panel></app-attribute-panel>
-    <div #workSpace id="workSpace">
-        <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
-        <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
+<div #workSpace id="draw-space">
+    <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
+    <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
+</div>
+<div id="tool-space">
+    <div class="colors">
+        <button class="add-button" [ngStyle]="{'background-color': pencilColor}">                
+            <input
+                class="color-input"
+                #primary
+                type="color"
+                [value]="this.pencilColor"
+                (change)="this.setColor($event.target.value)"
+            />
+        </button>
+        <button
+        *ngFor="let color of previousColors"
+        class="individual-color"
+        [ngStyle]="{'background-color': color }"
+        (click)="this.setColor(color)"
+        ></button>
+    </div>
+    <div class="slider">
+        <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
+    </div>
+    <div class="tool-buttons-container">
+        <button #pencil class="tool-button" (click)="setPencil()"><i class="fas fa-pencil-alt fa-2x"></i></button>
+        <button #eraser class="tool-button" (click)="setEraser()"><i class="fas fa-eraser fa-2x"></i></button>
+        <app-grid></app-grid>
+        <button class="tool-button" (click)="this.undoRedoService.undo()"><i class="fas fa-undo fa-2x"></i></button>
+        <button class="tool-button" (click)="this.undoRedoService.redo()"><i class="fas fa-redo fa-2x"></i></button>
     </div>
 </div>
+
+

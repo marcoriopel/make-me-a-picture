@@ -1,0 +1,88 @@
+.game-bar {
+    position: absolute;
+    width: 365px;
+    height: 95%;
+    left: 0px;
+    /* Gray 5 */
+    background: #E0E0E0;
+}
+
+.button {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+.button:active {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    top: 102px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+}
+
+#classic-button {
+    background: #4AA7DD;
+}
+
+#classic-button:active {
+    background: #2f7197;
+}
+
+
+#solo-button{
+    background: #8BC640;
+}
+
+#solo-button:active{
+    background: #66912e;
+}
+
+#coop-button{
+    background: #F89524;
+}
+
+#coop-button:active{
+    background: #b86e1a;
+}
+
+#create-button{
+    background: #BA2034;
+    outline: none;
+}
+
+#create-button:active{
+    background: #8f1828;
+}
+
+.title {
+    margin-left: 10%;
+}
+
+hr {
+    width: 90%;
+}
+
+.game-logo {
+    float:right;
+    margin: 10px;
+    height: 40px;
+}
