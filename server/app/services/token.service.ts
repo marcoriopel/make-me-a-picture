@@ -52,7 +52,7 @@ export class TokenService {
     public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, username: any): any => {
             if (err) { return res.sendStatus(403); }
         });
     }
