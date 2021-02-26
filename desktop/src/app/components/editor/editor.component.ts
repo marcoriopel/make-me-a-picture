@@ -2,13 +2,32 @@ import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingComponent } from '@app/components/drawing/drawing.component';
 import {
+    BLACK,
+    DARK,
+    DARK_BLUE,
+    DARK_GREEN,
+    INITIAL_LINE_WIDTH,
+    LIGHT_BLUE,
+    LIGHT_GREEN,
+    LINE_WIDTH_STEP,
+    MAX_LINE_WIDTH,
     MINIMUM_CANVAS_HEIGHT,
     MINIMUM_CANVAS_WIDTH,
     MINIMUM_WORKSPACE_HEIGHT,
     MINIMUM_WORKSPACE_WIDTH,
+    MIN_LINE_WIDTH,
+    ORANGE,
+    PINK,
+    POLY_RED,
+    PURPLE,
+    RED,
+    TURQUOISE,
+    WHITE,
+    YELLOW,
 } from '@app/ressources/global-variables/global-variables';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
-import { ToolSelectionService } from '@app/services/tool-selection/tool-selection.service';
+import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 
 @Component({
     selector: 'app-editor',
@@ -19,49 +38,65 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('drawingComponent', { static: false }) drawingComponent: DrawingComponent;
     @ViewChild('workSpace', { static: false }) workSpaceRef: ElementRef<HTMLDivElement>;
     @ViewChild('previewDiv', { static: false }) previewDivRef: ElementRef<HTMLDivElement>;
+    @ViewChild('pencil', { static: false }) pencilRef: ElementRef<HTMLButtonElement>;
+    @ViewChild('eraser', { static: false }) eraserRef: ElementRef<HTMLButtonElement>;
+
+    lineWidthMin: number = MIN_LINE_WIDTH;
+    lineWidthMax: number = MAX_LINE_WIDTH;
+    lineWidthStep: number = LINE_WIDTH_STEP;
+    lineWidth: number = INITIAL_LINE_WIDTH;
 
     workSpaceSize: Vec2 = { x: MINIMUM_WORKSPACE_WIDTH, y: MINIMUM_WORKSPACE_HEIGHT };
     previewSize: Vec2 = { x: MINIMUM_CANVAS_WIDTH, y: MINIMUM_CANVAS_HEIGHT };
     canvasSize: Vec2 = { x: MINIMUM_CANVAS_WIDTH, y: MINIMUM_CANVAS_HEIGHT };
     previewDiv: HTMLDivElement;
 
-    shortcutsArray: string[] = ['c', 'e', 'z', 'Z', 'g'];
+    shortcutsArray: string[] = ['c', 'z', 'Z', 'g'];
+
+    pencilColor: string = BLACK;
+    previousColors: string[] = [
+        RED,
+        ORANGE,
+        YELLOW,
+        DARK_GREEN,
+        LIGHT_GREEN,
+        DARK_BLUE,
+        LIGHT_BLUE,
+        TURQUOISE,
+        PURPLE,
+        PINK,
+        DARK,
+    ]
 
     constructor(
         public hotkeyService: HotkeyService,
-        public toolSelectionService: ToolSelectionService,
+        public drawingService: DrawingService,
+        public undoRedoService: UndoRedoService,
     ) {
+        this.drawingService.color = BLACK;
+        this.drawingService.lineWidth = this.lineWidth;
     }
 
     ngAfterViewInit(): void {
         setTimeout(() => {
             const workspaceElement: HTMLElement = this.workSpaceRef.nativeElement;
+            this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
+            this.drawingService.gridCanvas.style.cursor = 'crosshair';
             this.workSpaceSize.x = workspaceElement.offsetWidth;
             this.workSpaceSize.y = workspaceElement.offsetHeight;
             this.previewDiv = this.previewDivRef.nativeElement;
             this.previewDiv.style.display = 'none';
-            this.previewDiv.style.borderWidth = '1px';
-            this.previewDiv.style.borderColor = '#09acd9';
-            this.previewDiv.style.borderStyle = 'dashed';
             this.previewDiv.style.position = 'absolute';
         });
     }
 
-    @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent): void {
-        this.toolSelectionService.currentToolKeyUp(event);
+    onMouseDown(event: MouseEvent): void {
+        this.previewDiv.style.display = 'block';
     }
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): void {
-        if (this.shortcutsArray.includes(event.key)) {
-            this.hotkeyService.onKeyDown(event);
-        }
-        this.toolSelectionService.currentToolKeyDown(event);
-    }
-
-    onMouseDown(event: MouseEvent): void {
-        this.previewDiv.style.display = 'block';
+        this.hotkeyService.onKeyDown(event);
     }
 
     @HostListener('mousemove', ['$event'])
@@ -71,5 +106,28 @@ export class EditorComponent implements AfterViewInit {
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
         this.previewDiv.style.display = 'none';
+    }
+
+    setColor(color: string){
+        this.drawingService.color = color;
+        this.pencilColor = color;
+        this.setPencil();
+    }
+
+    setEraser(): void {
+        this.pencilColor = this.drawingService.color;
+        this.drawingService.color = WHITE;
+        this.pencilRef.nativeElement.style.backgroundColor = WHITE;
+        this.eraserRef.nativeElement.style.backgroundColor = POLY_RED;
+    }
+
+    setPencil(): void {
+        this.drawingService.color = this.pencilColor;
+        this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
+        this.eraserRef.nativeElement.style.backgroundColor = WHITE;
+    }
+
+    changeLineWidth(): void {
+        this.drawingService.lineWidth = this.lineWidth;
     }
 }
