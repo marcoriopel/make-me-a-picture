@@ -4,6 +4,7 @@ import { injectable } from 'inversify';
 export abstract class Lobby {
     difficulty: number;
     gameName: string;
+    gameType: number;
     players: string[];
 
     constructor(difficulty: number, gameName: string) {
