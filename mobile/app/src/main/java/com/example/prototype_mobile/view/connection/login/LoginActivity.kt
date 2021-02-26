@@ -16,6 +16,7 @@ import com.example.prototype_mobile.databinding.ActivityLoginBinding
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.chat.ChatActivity
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
+import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
@@ -87,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(username: String) {
-        val intent = Intent(this, ChatActivity::class.java);
+        val intent = Intent(this, MainMenuActivity::class.java);
         startActivity(intent)
         Toast.makeText(
                 applicationContext,

@@ -65,7 +65,7 @@
         android:layout_marginBottom="440dp"
         android:enabled="false"
         android:text="@string/action_sign_in"
-        android:theme="@style/Widget.App.Button"
+        android:theme="@style/Widget.App.Button.Blue"
         app:rippleColor="#FFFFFF" />
 
     <ProgressBar
