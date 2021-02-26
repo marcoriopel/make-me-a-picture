@@ -1,0 +1,34 @@
+
+    <button class="game-type-button" (click)="filterGameType('classic')" [ngClass]="{'blue' : this.filter.get('classic'), 'white': !this.filter.get('classic')}">
+        <img [src]="classicBlackImgRef" alt="avatar" class="logo"> 
+    </button>   
+
+    <button class="game-type-button" (click)="filterGameType('sprint')" [ngClass]="{'blue' : this.filter.get('sprint'), 'white': !this.filter.get('sprint')}">
+        <img [src]="sprintImgRef" alt="avatar" class="logo"> 
+    </button>   
+
+    <button class="game-type-button" (click)="filterGameType('easy')" [ngClass]="{'green' : this.filter.get('easy'), 'white': !this.filter.get('easy')}">
+        <img [src]="easyImgRef" alt="avatar" class="logo"> 
+    </button>   
+
+    <button class="game-type-button" (click)="filterGameType('normal')" [ngClass]="{'orange' : this.filter.get('normal'), 'white': !this.filter.get('normal')}">
+        <img [src]="normalImgRef" alt="avatar" class="logo"> 
+    </button>   
+
+    <button class="game-type-button" (click)="filterGameType('hard')" [ngClass]="{'red' : this.filter.get('hard'), 'white': !this.filter.get('hard')}">
+        <img [src]="hardImgRef" alt="avatar" class="logo"> 
+    </button>   
+
+    <form [formGroup]="searchForm" class="search-form">
+        <input #box type="text" placeholder="Recherche de partie" formControlName="gameNameOrId" (keyup)="filterName(box.value)">
+    </form>
+
+    <div *ngFor="let game of this.searchGameService.displayList">
+        <div class="game-button">
+            <p class="title"> {{game.name}} 
+                <img *ngIf="game.type == 'classic'" [src]="classicGreyImgRef" class="classic-logo"> 
+                <img *ngIf="game.type == 'sprint'" [src]="sprintImgRef" class="sprint-logo"> 
+            </p>
+        </div>
+    </div>
+

@@ -26,6 +26,10 @@ export class PencilService extends Tool {
         this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
         this.clearPath();
+        let mouseEvent = {
+            button: MouseButton.LEFT,
+        } as MouseEvent
+        this.onMouseUp(mouseEvent);
     }
 
     onMouseDown(event: MouseEvent): void {
@@ -88,8 +92,8 @@ export class PencilService extends Tool {
         this.pencilData = {
             type: 'pencil',
             path: this.pathData,
-            lineWidth: this.width,
-            primaryColor: this.colorSelectionService.primaryColor,
+            lineWidth: this.drawingService.lineWidth,
+            primaryColor: this.drawingService.color,
         };
     }
 
