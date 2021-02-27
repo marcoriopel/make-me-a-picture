@@ -30,6 +30,7 @@ export class AuthService {
     localStorage.removeItem('username');
     localStorage.removeItem('avatar');
     this.router.navigate(['/login']);
+    // TODO
   }
 
   loggedIn() {

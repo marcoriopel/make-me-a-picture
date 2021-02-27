@@ -22,6 +22,7 @@ export class SearchGameService {
 
   fetchGameList(): void {
     // TODO
+    throw new Error('Method not implemented.');
   }
 
   displayAllGame(): void {
@@ -29,13 +30,16 @@ export class SearchGameService {
   }
 
   filterName(gameName: string): void {
-    console.log(gameName);
     this.filter('name', gameName);
   }
 
   filterGame(filter: Map<string, boolean>): void {
     // TODO
-    console.log("TODO");
+    throw new Error('Method not implemented.');
+  }
+
+  joint(id: string) {
+    throw new Error('Method not implemented.');
   }
 
   private filter(key: string, value: string): void {

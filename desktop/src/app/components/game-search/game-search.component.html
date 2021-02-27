@@ -24,11 +24,6 @@
     </form>
 
     <div *ngFor="let game of this.searchGameService.displayList">
-        <div class="game-button">
-            <p class="title"> {{game.name}} 
-                <img *ngIf="game.type == 'classic'" [src]="classicGreyImgRef" class="classic-logo"> 
-                <img *ngIf="game.type == 'sprint'" [src]="sprintImgRef" class="sprint-logo"> 
-            </p>
-        </div>
+        <app-game-preview [name]=game.name [type]=game.type></app-game-preview>
     </div>
 
