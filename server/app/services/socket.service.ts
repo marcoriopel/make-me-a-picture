@@ -27,6 +27,9 @@ export class SocketService {
         this.io.on("connection", (socket: socketio.Socket) => {
 
             socket.on('message', (message: IncomingMessage) => {
+                if (!(message instanceof Object)) {
+                  message = JSON.parse(message)
+                }
                 try {
                     const user: string = jwt.verify(message.token, process.env.ACCES_TOKEN_SECRET) as string;
                     this.chatManagerService.dispatchMessage( user, message);
