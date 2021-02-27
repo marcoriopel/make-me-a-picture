@@ -43,6 +43,8 @@ import { SearchGameService } from './services/search-game/search-game.service';
 import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { LobbyService } from './services/lobby/lobby.service'
 
 @NgModule({
     declarations: [
@@ -63,7 +65,8 @@ import { GamePreviewComponent } from './components/game-preview/game-preview.com
         GameBarComponent,
         GameMenuComponent,
         GameSearchComponent,
-        GamePreviewComponent
+        GamePreviewComponent,
+        LobbyComponent
     ],
     imports: [
         BrowserModule,
@@ -95,7 +98,7 @@ import { GamePreviewComponent } from './components/game-preview/game-preview.com
         BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
