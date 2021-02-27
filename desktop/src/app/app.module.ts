@@ -43,6 +43,7 @@ import { SearchGameService } from './services/search-game/search-game.service';
 import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
+import { LobbyService } from './services/lobby/lobby.service'
 
 @NgModule({
     declarations: [
@@ -94,7 +95,7 @@ import { LobbyComponent } from './components/lobby/lobby.component';
         NgxElectronModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
