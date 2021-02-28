@@ -10,6 +10,8 @@
     left: 0;
     width: 250px;
     background-color: #E0E0E0;
+    overflow-x: hidden; 
+    overflow-y: auto; 
 }
 
 #editor {
@@ -29,7 +31,6 @@
 }
 
 .form {
-    margin-top: 50px;
     text-align: center;
 }
 
@@ -60,3 +61,10 @@
     margin:auto;
 }
 
+.form-wrapper {
+    margin-top: 50px;
+}
+
+#tip-button {
+    width: 70%;
+}

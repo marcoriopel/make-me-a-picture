@@ -1,8 +1,8 @@
 <div class="wrapper">
     <app-navbar></app-navbar>
     <div id="image-form">
-        <form class="form" [formGroup]="imageCreationForm">
-            <mat-form-field appearance="outline">
+        <form class="form form-wrapper" [formGroup]="imageCreationForm">
+            <mat-form-field appearance="fill">
                 <mat-label>Mot</mat-label>
                 <input matInput placeholder="Mot" formControlName="word" required>
                 <mat-error>
@@ -10,7 +10,7 @@
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
                 <mat-label>Difficulté</mat-label>
                 <mat-select formControlName="level">
                     <mat-option *ngFor="let level of levels" [value]="level">
@@ -20,7 +20,7 @@
             </mat-form-field>
 
             <form class="form" [formGroup]="tipsForm">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="fill">
                     <mat-label>Indice</mat-label>
                     <input matInput placeholder="Indice" formControlName="tip" required>
                     <mat-error>
@@ -29,7 +29,7 @@
                 </mat-form-field>
             </form>
 
-            <button id="tip-button" mat-raised-button (click)="addTip()" [disabled]="tipsForm.invalid">Ajouter un indice suplémentaire</button>
+            <button id="tip-button" mat-raised-button (click)="addTip()" [disabled]="tipsForm.invalid">Ajouter l'indice</button>
             <div id="tip" *ngFor="let tip of tips; let index = index">
                 <p>{{tip}}</p>
                 <input type="button" (click)="deleteTip(index)" value="X">
