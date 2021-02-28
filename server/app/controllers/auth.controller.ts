@@ -26,7 +26,7 @@ export class AuthController {
 
     this.router.post('/login', (req, res) => {
       this.authService.loginUser(req, res, (userInfo: UserInfo) => {
-        const token = this.tokenService.generateAccesToken(userInfo.username);
+        const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
           const avatar: number = userInfo.avatar;
           res.status(StatusCodes.OK).send({ token, avatar });
       });
@@ -35,7 +35,7 @@ export class AuthController {
 
     this.router.post('/register', (req, res) => {
       this.authService.registerUser(req, res, (userInfo: UserInfo) => {
-        const token = this.tokenService.generateAccesToken(userInfo.username);
+        const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
         const avatar: number = userInfo.avatar;
         res.status(StatusCodes.OK).send({ token, avatar });
       });

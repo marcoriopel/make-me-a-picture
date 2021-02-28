@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
+import { textSpanIntersection } from 'typescript';
 
 @injectable()
 export class TokenService {
@@ -30,8 +31,9 @@ export class TokenService {
      * @param username: Data to encryp in the jwt
      * @returns encrypted token
      */
-    public generateAccesToken(username: string): any {
-        return jwt.sign(username, process.env.ACCES_TOKEN_SECRET);
+    public generateAccesToken(username: string, avatar: number): any {
+        const user = {avatar: avatar, username: username}
+        return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
     }
 
     /** 
@@ -43,16 +45,16 @@ export class TokenService {
     public authenticateToken(req: Request, res: Response, next: NextFunction): any {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, username: any): any => {
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
             if (err) { return res.sendStatus(403); }
-            next(username);
+            next(user.username);
         });
     }
 
     public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
         if (!token) { return res.sendStatus(401); }
-        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, username: any): any => {
+        jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
             if (err) { return res.sendStatus(403); }
         });
     }

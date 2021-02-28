@@ -20,8 +20,8 @@ export class ChatService {
   connect(): void {
     // Prevent double connection
     if (this.completeChatList.length == 0) {
-      this.connectToNewChat("General", "http://18.217.235.167:3000/" );
-      // this.connectToNewChat("Local", "http://localhost:3000/");
+      // this.connectToNewChat("General", "http://18.217.235.167:3000/" );
+      this.connectToNewChat("Local", "http://localhost:3000/");
       this.setCurrentChat(this.chatList[0]);
     }
   }
@@ -60,8 +60,7 @@ export class ChatService {
 
   sendMessage(message:string): void {
     const jwt = localStorage.getItem('token');
-    const avatar = parseInt(localStorage.getItem('avatar') as string);
-    this.completeChatList[this.index]["socket"].emit('message', {"text": message,"token": jwt, "avatar": avatar});
+    this.completeChatList[this.index]["socket"].emit('message', {"text": message,"token": jwt });
   }
 
   private connectToNewChat(name: string, url: string): void {
@@ -83,13 +82,12 @@ export class ChatService {
     this.completeChatList[index]["socket"].on('message', (message: any) => {
       // TODO (Feature 85-90): Catch error if socket not connected
       const username = localStorage.getItem('username');
-      const avatar: number = message.avatar;
       this.completeChatList[index]["messages"].push({
-        "username": message.username, 
-        "avatar": avatar, 
+        "username": message.user.username, 
+        "avatar": message.user.avatar, 
         "text": message.text, 
         "timeStamp": message.timeStamp, 
-        "isUsersMessage": message.username === username ? true: false, 
+        "isUsersMessage": message.user.username === username ? true: false, 
         "textColor": message.textColor
       });
     });
