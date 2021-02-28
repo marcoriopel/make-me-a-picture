@@ -20,8 +20,8 @@ export class ChatService {
   connect(): void {
     // Prevent double connection
     if (this.completeChatList.length == 0) {
-      // this.connectToNewChat("General", "http://18.217.235.167:3000/" );
-      this.connectToNewChat("Local", "http://localhost:3000/");
+      this.connectToNewChat("General", "http://18.217.235.167:3000/" );
+      // this.connectToNewChat("Local", "http://localhost:3000/");
       this.setCurrentChat(this.chatList[0]);
     }
   }
