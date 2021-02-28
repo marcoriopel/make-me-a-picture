@@ -17,12 +17,6 @@ import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [chatFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ChatFragment : Fragment() {
 
     var chatList: MutableList<Message> = mutableListOf() ;
@@ -43,10 +37,6 @@ class ChatFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_chat, container, false)
 
-/*/
-        val layoutManager = LinearLayoutManager(view.getContext())
-        binding.recyclerView.layoutManager = layoutManager
-*/
         return view
     }
 
