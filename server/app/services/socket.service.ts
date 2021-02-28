@@ -20,6 +20,7 @@ export class SocketService {
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
     ) {
+        this.tokenService = TokenService.getInstance();
     }
     
     init(server: http.Server): void {
@@ -37,6 +38,20 @@ export class SocketService {
                     this.chatManagerService.dispatchMessage( user, message);
                 } catch (err) {
                     // err
+                }
+            });
+
+            socket.on('listenLobby', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                try {
+                    if(this.lobbyManagerService.lobbyExist(request.lobbyId))
+                        socket.join(request.lobbyId);
+                    else
+                        throw new Error("this lobby does not exist")
+                } catch (err) {
+                    this.io.emit('error', {"error": err.message});
                 }
             });
         });

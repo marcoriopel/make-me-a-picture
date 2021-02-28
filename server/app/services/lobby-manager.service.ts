@@ -14,13 +14,14 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class LobbyManagerService {
-    lobbies: Map<string, Lobby> = new Map<string, Lobby>();
-    socket: socketio.Server;
+
+    static lobbies: Map<string, Lobby> = new Map<string, Lobby>();
+    static socket: socketio.Server;
 
     constructor() { }
-
+    
     setSocket(io : socketio.Server){
-        this.socket = io;
+        LobbyManagerService.socket = io;
     }
 
     create(req: Request, res: Response, next: NextFunction){
@@ -31,13 +32,13 @@ export class LobbyManagerService {
         }
         switch(lobbyInfo.gameType) {
             case GameType.CLASSIC:
-                this.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             case GameType.SOLO:
-                this.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             case GameType.COOP:
-                this.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             default:
                 return res.sendStatus(StatusCodes.BAD_REQUEST);
@@ -47,20 +48,30 @@ export class LobbyManagerService {
 
     getLobbies(req: Request, res: Response, next: NextFunction): void {
         let response: lobbyInterface.Lobby[] = [];
-        this.lobbies.forEach((lobby: Lobby, key:string,  map: Map<string, Lobby>) =>{
+        LobbyManagerService.lobbies.forEach((lobby: Lobby, key:string,  map: Map<string, Lobby>) =>{
             response.push({id: key, gameName: lobby.gameName,difficulty: lobby.difficulty, gameType: lobby.gameType});
         })
         next(response);
     }
 
     join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
-        var lobby: Lobby = this.lobbies.get(req.body.lobbyId);
+        var lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
         lobby.addPlayer(user);
-        this.dispatchNewPlayer(user, req.body.lobbyId);
+        this.dispatchTeams(lobby.getPlayers(), req.body.lobbyId);
         next();
     }
 
-    private dispatchNewPlayer(user: BasicUser, lobbyId: string): void {
-        this.socket.to(lobbyId).emit('joinLobby', {"username": user.username, "avatar":user.avatar});
+    joinLobby(user: BasicUser, lobbyId: string): void {
+        const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
+        lobby.addPlayer(user);
+        this.dispatchTeams(lobby.getPlayers(), lobbyId);
+    }
+
+    lobbyExist(lobbyId: string): boolean {
+        return LobbyManagerService.lobbies.has(lobbyId);
+    }
+
+    private dispatchTeams(players: any, lobbyId: string): void {
+        LobbyManagerService.socket.to(lobbyId).emit('newTeams', {"players": players});
     }
 }
