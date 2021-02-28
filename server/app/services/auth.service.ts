@@ -67,11 +67,18 @@ export class AuthService {
 
     async getLastLogout(username: string, res: Response, next: NextFunction): Promise<any> {
         if (!username) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST)
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
-        const logouts = await this.userLogsModel.getLastLogout(username);
-        if (logouts.length == 0)
-            return res.sendStatus(StatusCodes.NOT_FOUND)
+        let logouts;
+        try {
+            logouts = await this.userLogsModel.getLastLogout(username);
+        }
+        catch (e) {
+            console.log(e);
+            return res.sendStatus(StatusCodes.NOT_FOUND);
+        }
+        if (!logouts.length)
+            return res.sendStatus(StatusCodes.NOT_FOUND);
         else {
             const lastLogout = logouts[logouts.length - 1].timeStamp;
             next(lastLogout);

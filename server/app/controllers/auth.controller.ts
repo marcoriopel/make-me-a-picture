@@ -43,7 +43,7 @@ export class AuthController {
 
     this.router.post('/logout', (req: Request, res: Response) => {
       this.tokenService.authenticateToken(req, res, (user: any) => {
-        this.authService.addUserToLogCollection(user.username, false)
+        this.authService.addUserToLogCollection(user.username, false);
         res.sendStatus(StatusCodes.OK);
       });
     });

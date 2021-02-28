@@ -35,21 +35,31 @@ export class ChatManagerService {
     async getAllChatHistory(username: string, res: Response, next: NextFunction) {
         var chatsHistory = [];
         if (!username) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST)
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
-        const userInfo = await this.userCredentialsModel.getCredentials(username);
-        const userChats = userInfo.rooms;
-        for (let i = 0; i < userChats.length; i++) {
-            const chatName = userChats[i];
-            const chatHistory = await this.chatModel.getChatHistory(chatName);
-            chatsHistory.push({ [chatName]: chatHistory });
+        try {
+            const userInfo = await this.userCredentialsModel.getCredentials(username);
+            const userChats = userInfo.rooms;
+            for (let i = 0; i < userChats.length; i++) {
+                const chatName = userChats[i];
+                const chatHistory = await this.chatModel.getChatHistory(chatName);
+                chatsHistory.push({ [chatName]: chatHistory });
+            }
+            next(chatsHistory);
         }
-        next(chatsHistory);
+        catch (e) {
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
     }
 
     async addMessageToDB(user: BasicUser, message: IncomingMessage, date: Date) {
         const timestamp = date.getTime();
-        await this.chatModel.addChatMessage(message.chatName, message.text, user.username, timestamp, user.avatar);
+        try {
+            await this.chatModel.addChatMessage(message.chatName, message.text, user.username, timestamp, user.avatar);
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
 }

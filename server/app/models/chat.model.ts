@@ -15,6 +15,7 @@ export class ChatModel {
             return await this.databaseModel.client.db("chats").collection(chatRoomName).find().toArray();
         } catch (e) {
             console.error(e);
+            throw e;
         }
     }
 
@@ -22,7 +23,7 @@ export class ChatModel {
         try {
             await this.databaseModel.client.db("chats").collection(chatRoomName).insertOne({ "username": username, "message": message, "timestamp": timestamp, "avatar": avatar });
         } catch (e) {
-            console.error(e);
+            throw e;
         }
     }
 }
