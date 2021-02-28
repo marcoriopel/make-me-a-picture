@@ -3,10 +3,10 @@
     width: 365px;
     height: 95%;
     left: 0px;
+    overflow-y: hidden;
     /* Gray 5 */
     background: #E0E0E0;
 }
-
 .button {
     width: 90%;
     height: 60px;
@@ -69,17 +69,17 @@ hr {
     font: 16px Serif;
     color: blue;
     margin: 0 0 10px 0;
-  }
+}
   
-  #grow input:checked {
+#grow input:checked {
     color: red;
-  }
+}
   
-  #more-button:hover {
+#more-button:hover {
     color: black;
-  }
+}
   
-  #grow {
+#grow {
     -moz-transition: height .5s;
     -ms-transition: height .5s;
     -o-transition: height .5s;
@@ -87,4 +87,4 @@ hr {
     transition: height .5s;
     height: 0;
     overflow: hidden;
-  }
+}

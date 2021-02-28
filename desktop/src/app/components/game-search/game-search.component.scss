@@ -124,3 +124,11 @@
     outline:none;
 }
 
+.game-list {
+    overflow-y: scroll;
+    height: calc(95% -  400px);
+}
+
+.game-list::-webkit-scrollbar {
+    display: none;
+}

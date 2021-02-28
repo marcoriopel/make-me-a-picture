@@ -16,6 +16,21 @@ export class SearchGameService {
       {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
       {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
       {name: 'Game 5', type: 'classic', difficulty: 'hard'},
+      {name: 'Game 1', type: 'classic', difficulty: 'normal'},
+      {name: 'Game 2', type: 'sprint', difficulty: 'hard'},
+      {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
+      {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
+      {name: 'Game 5', type: 'classic', difficulty: 'hard'},
+      {name: 'Game 1', type: 'classic', difficulty: 'normal'},
+      {name: 'Game 2', type: 'sprint', difficulty: 'hard'},
+      {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
+      {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
+      {name: 'Game 5', type: 'classic', difficulty: 'hard'},
+      {name: 'Game 1', type: 'classic', difficulty: 'normal'},
+      {name: 'Game 2', type: 'sprint', difficulty: 'hard'},
+      {name: 'Game 3', type: 'sprint', difficulty: 'easy'},
+      {name: 'Game 4', type: 'classic', difficulty: 'mushroom'},
+      {name: 'Game 5', type: 'classic', difficulty: 'hard'},
     ]
     this.displayList = this.gameList;
   }
