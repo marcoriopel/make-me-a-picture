@@ -6,7 +6,7 @@ import { inject, injectable } from 'inversify';
 import {
   StatusCodes,
 } from 'http-status-codes';
-import { UserInfo, AuthInfo } from '@app/ressources/interfaces/user.interface';
+import { DetailedUser, AuthInfo } from '@app/ressources/interfaces/user.interface';
 
 
 @injectable()
@@ -25,7 +25,7 @@ export class AuthController {
     this.router = Router();
 
     this.router.post('/login', (req, res) => {
-      this.authService.loginUser(req, res, (userInfo: UserInfo) => {
+      this.authService.loginUser(req, res, (userInfo: DetailedUser) => {
         const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
           const avatar: number = userInfo.avatar;
           res.status(StatusCodes.OK).send({ token, avatar });
@@ -34,7 +34,7 @@ export class AuthController {
 
 
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req, res, (userInfo: UserInfo) => {
+      this.authService.registerUser(req, res, (userInfo: DetailedUser) => {
         const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
         const avatar: number = userInfo.avatar;
         res.status(StatusCodes.OK).send({ token, avatar });
@@ -42,8 +42,8 @@ export class AuthController {
     });
 
     this.router.post('/logout', (req: Request, res: Response) => {
-      this.tokenService.authenticateToken(req, res, (username: any) => {
-        this.authService.addUserToLogCollection(username, false)
+      this.tokenService.authenticateToken(req, res, (user: any) => {
+        this.authService.addUserToLogCollection(user.username, false)
         res.sendStatus(StatusCodes.OK);
       });
     });

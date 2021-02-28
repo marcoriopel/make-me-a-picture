@@ -47,7 +47,7 @@ export class TokenService {
         if (!token) { return res.sendStatus(401); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
             if (err) { return res.sendStatus(403); }
-            next(user.username);
+            next(user);
         });
     }
 
