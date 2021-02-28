@@ -4,6 +4,7 @@ export const TYPES = {
 
     AuthController: Symbol('AuthController'),
     GamesController: Symbol('GamesController'),
+    DrawingsController: Symbol('DrawingsController'),
 
     TokenService: Symbol('TokenService'),
     SocketService: Symbol('SocketService'),
@@ -11,8 +12,10 @@ export const TYPES = {
     ChatManagerService: Symbol('ChatManagerService'),
     LobbyManagerService: Symbol('LobbyManagerService'),
     GameManagerService: Symbol('GameManagerService'),
+    DrawingsService: Symbol('DrawingsService'),
 
     DatabaseModel: Symbol('DatabaseModel'),
+    DrawingsModel: Symbol('DrawingsModel'),
     UserCredentialsModel: Symbol('UserCredentialsModel'),
     UserLogsModel: Symbol('UserLogsModel'),
 };
