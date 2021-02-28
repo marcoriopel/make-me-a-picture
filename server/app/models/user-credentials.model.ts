@@ -11,7 +11,7 @@ export class UserCredentialsModel {
 
     async getCredentials(username) {
         try {
-            return await this.databaseModel.client.db().collection("user-credentials").findOne({ 'username': username });
+            return await this.databaseModel.client.db("database").collection("user-credentials").findOne({ 'username': username });
         } catch (e) {
             console.error(e);
         }
@@ -19,7 +19,7 @@ export class UserCredentialsModel {
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
-            await this.databaseModel.client.db().collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["general"] });
+            await this.databaseModel.client.db("database").collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["general"] });
         } catch (e) {
             console.error(e);
         }
