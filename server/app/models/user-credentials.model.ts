@@ -19,7 +19,7 @@ export class UserCredentialsModel {
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
-            await this.databaseModel.client.db("database").collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["general"] });
+            await this.databaseModel.client.db("database").collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["General"] });
         } catch (e) {
             console.error(e);
         }

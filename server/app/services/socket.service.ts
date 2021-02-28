@@ -13,7 +13,7 @@ import { TokenService } from './token.service';
 @injectable()
 export class SocketService {
 
-    private io : socketio.Server;
+    private io: socketio.Server;
 
     constructor(
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
@@ -21,20 +21,21 @@ export class SocketService {
         @inject(TYPES.TokenService) private tokenService: TokenService,
     ) {
     }
-    
+
     init(server: http.Server): void {
         this.io = new socketio.Server(server, ({ cors: { origin: "*" } }));
         this.distibuteSocket();
 
         this.io.on("connection", (socket: socketio.Socket) => {
-
             socket.on('message', (message: IncomingMessage) => {
                 if (!(message instanceof Object)) {
-                  message = JSON.parse(message)
+                    message = JSON.parse(message)
                 }
                 try {
+                    let date: Date = new Date();
                     const user: any = this.tokenService.getTokenInfo(message.token);
-                    this.chatManagerService.dispatchMessage( user, message);
+                    this.chatManagerService.addMessageToDB(user, message, date);
+                    this.chatManagerService.dispatchMessage(user, message, date);
                 } catch (err) {
                     // err
                 }
@@ -42,7 +43,7 @@ export class SocketService {
         });
     }
 
-    private distibuteSocket(): void{
+    private distibuteSocket(): void {
         this.chatManagerService.setSocket(this.io);
         this.lobbyManagerService.setSocket(this.io);
     }

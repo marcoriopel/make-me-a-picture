@@ -6,6 +6,7 @@ import { UserCredentialsModel } from '@app/models/user-credentials.model';
 import { ChatModel } from '@app/models/chat.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class ChatManagerService {
@@ -21,15 +22,14 @@ export class ChatManagerService {
         this.socket = io;
     }
 
-    dispatchMessage( user: any, message: IncomingMessage){
-        let date: Date = new Date();
+    dispatchMessage(user: BasicUser, message: IncomingMessage, date: Date) {
         let tmpHour: number = date.getHours() + (date.getTimezoneOffset() / 60) - 5;
         if (tmpHour < 0) { tmpHour += 24 }
         let hours: string = tmpHour.toString().length == 1 ? "0" + tmpHour.toString() : tmpHour.toString();
         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        this.socket.emit('message', {"user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+        this.socket.emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
     }
 
     async getAllChatHistory(username: string, res: Response, next: NextFunction) {
@@ -45,6 +45,11 @@ export class ChatManagerService {
             chatsHistory.push({ [chatName]: chatHistory });
         }
         next(chatsHistory);
+    }
+
+    async addMessageToDB(user: BasicUser, message: IncomingMessage, date: Date) {
+        const timestamp = date.getTime();
+        await this.chatModel.addChatMessage(message.chatName, message.text, user.username, timestamp, user.avatar);
     }
 
 }

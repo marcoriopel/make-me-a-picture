@@ -18,9 +18,10 @@ export class ChatModel {
         }
     }
 
-    async addChatMessage(chatRoomName, message, username, messageType, timestamp, avatar) {
+    async addChatMessage(chatRoomName, message, username, timestamp, avatar) {
         try {
-            return await this.databaseModel.client.db("chats").collection(chatRoomName).insertOne({ "username": username, "message": message, "messageType": messageType, "timestamp": timestamp, "avatar": avatar });
+            console.log(chatRoomName);
+            await this.databaseModel.client.db("chats").collection(chatRoomName).insertOne({ "username": username, "message": message, "timestamp": timestamp, "avatar": avatar });
         } catch (e) {
             console.error(e);
         }
