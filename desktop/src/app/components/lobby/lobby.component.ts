@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { LobbyService } from '@app/services/lobby/lobby.service';
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LobbyComponent implements OnInit {
 
-  constructor() { }
+  classicBlackImgRef: string = "../../../assets/img/classicLogoBlack.png"
+  sprintImgRef: string = "../../../assets/img/sprintLogo.png";
+
+  constructor(public lobbyService: LobbyService) { }
 
   ngOnInit(): void {
   }
