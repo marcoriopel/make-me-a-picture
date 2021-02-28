@@ -11,15 +11,15 @@ export abstract class Lobby {
     constructor(difficulty: number, gameName: string) {
         this.difficulty = difficulty;
         this.gameName = gameName;
-     }
+    }
 
-    startGame(): void{}
+    startGame(): void { }
 
-    deleteLobby(): void{}
+    deleteLobby(): void { }
 
     addPlayer(user: BasicUser): void {
         this.players.push(user)
     }
 
-    removePlayer(): void{}
+    removePlayer(): void { }
 }

@@ -38,7 +38,7 @@ export class AuthService {
 
     async registerUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
-            const userInfo : DetailedUser = {
+            const userInfo: DetailedUser = {
                 'surname': req.body.surname,
                 'name': req.body.name,
                 'username': req.body.username,

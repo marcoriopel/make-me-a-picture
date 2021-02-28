@@ -27,8 +27,8 @@ export class AuthController {
     this.router.post('/login', (req, res) => {
       this.authService.loginUser(req, res, (userInfo: DetailedUser) => {
         const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
-          const avatar: number = userInfo.avatar;
-          res.status(StatusCodes.OK).send({ token, avatar });
+        const avatar: number = userInfo.avatar;
+        res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
@@ -49,8 +49,8 @@ export class AuthController {
     });
 
     this.router.get('/last/logout', (req: Request, res: Response) => {
-      this.tokenService.authenticateToken(req, res, (username: any) => {
-        this.authService.getLastLogout(username, res, (lastLogout: any) => {
+      this.tokenService.authenticateToken(req, res, (user: any) => {
+        this.authService.getLastLogout(user.username, res, (lastLogout: any) => {
           res.status(StatusCodes.OK).send({ lastLogout });
         });
       });

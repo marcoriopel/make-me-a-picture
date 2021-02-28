@@ -24,8 +24,8 @@ export class ChatController {
         this.router = Router();
 
         this.router.get('/history', (req: Request, res: Response) => {
-            this.tokenService.authenticateToken(req, res, (username: any) => {
-                this.chatManagerService.getAllChatHistory(username, res, (chatsHistory: any) => {
+            this.tokenService.authenticateToken(req, res, (user: any) => {
+                this.chatManagerService.getAllChatHistory(user.username, res, (chatsHistory: any) => {
                     res.status(StatusCodes.OK).send({ chatsHistory });
                 });
             });

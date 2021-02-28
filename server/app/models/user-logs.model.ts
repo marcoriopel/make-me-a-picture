@@ -18,6 +18,7 @@ export class UserLogsModel {
 
     async getLastLogout(username) {
         try {
+            console.log(username);
             return await this.databaseModel.client.db("database").collection("user-logs").find({ 'username': username, "isLogin": false }).toArray();
         } catch (e) {
             throw Error("No last logout");
