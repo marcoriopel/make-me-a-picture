@@ -1,0 +1,15 @@
+import { GameType } from '@app/ressources/variables/game-variables';
+import { injectable } from 'inversify';
+import { Lobby } from './lobby';
+
+@injectable()
+export class SoloLobby extends Lobby {
+    
+    constructor(difficulty: number, gameName: string) {
+        super(difficulty, gameName);
+        this.gameType = GameType.SOLO;
+        console.log("Created solo game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
+    }
+
+    startGame(): void{}
+}

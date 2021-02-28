@@ -53,7 +53,7 @@ class LoginRepository() {
          val mapLogin = HashMap<String, String>()
          mapLogin["username"] = username
          mapLogin["password"] = password
-         val response = HttpRequestDrawGuess.httpRequest("/api/auth/authenticate", mapLogin)
+         val response = HttpRequestDrawGuess.httpRequest("/api/authenticate/login", mapLogin)
 
 
          val result = analyseLoginAnswer(response, username)
