@@ -55,23 +55,19 @@ export class LobbyManagerService {
     }
 
     join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
-        var lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
+        const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
         lobby.addPlayer(user);
-        this.dispatchTeams(lobby.getPlayers(), req.body.lobbyId);
+        this.dispatchTeams(req.body.lobbyId);
         next();
-    }
-
-    joinLobby(user: BasicUser, lobbyId: string): void {
-        const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
-        lobby.addPlayer(user);
-        this.dispatchTeams(lobby.getPlayers(), lobbyId);
     }
 
     lobbyExist(lobbyId: string): boolean {
         return LobbyManagerService.lobbies.has(lobbyId);
     }
 
-    private dispatchTeams(players: any, lobbyId: string): void {
-        LobbyManagerService.socket.to(lobbyId).emit('newTeams', {"players": players});
+    dispatchTeams(lobbyId: string): void {
+        const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
+        console.log(lobby);
+        LobbyManagerService.socket.to(lobbyId).emit('dispatchTeams', {"players": lobby.getPlayers()});
     }
 }

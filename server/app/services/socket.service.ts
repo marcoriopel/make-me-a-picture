@@ -46,8 +46,10 @@ export class SocketService {
                     request = JSON.parse(request)
                 }
                 try {
-                    if(this.lobbyManagerService.lobbyExist(request.lobbyId))
+                    if(this.lobbyManagerService.lobbyExist(request.lobbyId)){
                         socket.join(request.lobbyId);
+                        this.lobbyManagerService.dispatchTeams(request.lobbyId)
+                    }
                     else
                         throw new Error("this lobby does not exist")
                 } catch (err) {
