@@ -15,4 +15,12 @@ export class UserLogsModel {
             console.error(e);
         }
     }
+
+    async getLastLogout(username) {
+        try {
+            return await this.databaseModel.client.db().collection("user-logs").find({ 'username': username, "isLogin": false }).toArray();
+        } catch (e) {
+            throw Error("No last logout");
+        }
+    }
 }

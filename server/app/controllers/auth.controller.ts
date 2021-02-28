@@ -15,7 +15,7 @@ export class AuthController {
 
   constructor(
     @inject(TYPES.TokenService) private tokenService: TokenService,
-    @inject(TYPES.AuthService) private authService: AuthService
+    @inject(TYPES.AuthService) private authService: AuthService,
   ) {
     this.configureRouter();
     this.tokenService = TokenService.getInstance();
@@ -27,8 +27,8 @@ export class AuthController {
     this.router.post('/login', (req, res) => {
       this.authService.loginUser(req, res, (userInfo: UserInfo) => {
         const token = this.tokenService.generateAccesToken(userInfo.username);
-          const avatar: number = userInfo.avatar;
-          res.status(StatusCodes.OK).send({ token, avatar });
+        const avatar: number = userInfo.avatar;
+        res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
@@ -45,6 +45,14 @@ export class AuthController {
       this.tokenService.authenticateToken(req, res, (username: any) => {
         this.authService.addUserToLogCollection(username, false)
         res.sendStatus(StatusCodes.OK);
+      });
+    });
+
+    this.router.get('/last/logout', (req: Request, res: Response) => {
+      this.tokenService.authenticateToken(req, res, (username: any) => {
+        this.authService.getLastLogout(username, res, (lastLogout: any) => {
+          res.status(StatusCodes.OK).send({ lastLogout });
+        });
       });
     });
 
