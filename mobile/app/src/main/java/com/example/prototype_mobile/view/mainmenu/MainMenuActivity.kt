@@ -13,6 +13,7 @@ class MainMenuActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, GameCreationFragment.newInstance())
                     .commitNow()
+            supportFragmentManager.beginTransaction().replace(R.id.center, GameParameterFragment.newInstance()).commit()
         }
     }
 }

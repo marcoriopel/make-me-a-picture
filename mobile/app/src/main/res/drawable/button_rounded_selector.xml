@@ -1,0 +1,6 @@
+
+<!-- https://stackoverflow.com/questions/3882064/how-to-change-color-of-button-in-android-when-clicked -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:drawable="@drawable/button_rounded_bg" /> <!--pressed -->
+    <item android:drawable="@drawable/button_rounded" /> <!-- Normal -->
+</selector>

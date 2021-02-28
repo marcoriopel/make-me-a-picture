@@ -26,4 +26,7 @@
     <string name="solo_sprint">"Sprint Solo"</string>
     <string name="coop_sprint">"Sprint Coop"</string>
     <string name="search_game">"Rechercher une partie"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name = "StartGame">Commencer</string>
 </resources>

@@ -13,4 +13,10 @@
         android:layout_height="813dp">
 
     </FrameLayout>
+    <FrameLayout
+        android:id="@+id/center"
+        android:layout_width="300dp"
+        android:layout_height="813dp">
+    </FrameLayout>
+
 </LinearLayout>

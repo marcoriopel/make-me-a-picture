@@ -29,9 +29,23 @@
         <item name="colorPrimary">@color/poly_orange</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
+    <style name="Widget.App.Button.LightGreen" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/light_green</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+    <style name="Widget.App.Button.DarkGreen" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/dark_green</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
 
     <style name="Widget.App.Button.Red" parent="Widget.MaterialComponents.Button">
         <item name="colorPrimary">@color/poly_red</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+
+    <style name="Widget.App.Button.Grey" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/light_grey</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
 </resources>
