@@ -17,12 +17,11 @@
         android:layout_height="81dp"
         android:layout_marginStart="160dp"
         android:layout_marginBottom="88dp"
-        android:background="@drawable/button_round"
+        android:background="@drawable/circle"
         android:enabled="true"
         android:gravity="center"
         android:src="@drawable/icon_incognito_64"
         android:textStyle="bold"
-        android:theme="@style/Widget.App.Button.Grey"
         app:layout_constraintBottom_toTopOf="@+id/StartGame"
         app:layout_constraintStart_toStartOf="parent"
 
