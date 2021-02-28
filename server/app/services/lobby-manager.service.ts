@@ -10,6 +10,7 @@ import { CoopLobby } from '@app/classes/lobby/coop-lobby';
 import { SoloLobby } from '@app/classes/lobby/solo-lobby';
 import {StatusCodes} from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class LobbyManagerService {
@@ -52,14 +53,14 @@ export class LobbyManagerService {
         next(response);
     }
 
-    join(req: Request, res: Response, username: string, next: NextFunction): void {
+    join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         var lobby: Lobby = this.lobbies.get(req.body.lobbyId);
-        lobby.addPlayer(username);
-        this.dispatchNewPlayer(username, req.body.lobbyId);
+        lobby.addPlayer(user);
+        this.dispatchNewPlayer(user, req.body.lobbyId);
         next();
     }
 
-    private dispatchNewPlayer(username: string, lobbyId: string): void {
-        this.socket.to(lobbyId).emit('joinLobby', {"username": username});
+    private dispatchNewPlayer(user: BasicUser, lobbyId: string): void {
+        this.socket.to(lobbyId).emit('joinLobby', {"username": user.username, "avatar":user.avatar});
     }
 }

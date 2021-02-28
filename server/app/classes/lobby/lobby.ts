@@ -1,3 +1,4 @@
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -5,7 +6,7 @@ export abstract class Lobby {
     difficulty: number;
     gameName: string;
     gameType: number;
-    players: string[];
+    players: BasicUser[];
 
     constructor(difficulty: number, gameName: string) {
         this.difficulty = difficulty;
@@ -16,8 +17,8 @@ export abstract class Lobby {
 
     deleteLobby(): void{}
 
-    addPlayer(username: string): void {
-        this.players.push(username)
+    addPlayer(user: BasicUser): void {
+        this.players.push(user)
     }
 
     removePlayer(): void{}

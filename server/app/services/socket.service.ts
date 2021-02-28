@@ -8,6 +8,7 @@ import * as http from 'http';
 import { ChatManagerService } from './chat-manager.service';
 import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
 import { LobbyManagerService } from './lobby-manager.service';
+import { TokenService } from './token.service';
 
 @injectable()
 export class SocketService {
@@ -17,6 +18,7 @@ export class SocketService {
     constructor(
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
+        @inject(TYPES.TokenService) private tokenService: TokenService,
     ) {
     }
     
@@ -27,8 +29,11 @@ export class SocketService {
         this.io.on("connection", (socket: socketio.Socket) => {
 
             socket.on('message', (message: IncomingMessage) => {
+                if (!(message instanceof Object)) {
+                  message = JSON.parse(message)
+                }
                 try {
-                    const user: string = jwt.verify(message.token, process.env.ACCES_TOKEN_SECRET) as string;
+                    const user: any = this.tokenService.getTokenInfo(message.token);
                     this.chatManagerService.dispatchMessage( user, message);
                 } catch (err) {
                     // err
