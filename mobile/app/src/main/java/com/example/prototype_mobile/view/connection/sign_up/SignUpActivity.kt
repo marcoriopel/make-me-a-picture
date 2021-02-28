@@ -2,7 +2,6 @@ package com.example.prototype_mobile.view.connection.sign_up
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
@@ -14,7 +13,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.SignUpInfo
 import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
-import com.example.prototype_mobile.view.chat.ChatActivity
+import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModel
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModelFactory
 import java.util.regex.Matcher.*
@@ -72,15 +71,15 @@ class SignUpActivity : AppCompatActivity() {
 
         binding.sendSignUp.setOnClickListener {
             val formData = SignUpInfo(
-                    binding.firstNameSignUp.text.toString(),
-                    binding.lastNameSignUp.text.toString(),
-                    binding.usernameSignUp.text.toString(),
-                    StringUtil.hashSha256(binding.passwordSignUp.text.toString()),
-                    avatar)
+                binding.firstNameSignUp.text.toString(),
+                binding.lastNameSignUp.text.toString(),
+                binding.usernameSignUp.text.toString(),
+                StringUtil.hashSha256(binding.passwordSignUp.text.toString()),
+                avatar)
 
             val isFormFilled = signUpViewModel.signUpDataVerification(
-                    formData,
-                    StringUtil.hashSha256(binding.passwordConfirmSignUp.text.toString()))
+                formData,
+                StringUtil.hashSha256(binding.passwordConfirmSignUp.text.toString()))
 
             if (isFormFilled) {
                 signUpViewModel.signUp(formData)
@@ -105,12 +104,12 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
-        val intent = Intent(this, ChatActivity::class.java);
+        val intent = Intent(this,   MainMenuActivity::class.java);
         startActivity(intent)
         Toast.makeText(
-                applicationContext,
-                "Bienvenue $username",
-                Toast.LENGTH_LONG
+            applicationContext,
+            "Bienvenue $username",
+            Toast.LENGTH_LONG
         ).show()
     }
 

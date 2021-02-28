@@ -34,4 +34,18 @@
         <item name="colorPrimary">@color/poly_red</item>
         <item name="colorOnPrimary">@color/black</item>
     </style>
+
+    <style name="Widget.App.Button.Grey" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/button_grey</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Theme.Prototype_mobile.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Prototype_mobile.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Prototype_mobile.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
