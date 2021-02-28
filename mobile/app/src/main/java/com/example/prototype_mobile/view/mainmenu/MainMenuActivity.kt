@@ -3,6 +3,7 @@ package com.example.prototype_mobile.view.mainmenu
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.view.chat.ChatFragment
 
 class MainMenuActivity : AppCompatActivity() {
 
@@ -12,6 +13,9 @@ class MainMenuActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, GameCreationFragment.newInstance())
+                    .commitNow()
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container2, ChatFragment.newInstance())
                     .commitNow()
         }
     }

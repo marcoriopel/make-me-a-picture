@@ -4,7 +4,7 @@ package com.example.prototype_mobile
 data class Message (val username : String, val text : String, val timeStamp : String, val messageType: Int)
 data class MessageReceive (val id : String, val username : String, val text : String, val timeStamp : String, val textColor : String)
 data class InitialData (val token : String)
-data class SendMessage(val text: String, val token: String)
+data class SendMessage(val text: String, val token: String, val avatar: Int)
 
 // Data class for the sign up
 data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String, val avatar: Int)

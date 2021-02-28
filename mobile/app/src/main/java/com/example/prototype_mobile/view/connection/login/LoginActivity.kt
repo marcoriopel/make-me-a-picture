@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.databinding.ActivityLoginBinding
 import com.example.prototype_mobile.util.StringUtil
-import com.example.prototype_mobile.view.chat.ChatActivity
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
