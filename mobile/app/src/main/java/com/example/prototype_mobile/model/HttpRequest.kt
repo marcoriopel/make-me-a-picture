@@ -15,7 +15,7 @@ class HttpRequestDrawGuess {
                 val formBody = formBuilder.build()
 
                 val request: Request = Request.Builder()
-//                        .url("http://10.0.2.2:3000" + urlPath)
+                        //.url("http://10.0.2.2:3000" + urlPath)
                         .url("http://18.217.235.167:3000$urlPath")
                         .post(formBody)
                         .build()
