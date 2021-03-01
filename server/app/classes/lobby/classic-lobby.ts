@@ -6,8 +6,8 @@ import { Lobby } from './lobby';
 
 @injectable()
 export class ClassicLobby extends Lobby {
-    private teams: Map<string, number>[] = new Map<string, number>()[2];
-    private vPlayers: VirtualPlayer[];
+    private teams: Map<string, number>[] = [new Map<string, number>(), new Map<string, number>()];
+    private vPlayers: VirtualPlayer[] = new Array(2);
     
     constructor(difficulty: number, gameName: string) {
         super(difficulty, gameName);
@@ -41,7 +41,7 @@ export class ClassicLobby extends Lobby {
         }
         let vPlayerIsUnique: boolean = false;
         let tempVPlayer: VirtualPlayer;
-        while (vPlayerIsUnique) {
+        while (!vPlayerIsUnique) {
             tempVPlayer = new VirtualPlayer();
             if(!this.isUserInLobby(tempVPlayer.getBasicUser())){
                 vPlayerIsUnique = true;

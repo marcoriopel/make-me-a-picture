@@ -33,16 +33,24 @@ export class GamesController {
     });
 
     this.router.get('/list', (req, res) => {
-      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-          this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
-            res.status(StatusCodes.OK).send({ lobbies })
-          });
-      });
-  });
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
+              res.status(StatusCodes.OK).send({ lobbies })
+            });
+        });
+    });
 
-    this.router.post('/joinLobby', (req, res) => {
+    this.router.post('/join', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.join(req, res, user, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
+
+  this.router.post('/add/virtual/player', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-          this.lobbyManagerService.join(req, res, user, () => {
+          this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
             res.sendStatus(StatusCodes.OK)
           });
       });

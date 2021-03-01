@@ -22,4 +22,16 @@ export abstract class Lobby {
     getPlayers(): any{} 
 
     removePlayer(): void{}
+
+    getGameName():string{
+        return this.gameName;
+    }
+
+    getGameType():number{
+        return this.gameType;
+    }
+
+    getDifficulty():number{
+        return this.difficulty;
+    }
 }

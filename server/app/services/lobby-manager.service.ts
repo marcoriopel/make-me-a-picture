@@ -49,7 +49,7 @@ export class LobbyManagerService {
     getLobbies(req: Request, res: Response, next: NextFunction): void {
         let response: lobbyInterface.Lobby[] = [];
         LobbyManagerService.lobbies.forEach((lobby: Lobby, key:string,  map: Map<string, Lobby>) =>{
-            response.push({id: key, gameName: lobby.gameName,difficulty: lobby.difficulty, gameType: lobby.gameType});
+            response.push({id: key, gameName: lobby.getGameName(), difficulty: lobby.getDifficulty(), gameType: lobby.getGameType()});
         })
         next(response);
     }
@@ -70,13 +70,31 @@ export class LobbyManagerService {
         next();
     }
 
+    addVirtualPlayer(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
+        if(req.body.teamNumber != 0 && req.body.teamNumber != 1){
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+        if(this.lobbyExist(req.body.lobbyId)){
+            const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
+            try{
+                (lobby as ClassicLobby).addVirtualPlayer(req.body.teamNumber);
+            }
+            catch (err){
+                return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
+            }
+            this.dispatchTeams(req.body.lobbyId);
+        }
+        else
+            return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
+        next();
+    }
+
     lobbyExist(lobbyId: string): boolean {
         return LobbyManagerService.lobbies.has(lobbyId);
     }
 
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
-        console.log(lobby);
         LobbyManagerService.socket.to(lobbyId).emit('dispatchTeams', {"players": lobby.getPlayers()});
     }
 }
