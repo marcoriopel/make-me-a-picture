@@ -1,0 +1,157 @@
+.green {
+    background-color: #8BC640;
+    transition: all 0.5s ease-out;
+}
+
+.white {
+    background-color: #E0E0E0;
+    transition: all 0.5s ease-out;
+}
+
+.title-div {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.classic-logo {
+    width: 100px;
+    float: left;
+}
+
+.sprint-logo {
+    width: 100px;
+    float: left;
+    margin-left: 20%;
+}
+
+.title {
+    float: left;
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 30px;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 48px;
+    border: none;
+    outline:none;
+}
+
+.teamList {
+    margin-top: 120px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.team {
+    margin: 20px;
+    width: 300px;
+}
+
+.teammate {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    background: #4F4F4F;;
+    border-radius: 50px;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    line-height: 58px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+    transition: all 0.5s ease-out;
+
+    p {
+        margin-left: 30px;
+    }
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.button {
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: center;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+}
+
+#start-game {
+    position: absolute;
+    width: 200px;
+    height: 60px;
+    top: 80%;
+    left: 50%;
+    margin-left: -100px;
+    
+}
+
+#start-game:active {
+    background: #73a334;
+}
+
+#joint-team-1 {
+    width: 160px;
+    height: 35px;
+    margin-left: 70px;
+}
+
+#joint-team-1:active {
+    background: #73a334;
+}
+
+#joint-team-2 {
+    width: 160px;
+    height: 35px;
+    margin-left: 70px;
+}
+
+#joint-team-2:active {
+    background: #73a334;
+}
+
+.add-bot {
+    height: 35px;
+    width: 35px;
+    margin-top: 12px;
+    margin-right: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 38px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+    cursor: pointer;
+
+    p {
+        margin-left: 11px;
+    }
+    #minus {
+        margin-left: 14px;
+    }
+}
