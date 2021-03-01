@@ -15,6 +15,8 @@ import com.example.prototype_mobile.R
 
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     val difficultyDrawable = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
+    val gameTypeDrawable = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
         Log.d("gamelist size",gameList.size.toString())
         var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
@@ -43,6 +45,8 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
     override fun onBindViewHolder(holder: GameListAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
         holder.gameName.setText(gameData.gameName)
+        holder.gameDifficulty.setImageResource(difficultyDrawable[gameData.difficulty.difficulty])
+        holder.gameType.setImageResource(gameTypeDrawable[gameData.gameType.type])
 
         }
 
