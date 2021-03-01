@@ -68,7 +68,7 @@ export class ChatService {
     const jwt = localStorage.getItem('token') as string;
     const socket = io(url, {
       extraHeaders: {
-        "Authorization": jwt
+        "authorization": jwt
       }
     });
     socket.connect();

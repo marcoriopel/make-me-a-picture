@@ -19,10 +19,10 @@ export class ClassicLobby extends Lobby {
     deleteLobby(): void{}
 
     addPlayer(user: BasicUser): void{
-        if(this.team1.has(user.username) || this.team1.has(user.username)){
+        if(this.team1.has(user.username) || this.team2.has(user.username)){
             throw new Error("You have already joined this lobby");
         }
-        if(this.team2.size == 2 && this.team1.size == 2){
+        if(this.team1.size == 2 && this.team2.size == 2){
             throw new Error("Lobby is full");
         }
         
@@ -40,7 +40,7 @@ export class ClassicLobby extends Lobby {
             players.push({"username": username, "avatar": avatar, "team": 1});
         })
         this.team2.forEach((avatar: number, username:string,  map: Map<string, number>) =>{
-            players.push({"username": username, "avatar": avatar, "team": 1});
+            players.push({"username": username, "avatar": avatar, "team": 2});
         })
         return players;
     } 
