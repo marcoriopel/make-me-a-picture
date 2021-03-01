@@ -48,7 +48,7 @@ class GameParameterFragment : Fragment() {
         binding.icognito.setOnClickListener{
              hello()
                 binding.icognito.isActivated = ! binding.icognito.isActivated
-            
+
         }
 
     }
