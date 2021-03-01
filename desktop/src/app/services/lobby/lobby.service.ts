@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Game, GameType } from '@app/classes/game';
+import { NewGame, Game ,GameType } from '@app/classes/game';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { ACCESS } from '@app/classes/acces';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,12 @@ export class LobbyService {
   isTeam2Full: boolean = false;
   isLobbyFull: boolean = false;
 
-  constructor() {
+  // URL
+  private baseUrl = environment.api_url;
+  private createGameUrl = this.baseUrl + "/api/games/create";
+
+
+  constructor(private http: HttpClient) {
     this.game = {
       id: "1234567890",
       name: "Game 1",
@@ -86,8 +94,16 @@ export class LobbyService {
     this.isFull();
   }
 
-  start() {
+  start(): void {
     throw new Error('Method not implemented.');
+  }
+
+  create(game: NewGame) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!});
+    const options = { headers: headers };
+    return this.http.post<any>(this.createGameUrl, game, options);
   }
 
 }
