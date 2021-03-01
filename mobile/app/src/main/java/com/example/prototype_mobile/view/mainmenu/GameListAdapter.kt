@@ -18,9 +18,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
     val gameTypeDrawable = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
-        Log.d("gamelist size",gameList.size.toString())
         var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
-        Log.d("game inflating","viewType : ${viewType}")
         view.setOnClickListener{
             val section1 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
             val section2 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
