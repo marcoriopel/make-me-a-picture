@@ -6,8 +6,8 @@ import { Lobby } from './lobby';
 
 @injectable()
 export class CoopLobby extends Lobby {
-    team1: Map<string, number> = new Map<string, number>();
-    vPlayer: VirtualPlayer;
+    private team1: Map<string, number> = new Map<string, number>();
+    private vPlayer: VirtualPlayer;
     
     constructor(difficulty: number, gameName: string) {
         super(difficulty, gameName);
@@ -33,7 +33,7 @@ export class CoopLobby extends Lobby {
     getPlayers(): any{
         let players = [];
         for(let user in this.team1){
-            players.push({"user": this.team1[user], "team": 1});
+            players.push({"user": this.team1[user], "team": 0});
         }
         return players;
     } 

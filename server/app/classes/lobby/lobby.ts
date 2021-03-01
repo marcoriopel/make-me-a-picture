@@ -3,10 +3,10 @@ import { injectable } from 'inversify';
 
 @injectable()
 export abstract class Lobby {
-    difficulty: number;
-    gameName: string;
-    gameType: number;
-    players: BasicUser[];
+    protected difficulty: number;
+    protected gameName: string;
+    protected gameType: number;
+    protected players: BasicUser[];
 
     constructor(difficulty: number, gameName: string) {
         this.difficulty = difficulty;
