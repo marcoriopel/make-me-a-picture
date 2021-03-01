@@ -55,9 +55,18 @@ export class LobbyManagerService {
     }
 
     join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
-        const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
-        lobby.addPlayer(user);
-        this.dispatchTeams(req.body.lobbyId);
+        if(this.lobbyExist(req.body.lobbyId)){
+            const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
+            try{
+                lobby.addPlayer(user);
+            }
+            catch (err){
+                return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
+            }
+            this.dispatchTeams(req.body.lobbyId);
+        }
+        else
+            return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
         next();
     }
 

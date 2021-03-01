@@ -18,12 +18,10 @@ export class SoloLobby extends Lobby {
     deleteLobby(): void{}
 
     addPlayer(user: BasicUser): void{
-        if(this.team1.has(user.username)){
-            return;
+        if(this.team1.size){
+            throw new Error("You have already joined this lobby");
         }
-        if(!this.team1.size){
-            this.team1.set(user.username, user.avatar);
-        }
+        this.team1.set(user.username, user.avatar);
     }    
 
     getPlayers(): any{

@@ -19,11 +19,12 @@ export class CoopLobby extends Lobby {
 
     addPlayer(user: BasicUser): void{
         if(this.team1.has(user.username)){
-            return;
+            throw new Error("You have already joined this lobby");
         }
-        if(this.team1.size < 4){
-            this.team1.set(user.username, user.avatar);
+        if(this.team1.size >= 4){
+            throw new Error("Lobby is full");
         }
+        this.team1.set(user.username, user.avatar);
     }    
 
     getPlayers(): any{

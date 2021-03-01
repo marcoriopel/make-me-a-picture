@@ -20,15 +20,17 @@ export class ClassicLobby extends Lobby {
 
     addPlayer(user: BasicUser): void{
         if(this.team1.has(user.username) || this.team1.has(user.username)){
-            return;
+            throw new Error("You have already joined this lobby");
         }
-        if(this.team2.size < 2){
-            if(this.team1.size === this.team2.size){
-                this.team1.set(user.username, user.avatar);
-            }
-            else{
-                this.team2.set(user.username, user.avatar);
-            }
+        if(this.team2.size == 2 && this.team1.size == 2){
+            throw new Error("Lobby is full");
+        }
+        
+        if(this.team1.size <= this.team2.size){
+            this.team1.set(user.username, user.avatar);
+        }
+        else{
+            this.team2.set(user.username, user.avatar);
         }
     }  
 
