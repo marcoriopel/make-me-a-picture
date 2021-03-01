@@ -15,7 +15,6 @@ export class GamesController {
 
   constructor(
     @inject(TYPES.TokenService) private tokenService: TokenService,
-    @inject(TYPES.AuthService) private authService: AuthService,
     @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
   ) {
     this.configureRouter();

@@ -5,13 +5,14 @@ import * as socketio from "socket.io";
 
 @injectable()
 export class ChatManagerService {
-    socket: socketio.Server;
+
+    static socket: socketio.Server;
 
     constructor() {
     }
 
     setSocket(io : socketio.Server){
-        this.socket = io;
+        ChatManagerService.socket = io;
     }
 
     dispatchMessage( user: any, message: IncomingMessage){
@@ -22,6 +23,6 @@ export class ChatManagerService {
         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        this.socket.emit('message', {"user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+        ChatManagerService.socket.emit('message', {"user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
     }
 }
