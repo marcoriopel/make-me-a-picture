@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -23,7 +24,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
             section1.visibility = View.VISIBLE
             val section2 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
             section2.visibility = View.VISIBLE
-            val joinButton = view.findViewById<LinearLayout>(R.id.gamelist_join)
+            val joinButton = view.findViewById<Button>(R.id.gamelist_join)
             joinButton.visibility = View.VISIBLE
         }
         return ViewHolder(view!!)
@@ -36,8 +37,6 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
     override fun onBindViewHolder(holder: GameListAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
         holder.gameName.setText(gameData.gameName)
-        holder.gameDifficulty.setImageResource(R.drawable.avatar0)
-
         }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
