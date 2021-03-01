@@ -17,9 +17,9 @@ export abstract class Lobby {
 
     deleteLobby(): void { }
 
-    addPlayer(user: BasicUser): void {
-        this.players.push(user)
-    }
+    addPlayer(user: BasicUser): void {}
+
+    getPlayers(): any{} 
 
     removePlayer(): void { }
 }

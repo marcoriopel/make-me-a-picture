@@ -2,7 +2,8 @@ package com.example.prototype_mobile
 
 // Data class for the chat
 data class Message (val username : String, val text : String, val timeStamp : String, val messageType: Int)
-data class MessageReceive (val id : String, val username : String, val text : String, val timeStamp : String, val textColor : String)
+data class MessageReceive (val id : String, val user : User, val text : String, val timeStamp : String, val textColor : String)
+data class User (val username: String, val Avatar: Int);
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val avatar: Int)
 

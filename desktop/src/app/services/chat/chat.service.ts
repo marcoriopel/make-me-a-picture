@@ -65,9 +65,14 @@ export class ChatService {
 
   private connectToNewChat(name: string, url: string): void {
     // TODO (Feature 85-90): try catch for non existant server
-    const socket = io(url);
+    const jwt = localStorage.getItem('token') as string;
+    const socket = io(url, {
+      extraHeaders: {
+        "authorization": jwt
+      }
+    });
     socket.connect();
-    const index = this.completeChatList.push({ name: name, url: url, socket: io(url), messages: [] });
+    const index = this.completeChatList.push({name: name, url: url, socket: socket, messages: []});
     this.index = index - 1;
     // TODO (Waiting for server side): Get history
     this.bindMessage(index - 1, name);
@@ -90,6 +95,16 @@ export class ChatService {
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       });
+    });
+
+    this.completeChatList[index]["socket"].on('dispatchTeams', (players: any) => {
+      // TODO : change location of this code
+      console.log(players);
+    });
+
+    this.completeChatList[index]["socket"].on('error', (error: string) => {
+      // TODO : change location of this code
+      console.error(error);
     });
   }
 

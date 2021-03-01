@@ -44,10 +44,10 @@ class ChatRepository() {
     var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1;
-        if (myUsername == messageReceive.username) {
+        if (myUsername == messageReceive.user.username) {
             messageType = 0
         }
-            _messageReceived.postValue(Message(messageReceive.username, messageReceive.text, messageReceive.timeStamp, messageType))
+            _messageReceived.postValue(Message(messageReceive.user.username, messageReceive.text, messageReceive.timeStamp, messageType))
 
     }
 
@@ -55,7 +55,7 @@ class ChatRepository() {
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             mSocket = IO.socket("http://18.217.235.167:3000/")
-            //mSocket = IO.socket("http://10.0.2.2:3000/")
+//            mSocket = IO.socket("http://10.0.2.2:3000/")
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("fail", "Failed to connect")

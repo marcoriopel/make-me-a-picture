@@ -10,16 +10,14 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class ChatManagerService {
-    socket: socketio.Server;
 
-    constructor(
-        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
-        @inject(TYPES.ChatModel) private chatModel: ChatModel,
-    ) {
+    static socket: socketio.Server;
+
+    constructor() {
     }
 
-    setSocket(io: socketio.Server) {
-        this.socket = io;
+    setSocket(io : socketio.Server){
+        ChatManagerService.socket = io;
     }
 
     dispatchMessage(user: BasicUser, message: IncomingMessage, date: Date) {
@@ -29,7 +27,7 @@ export class ChatManagerService {
         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        this.socket.emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+        ChatManagerService.socket.emit('message', {"user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
     }
 
     async getAllUserChats(username: string, res: Response, next: NextFunction) {
