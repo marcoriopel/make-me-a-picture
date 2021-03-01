@@ -56,14 +56,14 @@ export class LobbyManagerService {
 
     join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if(this.lobbyExist(req.body.lobbyId)){
-            const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
             try{
+                const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
                 lobby.addPlayer(user);
+                this.dispatchTeams(req.body.lobbyId);
             }
             catch (err){
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
             }
-            this.dispatchTeams(req.body.lobbyId);
         }
         else
             return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
@@ -75,14 +75,33 @@ export class LobbyManagerService {
             return res.sendStatus(StatusCodes.BAD_REQUEST);
         }
         if(this.lobbyExist(req.body.lobbyId)){
-            const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
             try{
+                const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
                 (lobby as ClassicLobby).addVirtualPlayer(req.body.teamNumber);
+                this.dispatchTeams(req.body.lobbyId);
             }
             catch (err){
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
             }
-            this.dispatchTeams(req.body.lobbyId);
+        }
+        else
+            return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
+        next();
+    }
+
+    removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
+        if(req.body.teamNumber != 0 && req.body.teamNumber != 1 || req.body.username == undefined){
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+        if(this.lobbyExist(req.body.lobbyId)){
+            try{
+                const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
+                (lobby as ClassicLobby).removeVirtualPlayer(req.body.teamNumber, req.body.username);
+                this.dispatchTeams(req.body.lobbyId);
+            }
+            catch (err){
+                return res.status(StatusCodes.NOT_FOUND).send(err.message);
+            }
         }
         else
             return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");

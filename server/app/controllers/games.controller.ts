@@ -48,13 +48,21 @@ export class GamesController {
         });
     });
 
-  this.router.post('/add/virtual/player', (req, res) => {
-      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-          this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
-            res.sendStatus(StatusCodes.OK)
-          });
-      });
-  });
+    this.router.post('/add/virtual/player', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
+
+    this.router.delete('/remove/virtual/player', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.removeVirtualPlayer(req, res, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
 
   }
 }

@@ -47,13 +47,24 @@ export class ClassicLobby extends Lobby {
                 vPlayerIsUnique = true;
             }
         }
-        if(this.teams[teamNumber].size < 2){
+        if(this.teams[teamNumber].size < 2 && this.vPlayers[teamNumber] == undefined){
             this.vPlayers[teamNumber] = tempVPlayer;
             const tempVPlayerBasicInfo: BasicUser = tempVPlayer.getBasicUser();
             this.teams[teamNumber].set(tempVPlayerBasicInfo.username, tempVPlayerBasicInfo.avatar)
         }
         else{
-            throw new Error("This team has already been filled");
+            throw new Error("No more virtual players can be added to this team");
+        }
+    }
+
+    removeVirtualPlayer(teamNumber: number, username: string): void {
+        if(this.teams[teamNumber].delete(username)){
+            this.vPlayers[teamNumber] = undefined;
+            console.log(this.teams[teamNumber].size);
+            console.log(this.vPlayers[teamNumber]);
+        }
+        else{
+            throw new Error("Virtual player not found");
         }
     }
 
