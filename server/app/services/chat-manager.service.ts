@@ -13,10 +13,13 @@ export class ChatManagerService {
 
     static socket: socketio.Server;
 
-    constructor() {
+    constructor(
+        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
+        @inject(TYPES.ChatModel) private chatModel: ChatModel,
+    ) {
     }
 
-    setSocket(io : socketio.Server){
+    setSocket(io: socketio.Server) {
         ChatManagerService.socket = io;
     }
 
@@ -27,7 +30,7 @@ export class ChatManagerService {
         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        ChatManagerService.socket.emit('message', {"user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+        ChatManagerService.socket.emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
     }
 
     async getAllUserChats(username: string, res: Response, next: NextFunction) {
