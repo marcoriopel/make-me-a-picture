@@ -60,8 +60,6 @@ export class ClassicLobby extends Lobby {
     removeVirtualPlayer(teamNumber: number, username: string): void {
         if(this.teams[teamNumber].delete(username)){
             this.vPlayers[teamNumber] = undefined;
-            console.log(this.teams[teamNumber].size);
-            console.log(this.vPlayers[teamNumber]);
         }
         else{
             throw new Error("Virtual player not found");
