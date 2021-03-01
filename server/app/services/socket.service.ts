@@ -46,6 +46,7 @@ export class SocketService {
                     request = JSON.parse(request)
                 }
                 try {
+                    socket.leave(request.oldLobbyId);
                     if(this.lobbyManagerService.lobbyExist(request.lobbyId)){
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
