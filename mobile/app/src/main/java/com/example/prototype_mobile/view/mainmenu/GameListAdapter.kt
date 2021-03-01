@@ -14,18 +14,24 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
 
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
-    val difficultyDrawable = arrayOf(R.drawable.icon_easy_white)
+    val difficultyDrawable = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
         Log.d("gamelist size",gameList.size.toString())
         var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
         Log.d("game inflating","viewType : ${viewType}")
         view.setOnClickListener{
             val section1 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
-            section1.visibility = View.VISIBLE
             val section2 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
-            section2.visibility = View.VISIBLE
             val joinButton = view.findViewById<Button>(R.id.gamelist_join)
-            joinButton.visibility = View.VISIBLE
+            if(section1.visibility == View.GONE) {
+                section1.visibility = View.VISIBLE
+                section2.visibility = View.VISIBLE
+                joinButton.visibility = View.VISIBLE
+            } else {
+                section1.visibility = View.GONE
+                section2.visibility = View.GONE
+                joinButton.visibility = View.GONE
+            }
         }
         return ViewHolder(view!!)
     }
@@ -37,6 +43,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
     override fun onBindViewHolder(holder: GameListAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
         holder.gameName.setText(gameData.gameName)
+
         }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
