@@ -1,7 +1,6 @@
 package com.example.prototype_mobile.view.mainmenu
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,27 +11,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
 
-class GameListAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
+class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val viewModel: GameListViewModel): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     val difficultyDrawable = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
     val gameTypeDrawable = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
         var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
-        view.setOnClickListener{
-            val section1 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
-            val section2 = view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
-            val joinButton = view.findViewById<Button>(R.id.gamelist_join)
-            if(section1.visibility == View.GONE) {
-                section1.visibility = View.VISIBLE
-                section2.visibility = View.VISIBLE
-                joinButton.visibility = View.VISIBLE
-            } else {
-                section1.visibility = View.GONE
-                section2.visibility = View.GONE
-                joinButton.visibility = View.GONE
-            }
-        }
         return ViewHolder(view!!)
     }
 
@@ -46,9 +32,27 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>): Re
         holder.gameDifficulty.setImageResource(difficultyDrawable[gameData.difficulty.difficulty])
         holder.gameType.setImageResource(gameTypeDrawable[gameData.gameType.type])
 
+        holder.view.setOnClickListener{
+            val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
+            val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
+            val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
+            if(section1.visibility == View.GONE) {
+                section1.visibility = View.VISIBLE
+                section2.visibility = View.VISIBLE
+                joinButton.visibility = View.VISIBLE
+                viewModel.listenLobby(gameData.gameID)
+            } else {
+                section1.visibility = View.GONE
+                section2.visibility = View.GONE
+                joinButton.visibility = View.GONE
+            }
+
+        }
+
         }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
+        val view = itemView
         val gameName = itemView.findViewById<TextView>(R.id.gamelist_name)
         val gameDifficulty = itemView.findViewById<ImageView>(R.id.gamelist_difficulty)
         val gameType = itemView.findViewById<ImageView>(R.id.gamelist_type)
