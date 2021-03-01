@@ -71,7 +71,7 @@ export class AuthService {
         }
         let logouts;
         try {
-            logouts = await this.userLogsModel.getLastLogout(username);
+            logouts = await this.userLogsModel.getLogouts(username);
         }
         catch (e) {
             console.log(e);
