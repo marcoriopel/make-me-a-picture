@@ -32,16 +32,16 @@ export class GameCreationComponent implements OnInit {
   }
 
   create(): void {
-    console.log(this.gameForm.value.difficulty)
     const game: NewGame = {
       gameType: this.type,
       gameName: this.gameForm.value.name,
       difficulty: this.gameForm.value.difficulty
     }
-    console.log(game);
     this.lobbyService.create(game).subscribe(
       res => {
-        console.log(res);
+        // TODO : Redirect to lobby
+        this.lobbyService.game.id = res.lobbyId;
+        console.log(this.lobbyService.game.id)
       },
       err => {
         console.log(err);
