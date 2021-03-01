@@ -3,9 +3,7 @@ import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import { ChatManagerService } from '@app/services/chat-manager.service';
-import {
-    StatusCodes,
-} from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 
 
 @injectable()
@@ -25,8 +23,16 @@ export class ChatController {
 
         this.router.get('/history', (req: Request, res: Response) => {
             this.tokenService.authenticateToken(req, res, (user: any) => {
-                this.chatManagerService.getAllChatHistory(user.username, res, (chatsHistory: any) => {
+                this.chatManagerService.getAllUserChatsHistory(user.username, res, (chatsHistory: any) => {
                     res.status(StatusCodes.OK).send({ chatsHistory });
+                });
+            });
+        });
+
+        this.router.get('/joined', (req: Request, res: Response) => {
+            this.tokenService.authenticateToken(req, res, (user: any) => {
+                this.chatManagerService.getAllUserChats(user.username, res, (chats: any) => {
+                    res.status(StatusCodes.OK).send({ chats });
                 });
             });
         });

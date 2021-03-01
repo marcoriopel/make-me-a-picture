@@ -10,18 +10,27 @@ export class ChatModel {
         this.databaseModel = DatabaseModel.getInstance();
     }
 
-    async getChatHistory(chatRoomName) {
+    async getChatHistory(chatRoomId) {
         try {
-            return await this.databaseModel.client.db("chats").collection(chatRoomName).find().toArray();
+            return await this.databaseModel.client.db("chats").collection(chatRoomId).find().toArray();
         } catch (e) {
             console.error(e);
             throw e;
         }
     }
 
-    async addChatMessage(chatRoomName, message, username, timestamp, avatar) {
+    async getChatInfo(chatRoomId) {
         try {
-            await this.databaseModel.client.db("chats").collection(chatRoomName).insertOne({ "username": username, "message": message, "timestamp": timestamp, "avatar": avatar });
+            return await this.databaseModel.client.db("database").collection("chat-names").findOne({ "chatId": chatRoomId });
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
+    async addChatMessage(chatRoomId, message, username, timestamp, avatar) {
+        try {
+            await this.databaseModel.client.db("chats").collection(chatRoomId).insertOne({ "username": username, "message": message, "timestamp": timestamp, "avatar": avatar });
         } catch (e) {
             throw e;
         }

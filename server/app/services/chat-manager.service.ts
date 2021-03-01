@@ -32,18 +32,29 @@ export class ChatManagerService {
         this.socket.emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
     }
 
-    async getAllChatHistory(username: string, res: Response, next: NextFunction) {
-        var chatsHistory = [];
-        if (!username) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
-        }
+    async getAllUserChats(username: string, res: Response, next: NextFunction) {
+        var chatNames = [];
         try {
             const userInfo = await this.userCredentialsModel.getCredentials(username);
             const userChats = userInfo.rooms;
-            for (let i = 0; i < userChats.length; i++) {
-                const chatName = userChats[i];
-                const chatHistory = await this.chatModel.getChatHistory(chatName);
-                chatsHistory.push({ [chatName]: chatHistory });
+            for (let chatId of userChats) {
+                const chatInfo = await this.chatModel.getChatInfo(chatId);
+                chatNames.push({ [chatId]: chatInfo["chatName"] });
+            }
+            next(chatNames);
+        }
+        catch (e) {
+            return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+    }
+    async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
+        var chatsHistory = [];
+        try {
+            const userInfo = await this.userCredentialsModel.getCredentials(username);
+            const userChats = userInfo.rooms;
+            for (let chatId of userChats) {
+                const chatHistory = await this.chatModel.getChatHistory(chatId);
+                chatsHistory.push({ [chatId]: chatHistory });
             }
             next(chatsHistory);
         }
@@ -55,7 +66,7 @@ export class ChatManagerService {
     async addMessageToDB(user: BasicUser, message: IncomingMessage, date: Date) {
         const timestamp = date.getTime();
         try {
-            await this.chatModel.addChatMessage(message.chatName, message.text, user.username, timestamp, user.avatar);
+            await this.chatModel.addChatMessage(message.chatId, message.text, user.username, timestamp, user.avatar);
         }
         catch (e) {
             console.log(e);
