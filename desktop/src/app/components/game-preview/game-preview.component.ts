@@ -54,7 +54,7 @@ export class GamePreviewComponent{
 
   }
 
-  joint(id: string) {
+  join(id: string) {
     this.searchGameService.joint(id);
   }
 

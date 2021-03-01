@@ -7,7 +7,7 @@
 <div class="teamList">
 
     <div class="team">
-        <button class="button" id="joint-team-1" *ngIf="lobbyService.game.type == 0" (click)="lobbyService.jointTeam(1)"
+        <button class="button" id="joint-team-1" *ngIf="lobbyService.game.type == 0" (click)="lobbyService.joinTeam(1)"
             [ngClass]="{'green' : !lobbyService.team1Full, 'white':  lobbyService.team1Full}"
             > Rejoindre </button>
         <div class="teammate" *ngFor="let teammate of lobbyService.game.team1 "> 
@@ -22,7 +22,7 @@
     </div>
 
     <div class="team" *ngIf="lobbyService.game.type == 0">
-        <button class="button" id="joint-team-2" (click)="lobbyService.jointTeam(2)" [ngClass]="{'green' : !lobbyService.team2Full, 'white':  lobbyService.team2Full}"> Rejoindre </button>
+        <button class="button" id="joint-team-2" (click)="lobbyService.joinTeam(2)" [ngClass]="{'green' : !lobbyService.isTeam2Full, 'white':  lobbyService.isTeam2Full}"> Rejoindre </button>
         <div class="teammate" *ngFor="let teammate of lobbyService.game.team2 "> 
             <p> {{teammate}} </p> 
             <div class="add-bot" *ngIf="teammate == 'Virtuel'" (click)="lobbyService.toggleVirtualPlayer(2)"> <p id="minus"> - </p> </div>
@@ -35,5 +35,5 @@
 
 </div>
 
-<button class="button" id="start-game" (click)="lobbyService.start()" [ngClass]="{'green' : lobbyService.gameFull, 'white':  !lobbyService.gameFull}"> Commencer la partie </button>
+<button class="button" id="start-game" (click)="lobbyService.start()" [ngClass]="{'green' : lobbyService.isLobbyFull, 'white':  !lobbyService.isLobbyFull}"> Commencer la partie </button>
 

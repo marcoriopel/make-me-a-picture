@@ -11,8 +11,8 @@ export class LobbyService {
   virtalPlayer1: string | null = null;
   virtalPlayer2: string | null = null;
   team1Full: boolean = false;
-  team2Full: boolean = false;
-  gameFull: boolean = false;
+  isTeam2Full: boolean = false;
+  isLobbyFull: boolean = false;
 
   constructor() {
     this.game = {
@@ -28,16 +28,16 @@ export class LobbyService {
   private isFull(): void {
     if (this.game.type == GameType.Classic) {
       this.team1Full = (this.game.team1.length < 2) ? false: true;
-      this.team2Full = (this.game.team2.length < 2) ? false: true;
-      this.gameFull = this.team1Full && this.team2Full;
+      this.isTeam2Full = (this.game.team2.length < 2) ? false: true;
+      this.isLobbyFull = this.team1Full && this.isTeam2Full;
     } else {
       this.team1Full = (this.game.team1.length < 4) ? false: true;
-      this.gameFull = this.team1Full;
+      this.isLobbyFull = this.team1Full;
     }
 
   }
 
-  jointTeam(team: number): void {
+  joinTeam(team: number): void {
     switch(team) {
       case 1:
         if (this.game.team1.length < 2 && this.game.team1.indexOf(this.username!, 0) < 0) {
