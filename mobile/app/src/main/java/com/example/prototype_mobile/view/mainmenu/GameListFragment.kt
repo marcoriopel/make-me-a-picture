@@ -51,7 +51,7 @@ class GameListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         // define an adapter
-        gameListAdapter = GameListAdapter(view.context, gameList);
+        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel);
         recyclerView.adapter = gameListAdapter
         binding = FragmentGameListBinding.bind(view)
 

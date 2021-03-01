@@ -38,4 +38,8 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
             }
         }
     }
+
+    fun listenLobby(lobbyID : String) {
+
+    }
 }
