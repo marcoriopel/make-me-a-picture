@@ -1,0 +1,12 @@
+<div class="game-button" (click)="preview()" #gamePreview>
+    <p class="title"> {{name}} 
+        <img *ngIf="type == 'classic'" [src]="classicGreyImgRef" class="classic-logo"> 
+        <img *ngIf="type == 'sprint'" [src]="sprintImgRef" class="sprint-logo"> 
+    </p>
+
+    <div *ngIf="isPreview" class="preview">
+        <button class="joint-button" [@inOutAnimation]> Rejoindre </button>
+        <!-- TODO: Avatar and name -->
+    </div>
+
+</div>

@@ -1,21 +1,26 @@
 .blue {
     background-color: #4AA7DD;
+    transition: all 0.5s ease-out;
 }
 
 .red {
     background-color: #BA2034;
+    transition: all 0.5s ease-out;
 }
 
 .green {
     background-color: #8BC640;
+    transition: all 0.5s ease-out;
 }
 
 .orange {
     background-color: #F89524;
+    transition: all 0.5s ease-out;
 }
 
 .white {
     background-color: #E0E0E0;
+    transition: all 0.5s ease-out;
 }
 
 .title {
@@ -64,7 +69,7 @@
     margin: 5%;
     top: 102px;
     //   /* Gray 6 */
-    background: #4F4F4F;;
+    background: #da0000;;
     border-radius: 50px;
     cursor: pointer;
     // text
@@ -92,6 +97,11 @@
     }
 }
 
+.game-preview {
+    height: 120px;
+    transition: all 1s ease;
+}
+
 .game-button:active{
     width: 90%;
     height: 60px;
@@ -114,3 +124,11 @@
     outline:none;
 }
 
+.game-list {
+    overflow-y: scroll;
+    height: calc(95% -  400px);
+}
+
+.game-list::-webkit-scrollbar {
+    display: none;
+}
