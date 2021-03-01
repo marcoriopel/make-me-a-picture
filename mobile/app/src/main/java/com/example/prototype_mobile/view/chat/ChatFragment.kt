@@ -19,7 +19,7 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 
 class ChatFragment : Fragment() {
 
-    var chatList: MutableList<Message> = mutableListOf() ;
+    var chatList: MutableList<Message> = mutableListOf()
     lateinit var chatRoomAdapter: ChatRoomAdapter
     private lateinit var binding: FragmentChatBinding
     private lateinit var chatViewModel: ChatViewModel
@@ -32,12 +32,9 @@ class ChatFragment : Fragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+            savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_chat, container, false)
-
-        return view
+        return inflater.inflate(R.layout.fragment_chat, container, false)
     }
 
 

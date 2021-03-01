@@ -12,13 +12,14 @@
         android:layout_width="300dp"
         android:layout_height="813dp">
     </FrameLayout>
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1" >
-    </Space>
     <FrameLayout
         android:id="@+id/container2"
+        android:layout_width="0dp"
+        android:layout_height="813dp"
+        android:layout_weight="1">
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/container3"
         android:layout_width="wrap_content"
         android:layout_height="813dp">
     </FrameLayout>
