@@ -1,15 +1,18 @@
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
 import { injectable } from 'inversify';
+import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Lobby } from './lobby';
 
 @injectable()
 export class SoloLobby extends Lobby {
-    team1: Map<string, number> = new Map<string, number>();
+    private team1: Map<string, number> = new Map<string, number>();
+    private vPlayer: VirtualPlayer;
     
     constructor(difficulty: number, gameName: string) {
         super(difficulty, gameName);
         this.gameType = GameType.SOLO;
+        this.vPlayer = new VirtualPlayer();
         console.log("Created solo game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
@@ -26,9 +29,9 @@ export class SoloLobby extends Lobby {
 
     getPlayers(): any{
         let players = [];
-        for(let user in this.team1){
-            players.push({"user": this.team1[user], "team": 1});
-        }
+        this.team1.forEach((avatar: number, username:string,  map: Map<string, number>) =>{
+            players.push({"username": username, "avatar": avatar, "team": 0});
+        })
         return players;
     } 
 
