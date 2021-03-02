@@ -31,7 +31,6 @@ class SocketOwner() {
 
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.d("fail", "Failed to connect")
         }
         socket.connect()
     }
