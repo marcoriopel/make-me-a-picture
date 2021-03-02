@@ -12,7 +12,7 @@ export class DrawingsModel {
 
     async addDrawing(username: string, drawing: Drawing) {
         try {
-            await this.databaseModel.client.db("database").collection("drawings").insertOne({ 'username': username, "drawing": drawing });
+            await this.databaseModel.client.db("database").collection("drawings").insertOne({ 'drawingId': drawing.drawingId, 'username': username, "strokes": drawing.strokes, "drawingVotes": drawing.drawingVotes, "drawingName": drawing.drawingName, "difficulty": drawing.difficulty, "hints": drawing.hints });
         } catch (e) {
             console.error(e);
             throw e;
