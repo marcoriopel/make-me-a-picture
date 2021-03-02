@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/light_grey"
     tools:context=".view.mainmenu.GameCreationFragment">
-
+    <Button
+        android:id="@+id/game_search"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="20dp"
+        android:enabled="true"
+        android:text="@string/search_game"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        android:theme="@style/Widget.App.Button.Red"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"/>
     <Button
         android:id="@+id/classic"
         android:layout_width="wrap_content"
@@ -65,162 +80,5 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="30dp"/>
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_marginStart="-50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/line_separator"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        >
-        <Button
-            android:id="@+id/classic_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_classic"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" >
-        </Space>
-        <Button
-            android:id="@+id/solo_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_solo"
-            android:paddingTop="-30dip"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" >
-        </Space>
-        <Button
-            android:id="@+id/coop_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_solo"
-            android:paddingTop="-30dip"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-           />
-
-    </LinearLayout>
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="10dp">
-    </Space>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        >
-
-        <Button
-            android:id="@+id/easy_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_easy"
-            android:paddingTop="7dp"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-             />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" >
-        </Space>
-        <Button
-            android:id="@+id/medium_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_medium"
-            android:paddingTop="9dp"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" >
-        </Space>
-
-        <Button
-            android:id="@+id/hard_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_hard"
-            android:paddingTop="-5dp"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
-
-    </LinearLayout>
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="20dp">
-    </Space>
-    <EditText
-        android:id="@+id/searchgame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/connexion"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="10dp"
-        android:autofillHints="@string/search_game"
-        android:background="@drawable/edittext_rounded"
-        android:gravity="left|center_vertical"
-        android:hint="@string/search_game"
-        android:inputType="textEmailAddress"
-        android:maxLength="126"
-        android:paddingLeft="10dp"
-        android:selectAllOnFocus="true" />
-
 </LinearLayout>
+

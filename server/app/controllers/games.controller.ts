@@ -6,6 +6,7 @@ import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import {StatusCodes} from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 
 @injectable()
@@ -14,7 +15,6 @@ export class GamesController {
 
   constructor(
     @inject(TYPES.TokenService) private tokenService: TokenService,
-    @inject(TYPES.AuthService) private authService: AuthService,
     @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
   ) {
     this.configureRouter();
@@ -25,7 +25,7 @@ export class GamesController {
     this.router = Router();
 
     this.router.post('/create', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (username: any) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
             this.lobbyManagerService.create(req, res, (lobbyId: string) => {
               res.status(StatusCodes.OK).send({ lobbyId })
             });
@@ -33,7 +33,8 @@ export class GamesController {
     });
 
     this.router.get('/list', (req, res) => {
-      this.tokenService.authenticateToken(req, res, (username: any) => {
+      console.log("Request received")
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
           this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
             res.status(StatusCodes.OK).send({ lobbies })
           });
@@ -41,8 +42,8 @@ export class GamesController {
   });
 
     this.router.post('/joinLobby', (req, res) => {
-      this.tokenService.authenticateToken(req, res, (username: any) => {
-          this.lobbyManagerService.join(req, res, username, () => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+          this.lobbyManagerService.join(req, res, user, () => {
             res.sendStatus(StatusCodes.OK)
           });
       });

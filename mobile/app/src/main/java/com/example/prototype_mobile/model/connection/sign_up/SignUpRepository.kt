@@ -17,7 +17,7 @@ class SignUpRepository() {
         mapSignUp["name"] = signUpInfo.firstName
         mapSignUp["surname"] = signUpInfo.lastName
         mapSignUp["avatar"] = signUpInfo.avatar.toString()
-        val response = HttpRequestDrawGuess.httpRequest("/api/auth/register", mapSignUp)
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/authenticate/register", mapSignUp)
 
 
         val result = analyseSignUpAnswer(response, signUpInfo.username)

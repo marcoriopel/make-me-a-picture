@@ -11,7 +11,17 @@
         android:id="@+id/container"
         android:layout_width="300dp"
         android:layout_height="813dp">
-
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/container2"
+        android:layout_width="0dp"
+        android:layout_height="750dp"
+        android:layout_weight="1">
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/container3"
+        android:layout_width="wrap_content"
+        android:layout_height="813dp">
     </FrameLayout>
     <FrameLayout
         android:id="@+id/center"

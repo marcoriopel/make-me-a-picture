@@ -1,18 +1,18 @@
 <div class="game-bar">
 
-    <div id="classic-button" class="button" (click)="classic()">
+    <div id="classic-button" class="button" (click)="displayGameMenu('classic')" #classic>
         <p class="title"> Classique 
             <img [src]="classicBlackImgRef" class="game-logo"> 
         </p>
     </div>
 
-    <div id="solo-button" class="button" (click)="sprintSolo()">
+    <div id="solo-button" class="button" (click)="displayGameMenu('solo')" #solo>
         <p class="title"> Sprint Solo
             <img [src]="sprintImgRef" class="game-logo">     
         </p>
     </div>
 
-    <div id="coop-button" class="button" (click)="sprintCoop()">
+    <div id="coop-button" class="button" (click)="displayGameMenu('coop')" #coop>
         <p class="title"> Sprint Coop
             <img [src]="sprintImgRef" class="game-logo">         
         </p>
@@ -27,3 +27,4 @@
     <app-game-search></app-game-search>
 
 </div>
+

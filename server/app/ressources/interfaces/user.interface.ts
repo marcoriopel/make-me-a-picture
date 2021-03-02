@@ -3,7 +3,12 @@ export interface AuthInfo {
     password: string;
 }
 
-export interface UserInfo {
+export interface BasicUser {
+    username: string;
+    avatar: number;
+}
+
+export interface DetailedUser {
     surname: string;
     name: string;
     username: string;
