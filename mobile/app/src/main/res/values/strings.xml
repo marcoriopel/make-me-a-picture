@@ -30,4 +30,5 @@
     <!-- Strings related to game searching -->
     <string name="search_game">"Rechercher une partie"</string>
     <string name="join_game">"Rejoindre"</string>
+    <string name="available">"Disponible"</string>
 </resources>

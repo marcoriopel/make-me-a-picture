@@ -3,6 +3,7 @@ package com.example.prototype_mobile.model.mainmenu
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
@@ -12,6 +13,7 @@ import org.json.JSONObject
 class GameListRepository {
 
     var gameList: MutableList<Game> = mutableListOf()
+    var lobbyRepository = LobbyRepository.getInstance()!!
 
     suspend fun getGameList(): Result<MutableList<Game>> {
         gameList.clear()
@@ -37,5 +39,9 @@ class GameListRepository {
         } else {
             return Result.Error(response.code())
         }
+    }
+
+    fun listenLobby(lobbyID: String) {
+        lobbyRepository.listenLobby(lobbyID)
     }
 }
