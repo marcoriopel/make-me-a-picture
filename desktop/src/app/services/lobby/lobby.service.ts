@@ -3,6 +3,7 @@ import { NewGame, Game ,GameType, Difficulty } from '@app/classes/game';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
+import { promises } from 'dns';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class LobbyService {
   // URL
   private baseUrl = environment.api_url;
   private createGameUrl = this.baseUrl + "/api/games/create";
+  private joinUrl = this.baseUrl + "/api/games/join";
 
 
   constructor(private http: HttpClient) {
@@ -105,6 +107,15 @@ export class LobbyService {
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers };
     return this.http.post<any>(this.createGameUrl, game, options);
+  }
+
+  join(id: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!});
+    const options = { headers: headers };
+    const body = {"lobbyId": id};
+    return this.http.post<any>(this.joinUrl, body, options);
   }
 
 }
