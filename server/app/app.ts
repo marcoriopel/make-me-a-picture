@@ -8,6 +8,7 @@ import { AuthController } from '@app/controllers/auth.controller';
 import { DatabaseModel } from './models/database.model';
 import { GamesController } from './controllers/games.controller';
 import { ChatController } from './controllers/chat.controller';
+import { DrawingsController } from './controllers/drawings.controller';
 
 @injectable()
 export class Application {
@@ -18,6 +19,7 @@ export class Application {
     constructor(
         @inject(TYPES.AuthController) private authController: AuthController,
         @inject(TYPES.GamesController) private gamesController: GamesController,
+        @inject(TYPES.DrawingsController) private drawingsController: DrawingsController,
         @inject(TYPES.ChatController) private chatController: ChatController,
         @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel
     ) {
@@ -43,6 +45,7 @@ export class Application {
         this.app.use('/api/authenticate', this.authController.router);
         this.app.use('/api/games', this.gamesController.router);
         this.app.use('/api/chat', this.chatController.router);
+        this.app.use('/api/drawings', this.drawingsController.router);
         this.errorHandling();
     }
 
