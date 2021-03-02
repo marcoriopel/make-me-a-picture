@@ -38,7 +38,7 @@ export class AuthService {
 
     async registerUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
-            const userInfo : DetailedUser = {
+            const userInfo: DetailedUser = {
                 'surname': req.body.surname,
                 'name': req.body.name,
                 'username': req.body.username,
@@ -61,6 +61,28 @@ export class AuthService {
         catch (e) {
             console.error(e);
             return res.sendStatus(StatusCodes.BAD_REQUEST);
+        }
+    }
+
+
+    async getLastLogout(username: string, res: Response, next: NextFunction): Promise<any> {
+        let logouts;
+        try {
+            logouts = await this.userLogsModel.getLogouts(username);
+        }
+        catch (e) {
+            console.log(e);
+            return res.sendStatus(StatusCodes.NOT_FOUND);
+        }
+        if (!logouts.length)
+            return res.sendStatus(StatusCodes.NOT_FOUND);
+        else {
+            let lastLogout = 0;
+            for (let logout of logouts) {
+                if (logout.timeStamp > lastLogout)
+                    lastLogout = logout.timeStamp
+            }
+            next(lastLogout);
         }
     }
 
