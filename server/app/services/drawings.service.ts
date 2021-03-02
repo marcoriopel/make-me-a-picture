@@ -25,7 +25,7 @@ export class DrawingsService {
                 "drawingName": req.body.drawingName
             };
 
-            if (!drawing.strokes.length || !drawing.drawingName.length)
+            if (!drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is empty");
 
             await this.drawingsModel.addDrawing(user.username, drawing);
