@@ -33,7 +33,7 @@ export class CoopLobby extends Lobby {
     getPlayers(): any{
         let players = [];
         this.team1.forEach((avatar: number, username:string,  map: Map<string, number>) =>{
-            players.push({"username": username, "avatar": avatar, "team": i});
+            players.push({"username": username, "avatar": avatar, "team": 0});
         })
         return players;
     } 
