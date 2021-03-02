@@ -34,7 +34,6 @@ class LobbyRepository() {
     val lobbyPlayers: LiveData<LobbyPlayers> = _lobbyPlayers
 
     var onTeamsUpdate = Emitter.Listener {
-        Log.d("teams update", it.toString())
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
     }

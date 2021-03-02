@@ -23,12 +23,6 @@ class SocketOwner() {
 
     lateinit var socket: io.socket.client.Socket
 
-    var onConnect = Emitter.Listener {
-        //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
-        //Send token to advise that we are connected
-        Log.d("Socket - ", "Connected")
-    }
-
     init {
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
@@ -40,7 +34,6 @@ class SocketOwner() {
             Log.d("fail", "Failed to connect")
         }
         socket.connect()
-        socket.on(io.socket.client.Socket.EVENT_CONNECT, onConnect)
     }
 
 
