@@ -15,7 +15,10 @@ class MainMenuActivity : AppCompatActivity() {
                     .replace(R.id.container, GameCreationFragment.newInstance())
                     .commitNow()
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.container2, ChatFragment.newInstance())
+                .replace(R.id.container2, GameListFragment.newInstance())
+                .commitNow()
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container3, ChatFragment.newInstance())
                     .commitNow()
         }
     }
