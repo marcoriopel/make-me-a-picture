@@ -30,7 +30,6 @@ class GameCreationFragment : Fragment() {
     private var createGameButtons: Vector<Button> = Vector<Button>()
     private var filterGameButtons: Vector<Button> = Vector<Button>()
     private var filterDifficulty: Vector<Button> = Vector<Button>()
-    val sprintCoopCheck= false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,10 +123,6 @@ class GameCreationFragment : Fragment() {
             binding.hardFilter.isActivated = !binding.hardFilter.isActivated
             disableOtherButtons(binding.hardFilter, filterDifficulty)
         }
-
-
-
-
 
     }
 

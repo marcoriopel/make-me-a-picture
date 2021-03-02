@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.Nullable
+import androidx.core.content.ContextCompat
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,8 +28,7 @@ class GameParameterFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
     private lateinit var  binding: FragmentGameParameterBinding
-    private var checked = false
-
+    private var filterDifficulty: Vector<Button> = Vector<Button>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -45,10 +47,35 @@ class GameParameterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentGameParameterBinding.bind(view)
-        binding.icognito.setOnClickListener{
-             hello()
-                binding.icognito.isActivated = ! binding.icognito.isActivated
+        filterDifficulty.addElement(binding.easyFilter)
+        filterDifficulty.addElement(binding.mediumFilter)
+        filterDifficulty.addElement(binding.hardFilter)
 
+        binding.StartGame.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
+
+        // filter difficulty
+        binding.easyFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
+        binding.easyFilter.setOnClickListener {
+            binding.easyFilter.isActivated = !binding.easyFilter.isActivated
+            disableOtherButtons(binding.easyFilter, filterDifficulty)
+        }
+        binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
+        binding.mediumFilter.setOnClickListener {
+            binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
+            disableOtherButtons(binding.mediumFilter, filterDifficulty)
+        }
+        binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
+        binding.hardFilter.setOnClickListener {
+            binding.hardFilter.isActivated = !binding.hardFilter.isActivated
+            disableOtherButtons(binding.hardFilter, filterDifficulty)
+        }
+        //Incognito button
+        binding.icognito.setOnClickListener{
+            binding.icognito.isActivated = ! binding.icognito.isActivated
+            if(binding.icognito.isActivated)
+                binding.passwordPrivateGame.visibility = View.VISIBLE
+            else
+                binding.passwordPrivateGame.visibility = View.INVISIBLE
         }
 
     }
@@ -73,8 +100,13 @@ class GameParameterFragment : Fragment() {
                     }
                 }
     }
+    fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
 
-    fun hello() {
-        println("hellooo")
+        for (button in buttonGroup) {
+            if (button.id != currentButton.id){
+                button.isActivated = false
+            }
+        }
+
     }
 }
