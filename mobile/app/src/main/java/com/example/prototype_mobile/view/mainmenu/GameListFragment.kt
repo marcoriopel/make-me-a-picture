@@ -68,6 +68,11 @@ class GameListFragment : Fragment() {
             }
         })
 
+        gameListViewModel.lobbyPlayers.observe(viewLifecycleOwner, Observer {
+            val lobbyPlayers = it ?: return@Observer
+            gameListAdapter.updatePlayers(lobbyPlayers)
+        })
+
         gameListViewModel.getGameList()
     }
 

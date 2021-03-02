@@ -7,6 +7,9 @@ import okhttp3.*
 
 class HttpRequestDrawGuess {
     companion object {
+        val url = "http://10.0.2.2:3000"
+        // val url = http://18.217.235.167:3000
+
         suspend fun httpRequestPost(urlPath: String, parameters: HashMap<String, String>): Response {
             return withContext(Dispatchers.IO) {
                 val client = OkHttpClient()
@@ -15,8 +18,7 @@ class HttpRequestDrawGuess {
                 val formBody = formBuilder.build()
 
                 val request: Request = Request.Builder()
-                        //.url("http://10.0.2.2:3000" + urlPath)
-                        .url("http://18.217.235.167:3000$urlPath")
+                        .url(url + urlPath)
                         .post(formBody)
                         .build()
 
@@ -31,8 +33,7 @@ class HttpRequestDrawGuess {
                 val token = LoginRepository.getInstance()!!.user!!.token
 
                 val request: Request = Request.Builder()
-                    //.url("http://10.0.2.2:3000" + urlPath)
-                    .url("http://18.217.235.167:3000$urlPath")
+                    .url(url + urlPath)
                     .addHeader("authorization", token)
                     .build()
 

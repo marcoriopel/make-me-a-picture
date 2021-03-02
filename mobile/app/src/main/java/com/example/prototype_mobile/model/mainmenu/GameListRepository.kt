@@ -13,6 +13,7 @@ import org.json.JSONObject
 class GameListRepository {
 
     var gameList: MutableList<Game> = mutableListOf()
+    var lobbyRepository = LobbyRepository.getInstance()!!
 
     suspend fun getGameList(): Result<MutableList<Game>> {
         gameList.clear()
@@ -38,5 +39,9 @@ class GameListRepository {
         } else {
             return Result.Error(response.code())
         }
+    }
+
+    fun listenLobby(lobbyID: String) {
+        lobbyRepository.listenLobby(lobbyID)
     }
 }

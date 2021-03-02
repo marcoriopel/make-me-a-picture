@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.model.connection.login
 
+import android.util.Log
 import com.example.prototype_mobile.LoggedInUser
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
@@ -60,6 +61,7 @@ class LoginRepository() {
 
          if (result is Result.Success) {
              setLoggedInUser((result).data)
+             Log.d("token", result.data.token)
          }
 
          return result;
