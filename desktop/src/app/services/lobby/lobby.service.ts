@@ -3,13 +3,14 @@ import { NewGame, Game ,GameType, Difficulty } from '@app/classes/game';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
-import { promises } from 'dns';
+import { io, Socket } from "socket.io-client";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LobbyService {
   
+  // Attribute
   game: Game;
   username = localStorage.getItem('username');
   virtalPlayer1: string | null = null;
@@ -18,10 +19,13 @@ export class LobbyService {
   isTeam2Full: boolean = false;
   isLobbyFull: boolean = false;
 
+  // Socket
+  private socket: Socket;
+
   // URL
   private baseUrl = environment.api_url;
   private createGameUrl = this.baseUrl + "/api/games/create";
-  private joinUrl = this.baseUrl + "/api/games/join";
+  private joinUrl = this.baseUrl + "/api/games/joinLobby";
 
 
   constructor(private http: HttpClient) {
@@ -34,6 +38,12 @@ export class LobbyService {
       team1: ["Marc"],
       team2: []
     }
+    const jwt = localStorage.getItem(ACCESS.TOKEN) as string;
+    this.socket = io("http://18.217.235.167:3000/", {
+      extraHeaders: {
+        "authorization": jwt
+      }
+    });
   }
 
   private isFull(): void {
@@ -45,7 +55,6 @@ export class LobbyService {
       this.team1Full = (this.game.team1.length < 4) ? false: true;
       this.isLobbyFull = this.team1Full;
     }
-
   }
 
   joinTeam(team: number): void {
@@ -115,7 +124,15 @@ export class LobbyService {
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers };
     const body = {"lobbyId": id};
-    return this.http.post<any>(this.joinUrl, body, options);
+    return this.http.post<any>(this.joinUrl, body, options).subscribe(
+      res => {
+        console.log(res);
+        this.socket.emit("listenLobby", {"oldLobbyId": "", "lobbyId": id});
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 }

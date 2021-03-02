@@ -13,6 +13,7 @@ export class SearchGameService {
   // Attribute
   private gameList: any[] = []
   displayList: any[] = []
+  currentPreviewId: string
 
   // URL
   private baseUrl = environment.api_url;
@@ -30,7 +31,6 @@ export class SearchGameService {
     const options = { headers: headers };
     this.http.get<any>(this.createGameUrl, options).subscribe(
       res => {
-        console.log(res);
         this.gameList = res.lobbies;
         this.displayList = this.gameList;
       },

@@ -155,3 +155,16 @@
         margin-left: 14px;
     }
 }
+
+#chat-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}
+
+.lobby {
+    height: 95%;
+    position: absolute;
+    left: 0;
+    width: calc(100% - 380px);
+}
