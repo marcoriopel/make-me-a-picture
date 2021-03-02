@@ -123,13 +123,15 @@ export class LobbyService {
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers };
-    const body = {"lobbyId": id};
-    return this.http.post<any>(this.joinUrl, body, options).subscribe(
+    return this.http.post<any>(this.joinUrl, {lobbyId: id}, options).subscribe(
       res => {
         console.log(res);
         this.socket.emit("listenLobby", {"oldLobbyId": "", "lobbyId": id});
+        console.log('test')
+
       },
       err => {
+        console.log('erro')
         console.log(err);
       }
     );

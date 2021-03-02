@@ -1,7 +1,8 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { SearchGameService } from '@app/services/search-game/search-game.service';
+import { Component, ElementRef, Input, Output, Renderer2, ViewChild, EventEmitter } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { AvailableGame } from '@app/classes/game';
+import { LobbyService } from '@app/services/lobby/lobby.service';
+import { SocketService } from '@app/services/socket/socket.service';
 
 @Component({
   selector: 'app-game-preview',
@@ -39,22 +40,39 @@ export class GamePreviewComponent{
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
 
   @Input() game: AvailableGame;
+  @Output() closeAllPreview: EventEmitter<any> = new EventEmitter();
+  players: any[];
 
   isPreview: boolean = false;
 
-  constructor(private searchGameService: SearchGameService, private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService) {}
 
   preview() {
-    if (this.isPreview)
+    if (this.isPreview) {
       this.renderer.removeClass(this.gamePreviewRef.nativeElement, "game-preview");
-    else
+      this.socketService.unbind('dispatchTeams');
+    } else {
+      this.closeAllPreview.emit();
       this.renderer.addClass(this.gamePreviewRef.nativeElement, "game-preview");
+      this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
+      this.socketService.bind('dispatchTeams', (res: any) => {
+          this.players = res.players;
+          console.log(this.players);
+      });
+    }
     this.isPreview = !this.isPreview;
-
   }
 
-  join(id: string) {
-    this.searchGameService.join(id);
+  closePreview(): void {
+    if (this.isPreview) {
+      this.renderer.removeClass(this.gamePreviewRef.nativeElement, "game-preview");
+      this.socketService.unbind('dispatchTeams');
+      this.isPreview = false;
+    }
+  }
+
+  join() {
+    this.lobbyService.join(this.game.id);
   }
 
 }

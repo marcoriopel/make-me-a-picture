@@ -9,7 +9,6 @@ export enum Difficulty {
     Normal,
     Hard
 }
-
 export interface NewGame {
     gameType: GameType,
     gameName: string,
@@ -30,4 +29,8 @@ export interface Game {
     player: string[],
     team1: string[],
     team2: string[]
+}
+
+export interface JoinLobby {
+    lobbyId: string
 }

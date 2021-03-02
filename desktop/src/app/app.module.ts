@@ -45,6 +45,7 @@ import { GamePreviewComponent } from './components/game-preview/game-preview.com
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyService } from './services/lobby/lobby.service';
 import { GameCreationComponent } from './components/game-creation/game-creation.component'
+import { SocketService } from './services/socket/socket.service';
 
 @NgModule({
     declarations: [
@@ -98,7 +99,7 @@ import { GameCreationComponent } from './components/game-creation/game-creation.
         BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

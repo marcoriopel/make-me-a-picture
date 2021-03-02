@@ -68,10 +68,6 @@ export class SearchGameService {
     });
   }
 
-  join(id: string) {
-    throw new Error('Method not implemented.');
-  }
-
   private filter(key: string, value: string): void {
     value = value.toLowerCase();
     this.displayList = [];
