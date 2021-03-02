@@ -7,6 +7,7 @@ import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { GameManagerService } from '@app/services/game-manager.service';
 
 
 @injectable()
@@ -16,6 +17,7 @@ export class GamesController {
   constructor(
     @inject(TYPES.TokenService) private tokenService: TokenService,
     @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
+    @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
   ) {
     this.configureRouter();
     this.tokenService = TokenService.getInstance();
@@ -33,35 +35,43 @@ export class GamesController {
     });
 
     this.router.get('/list', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-            this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
-              res.status(StatusCodes.OK).send({ lobbies })
-            });
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
+          res.status(StatusCodes.OK).send({ lobbies })
         });
+      });
+    });
+
+    this.router.post('/start', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.gameManagerService.start(user.username, req, res, () => {
+          res.sendStatus(StatusCodes.OK)
+        });
+      });
     });
 
     this.router.post('/join', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-            this.lobbyManagerService.join(req, res, user, () => {
-              res.sendStatus(StatusCodes.OK)
-            });
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.join(req, res, user, () => {
+          res.sendStatus(StatusCodes.OK)
         });
+      });
     });
 
     this.router.post('/add/virtual/player', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-            this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
-              res.sendStatus(StatusCodes.OK)
-            });
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
+          res.sendStatus(StatusCodes.OK)
         });
+      });
     });
 
     this.router.delete('/remove/virtual/player', (req, res) => {
-        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-            this.lobbyManagerService.removeVirtualPlayer(req, res, () => {
-              res.sendStatus(StatusCodes.OK)
-            });
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.removeVirtualPlayer(req, res, () => {
+          res.sendStatus(StatusCodes.OK)
         });
+      });
     });
 
   }
