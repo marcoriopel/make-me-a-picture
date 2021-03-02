@@ -1,6 +1,7 @@
 import { AuthController } from '@app/controllers/auth.controller';
 import { GamesController } from '@app/controllers/games.controller';
 import { DrawingsController } from '@app/controllers/drawings.controller';
+import { ChatController } from '@app/controllers/chat.controller';
 import { DatabaseModel } from '@app/models/database.model';
 import { Container } from 'inversify';
 import { Application } from './app';
@@ -8,6 +9,7 @@ import { Server } from './server';
 import { UserCredentialsModel } from './models/user-credentials.model';
 import { UserLogsModel } from './models/user-logs.model';
 import { DrawingsModel } from './models/drawings.model';
+import { ChatModel } from './models/chat.model';
 import { TYPES } from './types';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
@@ -26,6 +28,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.AuthController).to(AuthController);
     container.bind(TYPES.GamesController).to(GamesController);
     container.bind(TYPES.DrawingsController).to(DrawingsController);
+    container.bind(TYPES.ChatController).to(ChatController);
 
     container.bind(TYPES.TokenService).to(TokenService);
     container.bind(TYPES.SocketService).to(SocketService);
@@ -35,8 +38,10 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.GameManagerService).to(GameManagerService);
     container.bind(TYPES.DrawingsService).to(DrawingsService);
 
+
     container.bind(TYPES.DatabaseModel).to(DatabaseModel);
     container.bind(TYPES.DrawingsModel).to(DrawingsModel);
+    container.bind(TYPES.ChatModel).to(ChatModel);
     container.bind(TYPES.UserCredentialsModel).to(UserCredentialsModel);
     container.bind(TYPES.UserLogsModel).to(UserLogsModel);
     return container;
