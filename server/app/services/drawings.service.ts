@@ -26,7 +26,7 @@ export class DrawingsService {
             };
 
             if (!drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
-                throw Error("Drawing is empty");
+                throw Error("Drawing is invalid");
 
             await this.drawingsModel.addDrawing(user.username, drawing);
             return res.sendStatus(StatusCodes.OK);
