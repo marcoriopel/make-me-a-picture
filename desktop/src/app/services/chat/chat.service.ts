@@ -60,7 +60,7 @@ export class ChatService {
 
   sendMessage(message: string): void {
     const jwt = localStorage.getItem('token');
-    this.completeChatList[this.index]["socket"].emit('message', { "text": message, "token": jwt, "chatName": this.currentChat });
+    this.completeChatList[this.index]["socket"].emit('message', { "text": message, "token": jwt, "chatId": this.currentChat });
   }
 
   private connectToNewChat(name: string, url: string): void {
@@ -72,7 +72,7 @@ export class ChatService {
       }
     });
     socket.connect();
-    const index = this.completeChatList.push({name: name, url: url, socket: socket, messages: []});
+    const index = this.completeChatList.push({ name: name, url: url, socket: socket, messages: [] });
     this.index = index - 1;
     // TODO (Waiting for server side): Get history
     this.bindMessage(index - 1, name);
