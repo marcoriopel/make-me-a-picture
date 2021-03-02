@@ -3,6 +3,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { AvailableGame } from '@app/classes/game';
 import { LobbyService } from '@app/services/lobby/lobby.service';
 import { SocketService } from '@app/services/socket/socket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game-preview',
@@ -45,7 +46,7 @@ export class GamePreviewComponent{
 
   isPreview: boolean = false;
 
-  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService) {}
+  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router) {}
 
   preview() {
     if (this.isPreview) {
@@ -72,7 +73,15 @@ export class GamePreviewComponent{
   }
 
   join() {
-    this.lobbyService.join(this.game.id);
+    this.lobbyService.join(this.game.id).subscribe(
+      res => {
+        this.socketService.unbind('dispatchTeams');
+        this.router.navigate(['/lobby']);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
 }

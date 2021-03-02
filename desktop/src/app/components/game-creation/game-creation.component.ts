@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { GameType, NewGame } from '@app/classes/game';
 import { LobbyService } from '@app/services/lobby/lobby.service';
 import { errorMessages } from '../register/custom-validator';
@@ -16,7 +17,7 @@ export class GameCreationComponent implements OnInit {
   gameForm: FormGroup;
   errors = errorMessages;
 
-  constructor(private fb: FormBuilder, private lobbyService: LobbyService) { }
+  constructor(private fb: FormBuilder, private lobbyService: LobbyService, private router: Router) { }
 
   ngOnInit(): void {
     this.gameForm = this.fb.group({
@@ -40,9 +41,8 @@ export class GameCreationComponent implements OnInit {
     this.lobbyService.create(game).subscribe(
       res => {
         // TODO : Redirect to lobby
-        this.lobbyService.game.id = res.lobbyId;
-        console.log(this.lobbyService.game.id);
-        this.join();
+        console.log(res.lobbyId);
+        this.join(res.lobbyId);
       },
       err => {
         console.log(err);
@@ -50,8 +50,15 @@ export class GameCreationComponent implements OnInit {
     )
   }
 
-  private join(): void {
-    this.lobbyService.join(this.lobbyService.game.id);
+  private join(id: string): void {
+    this.lobbyService.join(id).subscribe(
+      res => {
+        this.router.navigate(['/lobby']);
+      },
+      err => {
+        console.log(err);
+      }
+    )
   }
 
 }

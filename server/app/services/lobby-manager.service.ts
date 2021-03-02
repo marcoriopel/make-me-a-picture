@@ -61,6 +61,7 @@ export class LobbyManagerService {
                 lobby.addPlayer(user);
             }
             catch (err){
+                console.log(err);
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
             }
             this.dispatchTeams(req.body.lobbyId);
