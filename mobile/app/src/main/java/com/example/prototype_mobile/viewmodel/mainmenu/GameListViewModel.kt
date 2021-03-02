@@ -53,6 +53,10 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     }
 
     fun listenLobby(lobbyID : String) {
+<<<<<<< HEAD
         gameListRepository.listenLobby(lobbyID)
+=======
+
+>>>>>>> 439-player-list-mobile
     }
 }
