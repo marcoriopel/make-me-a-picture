@@ -33,6 +33,7 @@ export class GamesController {
     });
 
     this.router.get('/list', (req, res) => {
+      console.log("Request received")
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
           this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
             res.status(StatusCodes.OK).send({ lobbies })
