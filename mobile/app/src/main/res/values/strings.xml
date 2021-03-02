@@ -4,6 +4,7 @@
     <string name="send">Envoyer</string>
     <string name="back">Retour</string>
     <string name="bad_request">"Mauvaise requête"</string>
+    <string name="not_authorized">"Vous n'êtes pas autorisés à faire cette requête"</string>
     <string name="mandatory_field">"Champ requis"</string>
 
     <!-- Strings related to login and sign up -->
@@ -25,5 +26,8 @@
     <string name="classic">"Classique"</string>
     <string name="solo_sprint">"Sprint Solo"</string>
     <string name="coop_sprint">"Sprint Coop"</string>
+
+    <!-- Strings related to game searching -->
     <string name="search_game">"Rechercher une partie"</string>
+    <string name="join_game">"Rejoindre"</string>
 </resources>
