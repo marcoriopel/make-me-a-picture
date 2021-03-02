@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 import { SearchGameService } from '@app/services/search-game/search-game.service';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { AvailableGame } from '@app/classes/game';
 
 @Component({
   selector: 'app-game-preview',
@@ -37,13 +38,11 @@ export class GamePreviewComponent{
 
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
 
-  @Input() name: string;
-  @Input() type: string;
-  @Input() id: string;
+  @Input() game: AvailableGame;
 
   isPreview: boolean = false;
 
-  constructor(private searchGameService: SearchGameService, private renderer: Renderer2) { }
+  constructor(private searchGameService: SearchGameService, private renderer: Renderer2) {}
 
   preview() {
     if (this.isPreview)
@@ -55,7 +54,7 @@ export class GamePreviewComponent{
   }
 
   join(id: string) {
-    this.searchGameService.joint(id);
+    this.searchGameService.join(id);
   }
 
 }

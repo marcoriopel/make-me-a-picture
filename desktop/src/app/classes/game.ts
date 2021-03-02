@@ -1,7 +1,7 @@
 export enum GameType {
     Classic,
-    SprintSolo,
-    SprintCoop
+    SprintCoop,
+    SprintSolo
 }
 
 export enum Difficulty {
@@ -15,11 +15,19 @@ export interface NewGame {
     gameName: string,
     difficulty: Difficulty
 }
+
+export interface AvailableGame {
+    gameType: GameType,
+    gameName: string,
+    difficulty: Difficulty,
+    id: string
+}
 export interface Game {
-    id: string;
-    name: string;
-    type: GameType;
-    player: string[];
-    team1: string[];
+    id: string,
+    name: string,
+    type: GameType,
+    difficulty: Difficulty,
+    player: string[],
+    team1: string[],
     team2: string[]
 }

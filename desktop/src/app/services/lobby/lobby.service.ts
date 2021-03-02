@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NewGame, Game ,GameType } from '@app/classes/game';
+import { NewGame, Game ,GameType, Difficulty } from '@app/classes/game';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
@@ -27,6 +27,7 @@ export class LobbyService {
       id: "1234567890",
       name: "Game 1",
       type: GameType.Classic,
+      difficulty: Difficulty.Normal,
       player: ["Marc", "Gui"],
       team1: ["Marc"],
       team2: []

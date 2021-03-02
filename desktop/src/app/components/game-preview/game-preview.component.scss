@@ -17,19 +17,35 @@
     border: none;
     outline:none;
     transition: all 0.5s ease-out;
-    
-    .sprint-logo {
-        float:right;
-        margin: 10px;
-        height: 42px;
-        margin-right: 20px;
-    }
 
-    .classic-logo {
-        float:right;
-        margin: 15px;
-        height: 25px;
-        margin-right: 20px;
+    .all-info{ 
+        display: flex;
+        justify-content: space-between;
+
+        .info {
+            width: 100px;
+            display: flex;
+            justify-content: flex-end;
+            float: right;
+    
+            .difficulty {
+                width: 30px;
+                height: 30px;
+                margin-top: 15px;
+            }
+            
+            .sprint-logo {
+                margin: 10px;
+                height: 42px;
+                margin-right: 20px;
+            }
+        
+            .classic-logo {
+                margin: 15px;
+                height: 25px;
+                margin-right: 20px;
+            }
+        }
     }
 }
 
