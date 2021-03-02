@@ -36,35 +36,17 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
         holder.gameType.setImageResource(gameTypeDrawable[gameData.gameType.type])
 
         holder.view.setOnClickListener{
-<<<<<<< HEAD
             closeLastGame()
             if (it != lastGameChecked) {
                 val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
                 val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
                 val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
-=======
-            val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
-            val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
-            val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
-            if(section1.visibility == View.GONE) {
->>>>>>> 439-player-list-mobile
                 section1.visibility = View.VISIBLE
                 section2.visibility = View.VISIBLE
                 joinButton.visibility = View.VISIBLE
                 viewModel.listenLobby(gameData.gameID)
-<<<<<<< HEAD
                 lastGameChecked = it
             }
-=======
-            } else {
-                section1.visibility = View.GONE
-                section2.visibility = View.GONE
-                joinButton.visibility = View.GONE
-            }
-
-        }
-
->>>>>>> 439-player-list-mobile
         }
     }
 
