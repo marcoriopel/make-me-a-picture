@@ -122,13 +122,11 @@ class GameCreationFragment : Fragment() {
     //Send data to viewmodel
     fun setSelectedButton(button: Button, selection:SelectedButton) {
         _selectedButton = if(button.isActivated) selection else SelectedButton.NONE
-
+        sharedViewModel.setCreationGameButtonType(_selectedButton)
     }
 
    //
-    fun selectGameMode(selection: SelectedButton) {
-        sharedViewModel.setCreationGameButtonType(selection)
-    }
+
 
 
 

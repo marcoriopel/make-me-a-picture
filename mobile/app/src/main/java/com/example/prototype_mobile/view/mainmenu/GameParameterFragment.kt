@@ -103,7 +103,11 @@ class GameParameterFragment : Fragment() {
             val type = it
 
             when(type) {
-                SelectedButton.SEARCH -> println("Search from fragment")
+                SelectedButton.SEARCH -> println("Pop up pour entrer un code unique de game")
+                SelectedButton.SPRINT -> updateFragmentView(SelectedButton.SPRINT)
+                SelectedButton.COOP -> updateFragmentView(SelectedButton.COOP)
+                SelectedButton.CLASSIC -> updateFragmentView(SelectedButton.CLASSIC)
+                SelectedButton.NONE -> updateFragmentView(SelectedButton.NONE )
 
             }
 
@@ -148,6 +152,10 @@ class GameParameterFragment : Fragment() {
     }
     fun updateIcognitoPassword(password: String) {
         sharedViewModel.setIcognitoPassword(password)
+    }
+
+    fun updateFragmentView(selectedButton: SelectedButton) {
+        
     }
 
 }

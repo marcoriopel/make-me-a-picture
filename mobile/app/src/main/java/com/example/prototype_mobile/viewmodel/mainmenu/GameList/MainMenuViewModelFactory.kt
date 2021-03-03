@@ -12,7 +12,7 @@ class MainMenuViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(GameListViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MainMenuViewModel::class.java)) {
             return MainMenuViewModel(MainMenuRepository()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
