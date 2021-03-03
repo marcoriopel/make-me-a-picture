@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Stroke } from '@app/classes/drawing';
 import { Tool } from '@app/classes/tool';
-import { Pencil } from '@app/classes/tool-properties';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { Observable, Subject } from 'rxjs';
@@ -106,7 +106,7 @@ export class UndoRedoService extends Tool {
         }
     }
 
-    drawElement(element: Pencil): void {
-        this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Pencil);
+    drawElement(element: Stroke): void {
+        this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Stroke);
     }
 }

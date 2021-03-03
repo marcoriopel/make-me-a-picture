@@ -4,7 +4,7 @@
         <form class="form form-wrapper" [formGroup]="imageCreationForm">
             <mat-form-field appearance="fill">
                 <mat-label>Mot</mat-label>
-                <input matInput placeholder="Mot" formControlName="word" required>
+                <input matInput placeholder="Mot" formControlName="drawingName" required>
                 <mat-error>
                     {{errorMessages.text}}
                 </mat-error>
@@ -12,30 +12,30 @@
 
             <mat-form-field appearance="fill">
                 <mat-label>Difficulté</mat-label>
-                <mat-select formControlName="level">
-                    <mat-option *ngFor="let level of levels" [value]="level">
+                <mat-select formControlName="difficulty">
+                    <mat-option *ngFor="let level of difficulty" [value]="level">
                     {{level}}
                     </mat-option>
                 </mat-select>                
             </mat-form-field>
 
-            <form class="form" [formGroup]="tipsForm">
+            <form class="form" [formGroup]="hintForm">
                 <mat-form-field appearance="fill">
                     <mat-label>Indice</mat-label>
-                    <input matInput placeholder="Indice" formControlName="tip" required>
+                    <input matInput placeholder="Indice" formControlName="hint" required>
                     <mat-error>
                         {{errorMessages.text}}
                     </mat-error>
                 </mat-form-field>
             </form>
 
-            <button id="tip-button" mat-raised-button (click)="addTip()" [disabled]="tipsForm.invalid">Ajouter l'indice</button>
-            <div id="tip" *ngFor="let tip of tips; let index = index">
-                <p>{{tip}}</p>
-                <input type="button" (click)="deleteTip(index)" value="X">
+            <button id="tip-button" mat-raised-button (click)="addHint()" [disabled]="hintForm.invalid">Ajouter l'indice</button>
+            <div id="tip" *ngFor="let hint of hints; let index = index">
+                <p>{{hint}}</p>
+                <input type="button" (click)="deleteHint(index)" value="X">
             </div>
-            <button id="form-button" mat-raised-button (click)="sendForm()" [disabled]="imageCreationForm.invalid || !isTipListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
-            <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid && !isTipListValid && this.drawingService.strokeStack.length < 1">Preview</button>
+            <button id="form-button" mat-raised-button (click)="sendForm()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
+            <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid && !isHintListValid && this.drawingService.strokeStack.length < 1">Preview</button>
         </form>
 
 
@@ -47,4 +47,3 @@
         <app-chat-bar></app-chat-bar>
     </div>    
 </div>
-

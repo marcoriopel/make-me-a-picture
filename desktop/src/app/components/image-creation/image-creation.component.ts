@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import {MatDialog} from '@angular/material/dialog';
 import { ViewingComponent } from '../viewing/viewing.component';
+import { Difficulty, Drawing } from '@app/classes/drawing';
 
 @Component({
   selector: 'app-image-creation',
@@ -10,32 +11,30 @@ import { ViewingComponent } from '../viewing/viewing.component';
   styleUrls: ['./image-creation.component.scss']
 })
 export class ImageCreationComponent implements OnInit {
-  // @ViewChild('tipInput', { static: false }) tipInputRef: ElementRef<HTMLInputElement>;
-
   imageCreationForm: FormGroup;
-  tipsForm: FormGroup;
-  levels = ['Facile', 'Moyen', 'Difficile'];
-  tip: string = '';
-  tips: string[] = [];
-  isTipListValid: boolean = false;
+  hintForm: FormGroup;
+  difficulty = ['Facile', 'Normale', 'Difficile'];
+  hint: string = '';
+  hints: string[] = [];
+  isHintListValid: boolean = false;
 
   errorMessages: { [key: string]: string } = {
     text: "Entre 1 et 30 caractères",
-};
+  };
 
   constructor(private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.imageCreationForm = this.fb.group({
-      word:['', [
+      drawingName:['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
       ]],
-      level:['', Validators.required],
+      difficulty:['', Validators.required],
     })
-    this.tipsForm = this.fb.group({
-      tip:['', [
+    this.hintForm = this.fb.group({
+      hint:['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
@@ -44,42 +43,54 @@ export class ImageCreationComponent implements OnInit {
   }
 
   sendForm(): void {
-    const newImage = {
-      word: this.imageCreationForm.value.word,
-      level: this.imageCreationForm.value.level,
-      strokeStack: this.drawingService.strokeStack,
-      tips: this.tips,
+    const newImage: Drawing = {
+      drawingName: this.imageCreationForm.value.drawingName,
+      difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
+      strokes: this.drawingService.strokeStack,
+      hints: this.hints,
     }
     console.log(newImage);
   }
 
-  addTip(): void {
-    this.tips.push(this.tipsForm.value.tip);
-    this.isTipListValid = this.tips.length > 0 ? true : false;
-    this.tipsForm.reset();
+  addHint(): void {
+    this.hints.push(this.hintForm.value.hint);
+    this.isHintListValid = this.hints.length > 0 ? true : false;
+    this.hintForm.reset();
   }
 
-  deleteTip(index: number): void {
-    this.tips.splice(index, 1);
-    this.isTipListValid = this.tips.length > 0 ? true : false;
+  deleteHint(index: number): void {
+    this.hints.splice(index, 1);
+    this.isHintListValid = this.hints.length > 0 ? true : false;
   }
 
   openPreview(): void {
+    const data: Drawing = {
+      drawingName: this.imageCreationForm.value.drawingName,
+      difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
+      strokes: this.drawingService.strokeStack,
+      hints: this.hints,
+    }
+    
     let dialogRef = this.dialog.open(ViewingComponent, {
       height: '800px',
       width: '1200px',
-      data: {
-        word: this.imageCreationForm.value.word,
-        level: this.imageCreationForm.value.level,
-        strokeStack: this.drawingService.strokeStack,
-        tips: this.tips,
-      }
+      data: data,
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
     });
 
+  }
+
+  convertDifficulty(difficulty: string): number {
+    console.log(difficulty)
+    switch(difficulty) {
+      case 'Facile': return Difficulty.Facile;
+      case 'Normale': return Difficulty.Normale;
+      case 'Difficile': return Difficulty.Difficile;
+    }
+    return Difficulty.Facile // Default
   }
 
 }
