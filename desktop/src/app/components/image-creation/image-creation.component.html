@@ -19,7 +19,7 @@
                 </mat-select>                
             </mat-form-field>
 
-            <form class="form" [formGroup]="hintForm">
+            <form class="form hint-form" [formGroup]="hintForm">
                 <mat-form-field appearance="fill">
                     <mat-label>Indice</mat-label>
                     <input matInput placeholder="Indice" formControlName="hint" required>
@@ -34,8 +34,8 @@
                 <p>{{hint}}</p>
                 <input type="button" (click)="deleteHint(index)" value="X">
             </div>
-            <button id="form-button" mat-raised-button (click)="sendForm()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
-            <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid && !isHintListValid && this.drawingService.strokeStack.length < 1">Preview</button>
+            <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Prévisualiser</button>
+            <button id="form-button" mat-raised-button (click)="processForm()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
         </form>
 
 
