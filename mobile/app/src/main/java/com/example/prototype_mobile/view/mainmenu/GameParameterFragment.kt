@@ -10,12 +10,15 @@ import android.widget.Button
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
 import com.example.prototype_mobile.view.connection.login.afterTextChanged
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -96,9 +99,15 @@ class GameParameterFragment : Fragment() {
             updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
         }
 
-        sharedViewModel.creationGameButtonType.observe(this@GameParameterFragment, Observer {
+        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
+            val type = it
 
-        }
+            when(type) {
+                SelectedButton.SEARCH -> println("Search from fragment")
+
+            }
+
+        })
 
     }
 
@@ -140,4 +149,5 @@ class GameParameterFragment : Fragment() {
     fun updateIcognitoPassword(password: String) {
         sharedViewModel.setIcognitoPassword(password)
     }
+
 }

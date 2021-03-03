@@ -101,7 +101,7 @@ class GameCreationFragment : Fragment() {
 
         //Observers in fragment
 
-        sharedViewModel.creationGameButtonType.observe(this@)
+        //sharedViewModel.creationGameButtonType.observe(this@)
 
 
 
@@ -119,13 +119,13 @@ class GameCreationFragment : Fragment() {
             }
         }
     }
-
+    //Send data to viewmodel
     fun setSelectedButton(button: Button, selection:SelectedButton) {
         _selectedButton = if(button.isActivated) selection else SelectedButton.NONE
 
     }
 
-    //Send data to viewmodel
+   //
     fun selectGameMode(selection: SelectedButton) {
         sharedViewModel.setCreationGameButtonType(selection)
     }

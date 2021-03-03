@@ -2,8 +2,10 @@ package com.example.prototype_mobile.viewmodel.mainmenu.GameList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
+import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 
 //Communicate data between fragments
 class MainMenuViewModelFactory : ViewModelProvider.Factory {
@@ -16,3 +18,4 @@ class MainMenuViewModelFactory : ViewModelProvider.Factory {
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
