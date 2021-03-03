@@ -42,6 +42,7 @@ import { GameBarComponent } from './components/game-bar/game-bar.component';
 import { SearchGameService } from './services/search-game/search-game.service';
 import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
+import { ViewingComponent } from './components/viewing/viewing.component';
 
 @NgModule({
     declarations: [
@@ -61,7 +62,8 @@ import { GameSearchComponent } from './components/game-search/game-search.compon
         ChatComponent,
         GameBarComponent,
         GameMenuComponent,
-        GameSearchComponent
+        GameSearchComponent,
+        ViewingComponent
     ],
     imports: [
         BrowserModule,

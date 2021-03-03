@@ -35,6 +35,7 @@
                 <input type="button" (click)="deleteTip(index)" value="X">
             </div>
             <button id="form-button" mat-raised-button (click)="sendForm()" [disabled]="imageCreationForm.invalid || !isTipListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
+            <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid && !isTipListValid && this.drawingService.strokeStack.length < 1">Preview</button>
         </form>
 
 

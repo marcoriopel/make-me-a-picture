@@ -1,6 +1,8 @@
   import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import {MatDialog} from '@angular/material/dialog';
+import { ViewingComponent } from '../viewing/viewing.component';
 
 @Component({
   selector: 'app-image-creation',
@@ -21,7 +23,7 @@ export class ImageCreationComponent implements OnInit {
     text: "Entre 1 et 30 caractères",
 };
 
-  constructor(private fb: FormBuilder, public drawingService: DrawingService) { }
+  constructor(private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.imageCreationForm = this.fb.group({
@@ -60,6 +62,24 @@ export class ImageCreationComponent implements OnInit {
   deleteTip(index: number): void {
     this.tips.splice(index, 1);
     this.isTipListValid = this.tips.length > 0 ? true : false;
+  }
+
+  openPreview(): void {
+    let dialogRef = this.dialog.open(ViewingComponent, {
+      height: '800px',
+      width: '1200px',
+      data: {
+        word: this.imageCreationForm.value.word,
+        level: this.imageCreationForm.value.level,
+        strokeStack: this.drawingService.strokeStack,
+        tips: this.tips,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+
   }
 
 }
