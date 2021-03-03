@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
+import com.example.prototype_mobile.view.connection.login.afterTextChanged
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -29,6 +32,9 @@ class GameParameterFragment : Fragment() {
 
     private lateinit var  binding: FragmentGameParameterBinding
     private var filterDifficulty: Vector<Button> = Vector<Button>()
+    private val sharedViewModel: MainMenuViewModel by activityViewModels()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -53,6 +59,10 @@ class GameParameterFragment : Fragment() {
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
+
+        binding.gameName.afterTextChanged {
+            updateGameName(binding.gameName.text.toString())
+        }
 
         binding.StartGame.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
 
@@ -79,6 +89,11 @@ class GameParameterFragment : Fragment() {
                 binding.passwordPrivateGame.visibility = View.VISIBLE
             else
                 binding.passwordPrivateGame.visibility = View.INVISIBLE
+
+            updateIcognitoModeStatus(binding.icognito.isActivated)
+        }
+        binding.passwordPrivateGame.afterTextChanged {
+            updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
         }
 
         sharedViewModel.creationGameButtonType.observe(this@GameParameterFragment, Observer {
@@ -114,6 +129,15 @@ class GameParameterFragment : Fragment() {
                 button.isActivated = false
             }
         }
+    }
 
+    fun updateGameName(name:String) {
+        sharedViewModel.setGameName(name)
+    }
+    fun updateIcognitoModeStatus(isIcognito: Boolean){
+        sharedViewModel.setIcognitoMode(isIcognito)
+    }
+    fun updateIcognitoPassword(password: String) {
+        sharedViewModel.setIcognitoPassword(password)
     }
 }
