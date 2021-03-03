@@ -47,6 +47,9 @@ class GameParameterFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentGameParameterBinding.bind(view)
+
+
+
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
@@ -76,6 +79,10 @@ class GameParameterFragment : Fragment() {
                 binding.passwordPrivateGame.visibility = View.VISIBLE
             else
                 binding.passwordPrivateGame.visibility = View.INVISIBLE
+        }
+
+        sharedViewModel.creationGameButtonType.observe(this@GameParameterFragment, Observer {
+
         }
 
     }
