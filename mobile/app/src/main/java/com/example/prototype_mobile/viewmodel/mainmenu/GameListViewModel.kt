@@ -10,6 +10,7 @@ import com.example.prototype_mobile.GameListResult
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
@@ -54,5 +55,10 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
 
     fun listenLobby(lobbyID : String) {
         gameListRepository.listenLobby(lobbyID)
+    }
+
+    fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {
+        gameListRepository.setFilter(filter, showThisTypeOfGame)
+        getGameList()
     }
 }
