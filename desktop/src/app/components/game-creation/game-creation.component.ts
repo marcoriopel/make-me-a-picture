@@ -40,18 +40,17 @@ export class GameCreationComponent implements OnInit {
     }
     this.lobbyService.create(game).subscribe(
       res => {
-        // TODO : Redirect to lobby
         console.log(res.lobbyId);
-        this.join(res.lobbyId);
+        this.join(res.lobbyId, game);
       },
-      err => {
+      err => { 
         console.log(err);
       }
     )
   }
 
-  private join(id: string): void {
-    this.lobbyService.join(id).subscribe(
+  private join(id: string, game: NewGame): void {
+    this.lobbyService.join(id, game).subscribe(
       res => {
         this.router.navigate(['/lobby']);
       },

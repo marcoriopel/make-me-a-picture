@@ -39,9 +39,9 @@ export class GamePreviewComponent{
   sprintImgRef: string = "../../../assets/img/sprintLogo.png";
 
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
-
   @Input() game: AvailableGame;
   @Output() closeAllPreview: EventEmitter<any> = new EventEmitter();
+  
   players: any[];
 
   isPreview: boolean = false;
@@ -58,7 +58,6 @@ export class GamePreviewComponent{
       this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
       this.socketService.bind('dispatchTeams', (res: any) => {
           this.players = res.players;
-          console.log(this.players);
       });
     }
     this.isPreview = !this.isPreview;
@@ -73,9 +72,14 @@ export class GamePreviewComponent{
   }
 
   join() {
-    this.lobbyService.join(this.game.id).subscribe(
+    this.closePreview();
+    const game = {
+      gameType: this.game.gameType,
+      gameName: this.game.gameName,
+      difficulty: this.game.difficulty
+    }
+    this.lobbyService.join(this.game.id, game).subscribe(
       res => {
-        this.socketService.unbind('dispatchTeams');
         this.router.navigate(['/lobby']);
       },
       err => {
@@ -83,5 +87,4 @@ export class GamePreviewComponent{
       }
     );
   }
-
 }

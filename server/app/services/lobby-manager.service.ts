@@ -115,6 +115,7 @@ export class LobbyManagerService {
 
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
+        console.log(lobby.getPlayers());
         LobbyManagerService.socket.to(lobbyId).emit('dispatchTeams', {"players": lobby.getPlayers()});
     }
 }

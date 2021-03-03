@@ -1,4 +1,4 @@
-<div class="game-button" (click)="preview()" #gamePreview>
+<div class="game-button" (click)="preview()"  *ngIf="game.gameType != 1" #gamePreview>
     <div class="all-info">
         <p class="title"> {{game.gameName}} </p>
         <div class="info">
@@ -7,7 +7,7 @@
             <img *ngIf="game.difficulty == 2" src="../../../assets/img/hardLogo2.png" class="difficulty">
 
             <img *ngIf="game.gameType == 0" [src]="classicGreyImgRef" class="classic-logo"> 
-            <img *ngIf="game.gameType == 1" [src]="sprintImgRef" class="sprint-logo"> 
+            <img *ngIf="game.gameType == 2" [src]="sprintImgRef" class="sprint-logo"> 
         </div>
     </div>
 

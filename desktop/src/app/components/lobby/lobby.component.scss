@@ -1,3 +1,22 @@
+#chat-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}
+
+.lobby {
+    height: 95%;
+    position: absolute;
+    left: 0;
+    width: calc(100% - 380px);
+}
+
+#nav-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}
+
 .green {
     background-color: #8BC640;
     transition: all 0.5s ease-out;
@@ -156,15 +175,3 @@
     }
 }
 
-#chat-bar {
-    height: 95%;
-    position: absolute;
-    right: 0;
-}
-
-.lobby {
-    height: 95%;
-    position: absolute;
-    left: 0;
-    width: calc(100% - 380px);
-}

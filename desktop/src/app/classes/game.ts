@@ -34,3 +34,8 @@ export interface Game {
 export interface JoinLobby {
     lobbyId: string
 }
+
+export interface Player {
+    username: string,
+    avatar: number
+}
