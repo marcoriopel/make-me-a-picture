@@ -98,11 +98,11 @@ export class ImageCreationComponent implements OnInit {
 
   convertDifficulty(difficulty: string): number {
     switch(difficulty) {
-      case 'Facile': return Difficulty.Facile;
-      case 'Normale': return Difficulty.Normale;
-      case 'Difficile': return Difficulty.Difficile;
+      case 'Facile': return Difficulty.easy;
+      case 'Normale': return Difficulty.normal;
+      case 'Difficile': return Difficulty.hard;
     }
-    return Difficulty.Facile // Default
+    return Difficulty.easy // Default
   }
 
   sendDrawing(drawing: Drawing) {
