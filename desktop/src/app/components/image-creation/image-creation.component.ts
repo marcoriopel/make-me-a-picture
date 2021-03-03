@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import {MatDialog} from '@angular/material/dialog';
 import { ViewingComponent } from '../viewing/viewing.component';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Difficulty, Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
 
@@ -57,10 +57,9 @@ export class ImageCreationComponent implements OnInit {
     }
     this.sendDrawing(drawing).subscribe(
       res => {
-        console.log(res);
       },
       err => {
-        console.log(err);
+        alert("Oups, un problème est survenu");
       }
     )
   }
@@ -94,14 +93,10 @@ export class ImageCreationComponent implements OnInit {
       data: drawing,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-
+    dialogRef.afterClosed(); // To avoid compiling error
   }
 
   convertDifficulty(difficulty: string): number {
-    console.log(difficulty)
     switch(difficulty) {
       case 'Facile': return Difficulty.Facile;
       case 'Normale': return Difficulty.Normale;
@@ -111,7 +106,10 @@ export class ImageCreationComponent implements OnInit {
   }
 
   sendDrawing(drawing: Drawing) {
-    return this.http.post<any>(this.imageFormUrl, drawing);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    const options = { headers: headers, responseType: 'text' as 'json'};
+    return this.http.post<any>(this.imageFormUrl, drawing, options);
   }
-
 }

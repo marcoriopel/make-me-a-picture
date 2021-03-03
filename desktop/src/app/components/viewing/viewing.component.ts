@@ -16,9 +16,7 @@ export class ViewingComponent implements AfterViewInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public drawing: Drawing,
-  ) {
-    console.log(drawing);
-   }
+  ) {   }
 
   ngAfterViewInit(): void {
     this.baseCtx = this.baseCanvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
