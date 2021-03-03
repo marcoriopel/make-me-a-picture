@@ -43,6 +43,9 @@ import { SearchGameService } from './services/search-game/search-game.service';
 import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
 import { ViewingComponent } from './components/viewing/viewing.component';
+import { GamePreviewComponent } from './components/game-preview/game-preview.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { LobbyService } from './services/lobby/lobby.service'
 
 @NgModule({
     declarations: [
@@ -63,7 +66,9 @@ import { ViewingComponent } from './components/viewing/viewing.component';
         GameBarComponent,
         GameMenuComponent,
         GameSearchComponent,
-        ViewingComponent
+        ViewingComponent,
+        GamePreviewComponent,
+        LobbyComponent,
     ],
     imports: [
         BrowserModule,
@@ -92,9 +97,10 @@ import { ViewingComponent } from './components/viewing/viewing.component';
         MatInputModule,
         MatToolbarModule,
         NgxElectronModule,
+        BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

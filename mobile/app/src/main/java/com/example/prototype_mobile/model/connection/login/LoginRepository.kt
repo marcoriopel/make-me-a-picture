@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.model.connection.login
 
+import android.util.Log
 import com.example.prototype_mobile.LoggedInUser
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
@@ -53,13 +54,14 @@ class LoginRepository() {
          val mapLogin = HashMap<String, String>()
          mapLogin["username"] = username
          mapLogin["password"] = password
-         val response = HttpRequestDrawGuess.httpRequest("/api/auth/authenticate", mapLogin)
+         val response = HttpRequestDrawGuess.httpRequestPost("/api/authenticate/login", mapLogin)
 
 
          val result = analyseLoginAnswer(response, username)
 
          if (result is Result.Success) {
              setLoggedInUser((result).data)
+             Log.d("token", result.data.token)
          }
 
          return result;

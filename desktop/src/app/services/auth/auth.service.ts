@@ -10,8 +10,8 @@ import { SHA256, enc } from 'crypto-js';
 })
 export class AuthService {
   private baseUrl = environment.api_url;
-  private loginUrl = this.baseUrl + "/api/auth/authenticate";
-  private registerUrl = this.baseUrl + "/api/auth/register";
+  private loginUrl = this.baseUrl + "/api/authenticate/login";
+  private registerUrl = this.baseUrl + "/api/authenticate/register";
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -30,6 +30,7 @@ export class AuthService {
     localStorage.removeItem('username');
     localStorage.removeItem('avatar');
     this.router.navigate(['/login']);
+    // TODO
   }
 
   loggedIn() {

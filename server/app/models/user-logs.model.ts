@@ -10,7 +10,15 @@ export class UserLogsModel {
     }
     async logUser(username, timeStamp, isLogin) {
         try {
-            await this.databaseModel.client.db().collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timeStamp': timeStamp });
+            await this.databaseModel.client.db("database").collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timeStamp': timeStamp });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getLogouts(username) {
+        try {
+            return await this.databaseModel.client.db("database").collection("user-logs").find({ 'username': username, "isLogin": false }).toArray();
         } catch (e) {
             console.error(e);
         }
