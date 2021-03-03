@@ -31,8 +31,8 @@ class HttpRequestDrawGuess {
                 val token = LoginRepository.getInstance()!!.user!!.token
 
                 val request: Request = Request.Builder()
-                    //.url("http://10.0.2.2:3000" + urlPath)
-                    .url("http://18.217.235.167:3000$urlPath")
+                    .url("http://10.0.2.2:3000" + urlPath)
+                    //.url("http://18.217.235.167:3000$urlPath")
                     .addHeader("authorization", token)
                     .build()
 

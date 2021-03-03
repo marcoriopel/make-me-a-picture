@@ -101,6 +101,7 @@ class GameCreationFragment : Fragment() {
 
         //Observers in fragment
 
+        sharedViewModel.creationGameButtonType.observe(this@)
 
 
 

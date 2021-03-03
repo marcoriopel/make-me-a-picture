@@ -2,10 +2,17 @@ package com.example.prototype_mobile.view.mainmenu
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModelFactory
+
 
 class MainMenuActivity : AppCompatActivity() {
+
+
+    private lateinit var mainMenuViewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,5 +29,9 @@ class MainMenuActivity : AppCompatActivity() {
                     .replace(R.id.container3, ChatFragment.newInstance())
                     .commitNow()
         }
+
+        mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory())
+                .get(MainMenuViewModel::class.java)
     }
+    
 }
