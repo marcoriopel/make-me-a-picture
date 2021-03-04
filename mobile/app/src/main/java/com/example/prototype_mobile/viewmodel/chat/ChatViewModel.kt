@@ -22,7 +22,6 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     fun onDestroy(token:String) {
         val data = InitialData(token)
         chatRepository.onDestroy(data)
-
     }
 
     fun sendMessage(msg: String) {

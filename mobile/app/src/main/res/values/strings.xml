@@ -18,14 +18,14 @@
     <string name="prompt_password_confirm">Confirmer mot de passe</string>
     <string name="invalid_username">Pas un nom d\'utilisateur valide</string>
     <string name="invalid_password">Pas un mot de passe valide</string>
-    <string name="login_failed">"Le nom d'utilisateur ou le mot de passe est eronné"</string>
-    <string name="username_used">"Ce nom d'utilisateur est déjà utilisé"</string>
+    <string name="login_failed">Le nom d\'utilisateur ou le mot de passe est eronné</string>
+    <string name="username_used">Ce nom d\'utilisateur est déjà utilisé</string>
     <string name="password_not_matched">"Les mots de passe ne sont pas identiques"</string>
 
     <!-- Strings related to game creation -->
-    <string name="classic">"Classique"</string>
-    <string name="solo_sprint">"Sprint Solo"</string>
-    <string name="coop_sprint">"Sprint Coop"</string>
+    <string name="classic">Classique</string>
+    <string name="solo_sprint">Sprint Solo</string>
+    <string name="coop_sprint">Sprint Coop</string>
 
     <!-- Strings related to game searching -->
     <string name="search_game">"Rechercher une partie"</string>
@@ -33,4 +33,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name = "StartGame">Commencer</string>
     <string name="join_game">"Rejoindre"</string>
+    <string name="available">"Disponible"</string>
+    <string name="lobby_full">"Le lobby est déjà plein"</string>
+
+    <!-- Strings related to the lobby -->
+    <string name="join_team">Rejoindre l\'équipe</string>
+    <string name="start_game">Commencer la partie</string>
+    <string name="team1">Équipe 1</string>
+    <string name="team2">Équipe 2</string>
 </resources>

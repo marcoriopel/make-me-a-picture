@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentTransaction
@@ -10,9 +11,12 @@ import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModelFactory
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
 
 class MainMenuActivity : AppCompatActivity() {
+    private lateinit var mainMenuViewModel: MainMenuViewModel
 
 
     private lateinit var mainMenuViewModel: MainMenuViewModel
@@ -46,6 +50,17 @@ class MainMenuActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().replace(R.id.container2,GameParameterFragment.newInstance()).commit()
             }
         })
+
+
+        mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
+            val gameJoined = it ?: return@Observer
+
+            supportFragmentManager.beginTransaction().replace(R.id.container2, LobbyFragment.newInstance(gameJoined.gameName, gameJoined.gameType.type))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null)
+                    .commit()
+        })
+
     }
 
     

@@ -4,7 +4,7 @@ import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
-import {StatusCodes} from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
@@ -25,29 +25,44 @@ export class GamesController {
     this.router = Router();
 
     this.router.post('/create', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.create(req, res, (lobbyId: string) => {
+          res.status(StatusCodes.OK).send({ lobbyId })
+        });
+      });
+    });
+
+    this.router.get('/list', (req, res) => {
         this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-            this.lobbyManagerService.create(req, res, (lobbyId: string) => {
-              res.status(StatusCodes.OK).send({ lobbyId })
+            this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
+              res.status(StatusCodes.OK).send({ lobbies })
             });
         });
     });
 
-    this.router.get('/list', (req, res) => {
-      console.log("Request received")
-      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-          this.lobbyManagerService.getLobbies(req, res, (lobbies: lobbyInterface.Lobby[]) => {
-            res.status(StatusCodes.OK).send({ lobbies })
-          });
-      });
-  });
+    this.router.post('/join', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.join(req, res, user, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
 
-    this.router.post('/joinLobby', (req, res) => {
-      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-          this.lobbyManagerService.join(req, res, user, () => {
-            res.sendStatus(StatusCodes.OK)
-          });
-      });
-  });
+    this.router.post('/add/virtual/player', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.addVirtualPlayer(req, res, user, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
+
+    this.router.delete('/remove/virtual/player', (req, res) => {
+        this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+            this.lobbyManagerService.removeVirtualPlayer(req, res, () => {
+              res.sendStatus(StatusCodes.OK)
+            });
+        });
+    });
 
   }
 }

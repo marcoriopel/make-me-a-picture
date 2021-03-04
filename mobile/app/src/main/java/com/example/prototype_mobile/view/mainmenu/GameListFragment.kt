@@ -19,8 +19,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameListBinding
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModelFactory
+import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
+import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.util.*
 
@@ -55,7 +56,7 @@ class GameListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         // define an adapter
-        gameListAdapter = GameListAdapter(view.context, gameList);
+        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel);
         recyclerView.adapter = gameListAdapter
         binding = FragmentGameListBinding.bind(view)
 
@@ -65,6 +66,9 @@ class GameListFragment : Fragment() {
                 showLoadingFailed(view.getContext(), gameListResult.error)
             }
 
+            gameList.clear()
+            gameListAdapter.notifyDataSetChanged()
+
             if (gameListResult.success != null) {
                 for (game in gameListResult.success) {
                     addItemToRecyclerView(game)
@@ -72,6 +76,19 @@ class GameListFragment : Fragment() {
             }
         })
 
+        gameListViewModel.joinLobbyResult.observe(viewLifecycleOwner, Observer {
+            val joinLobbyResult = it ?: return@Observer
+            if (joinLobbyResult.error != null) {
+                showLoadingFailed(view.getContext(), joinLobbyResult.error)
+            }
+        })
+
+        gameListViewModel.lobbyPlayers.observe(viewLifecycleOwner, Observer {
+            val lobbyPlayers = it ?: return@Observer
+            gameListAdapter.updatePlayers(lobbyPlayers)
+        })
+
+        setFilters()
         gameListViewModel.getGameList()
 
         // Create game filter list
@@ -136,6 +153,38 @@ class GameListFragment : Fragment() {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
         toast.show()
     }
+
+    private fun setFilters() {
+        binding.classicFilter.isActivated = true
+        binding.classicFilter.setOnClickListener{
+            it.isActivated = !it.isActivated
+            gameListViewModel.setFilter(GameFilter.CLASSIC, it.isActivated)
+        }
+        binding.coopFilter.isActivated = true
+        binding.coopFilter.setOnClickListener{
+            it.isActivated = !it.isActivated
+            gameListViewModel.setFilter(GameFilter.COOP, it.isActivated)
+        }
+        binding.easyFilter.isActivated = true
+        binding.easyFilter.setOnClickListener{
+            it.isActivated = !it.isActivated
+            gameListViewModel.setFilter(GameFilter.EASY, it.isActivated)
+        }
+        binding.mediumFilter.isActivated = true
+        binding.mediumFilter.setOnClickListener{
+            it.isActivated = !it.isActivated
+            gameListViewModel.setFilter(GameFilter.MEDIUM, it.isActivated)
+        }
+        binding.hardFilter.isActivated = true
+        binding.hardFilter.setOnClickListener{
+            it.isActivated = !it.isActivated
+            gameListViewModel.setFilter(GameFilter.HARD, it.isActivated)
+        }
+        binding.refresh.setOnClickListener{
+            gameListViewModel.getGameList()
+        }
+    }
+
 
     fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
 

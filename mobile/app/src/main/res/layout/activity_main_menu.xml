@@ -15,7 +15,7 @@
     <FrameLayout
         android:id="@+id/container2"
         android:layout_width="0dp"
-        android:layout_height="750dp"
+        android:layout_height="680dp"
         android:layout_weight="1">
     </FrameLayout>
     <FrameLayout

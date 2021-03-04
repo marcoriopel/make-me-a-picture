@@ -20,6 +20,7 @@
             android:layout_marginStart="50dp"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="20dp"
+            app:backgroundTint="@color/blue_to_lightblue"
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/icon_classic"
             android:enabled="true"
@@ -57,10 +58,11 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="20dp"
-
             android:background="@drawable/button_round"
+            app:backgroundTint="@color/blue_to_lightblue"
             android:drawableTop="@drawable/icon_solo"
             android:paddingTop="-30dip"
+            android:enabled="true" />
             android:enabled="true"
             app:backgroundTint = "@null"
             />
@@ -78,11 +80,13 @@
             android:layout_marginTop="13dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_round"
+            app:backgroundTint="@color/blue_to_lightblue"
             android:drawableTop="@drawable/icon_easy"
             android:paddingTop="7dp"
             android:enabled="true"
             app:backgroundTint = "@null"
             />
+            android:enabled="true" />
 
         <Space
             android:layout_width="0dp"
@@ -98,6 +102,7 @@
             android:layout_marginTop="13dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_round"
+            app:backgroundTint="@color/blue_to_lightblue"
             android:drawableTop="@drawable/icon_medium"
             android:paddingTop="9dp"
             android:enabled="true"
@@ -115,13 +120,33 @@
             android:layout_gravity="start"
             android:layout_marginStart="30dp"
             android:layout_marginTop="13dp"
-            android:layout_marginEnd="50dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_round"
+            app:backgroundTint="@color/blue_to_lightblue"
             android:drawableTop="@drawable/icon_hard"
             android:paddingTop="-5dp"
             android:enabled="true"
             app:backgroundTint = "@null" />
+            android:enabled="true" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/blue_to_lightblue"
+            android:drawableTop="@drawable/icon_solo"
+            android:paddingTop="-30dip"
+            android:enabled="true" />
 
     </LinearLayout>
     <Space
