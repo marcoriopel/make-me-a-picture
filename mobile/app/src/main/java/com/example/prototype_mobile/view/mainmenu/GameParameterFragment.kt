@@ -56,6 +56,8 @@ class GameParameterFragment : Fragment() {
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var gameName =""
+        var difficulty = GameDifficulty.NONE
 
         binding = FragmentGameParameterBinding.bind(view)
 
@@ -76,21 +78,34 @@ class GameParameterFragment : Fragment() {
         binding.easyFilter.setOnClickListener {
             binding.easyFilter.isActivated = !binding.easyFilter.isActivated
             disableOtherButtons(binding.easyFilter, filterDifficulty)
-            sharedViewModel.setGameDifficulty(GameDifficulty.EASY)
+            if(binding.easyFilter.isActivated){
+                sharedViewModel.setGameDifficulty(GameDifficulty.EASY)
+            } else {
+                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+            }
             sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
         binding.mediumFilter.setOnClickListener {
             binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
             disableOtherButtons(binding.mediumFilter, filterDifficulty)
-            sharedViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
+            if(binding.mediumFilter.isActivated){
+                sharedViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
+            } else {
+                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+            }
             sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
         binding.hardFilter.setOnClickListener {
             binding.hardFilter.isActivated = !binding.hardFilter.isActivated
             disableOtherButtons(binding.hardFilter, filterDifficulty)
-            sharedViewModel.setGameDifficulty(GameDifficulty.HARD)
+            println("hard filter" + binding.hardFilter.isActivated)
+            if(binding.hardFilter.isActivated){
+                sharedViewModel.setGameDifficulty(GameDifficulty.HARD)
+            } else {
+                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+            }
 
             sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
@@ -118,34 +133,28 @@ class GameParameterFragment : Fragment() {
         }
 
 
-        sharedViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer {
+        sharedViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer<GameCreationMergeData> {
 
-            var gameName =""
-            var difficulty = GameDifficulty.NONE
-            println("On a reussi Entrer dans l'observateur")
-
-            override fun onChanged(it:GameCreationMergeData?) {
-                when (it){
-                    is GameName -> { gameName = it.name}
-                    is Difficulty -> {difficulty = it.difficulty}
+            when (it) {
+                is GameName -> {
+                    gameName = it.name
+                }
+                is Difficulty -> {
+                    difficulty = it.difficulty
                 }
             }
-            println("GameName: "+ gameName+ " Difficulty: " + difficulty)
-
-            if(gameName!="" && difficulty!=GameDifficulty.NONE){
-                println("On a reussi!")
-            }
-
+            binding.StartGame.isActivated = gameName != "" && difficulty != GameDifficulty.NONE
         })
-    }
 
 
 
+        binding.StartGame.setOnClickListener{
+            if(binding.StartGame.isActivated) {
+                sharedViewModel.sendRequest()
+            }
+        }
 
-//        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
-//            val type = it
-//            updateFragmentView(type)
-//        })
+
 
     }
 
@@ -209,7 +218,6 @@ class GameParameterFragment : Fragment() {
                 binding.GameCreation.text = "Création partie COOP"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
             }
-
         }
     }
 

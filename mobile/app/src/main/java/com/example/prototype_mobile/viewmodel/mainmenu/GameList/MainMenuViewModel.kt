@@ -31,6 +31,10 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
 
+    init {
+        liveDataMerger= fetchData()
+
+    }
 
     fun setCreationGameButtonType(selection: SelectedButton){
         _creationGameButtonType.value = selection
@@ -61,12 +65,13 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
     fun fetchData(): MediatorLiveData<GameCreationMergeData> {
 
         val liveDataMerger = MediatorLiveData<GameCreationMergeData>()
-        liveDataMerger.addSource(_gameDifficulty)
-        {
+        liveDataMerger.addSource(_gameDifficulty,  Observer<GameDifficulty>{
             if(it !=null) {
-            liveDataMerger.value = Difficulty(it)
+                liveDataMerger.value = Difficulty(it)
             }
-        }
+
+        })
+
         liveDataMerger.addSource(_gameName){
             println("livedataMerger: " + it)
             if(it != null){
@@ -75,6 +80,10 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
         }
 
     return liveDataMerger
+    }
+
+    fun sendRequest() {
+
     }
 
 
