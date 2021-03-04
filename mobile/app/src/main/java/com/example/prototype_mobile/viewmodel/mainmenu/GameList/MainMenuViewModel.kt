@@ -5,11 +5,12 @@ import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
-class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(){
+class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository, private val lobbyRepository: LobbyRepository) : ViewModel(){
 
     //Information that we need to observe in order to send an gameCreation request.
     private val _creationGameButtonType = MutableLiveData<SelectedButton>()
@@ -28,11 +29,19 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
     val gameDifficulty: LiveData<GameDifficulty> = _gameDifficulty
 
+    private val _lobbyJoined = MutableLiveData<Game>()
+    val lobbyJoined: LiveData<Game> = _lobbyJoined
+
+
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
 
     init {
         liveDataMerger= fetchData()
+
+        lobbyRepository.lobbyJoined.observeForever(Observer {
+            _lobbyJoined.value = it ?: return@Observer
+        })
 
     }
 

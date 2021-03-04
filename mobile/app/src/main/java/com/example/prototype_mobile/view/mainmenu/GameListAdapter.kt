@@ -13,7 +13,8 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.util.Drawable
-import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
+
 
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val viewModel: GameListViewModel): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     var lastGameChecked: View? = null

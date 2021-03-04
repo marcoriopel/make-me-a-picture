@@ -20,8 +20,9 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameListBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
-import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModelFactory
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModelFactory
+
 import org.jetbrains.anko.support.v4.runOnUiThread
 import java.util.*
 
@@ -104,35 +105,29 @@ class GameListFragment : Fragment() {
         binding.classicFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.blue_to_lightblue)
         binding.classicFilter.setOnClickListener {
             binding.classicFilter.isActivated = !binding.classicFilter.isActivated
-            disableOtherButtons(binding.classicFilter, filterGameButtons)
         }
 
         binding.soloFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.green_to_lightgreen)
         binding.soloFilter.setOnClickListener {
             binding.soloFilter.isActivated = !binding.soloFilter.isActivated
-            disableOtherButtons(binding.soloFilter, filterGameButtons)
         }
         binding.coopFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.orange_to_lightorange)
         binding.coopFilter.setOnClickListener {
             binding.coopFilter.isActivated = !binding.coopFilter.isActivated
-            disableOtherButtons(binding.coopFilter, filterGameButtons)
         }
 
         // filter difficulty
         binding.easyFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
         binding.easyFilter.setOnClickListener {
             binding.easyFilter.isActivated = !binding.easyFilter.isActivated
-            disableOtherButtons(binding.easyFilter, filterDifficulty)
         }
         binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
         binding.mediumFilter.setOnClickListener {
             binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
-            disableOtherButtons(binding.mediumFilter, filterDifficulty)
         }
         binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
         binding.hardFilter.setOnClickListener {
             binding.hardFilter.isActivated = !binding.hardFilter.isActivated
-            disableOtherButtons(binding.hardFilter, filterDifficulty)
         }
 
 

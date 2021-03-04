@@ -2,7 +2,6 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -10,16 +9,15 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModelFactory
+
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
-import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
+
 
 
 class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
 
 
-    private lateinit var mainMenuViewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
