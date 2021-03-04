@@ -20,5 +20,7 @@
     <color name="black_bar">#231F20</color>
     <color name="ic_launcher_background">#EDEDEB</color>
     <color name="light_blue">#a8dbff</color>
+    <color name="colorBackground">#FFFF5500</color>
+    <color name="colorPaint">#FFFFEB3B</color>
 
 </resources>

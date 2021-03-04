@@ -37,4 +37,7 @@
     <string name="start_game">Commencer la partie</string>
     <string name="team1">Équipe 1</string>
     <string name="team2">Équipe 2</string>
+    <string name="canvasContentDescription">Mini Paint is a simple line drawing app.
+   Drag your fingers to draw. Rotate the phone to clear.</string>
+
 </resources>
