@@ -94,41 +94,18 @@ class GameListFragment : Fragment() {
 
         // Create game filter list
         filterGameButtons.addElement(binding.classicFilter)
-        filterGameButtons.addElement(binding.soloFilter)
         filterGameButtons.addElement(binding.coopFilter)
 
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
 
-        //Create event listener for filters
+        //Set color change on button
         binding.classicFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.blue_to_lightblue)
-        binding.classicFilter.setOnClickListener {
-            binding.classicFilter.isActivated = !binding.classicFilter.isActivated
-        }
-
-        binding.soloFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.green_to_lightgreen)
-        binding.soloFilter.setOnClickListener {
-            binding.soloFilter.isActivated = !binding.soloFilter.isActivated
-        }
         binding.coopFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.orange_to_lightorange)
-        binding.coopFilter.setOnClickListener {
-            binding.coopFilter.isActivated = !binding.coopFilter.isActivated
-        }
-
-        // filter difficulty
         binding.easyFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
-        binding.easyFilter.setOnClickListener {
-            binding.easyFilter.isActivated = !binding.easyFilter.isActivated
-        }
         binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
-        binding.mediumFilter.setOnClickListener {
-            binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
-        }
         binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
-        binding.hardFilter.setOnClickListener {
-            binding.hardFilter.isActivated = !binding.hardFilter.isActivated
-        }
 
 
 

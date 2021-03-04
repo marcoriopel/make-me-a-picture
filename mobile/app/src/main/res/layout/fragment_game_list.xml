@@ -30,20 +30,7 @@
             android:layout_height="1dp"
             android:layout_weight="1" >
         </Space>
-        <Button
-            android:id="@+id/solo_filter"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/button_round"
-            android:drawableTop="@drawable/icon_solo"
-            android:paddingTop="-30dip"
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"

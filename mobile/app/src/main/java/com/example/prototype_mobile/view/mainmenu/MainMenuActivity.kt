@@ -7,8 +7,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModelFactory
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 

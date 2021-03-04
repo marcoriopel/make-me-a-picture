@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
 

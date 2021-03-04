@@ -17,7 +17,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.view.connection.login.afterTextChanged
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
 
@@ -153,9 +153,7 @@ class GameParameterFragment : Fragment() {
                 sharedViewModel.sendRequest()
             }
         }
-
-
-
+        
     }
 
 
@@ -199,6 +197,8 @@ class GameParameterFragment : Fragment() {
 
     fun updateFragmentView(type: SelectedButton) {
 
+        sharedViewModel.updateData(GameDifficulty.NONE, "")
+        binding.StartGame.isActivated =false
         when(type)
         {
             SelectedButton.SEARCH -> {

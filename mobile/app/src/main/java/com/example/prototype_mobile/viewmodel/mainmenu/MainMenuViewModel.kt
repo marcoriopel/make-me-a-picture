@@ -1,12 +1,11 @@
-package com.example.prototype_mobile.viewmodel.mainmenu.GameList
+package com.example.prototype_mobile.viewmodel.mainmenu
 
 import androidx.lifecycle.*
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
-import com.example.prototype_mobile.model.connection.sign_up.model.GameType
-import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
@@ -88,9 +87,15 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository, priv
             }
         }
 
+
     return liveDataMerger
     }
 
+    fun updateData(difficulty: GameDifficulty, str: String) {
+        liveDataMerger.value = Difficulty(difficulty)
+        liveDataMerger.value = GameName(str)
+
+    }
     fun sendRequest() {
 
     }
