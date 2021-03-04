@@ -19,6 +19,7 @@
             android:id="@+id/lobby_game_logo"
             android:layout_width="60dp"
             android:layout_height="70dp"
+            android:layout_weight="1"
             android:src="@drawable/icon_classic" />
 
         <TextView
@@ -57,7 +58,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
                 android:background="@drawable/button_rounded"
                 android:backgroundTint="@color/dark_grey"
                 android:layout_marginBottom="20dp">
@@ -86,7 +87,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
                 android:background="@drawable/button_rounded"
                 android:backgroundTint="@color/dark_grey">
                 <ImageView
@@ -129,7 +130,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
                 android:background="@drawable/button_rounded"
                 android:backgroundTint="@color/dark_grey"
                 android:layout_marginBottom="20dp">
@@ -158,7 +159,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="left|center_vertical"
                 android:background="@drawable/button_rounded"
                 android:backgroundTint="@color/dark_grey">
                 <ImageView
@@ -178,13 +179,36 @@
 
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lobby_1player_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="@drawable/button_rounded"
+        android:backgroundTint="@color/dark_grey"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/lobby_player_solo_avatar"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/avatar0" />
+        <TextView
+            android:id="@+id/lobby_player_solo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/available"
+            android:textColor="@color/white"/>
+    </LinearLayout>
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_rounded"
-        app:backgroundTint="@color/poly_green"
+        app:backgroundTint="@color/blue_to_lightblue"
         android:text="@string/start_game" />
     <Space
         android:layout_width="0dp"

@@ -79,8 +79,12 @@ class LobbyFragment : Fragment() {
     fun updatePlayers(lobbyPlayers: LobbyPlayers) {
         when(game_type) {
             GameType.CLASSIC -> updatePlayersClassic(lobbyPlayers)
-            GameType.SOLO -> updatePlayers(lobbyPlayers)
+            GameType.SOLO -> updatePlayerSolo(lobbyPlayers)
             GameType.COOP -> updatePlayersCoop(lobbyPlayers)
+        }
+
+        if (lobbyPlayers.players.size == 4) {
+            binding.start.isActivated = true
         }
     }
 
@@ -88,15 +92,35 @@ class LobbyFragment : Fragment() {
         var team1Count = 0
         var team2Count = 2 // Starts at player 3
         for(player in lobbyPlayers.players) {
-            if(player.team == 1) {
+            if(player.team == 0) {
                 avatarList[team1Count].setImageResource(Drawable.avatars[player.avatar])
                 usernameList[team1Count].text = player.username
                 team1Count++
             }
-            if(player.team == 2) {
-                
+            if(player.team == 1) {
+                avatarList[team2Count].setImageResource(Drawable.avatars[player.avatar])
+                usernameList[team2Count].text = player.username
+                team2Count++
             }
         }
+
+        while (team1Count < 2) {
+            usernameList[team1Count].text = getString(R.string.available)
+            team1Count++
+        }
+
+        if(team2Count < 4) {
+            usernameList[team2Count].text = getString(R.string.available)
+            team2Count++
+        }
+    }
+
+    fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
+        binding.start.isActivated = true
+        binding.lobby4playerLayout.visibility = View.GONE
+        binding.lobby1playerLayout.visibility = View.VISIBLE
+        binding.lobbyPlayerSoloAvatar.setImageResource(Drawable.avatars[lobbyPlayers.players[0].avatar])
+        binding.lobbyPlayerSoloName.text = lobbyPlayers.players[0].username
     }
 
     fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){
@@ -107,8 +131,8 @@ class LobbyFragment : Fragment() {
             i++
         }
 
-        while (i <3) {
-            usernameList[i].text = R.string.available.toString()
+        while (i <4) {
+            usernameList[i].text = getString(R.string.available)
             i++
         }
 
