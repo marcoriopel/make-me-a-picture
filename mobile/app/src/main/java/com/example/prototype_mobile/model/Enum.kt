@@ -15,3 +15,7 @@ enum class GameDifficulty(val difficulty: Int){
 enum class GameType(val type: Int){
     CLASSIC(0), SOLO(1), COOP(2)
 }
+
+enum class GameFilter(val filter: Int){
+    CLASSIC(0), COOP(1), EASY(2), MEDIUM(3), HARD(4)
+}
