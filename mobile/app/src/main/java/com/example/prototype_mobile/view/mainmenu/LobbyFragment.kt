@@ -131,7 +131,7 @@ class LobbyFragment : Fragment() {
             i++
         }
 
-        while (i <4) {
+        while (i < 4) {
             usernameList[i].text = getString(R.string.available)
             i++
         }

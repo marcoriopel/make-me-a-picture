@@ -41,7 +41,7 @@ class LobbyRepository() {
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
     }
-    
+
     init {
         socket = SocketOwner.getInstance()!!.socket
         socket.on("dispatchTeams", onTeamsUpdate)
