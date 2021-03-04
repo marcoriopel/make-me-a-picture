@@ -105,7 +105,7 @@ class GameParameterFragment : Fragment() {
             sharedViewModel.setGameName(binding.gameName.text.toString())
         }
         binding.easyFilter.setOnClickListener(
-                sharedViewModel.set
+                sharedViewModel
         )
 //        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
 //            val type = it
