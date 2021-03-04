@@ -1,8 +1,8 @@
 package com.example.prototype_mobile.viewmodel.mainmenu.GameList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
@@ -25,8 +25,14 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
     private val _icognitoPassword= MutableLiveData<String>()
     val icognitoPassword: LiveData<String> = _icognitoPassword
 
-    private val _gameDifficulty = MutableLiveData<GameType>()
-    val gameDifficulty: LiveData<GameType> = _gameDifficulty
+    private val _gameDifficulty = MutableLiveData<GameDifficulty>()
+    val gameDifficulty: LiveData<GameDifficulty> = _gameDifficulty
+
+    var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
+
+    init {
+        liveDataMerger = fetchData()
+    }
 
     fun setCreationGameButtonType(selection: SelectedButton){
         _creationGameButtonType.value = selection
@@ -46,6 +52,28 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
 
     fun createGame() {
         mainMenuRepository.createGame()
+    }
+    fun setGameDifficulty(difficulty: GameDifficulty) {
+        _gameDifficulty.value = difficulty
+    }
+
+    //adaptation from https://code.luasoftware.com/tutorials/android/use-mediatorlivedata-to-query-and-merge-different-data-type/
+    fun fetchData(): MediatorLiveData<GameCreationMergeData> {
+
+        val liveDataMerger = MediatorLiveData<GameCreationMergeData>()
+        liveDataMerger.addSource(_gameDifficulty)
+        {
+            if(it !=null) {
+            liveDataMerger.value = Difficulty(it)
+            }
+        }
+        liveDataMerger.addSource(_gameName){
+            if(it != null){
+                liveDataMerger.value= GameName(it)
+            }
+        }
+
+    return liveDataMerger
     }
 
 

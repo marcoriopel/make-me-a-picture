@@ -20,3 +20,8 @@ data class LoginResult(val success: String? = null, val error: Int? = null)
 //Data class for the games
 data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
+
+//Merge data change in form
+sealed class GameCreationMergeData
+data class GameName(val name:String): GameCreationMergeData()
+data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()

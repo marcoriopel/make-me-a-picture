@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.view.connection.login.afterTextChanged
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
@@ -74,16 +75,19 @@ class GameParameterFragment : Fragment() {
         binding.easyFilter.setOnClickListener {
             binding.easyFilter.isActivated = !binding.easyFilter.isActivated
             disableOtherButtons(binding.easyFilter, filterDifficulty)
+            sharedViewModel.setGameDifficulty(GameDifficulty.EASY)
         }
         binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
         binding.mediumFilter.setOnClickListener {
             binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
             disableOtherButtons(binding.mediumFilter, filterDifficulty)
+            sharedViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
         }
         binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
         binding.hardFilter.setOnClickListener {
             binding.hardFilter.isActivated = !binding.hardFilter.isActivated
             disableOtherButtons(binding.hardFilter, filterDifficulty)
+            sharedViewModel.setGameDifficulty(GameDifficulty.HARD)
         }
         //Incognito button
         binding.icognito.setOnClickListener{
@@ -100,13 +104,18 @@ class GameParameterFragment : Fragment() {
         }
         updateFragmentView(sharedViewModel.creationGameButtonType.value!!)
 
-
+        // Set parameter to game
         binding.gameName.afterTextChanged {
             sharedViewModel.setGameName(binding.gameName.text.toString())
         }
-        binding.easyFilter.setOnClickListener(
-                sharedViewModel
-        )
+
+        sharedViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer {
+            println("hello something has changed")
+        })
+
+
+
+
 //        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
 //            val type = it
 //            updateFragmentView(type)
