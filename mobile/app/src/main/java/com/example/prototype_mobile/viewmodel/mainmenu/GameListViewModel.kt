@@ -55,4 +55,8 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     fun listenLobby(lobbyID : String) {
         gameListRepository.listenLobby(lobbyID)
     }
+
+    fun joinLobby(game: Game) {
+        gameListRepository.joinLobby(game)
+    }
 }

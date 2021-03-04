@@ -1,11 +1,18 @@
 package com.example.prototype_mobile.view.mainmenu
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
+
 
 class MainMenuActivity : AppCompatActivity() {
+    private lateinit var mainMenuViewModel: MainMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,5 +28,17 @@ class MainMenuActivity : AppCompatActivity() {
                     .replace(R.id.container3, ChatFragment.newInstance())
                     .commitNow()
         }
+
+        mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory()).get(MainMenuViewModel::class.java)
+
+        mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
+            val gameJoined = it ?: return@Observer
+
+            supportFragmentManager.beginTransaction().replace(R.id.container2, LobbyFragment.newInstance(gameJoined.gameName, gameJoined.gameType.type))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null)
+                    .commit()
+        })
+
     }
 }

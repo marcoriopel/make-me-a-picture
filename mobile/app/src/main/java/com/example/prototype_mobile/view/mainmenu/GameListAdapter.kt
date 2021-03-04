@@ -17,7 +17,7 @@ import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val viewModel: GameListViewModel): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     val difficultyDrawable = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
     val gameTypeDrawable = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
-    val avatarsDrawable = arrayOf(R.drawable.avatar0, R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4, R.drawable.avatar5)
+    val avatarsDrawable = arrayOf(R.drawable.avatar0, R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4, R.drawable.avatar5, R.drawable.avatar5)
     var lastGameChecked: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
@@ -34,19 +34,22 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
         holder.gameName.setText(gameData.gameName)
         holder.gameDifficulty.setImageResource(difficultyDrawable[gameData.difficulty.difficulty])
         holder.gameType.setImageResource(gameTypeDrawable[gameData.gameType.type])
-
+        val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
         holder.view.setOnClickListener{
             closeLastGame()
             if (it != lastGameChecked) {
                 val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
                 val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
-                val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
                 section1.visibility = View.VISIBLE
                 section2.visibility = View.VISIBLE
                 joinButton.visibility = View.VISIBLE
                 viewModel.listenLobby(gameData.gameID)
                 lastGameChecked = it
             }
+        }
+
+        joinButton.setOnClickListener {
+            viewModel.joinLobby(gameData)
         }
     }
 
@@ -78,6 +81,10 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
             for(player in lobbyPlayers.players) {
                 usernameList[i].text = player.username
                 avatarList[i].setImageResource(avatarsDrawable[player.avatar])
+                i++
+            }
+            while (i <3) {
+                usernameList[i].text = R.string.available.toString()
                 i++
             }
         }
