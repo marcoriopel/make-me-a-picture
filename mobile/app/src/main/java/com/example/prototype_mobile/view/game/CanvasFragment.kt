@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 
 class CanvasFragment : Fragment() {
 
