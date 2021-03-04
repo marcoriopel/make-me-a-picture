@@ -24,6 +24,8 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
     private val _icognitoPassword= MutableLiveData<String>()
     val icognitoPassword: LiveData<String> = _icognitoPassword
 
+    private val _gameDifficulty = Mutable
+
     fun setCreationGameButtonType(selection: SelectedButton){
         _creationGameButtonType.value = selection
     }

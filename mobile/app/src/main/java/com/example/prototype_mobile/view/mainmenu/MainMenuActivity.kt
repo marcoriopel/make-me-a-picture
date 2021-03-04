@@ -24,7 +24,6 @@ class MainMenuActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, GameCreationFragment.newInstance())
                     .commit()
-            supportFragmentManager.beginTransaction().replace(R.id.center, GameParameterFragment.newInstance()).commit()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container2, GameListFragment.newInstance())
                 .commit()
@@ -40,19 +39,11 @@ class MainMenuActivity : AppCompatActivity() {
         mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, Observer {
             println("Fragment should be deleted")
             if(it == SelectedButton.NONE) {
-                val transaction1 = supportFragmentManager.beginTransaction()
-                transaction1.hide(supportFragmentManager.fragments[1])
-                transaction1.commit()
-                supportFragmentManager.beginTransaction().show(supportFragmentManager.fragments[2]).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.container2,GameListFragment.newInstance()).commit()
+
             }
             else {
-                val transaction2 = supportFragmentManager.beginTransaction()
-                transaction2.hide(supportFragmentManager.fragments[2])
-                transaction2.commit()
-                val transaction1 = supportFragmentManager.beginTransaction()
-                transaction1.show(supportFragmentManager.fragments[1])
-                transaction1.commit()
-
+                supportFragmentManager.beginTransaction().replace(R.id.container2,GameParameterFragment.newInstance()).commit()
             }
         })
     }

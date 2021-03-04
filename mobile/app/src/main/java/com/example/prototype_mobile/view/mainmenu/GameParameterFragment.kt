@@ -98,7 +98,15 @@ class GameParameterFragment : Fragment() {
         binding.passwordPrivateGame.afterTextChanged {
             updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
         }
+        updateFragmentView(sharedViewModel.creationGameButtonType.value!!)
 
+
+        binding.gameName.afterTextChanged {
+            sharedViewModel.setGameName(binding.gameName.text.toString())
+        }
+        binding.easyFilter.setOnClickListener(
+                sharedViewModel.set
+        )
 //        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
 //            val type = it
 //            updateFragmentView(type)
