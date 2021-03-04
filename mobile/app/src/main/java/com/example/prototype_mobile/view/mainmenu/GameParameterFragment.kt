@@ -99,19 +99,10 @@ class GameParameterFragment : Fragment() {
             updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
         }
 
-        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
-            val type = it
-
-            when(type) {
-                SelectedButton.SEARCH -> println("Pop up pour entrer un code unique de game")
-                SelectedButton.SPRINT -> updateFragmentView(SelectedButton.SPRINT)
-                SelectedButton.COOP -> updateFragmentView(SelectedButton.COOP)
-                SelectedButton.CLASSIC -> updateFragmentView(SelectedButton.CLASSIC)
-                SelectedButton.NONE -> updateFragmentView(SelectedButton.NONE )
-
-            }
-
-        })
+//        sharedViewModel.creationGameButtonType.observe(viewLifecycleOwner, Observer {
+//            val type = it
+//            updateFragmentView(type)
+//        })
 
     }
 
@@ -154,8 +145,29 @@ class GameParameterFragment : Fragment() {
         sharedViewModel.setIcognitoPassword(password)
     }
 
-    fun updateFragmentView(selectedButton: SelectedButton) {
-        
+    fun updateFragmentView(type: SelectedButton) {
+
+        when(type)
+        {
+            SelectedButton.SEARCH -> {
+                //close popUp
+            }
+            SelectedButton.CLASSIC -> {
+                binding.GameCreation.text = "Création partie classique"
+                binding.gameLogo.setImageResource(R.drawable.icon_classic)
+            }
+            SelectedButton.SPRINT -> {
+                binding.GameCreation.text = "Création partie SPRINT"
+                binding.gameLogo.setImageResource(R.drawable.icon_solo)
+
+               // binding.GameCreation.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable ,null)
+            }
+            SelectedButton.COOP -> {
+                binding.GameCreation.text = "Création partie COOP"
+                binding.gameLogo.setImageResource(R.drawable.icon_solo)
+            }
+
+        }
     }
 
 }

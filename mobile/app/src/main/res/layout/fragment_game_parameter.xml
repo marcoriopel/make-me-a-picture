@@ -90,27 +90,6 @@
         app:layout_constraintStart_toEndOf="@+id/easy_filter"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/GameCreation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="36dp"
-        android:text="Création de partie"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/GameParameter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="80dp"
-        android:text="Type De Partie"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/gameName"
         android:layout_width="wrap_content"
@@ -118,14 +97,14 @@
         android:layout_marginStart="101dp"
         android:layout_marginTop="156dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Nom de la partie"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/password_private_game"
@@ -134,11 +113,33 @@
         android:layout_marginStart="101dp"
         android:layout_marginTop="436dp"
         android:ems="10"
-        android:visibility="invisible"
-        android:hint = "Code accès"
+        android:hint="Code accès"
         android:inputType="textPersonName"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/gameLogo"
+        android:layout_width="74dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@+id/GameCreation"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/GameCreation"
+        android:layout_width="249dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Création Partie"
+        android:textSize="24sp"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

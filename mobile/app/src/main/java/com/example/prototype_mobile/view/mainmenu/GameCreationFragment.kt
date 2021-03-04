@@ -68,7 +68,7 @@ class GameCreationFragment : Fragment() {
         _createGameButtons.addElement(binding.coopSprint)
         _createGameButtons.addElement(binding.gameSearch)
 
-        binding.gameSearch.isActivated = true
+
 
 
         binding.gameSearch.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.red_to_lightred)
@@ -124,6 +124,8 @@ class GameCreationFragment : Fragment() {
         _selectedButton = if(button.isActivated) selection else SelectedButton.NONE
         sharedViewModel.setCreationGameButtonType(_selectedButton)
     }
+
+
 
    //
 
