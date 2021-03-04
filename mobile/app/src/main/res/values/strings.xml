@@ -31,6 +31,7 @@
     <string name="search_game">"Rechercher une partie"</string>
     <string name="join_game">"Rejoindre"</string>
     <string name="available">"Disponible"</string>
+    <string name="lobby_full">"Le lobby est déjà plein"</string>
 
     <!-- Strings related to the lobby -->
     <string name="join_team">Rejoindre l\'équipe</string>

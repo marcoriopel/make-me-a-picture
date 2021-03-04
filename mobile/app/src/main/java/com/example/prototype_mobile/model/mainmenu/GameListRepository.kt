@@ -72,7 +72,7 @@ class GameListRepository {
         lobbyRepository.listenLobby(lobbyID)
     }
 
-    fun joinLobby(game: Game) {
-        lobbyRepository.joinLobby(game)
+    suspend fun joinLobby(game: Game): Result<Game> {
+        return lobbyRepository.joinLobby(game)
     }
 }
