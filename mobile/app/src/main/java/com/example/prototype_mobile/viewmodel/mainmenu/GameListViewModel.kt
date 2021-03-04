@@ -25,6 +25,9 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     private val _lobbyPlayers = MutableLiveData<LobbyPlayers>()
     val lobbyPlayers: LiveData<LobbyPlayers> = _lobbyPlayers
 
+    private val _joinLobbyResult= MutableLiveData<GameListResult>()
+    val joinLobbyResult: LiveData<GameListResult> = _joinLobbyResult
+
     init {
         val lobbyRepository = LobbyRepository.getInstance()!!
         lobbyRepository.lobbyPlayers.observeForever(Observer {
@@ -63,6 +66,20 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     }
 
     fun joinLobby(game: Game) {
-        gameListRepository.joinLobby(game)
+        viewModelScope.launch() {
+            val result: Result<Game> = try {
+                gameListRepository.joinLobby(game)
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+
+            if (result is Result.Error) {
+                when (result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _joinLobbyResult.value = GameListResult(error = R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _joinLobbyResult.value = GameListResult(error = R.string.bad_request)
+                    ResponseCode.FULL.code -> _joinLobbyResult.value = GameListResult(error = R.string.lobby_full)
+                }
+            }
+        }
     }
 }

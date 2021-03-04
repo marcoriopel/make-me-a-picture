@@ -72,6 +72,13 @@ class GameListFragment : Fragment() {
             }
         })
 
+        gameListViewModel.joinLobbyResult.observe(viewLifecycleOwner, Observer {
+            val joinLobbyResult = it ?: return@Observer
+            if (joinLobbyResult.error != null) {
+                showLoadingFailed(view.getContext(), joinLobbyResult.error)
+            }
+        })
+
         gameListViewModel.lobbyPlayers.observe(viewLifecycleOwner, Observer {
             val lobbyPlayers = it ?: return@Observer
             gameListAdapter.updatePlayers(lobbyPlayers)
