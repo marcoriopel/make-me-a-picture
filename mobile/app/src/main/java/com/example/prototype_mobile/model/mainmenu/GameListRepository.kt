@@ -71,4 +71,8 @@ class GameListRepository {
     fun listenLobby(lobbyID: String) {
         lobbyRepository.listenLobby(lobbyID)
     }
+
+    fun joinLobby(game: Game) {
+        lobbyRepository.joinLobby(game)
+    }
 }

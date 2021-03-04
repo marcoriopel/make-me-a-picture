@@ -61,4 +61,8 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
         gameListRepository.setFilter(filter, showThisTypeOfGame)
         getGameList()
     }
+
+    fun joinLobby(game: Game) {
+        gameListRepository.joinLobby(game)
+    }
 }
