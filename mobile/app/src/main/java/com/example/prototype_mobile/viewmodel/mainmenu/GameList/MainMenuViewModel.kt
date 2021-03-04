@@ -30,16 +30,16 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
 
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
-    init {
-        liveDataMerger = fetchData()
-    }
+
 
     fun setCreationGameButtonType(selection: SelectedButton){
         _creationGameButtonType.value = selection
     }
 
     fun setGameName(name: String){
+        println("setGameName: " + name)
         _gameName.value = name
+        println("gameName: "+ _gameName.value)
     }
 
     fun setIcognitoPassword(password: String){
@@ -68,6 +68,7 @@ class MainMenuViewModel(val mainMenuRepository: MainMenuRepository) : ViewModel(
             }
         }
         liveDataMerger.addSource(_gameName){
+            println("livedataMerger: " + it)
             if(it != null){
                 liveDataMerger.value= GameName(it)
             }

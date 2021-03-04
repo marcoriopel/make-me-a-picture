@@ -1,6 +1,5 @@
 package com.example.prototype_mobile.view.mainmenu
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,8 +10,10 @@ import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.example.prototype_mobile.Difficulty
+import com.example.prototype_mobile.GameCreationMergeData
+import com.example.prototype_mobile.GameName
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.view.connection.login.afterTextChanged
@@ -76,18 +77,22 @@ class GameParameterFragment : Fragment() {
             binding.easyFilter.isActivated = !binding.easyFilter.isActivated
             disableOtherButtons(binding.easyFilter, filterDifficulty)
             sharedViewModel.setGameDifficulty(GameDifficulty.EASY)
+            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
         binding.mediumFilter.setOnClickListener {
             binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
             disableOtherButtons(binding.mediumFilter, filterDifficulty)
             sharedViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
+            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
         binding.hardFilter.setOnClickListener {
             binding.hardFilter.isActivated = !binding.hardFilter.isActivated
             disableOtherButtons(binding.hardFilter, filterDifficulty)
             sharedViewModel.setGameDifficulty(GameDifficulty.HARD)
+
+            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         //Incognito button
         binding.icognito.setOnClickListener{
@@ -101,17 +106,38 @@ class GameParameterFragment : Fragment() {
         }
         binding.passwordPrivateGame.afterTextChanged {
             updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
+            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
         }
         updateFragmentView(sharedViewModel.creationGameButtonType.value!!)
 
         // Set parameter to game
         binding.gameName.afterTextChanged {
+            println("after text changed: " + binding.gameName.text.toString())
             sharedViewModel.setGameName(binding.gameName.text.toString())
+            sharedViewModel.fetchData()
         }
 
+
         sharedViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer {
-            println("hello something has changed")
+
+            var gameName =""
+            var difficulty = GameDifficulty.NONE
+            println("On a reussi Entrer dans l'observateur")
+
+            override fun onChanged(it:GameCreationMergeData?) {
+                when (it){
+                    is GameName -> { gameName = it.name}
+                    is Difficulty -> {difficulty = it.difficulty}
+                }
+            }
+            println("GameName: "+ gameName+ " Difficulty: " + difficulty)
+
+            if(gameName!="" && difficulty!=GameDifficulty.NONE){
+                println("On a reussi!")
+            }
+
         })
+    }
 
 
 
