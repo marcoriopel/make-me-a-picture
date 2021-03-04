@@ -35,6 +35,8 @@ class MyCanvasView(context: Context) : View(context) {
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
+
+        // BITMAP VERSION
         if (::extraBitmap.isInitialized)
             extraBitmap.recycle()
 
@@ -46,24 +48,15 @@ class MyCanvasView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawBitmap(extraBitmap, 0f, 0f, null)
-        // Draw the drawing so far
-        canvas.drawPath(drawing, paint)
-        // Draw any current squiggle
-        canvas.drawPath(curPath, paint)
 
-    }
+        // BITMAP VERSION
+//          canvas.drawBitmap(extraBitmap, 0f, 0f, null)
 
-    private val paint = Paint().apply {
-        color = drawColor
-        // Smooths out edges of what is drawn without affecting shape.
-        isAntiAlias = true
-        // Dithering affects how colors with higher-precision than the device are down-sampled.
-        isDither = true
-        style = Paint.Style.STROKE // default: FILL
-        strokeJoin = Paint.Join.ROUND // default: MITER
-        strokeCap = Paint.Cap.ROUND // default: BUTT
-        strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
+        // PATH VERSION
+            // Draw the drawing so far
+            canvas.drawPath(drawing, paint)
+            // Draw any current squiggle
+            canvas.drawPath(curPath, paint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -79,8 +72,17 @@ class MyCanvasView(context: Context) : View(context) {
     }
 
     private fun touchStart() {
-        path.reset()
-        path.moveTo(motionTouchEventX, motionTouchEventY)
+        // BITMAP VERSION
+//          path.reset()
+//          path.moveTo(motionTouchEventX, motionTouchEventY)
+        // PATH VERSION
+            curPath.reset()
+            curPath.moveTo(motionTouchEventX, motionTouchEventY)
+            // Add dot for touch feedback
+            curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
+
+        // Call the onDraw() method to update the view
+        invalidate()
         currentX = motionTouchEventX
         currentY = motionTouchEventY
     }
@@ -91,28 +93,49 @@ class MyCanvasView(context: Context) : View(context) {
         if (dx >= touchTolerance || dy >= touchTolerance) {
             // QuadTo() adds a quadratic bezier from the last point,
             // approaching control point (x1,y1), and ending at (x2,y2).
-            path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
-            currentX = motionTouchEventX
-            currentY = motionTouchEventY
-            // Draw the path in the extra bitmap to cache it.
-            extraCanvas.drawPath(path, paint)
+
+            // BITMAP VERSION
+//              path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+//              currentX = motionTouchEventX
+//              currentY = motionTouchEventY
+                // Draw the path in the extra bitmap to cache it.
+//              extraCanvas.drawPath(path, paint)
+
+            // PATH VERSION
+                curPath.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+                currentX = motionTouchEventX
+                currentY = motionTouchEventY
+
+            // TODO: Add current point to data struct to send to the other player
         }
+        // Call the onDraw() method to update the view
         invalidate()
 
     }
 
     private fun touchUp() {
         // Reset the path so it doesn't get drawn again.
-        // Add the current path to the drawing so far
-//        drawing.addPath(curPath)
-        // Rewind the current path for the next touch
-//        curPath.reset()
+        // BITMAP VERSION
+//          path.reset()
 
-        path.reset()
-
-
+        // PATH VERSION
+            // Add the current path to the drawing so far
+            drawing.addPath(curPath)
+            // Rewind the current path for the next touch
+            curPath.reset()
     }
 
+    private val paint = Paint().apply {
+        color = drawColor
+        // Smooths out edges of what is drawn without affecting shape.
+        isAntiAlias = true
+        // Dithering affects how colors with higher-precision than the device are down-sampled.
+        isDither = true
+        style = Paint.Style.STROKE // default: FILL
+        strokeJoin = Paint.Join.ROUND // default: MITER
+        strokeCap = Paint.Cap.ROUND // default: BUTT
+        strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
+    }
 
 
 }
