@@ -1,7 +1,7 @@
 export enum GameType {
     Classic,
-    SprintCoop,
-    SprintSolo
+    SprintSolo,
+    SprintCoop
 }
 
 export enum Difficulty {

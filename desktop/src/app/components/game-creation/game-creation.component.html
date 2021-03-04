@@ -1,5 +1,5 @@
 <div class="container">
-    <mat-card>
+    <mat-card [@inOutAnimation]>
       <mat-card-content>
         <form [formGroup]="gameForm" novalidate>
           <div class="formHeader">
@@ -9,7 +9,7 @@
           <mat-form-field class="full-width-input">
             <input matInput placeholder="Nom de la partie" formControlName="name" required>
             <mat-error>
-              {{errors.name}} 
+              Le nom de la partie doit être entre 1 et 16 caractères.
             </mat-error>
           </mat-form-field>
 

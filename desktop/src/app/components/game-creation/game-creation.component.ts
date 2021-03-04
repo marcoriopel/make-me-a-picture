@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -8,7 +9,30 @@ import { errorMessages } from '../register/custom-validator';
 @Component({
   selector: 'app-game-creation',
   templateUrl: './game-creation.component.html',
-  styleUrls: ['./game-creation.component.scss']
+  styleUrls: ['./game-creation.component.scss'],
+  animations: [
+    trigger(
+      'inOutAnimation', 
+      [
+        transition(
+          ':enter', 
+          [
+            style({opacity: 0 }),
+            animate('1.5s ease-out', 
+                    style({opacity: 1 }))
+          ]
+        ),
+        transition(
+          ':leave', 
+          [
+            style({opacity: 1 }),
+            animate('0.5s ease-in', 
+                    style({opacity: 0 }))
+          ]
+        )
+      ]
+    )
+  ]
 })
 export class GameCreationComponent implements OnInit {
 
@@ -16,6 +40,7 @@ export class GameCreationComponent implements OnInit {
 
   gameForm: FormGroup;
   errors = errorMessages;
+  private onlySpaceRegExp = /^\s+$/;
 
   constructor(private fb: FormBuilder, private lobbyService: LobbyService, private router: Router) { }
 
@@ -24,7 +49,7 @@ export class GameCreationComponent implements OnInit {
       name: [ '', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(128)
+        Validators.maxLength(16)
       ]],
       difficulty: [ '', [
         Validators.required,
@@ -33,6 +58,12 @@ export class GameCreationComponent implements OnInit {
   }
 
   create(): void {
+
+    if(this.gameForm.value.name.match(this.onlySpaceRegExp)) {
+      this.gameForm.get('name')?.setErrors({'notValid': true});
+      return
+    }
+
     const game: NewGame = {
       gameType: this.type,
       gameName: this.gameForm.value.name,

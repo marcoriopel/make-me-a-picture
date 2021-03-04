@@ -71,7 +71,11 @@ export class SearchGameService {
   private filter(key: string, value: string): void {
     value = value.toLowerCase();
     this.displayList = [];
-    this.gameList.forEach(game => game[key].toLowerCase() == value ? this.displayList.push(game): null);
+    this.gameList.forEach(game => {
+      const name = game[key].toLowerCase();
+      value = value.toLowerCase()
+      name.includes(value) ? this.displayList.push(game): null;
+    });
   }
 
 }
