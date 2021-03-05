@@ -36,9 +36,7 @@ class GameListRepository {
                     GameType.values()[gameJson.getInt("gameType")])
                 gameList.add(game)
             }
-            println(gameList)
             val filteredGameList = gameList.filter{ filterGame(it) } as MutableList<Game>
-            println(filteredGameList)
             return Result.Success(filteredGameList)
         } else {
             return Result.Error(response.code())
