@@ -37,5 +37,9 @@ export class DrawingsService {
         }
     }
 
+    drawingWordSuggestion() {
+        return ["Bateau", "Vélo", "Chameau"];
+    }
+
 }
 
