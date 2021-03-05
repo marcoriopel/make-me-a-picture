@@ -14,6 +14,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -36,7 +37,7 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     }
 
     fun getGameList() {
-        viewModelScope.launch() {
+        viewModelScope.launch(Dispatchers.IO) {
             val result: Result<MutableList<Game>> = try {
                 gameListRepository.getGameList()
             } catch (e: Exception) {
@@ -44,13 +45,13 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
             }
 
             if (result is Result.Success) {
-                    _gameListResult.value = GameListResult(result.data)
+                    _gameListResult.postValue(GameListResult(result.data))
             }
 
             if (result is Result.Error){
                 when(result.exception) {
-                    ResponseCode.NOT_AUTHORIZED.code -> _gameListResult.value = GameListResult(error = R.string.not_authorized)
-                    ResponseCode.BAD_REQUEST.code -> _gameListResult.value = GameListResult(error = R.string.bad_request)
+                    ResponseCode.NOT_AUTHORIZED.code -> _gameListResult.postValue(GameListResult(error = R.string.not_authorized))
+                    ResponseCode.BAD_REQUEST.code -> _gameListResult.postValue(GameListResult(error = R.string.bad_request))
                 }
             }
         }

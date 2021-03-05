@@ -5,14 +5,14 @@ export interface Lobby {
     difficulty: number;
 }
 
-export function validateLobby(element: any): boolean{
-    if ( 
-        (element.id && typeof element.id != 'string') || 
-        (element.gameName && typeof element.gameName != 'string') || 
-        (element.gameType && typeof element.gameType != 'number') || 
-        (element.difficulty && typeof element.difficulty != 'number')
-    ){
+export function validateLobby(element: any): boolean {
+    if (!element.id)
         return false;
-    }
+    if (!element.gameName)
+        return false;
+    if (element.gameType && isNaN(element.gameType))
+        return false;
+    if (element.difficulty && isNaN(element.difficulty))
+        return false;
     return true
 }
