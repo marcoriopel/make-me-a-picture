@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.model.mainmenu
 
 
+import com.example.prototype_mobile.CreateGame
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
@@ -15,8 +16,8 @@ class MainMenuRepository {
 
 
 
-    fun createGame(){
-        print("Game created")
+    suspend fun createGame(game: CreateGame){
+
     }
 
 }

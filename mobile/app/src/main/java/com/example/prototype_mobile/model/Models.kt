@@ -25,6 +25,10 @@ data class GameListResult(val success: MutableList<Game>? = null, val error: Int
 sealed class GameCreationMergeData
 data class GameName(val name:String): GameCreationMergeData()
 data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
+
+//Game creation
+data class CreateGame(val gameType: GameType?, val gameName: String?, val gameDifficulty: GameDifficulty?)
+
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)

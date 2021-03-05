@@ -63,6 +63,7 @@ class GameParameterFragment : Fragment() {
 
 
 
+
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
@@ -155,6 +156,7 @@ class GameParameterFragment : Fragment() {
         }
 
     }
+
 
 
 
