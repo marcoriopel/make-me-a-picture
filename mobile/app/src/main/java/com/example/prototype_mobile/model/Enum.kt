@@ -9,7 +9,7 @@ enum class ResponseCode(val code: Int){
 }
 
 enum class GameDifficulty(val difficulty: Int){
-    EASY(0), MEDIUM(1), HARD(2)
+    EASY(0), MEDIUM(1), HARD(2), NONE(-1)
 }
 
 enum class GameType(val type: Int){

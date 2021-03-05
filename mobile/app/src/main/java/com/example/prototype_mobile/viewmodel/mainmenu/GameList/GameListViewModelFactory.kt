@@ -1,9 +1,8 @@
-package com.example.prototype_mobile.viewmodel.mainmenu
+package com.example.prototype_mobile.viewmodel.mainmenu.GameList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.model.mainmenu.GameListRepository
-import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModel
 
 class GameListViewModelFactory : ViewModelProvider.Factory {
 

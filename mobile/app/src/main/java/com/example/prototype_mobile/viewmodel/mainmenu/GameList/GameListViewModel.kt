@@ -1,4 +1,4 @@
-package com.example.prototype_mobile.viewmodel.mainmenu
+package com.example.prototype_mobile.viewmodel.mainmenu.GameList
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
