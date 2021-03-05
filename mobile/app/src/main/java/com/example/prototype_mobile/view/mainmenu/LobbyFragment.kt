@@ -119,8 +119,10 @@ class LobbyFragment : Fragment() {
         binding.start.isActivated = true
         binding.lobby4playerLayout.visibility = View.GONE
         binding.lobby1playerLayout.visibility = View.VISIBLE
-        binding.lobbyPlayerSoloAvatar.setImageResource(Drawable.avatars[lobbyPlayers.players[0].avatar])
-        binding.lobbyPlayerSoloName.text = lobbyPlayers.players[0].username
+        if(lobbyPlayers.players.size > 0) {
+            binding.lobbyPlayerSoloAvatar.setImageResource(Drawable.avatars[lobbyPlayers.players[0].avatar])
+            binding.lobbyPlayerSoloName.text = lobbyPlayers.players[0].username
+        }
     }
 
     fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){

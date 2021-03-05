@@ -3,9 +3,12 @@ package com.example.prototype_mobile.viewmodel.mainmenu
 import androidx.lifecycle.*
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
+import kotlinx.coroutines.launch
+import com.example.prototype_mobile.model.Result
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
@@ -14,6 +17,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     //Information that we need to observe in order to send an gameCreation request.
     private val _creationGameButtonType = MutableLiveData<SelectedButton>()
     val creationGameButtonType: LiveData<SelectedButton> = _creationGameButtonType
+
 
     private val _gameName = MutableLiveData<String>()
     val gameName: LiveData<String> = _gameName
@@ -67,9 +71,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         _icognitoModeActivated.value = mode
     }
 
-    fun createGame() {
-        mainMenuRepository.createGame()
-    }
+
     fun setGameDifficulty(difficulty: GameDifficulty) {
         _gameDifficulty.value = difficulty
     }
@@ -101,8 +103,37 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         liveDataMerger.value = GameName(str)
 
     }
-    fun sendRequest() {
+    fun createGame() {
+        viewModelScope.launch {
+            var gameData = CreateGame(null, null, null)
 
+            when (creationGameButtonType.value) {
+                SelectedButton.CLASSIC -> {
+                    gameData = CreateGame(GameType.CLASSIC, gameName.value, gameDifficulty.value)
+                }
+                SelectedButton.SPRINT -> {
+                    gameData = CreateGame(GameType.SOLO, gameName.value, gameDifficulty.value)
+                }
+                SelectedButton.COOP -> {
+                    gameData = CreateGame(GameType.COOP, gameName.value, gameDifficulty.value)
+                }
+                else -> println("Somethings wrong with game data")
+            }
+            val result: Result<Game> = mainMenuRepository.createGame(gameData)
+
+            if (result is Result.Success) {
+                lobbyRepository.listenLobby(result.data.gameID)
+                lobbyRepository.joinLobby(result.data)
+            }
+            if (result is Result.Error) {
+                println("Bad request")
+            }
+        }
+    }
+
+    fun clear() {
+        liveDataMerger.value = Difficulty(GameDifficulty.NONE)
+        liveDataMerger.value = GameName("")
     }
 
 
