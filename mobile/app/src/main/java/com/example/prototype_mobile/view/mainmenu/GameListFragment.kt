@@ -113,8 +113,6 @@ class GameListFragment : Fragment() {
     }
 
     private fun addItemToRecyclerView(game: Game) {
-        // Since this function is inside of the listener,
-        // You need to do it on UIThread!
         runOnUiThread {
             gameList.add(game)
             gameListAdapter.notifyItemInserted(gameList.size - 1)
@@ -159,17 +157,5 @@ class GameListFragment : Fragment() {
         binding.searchgame.addTextChangedListener {
             gameListViewModel.filterByGameName(it.toString())
         }
-
     }
-
-
-    fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
-
-        for (button in buttonGroup) {
-            if (button.id != currentButton.id){
-                button.isActivated = false
-            }
-        }
-    }
-
 }
