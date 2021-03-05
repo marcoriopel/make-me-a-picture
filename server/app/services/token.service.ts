@@ -32,7 +32,7 @@ export class TokenService {
      * @returns encrypted token
      */
     public generateAccesToken(username: string, avatar: number): any {
-        const user = {avatar: avatar, username: username}
+        const user = { avatar: avatar, username: username }
         return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
     }
 
@@ -44,18 +44,18 @@ export class TokenService {
      */
     public authenticateToken(req: Request, res: Response, next: NextFunction): any {
         const token = req.headers['authorization'];
-        if (!token) { return res.sendStatus(401); }
+        if (!token) { return res.status(401).send("No authorization header!"); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
-            if (err) { return res.sendStatus(403); }
+            if (err) { return res.status(403).send("Invalid Token"); }
             next(user);
         });
     }
 
     public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
-        if (!token) { return res.sendStatus(401); }
+        if (!token) { return res.status(401).send("No authorization header!"); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
-            if (err) { return res.sendStatus(403); }
+            if (err) { return res.status(403).send("Invalid Token"); }
         });
     }
 

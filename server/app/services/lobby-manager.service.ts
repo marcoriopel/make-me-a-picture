@@ -28,7 +28,7 @@ export class LobbyManagerService {
         const lobbyInfo: lobbyInterface.Lobby = req.body;
         lobbyInfo.id = uuid();
         if (!lobbyInterface.validateLobby(lobbyInfo)) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send("Provided lobby info is invalid");
         }
         lobbyInfo.gameType = Number(lobbyInfo.gameType);
         lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
@@ -43,7 +43,7 @@ export class LobbyManagerService {
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
                 break;
             default:
-                return res.sendStatus(StatusCodes.BAD_REQUEST);
+                return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
         }
         next(lobbyInfo.id)
     }
@@ -74,7 +74,7 @@ export class LobbyManagerService {
 
     addVirtualPlayer(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (req.body.teamNumber != 0 && req.body.teamNumber != 1) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send("Provided team number for virtual player is invalid");
         }
         if (this.lobbyExist(req.body.lobbyId)) {
             try {
@@ -93,7 +93,7 @@ export class LobbyManagerService {
 
     removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
         if (req.body.teamNumber != 0 && req.body.teamNumber != 1 || req.body.username == undefined) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send("Provided team number for virtual player is invalid");
         }
         if (this.lobbyExist(req.body.lobbyId)) {
             try {

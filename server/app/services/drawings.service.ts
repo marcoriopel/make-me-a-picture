@@ -33,7 +33,7 @@ export class DrawingsService {
         }
         catch (e) {
             console.log(e);
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
 

@@ -45,7 +45,7 @@ export class ChatManagerService {
             next(chatNames);
         }
         catch (e) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
     async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
@@ -60,7 +60,7 @@ export class ChatManagerService {
             next(chatsHistory);
         }
         catch (e) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
 
