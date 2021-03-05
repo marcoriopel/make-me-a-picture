@@ -151,7 +151,7 @@ class GameParameterFragment : Fragment() {
 
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
-                sharedViewModel.sendRequest()
+                sharedViewModel.createGame()
             }
         }
 

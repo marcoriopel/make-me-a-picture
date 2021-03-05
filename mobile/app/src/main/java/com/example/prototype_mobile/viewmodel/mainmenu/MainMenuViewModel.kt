@@ -8,6 +8,7 @@ import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import kotlinx.coroutines.launch
+import com.example.prototype_mobile.model.Result
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
@@ -104,16 +105,31 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
     fun createGame() {
         viewModelScope.launch {
-            var gameData:CreateGame =CreateGame(null, null,null)
+            var gameData = CreateGame(null, null, null)
 
-            when(creationGameButtonType.value){
-                SelectedButton.CLASSIC-> {gameData = CreateGame(GameType.CLASSIC,gameName.value, gameDifficulty.value)}
-                SelectedButton.SPRINT-> {gameData = CreateGame(GameType.SOLO,gameName.value, gameDifficulty.value)}
-                SelectedButton.COOP-> {gameData = CreateGame(GameType.COOP,gameName.value, gameDifficulty.value)}
+            when (creationGameButtonType.value) {
+                SelectedButton.CLASSIC -> {
+                    gameData = CreateGame(GameType.CLASSIC, gameName.value, gameDifficulty.value)
+                }
+                SelectedButton.SPRINT -> {
+                    gameData = CreateGame(GameType.SOLO, gameName.value, gameDifficulty.value)
+                }
+                SelectedButton.COOP -> {
+                    gameData = CreateGame(GameType.COOP, gameName.value, gameDifficulty.value)
+                }
+                else -> println("Somethings wrong with game data")
             }
-            mainMenuRepository.createGame(gameData)
+            val result: Result<Game> = mainMenuRepository.createGame(gameData)
+
+            if (result is Result.Success) {
+                lobbyRepository.joinLobby(result.data)
+            }
+            if (result is Result.Error) {
+                println("Bad request")
+            }
         }
     }
+
     fun clear() {
         liveDataMerger.value = Difficulty(GameDifficulty.NONE)
         liveDataMerger.value = GameName("")
