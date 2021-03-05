@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -13,6 +12,7 @@ import com.example.prototype_mobile.R
 import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12f // has to be float
+private const val GRID_WIDTH = 2f // has to be float
 
 // Inspired by: https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas#5
 class MyCanvasView(context: Context) : View(context) {
@@ -27,23 +27,41 @@ class MyCanvasView(context: Context) : View(context) {
     private var currentX = 0f
     private var currentY = 0f
     private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
-
     // Path representing the drawing so far
     private val drawing = Path()
     // Path representing what's currently being drawn
     private val curPath = Path()
 
+    // Grid
+    private var isGrid = true;
+    private lateinit var gridBitmap: Bitmap
+    private lateinit var gridCanvas: Canvas
+    private val gridColor = ResourcesCompat.getColor(resources, R.color.gridColor, null)
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
 
         // BITMAP VERSION
-        if (::extraBitmap.isInitialized)
-            extraBitmap.recycle()
+//        if (::extraBitmap.isInitialized)
+//            extraBitmap.recycle()
+//
+//        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+//        extraCanvas = Canvas(extraBitmap)
+//        extraCanvas.drawColor(backgroundColor)
 
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraCanvas = Canvas(extraBitmap)
-        extraCanvas.drawColor(backgroundColor)
+        gridBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        gridCanvas = Canvas(gridBitmap)
+
+        var x = 0F
+        while(x < width) {
+            gridCanvas.drawLine(x, 0F, x, height.toFloat(), gridPaint)
+            x += 50F
+        }
+        var y = 0F
+        while(y < height) {
+            gridCanvas.drawLine(0F, y, width.toFloat(), y, gridPaint)
+            y += 50F
+        }
 
     }
 
@@ -58,6 +76,8 @@ class MyCanvasView(context: Context) : View(context) {
             canvas.drawPath(drawing, paint)
             // Draw any current squiggle
             canvas.drawPath(curPath, paint)
+
+        canvas.drawBitmap(gridBitmap, 0f, 0f, null)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -138,5 +158,16 @@ class MyCanvasView(context: Context) : View(context) {
         strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
     }
 
+    private val gridPaint = Paint().apply {
+        color = gridColor
+        // Smooths out edges of what is drawn without affecting shape.
+        isAntiAlias = true
+        // Dithering affects how colors with higher-precision than the device are down-sampled.
+        isDither = true
+        style = Paint.Style.STROKE // default: FILL
+        strokeJoin = Paint.Join.ROUND // default: MITER
+        strokeCap = Paint.Cap.ROUND // default: BUTT
+        strokeWidth = GRID_WIDTH // default: Hairline-width (really thin)
+    }
 
 }
