@@ -198,7 +198,6 @@ class GameParameterFragment : Fragment() {
     }
 
     fun updateFragmentView(type: SelectedButton) {
-
         sharedViewModel.updateData(GameDifficulty.NONE, "")
         binding.StartGame.isActivated =false
         when(type)
