@@ -3,7 +3,8 @@ import { inject, injectable } from 'inversify';
 import { Application } from './app';
 import { TYPES } from './types';
 import { TokenService } from './services/token.service';
-import { SocketService } from './services/socket.service';
+import { SocketService } from './services/sockets/socket.service';
+import { SocketConnectionService } from './services/sockets/socket-connection.service';
 
 @injectable()
 export class Server {
@@ -12,9 +13,11 @@ export class Server {
     private server: http.Server;
 
     constructor(
-        @inject(TYPES.TokenService) private tokenService: TokenService,
         @inject(TYPES.SocketService) private socketService: SocketService,
+        @inject(TYPES.SocketConnectionService) private socketConnectionService: SocketConnectionService,
+        @inject(TYPES.TokenService) private tokenService: TokenService,
         @inject(TYPES.Application) private application: Application) {
+        this.socketService = SocketService.getInstance();
         this.tokenService = TokenService.getInstance();
     }
 
@@ -22,6 +25,7 @@ export class Server {
         this.application.app.set('port', this.appPort);
         this.server = http.createServer(this.application.app);
         this.socketService.init(this.server);
+        this.socketConnectionService.start();
         this.server.listen(this.appPort);
         this.server.on('error', (error: NodeJS.ErrnoException) => this.onError(error));
         this.server.on('listening', () => this.onListening());
