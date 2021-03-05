@@ -10,6 +10,8 @@ import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.int
 import { LobbyManagerService } from '../managers/lobby-manager.service';
 import { TokenService } from '../token.service';
 import { SocketService } from './socket.service';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { GameManagerService } from '../managers/game-manager.service';
 
 @injectable()
 export class SocketConnectionService {
@@ -18,6 +20,7 @@ export class SocketConnectionService {
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
+        @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
     ) {
@@ -36,6 +39,17 @@ export class SocketConnectionService {
                     const user: any = this.tokenService.getTokenInfo(message.token);
                     this.chatManagerService.addMessageToDB(user, message, date);
                     this.chatManagerService.dispatchMessage(user, message, date);
+                } catch (err) {
+                    // err
+                }
+            });
+
+            socket.on('drawingEvent', (drawingEvent: DrawingEvent) => {
+                if (!(drawingEvent instanceof Object)) {
+                    drawingEvent = JSON.parse(drawingEvent)
+                }
+                try {
+                    this.gameManagerService.dispatchDrawingEvent(drawingEvent);
                 } catch (err) {
                     // err
                 }

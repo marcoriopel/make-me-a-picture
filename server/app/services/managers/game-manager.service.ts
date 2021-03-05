@@ -3,13 +3,18 @@ import { LobbyManagerService } from './lobby-manager.service';
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { GameType } from '@app/ressources/variables/game-variables';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { SocketService } from '../sockets/socket.service';
+import { TYPES } from '@app/types';
 
 
 
 @injectable()
 export class GameManagerService {
 
-    constructor() {
+    constructor(
+        @inject(TYPES.SocketService) private socketService: SocketService,) {
+        this.socketService = SocketService.getInstance();
     }
 
     start(username: string, req: Request, res: Response, next: NextFunction) {
@@ -42,5 +47,9 @@ export class GameManagerService {
             return res.sendStatus(StatusCodes.NOT_ACCEPTABLE);
         console.log("created game");
         next();
+    }
+
+    dispatchDrawingEvent(event: DrawingEvent){
+        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "event": event});
     }
 }
