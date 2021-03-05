@@ -28,7 +28,7 @@ export class GameManagerService {
                     return res.sendStatus(StatusCodes.NOT_ACCEPTABLE);
                 break;
             case GameType.COOP:
-                if (players.length < 2)
+                if (players.length < 2 || players.length > 4)
                     return res.sendStatus(StatusCodes.NOT_ACCEPTABLE);
                 break;
             default:
