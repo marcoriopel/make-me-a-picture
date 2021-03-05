@@ -21,35 +21,20 @@ import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [gameParameterFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GameParameterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
 
     private lateinit var  binding: FragmentGameParameterBinding
     private var filterDifficulty: Vector<Button> = Vector<Button>()
-    private val sharedViewModel: MainMenuViewModel by activityViewModels()
-
+    private val mainMenuViewModel: MainMenuViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_game_parameter, container, false)
         return view
     }
@@ -61,81 +46,64 @@ class GameParameterFragment : Fragment() {
 
         binding = FragmentGameParameterBinding.bind(view)
 
-
-
-
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
 
-        binding.gameName.afterTextChanged {
-            updateGameName(binding.gameName.text.toString())
-        }
-
-        binding.StartGame.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
-
         // filter difficulty
-        binding.easyFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_green)
         binding.easyFilter.setOnClickListener {
-            binding.easyFilter.isActivated = !binding.easyFilter.isActivated
+            binding.easyFilter.isActivated = true
             disableOtherButtons(binding.easyFilter, filterDifficulty)
             if(binding.easyFilter.isActivated){
-                sharedViewModel.setGameDifficulty(GameDifficulty.EASY)
-            } else {
-                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+                mainMenuViewModel.setGameDifficulty(GameDifficulty.EASY)
             }
-            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
+            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
         }
-        binding.mediumFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_orange)
+
         binding.mediumFilter.setOnClickListener {
-            binding.mediumFilter.isActivated = !binding.mediumFilter.isActivated
+            binding.mediumFilter.isActivated = true
             disableOtherButtons(binding.mediumFilter, filterDifficulty)
             if(binding.mediumFilter.isActivated){
-                sharedViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
-            } else {
-                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+                mainMenuViewModel.setGameDifficulty(GameDifficulty.MEDIUM)
             }
-            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
+            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
         }
-        binding.hardFilter.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.grey_to_red)
+
         binding.hardFilter.setOnClickListener {
-            binding.hardFilter.isActivated = !binding.hardFilter.isActivated
+            binding.hardFilter.isActivated = true
             disableOtherButtons(binding.hardFilter, filterDifficulty)
-            println("hard filter" + binding.hardFilter.isActivated)
             if(binding.hardFilter.isActivated){
-                sharedViewModel.setGameDifficulty(GameDifficulty.HARD)
-            } else {
-                sharedViewModel.setGameDifficulty(GameDifficulty.NONE)
+                mainMenuViewModel.setGameDifficulty(GameDifficulty.HARD)
             }
 
-            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
+            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
         }
-        //Incognito button
-        binding.icognito.setOnClickListener{
-            binding.icognito.isActivated = ! binding.icognito.isActivated
-            if(binding.icognito.isActivated)
-                binding.passwordPrivateGame.visibility = View.VISIBLE
-            else
-                binding.passwordPrivateGame.visibility = View.INVISIBLE
 
-            updateIcognitoModeStatus(binding.icognito.isActivated)
+        //Incognito button
+        binding.incognito.setOnClickListener{
+            binding.incognito.isActivated = ! binding.incognito.isActivated
+            if(binding.incognito.isActivated) {
+                binding.passwordPrivateGame.visibility = View.VISIBLE
+            } else {
+                binding.passwordPrivateGame.visibility = View.INVISIBLE
+            }
+
+            mainMenuViewModel.setIncognitoMode(binding.incognito.isActivated)
         }
+
         binding.passwordPrivateGame.afterTextChanged {
-            updateIcognitoPassword(binding.passwordPrivateGame.text.toString())
-            sharedViewModel.liveDataMerger = sharedViewModel.fetchData()
+            updateIncognitoPassword(binding.passwordPrivateGame.text.toString())
+            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
         }
-        updateFragmentView(sharedViewModel.creationGameButtonType.value!!)
+        updateFragmentView(mainMenuViewModel.creationGameButtonType.value!!)
 
         // Set parameter to game
         binding.gameName.afterTextChanged {
-            println("after text changed: " + binding.gameName.text.toString())
-            sharedViewModel.setGameName(binding.gameName.text.toString())
-            sharedViewModel.fetchData()
+            mainMenuViewModel.setGameName(binding.gameName.text.toString())
+            mainMenuViewModel.fetchData()
         }
 
-
-        sharedViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer<GameCreationMergeData> {
-
+        mainMenuViewModel.liveDataMerger.observe(viewLifecycleOwner, Observer<GameCreationMergeData> {
             when (it) {
                 is GameName -> {
                     gameName = it.name
@@ -147,39 +115,14 @@ class GameParameterFragment : Fragment() {
             binding.StartGame.isActivated = gameName != "" && difficulty != GameDifficulty.NONE
         })
 
-
-
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
-                sharedViewModel.createGame()
+                mainMenuViewModel.createGame()
             }
         }
-
     }
 
-
-
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment gameParameterFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance() =
-                GameParameterFragment().apply {
-                    arguments = Bundle().apply {
-
-                    }
-                }
-    }
     fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
-
         for (button in buttonGroup) {
             if (button.id != currentButton.id){
                 button.isActivated = false
@@ -187,18 +130,12 @@ class GameParameterFragment : Fragment() {
         }
     }
 
-    fun updateGameName(name:String) {
-        sharedViewModel.setGameName(name)
-    }
-    fun updateIcognitoModeStatus(isIcognito: Boolean){
-        sharedViewModel.setIcognitoMode(isIcognito)
-    }
-    fun updateIcognitoPassword(password: String) {
-        sharedViewModel.setIcognitoPassword(password)
+    fun updateIncognitoPassword(password: String) {
+        mainMenuViewModel.setIncognitoPassword(password)
     }
 
     fun updateFragmentView(type: SelectedButton) {
-        sharedViewModel.updateData(GameDifficulty.NONE, "")
+        mainMenuViewModel.updateData(GameDifficulty.NONE, "")
         binding.StartGame.isActivated =false
         when(type)
         {
@@ -206,20 +143,24 @@ class GameParameterFragment : Fragment() {
                 //close popUp
             }
             SelectedButton.CLASSIC -> {
-                binding.GameCreation.text = "Création partie classique"
+                binding.GameCreation.text = "Création d'une partie classique"
                 binding.gameLogo.setImageResource(R.drawable.icon_classic)
             }
             SelectedButton.SPRINT -> {
-                binding.GameCreation.text = "Création partie SPRINT"
+                binding.GameCreation.text = "Création d'une partie sprint solo"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
 
                // binding.GameCreation.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable ,null)
             }
             SelectedButton.COOP -> {
-                binding.GameCreation.text = "Création partie COOP"
+                binding.GameCreation.text = "Création d'une partie coop"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
             }
         }
     }
 
+    companion object {
+        @JvmStatic
+        fun newInstance() = GameParameterFragment()
+    }
 }
