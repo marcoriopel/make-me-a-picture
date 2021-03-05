@@ -14,30 +14,22 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 
 
-// Inspired by: https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas#5
+
 class CanvasFragment : Fragment() {
-
-    val bitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
-    val extrabitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
-    val canvas = Canvas(bitmap);
-
-    companion object {
-        fun newInstance() = CanvasFragment()
-        const val OFFSET = 0;
-        const val MULTIPLIER = 0;
-    }
 
     private lateinit var viewModel: CanvasViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+        if (container != null) {
+            return MyCanvasView(container.context)
+        };
         return inflater.inflate(R.layout.fragment_canvas, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(CanvasViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
 }

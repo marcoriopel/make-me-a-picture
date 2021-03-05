@@ -12,17 +12,17 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
-        val myCanvasView =
-            MyCanvasView(this)
-        myCanvasView.systemUiVisibility = SYSTEM_UI_FLAG_FULLSCREEN
-        myCanvasView.contentDescription = getString(R.string.canvasContentDescription)
-        setContentView(myCanvasView)
+//        val myCanvasView =
+//            MyCanvasView(this)
+//        myCanvasView.systemUiVisibility = SYSTEM_UI_FLAG_FULLSCREEN
+//        myCanvasView.contentDescription = getString(R.string.canvasContentDescription)
+//        setContentView(myCanvasView)
 
-//        setContentView(R.layout.activity_game)
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                    .replace(R.id.container, CanvasFragment.newInstance())
-//                    .commitNow()
-//        }
+        setContentView(R.layout.activity_game)
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, CanvasFragment.newInstance())
+                    .commitNow()
+        }
     }
 }
