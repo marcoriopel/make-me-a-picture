@@ -17,12 +17,11 @@ class MainMenuRepository() {
     suspend fun createGame(game: CreateGame): Result<Game> {
         val mapCreateGame = HashMap<String, String>()
         mapCreateGame["gameType"] = game.gameType!!.type.toString()
-        mapCreateGame["gameName"] = game.gameName!!
+        mapCreateGame["gameName"] = game.gameName!!.toString()
         mapCreateGame["difficulty"] = game.gameDifficulty!!.difficulty.toString()
 
         println(mapCreateGame)
-        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create", mapCreateGame)
-        println(reponse)
+        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create", mapCreateGame,true)
         val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
 
         return result
