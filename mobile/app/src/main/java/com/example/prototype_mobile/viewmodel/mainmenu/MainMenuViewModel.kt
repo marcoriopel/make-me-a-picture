@@ -9,7 +9,7 @@ import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
-class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository, private val lobbyRepository: LobbyRepository) : ViewModel(){
+class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : ViewModel(){
 
     //Information that we need to observe in order to send an gameCreation request.
     private val _creationGameButtonType = MutableLiveData<SelectedButton>()
@@ -31,12 +31,17 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository, priv
     private val _lobbyJoined = MutableLiveData<Game>()
     val lobbyJoined: LiveData<Game> = _lobbyJoined
 
+    val lobbyRepository: LobbyRepository
+
 
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
 
     init {
         liveDataMerger= fetchData()
+
+        lobbyRepository = LobbyRepository.getInstance()!!
+
 
         lobbyRepository.lobbyJoined.observeForever(Observer {
             _lobbyJoined.value = it ?: return@Observer

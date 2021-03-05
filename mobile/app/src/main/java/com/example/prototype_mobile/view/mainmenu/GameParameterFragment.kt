@@ -153,7 +153,7 @@ class GameParameterFragment : Fragment() {
                 sharedViewModel.sendRequest()
             }
         }
-        
+
     }
 
 
