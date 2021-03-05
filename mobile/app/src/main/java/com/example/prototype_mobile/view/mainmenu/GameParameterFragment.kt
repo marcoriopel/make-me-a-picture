@@ -63,6 +63,7 @@ class GameParameterFragment : Fragment() {
 
 
 
+
         filterDifficulty.addElement(binding.easyFilter)
         filterDifficulty.addElement(binding.mediumFilter)
         filterDifficulty.addElement(binding.hardFilter)
@@ -150,11 +151,12 @@ class GameParameterFragment : Fragment() {
 
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
-                sharedViewModel.sendRequest()
+                sharedViewModel.createGame()
             }
         }
 
     }
+
 
 
 
@@ -196,7 +198,6 @@ class GameParameterFragment : Fragment() {
     }
 
     fun updateFragmentView(type: SelectedButton) {
-
         sharedViewModel.updateData(GameDifficulty.NONE, "")
         binding.StartGame.isActivated =false
         when(type)
