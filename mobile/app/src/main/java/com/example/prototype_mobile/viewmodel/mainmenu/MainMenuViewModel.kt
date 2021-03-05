@@ -122,6 +122,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             val result: Result<Game> = mainMenuRepository.createGame(gameData)
 
             if (result is Result.Success) {
+                lobbyRepository.listenLobby(result.data.gameID)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {
