@@ -126,12 +126,4 @@ class GameCreationFragment : Fragment() {
     }
 
 
-
-
-
-
-
-
-
-
 }

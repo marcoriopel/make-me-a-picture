@@ -1,5 +1,5 @@
 import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as socketio from "socket.io";
 import { NextFunction, Request, Response } from "express";
 import { GameType } from '@app/ressources/variables/game-variables'
@@ -11,17 +11,17 @@ import { SoloLobby } from '@app/classes/lobby/solo-lobby';
 import { StatusCodes } from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { TYPES } from '@app/types';
+import { SocketService } from '../sockets/socket.service';
 
 @injectable()
 export class LobbyManagerService {
 
     static lobbies: Map<string, Lobby> = new Map<string, Lobby>();
-    static socket: socketio.Server;
 
-    constructor() { }
-
-    setSocket(io: socketio.Server) {
-        LobbyManagerService.socket = io;
+    constructor(
+        @inject(TYPES.SocketService) private socketService: SocketService,) {
+        this.socketService = SocketService.getInstance();
     }
 
     create(req: Request, res: Response, next: NextFunction) {
@@ -116,6 +116,6 @@ export class LobbyManagerService {
 
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
-        LobbyManagerService.socket.to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
+        this.socketService.getSocket().to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
     }
 }

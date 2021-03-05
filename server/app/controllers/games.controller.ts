@@ -1,5 +1,5 @@
 import { AuthService } from '@app/services/auth.service';
-import { LobbyManagerService } from '@app/services/lobby-manager.service';
+import { LobbyManagerService } from '@app/services/managers/lobby-manager.service';
 import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';

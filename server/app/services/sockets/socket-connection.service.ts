@@ -5,29 +5,28 @@ import { inject, injectable } from 'inversify';
 import * as socketio from "socket.io";
 import * as jwt from 'jsonwebtoken';
 import * as http from 'http';
-import { ChatManagerService } from './chat-manager.service';
+import { ChatManagerService } from '../managers/chat-manager.service';
 import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
-import { LobbyManagerService } from './lobby-manager.service';
-import { TokenService } from './token.service';
+import { LobbyManagerService } from '../managers/lobby-manager.service';
+import { TokenService } from '../token.service';
+import { SocketService } from './socket.service';
 
 @injectable()
-export class SocketService {
+export class SocketConnectionService {
 
-    private io: socketio.Server;
 
     constructor(
+        @inject(TYPES.SocketService) private socketService: SocketService,
+        @inject(TYPES.TokenService) private tokenService: TokenService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
-        @inject(TYPES.TokenService) private tokenService: TokenService,
     ) {
+        this.socketService = SocketService.getInstance();
         this.tokenService = TokenService.getInstance();
     }
 
-    init(server: http.Server): void {
-        this.io = new socketio.Server(server, ({ cors: { origin: "*" } }));
-        this.distibuteSocket();
-
-        this.io.on("connection", (socket: socketio.Socket) => {
+    start():void {
+        this.socketService.getSocket().on("connection", (socket: socketio.Socket) => {
             socket.on('message', (message: IncomingMessage) => {
                 if (!(message instanceof Object)) {
                     message = JSON.parse(message)
@@ -55,15 +54,9 @@ export class SocketService {
                     else
                         throw new Error("this lobby does not exist")
                 } catch (err) {
-                    this.io.emit('error', {"error": err.message});
+                    this.socketService.getSocket().emit('error', {"error": err.message});
                 }
             });
         });
     }
-
-    private distibuteSocket(): void {
-        this.chatManagerService.setSocket(this.io);
-        this.lobbyManagerService.setSocket(this.io);
-    }
-
 }
