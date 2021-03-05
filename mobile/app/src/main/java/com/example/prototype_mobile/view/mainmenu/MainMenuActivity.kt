@@ -6,18 +6,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
-
-
-
 class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +34,6 @@ class MainMenuActivity : AppCompatActivity() {
                 .get(MainMenuViewModel::class.java)
 
         mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, Observer {
-            println("Fragment should be deleted")
             if(it == SelectedButton.NONE) {
                     supportFragmentManager.beginTransaction().replace(R.id.container2,GameListFragment.newInstance()).commit()
 

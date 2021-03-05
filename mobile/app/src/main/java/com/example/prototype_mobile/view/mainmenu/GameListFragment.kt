@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -155,6 +156,10 @@ class GameListFragment : Fragment() {
         binding.refresh.setOnClickListener{
             gameListViewModel.getGameList()
         }
+        binding.searchgame.addTextChangedListener {
+            gameListViewModel.filterByGameName(it.toString())
+        }
+
     }
 
 

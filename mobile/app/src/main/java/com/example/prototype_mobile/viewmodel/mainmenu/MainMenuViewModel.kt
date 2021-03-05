@@ -6,9 +6,9 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficult
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import kotlinx.coroutines.launch
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
