@@ -92,14 +92,15 @@ export class LobbyManagerService {
     }
 
     removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
-        if (req.body.teamNumber != 0 && req.body.teamNumber != 1 || req.body.username == undefined) {
+        console.log(req.query);
+        if (req.query.teamNumber != 0 && req.query.teamNumber != 1 || req.query.username == undefined) {
             return res.status(StatusCodes.BAD_REQUEST).send("Provided team number for virtual player is invalid");
         }
-        if (this.lobbyExist(req.body.lobbyId)) {
+        if (this.lobbyExist(req.query.lobbyId)) {
             try {
-                const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
-                (lobby as ClassicLobby).removeVirtualPlayer(req.body.teamNumber, req.body.username);
-                this.dispatchTeams(req.body.lobbyId);
+                const lobby: Lobby = LobbyManagerService.lobbies.get(req.query.lobbyId);
+                (lobby as ClassicLobby).removeVirtualPlayer(req.query.teamNumber, req.query.username);
+                this.dispatchTeams(req.query.lobbyId);
             }
             catch (err) {
                 return res.status(StatusCodes.NOT_FOUND).send(err.message);
