@@ -34,7 +34,7 @@ class MainMenuActivity : AppCompatActivity() {
                 .get(MainMenuViewModel::class.java)
 
         mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, Observer {
-            if(it == SelectedButton.NONE) {
+            if(it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
                     supportFragmentManager.beginTransaction().replace(R.id.container2,GameListFragment.newInstance()).commit()
 
             }

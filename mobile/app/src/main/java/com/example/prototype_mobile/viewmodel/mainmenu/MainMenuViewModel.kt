@@ -69,7 +69,6 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         })
 
         liveDataMerger.addSource(_gameName){
-            println("livedataMerger: " + it)
             if(it != null){
                 liveDataMerger.value= GameName(it)
             }
