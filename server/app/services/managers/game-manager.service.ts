@@ -6,6 +6,9 @@ import { GameType } from '@app/ressources/variables/game-variables';
 import { Game } from '@app/classes/game/game';
 import { Lobby } from '@app/classes/lobby/lobby';
 import { ClassicGame } from '@app/classes/game/classic-game';
+import { SocketService } from '../sockets/socket.service';
+import { TYPES } from '@app/types';
+import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
 
 
 
@@ -13,7 +16,10 @@ import { ClassicGame } from '@app/classes/game/classic-game';
 export class GameManagerService {
 
     static games: Map<string, Game> = new Map<string, Game>();
-    constructor() {
+    
+    constructor(
+        @inject(TYPES.SocketService) private socketService: SocketService,) {
+        this.socketService = SocketService.getInstance();
     }
 
     start(username: string, req: Request, res: Response, next: NextFunction) {
@@ -27,7 +33,7 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const game = new ClassicGame(lobby.getDifficulty(), lobby.getGameName(), lobby.getPlayers());
+                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService);
                 console.log(lobby.getPlayers());
                 GameManagerService.games.set(req.body.lobbyId, game);
                 console.log("here");

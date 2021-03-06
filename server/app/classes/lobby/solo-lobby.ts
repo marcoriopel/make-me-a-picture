@@ -9,8 +9,8 @@ export class SoloLobby extends Lobby {
     private team1: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
     
-    constructor(difficulty: number, gameName: string) {
-        super(difficulty, gameName);
+    constructor(difficulty: number, gameName: string, id: string) {
+        super(difficulty, gameName, id);
         this.gameType = GameType.SOLO;
         this.vPlayer = new VirtualPlayer();
         console.log("Created solo game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -35,8 +35,8 @@ export class SoloLobby extends Lobby {
 
     getPlayers(): any{
         let players = [];
-        this.team1.forEach((player: Player, username:string,  map: Map<string, Player>) =>{
-            players.push({"username": username, "avatar": player.avatar, "team": 0});
+        this.team1.forEach((player: Player) =>{
+            players.push({"username": player.username, "avatar": player.avatar, "team": 0});
         })
         return players;
     } 

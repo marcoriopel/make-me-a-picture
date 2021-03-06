@@ -9,8 +9,8 @@ export class ClassicLobby extends Lobby {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private vPlayers: VirtualPlayer[] = new Array(2);
 
-    constructor(difficulty: number, gameName: string) {
-        super(difficulty, gameName);
+    constructor(difficulty: number, gameName: string, id: string) {
+        super(difficulty, gameName, id);
         this.gameType = GameType.CLASSIC;
         console.log("Created classic game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -82,8 +82,8 @@ export class ClassicLobby extends Lobby {
     getPlayers(): any {
         let players = [];
         for (let i = 0; i < this.teams.length; ++i) {
-            this.teams[i].forEach((player: Player, username: string, map: Map<string, Player>) => {
-                players.push({ "username": username, "avatar": player.avatar, "team": i});
+            this.teams[i].forEach((player: Player) => {
+                players.push({ "username": player.username, "avatar": player.avatar, "team": i});
             })
         }
         return players;
@@ -97,5 +97,9 @@ export class ClassicLobby extends Lobby {
 
     private isLobbyFull(): boolean {
         return this.teams[0].size == 2 && this.teams[1].size == 2;
+    }
+
+    getTeams() : Map<string, Player>[]{
+        return this.teams;
     }
 }

@@ -9,8 +9,8 @@ export class CoopLobby extends Lobby {
     private team1: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
     
-    constructor(difficulty: number, gameName: string) {
-        super(difficulty, gameName);
+    constructor(difficulty: number, gameName: string, id: string) {
+        super(difficulty, gameName, id);
         this.gameType = GameType.COOP;
         this.vPlayer = new VirtualPlayer();
         console.log("Created coop game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -34,14 +34,14 @@ export class CoopLobby extends Lobby {
             "isVirtual": false,
             "socketId": socketId,
         }
-        
+
         this.team1.set(user.username, player);
     }    
 
     getPlayers(): any{
         let players = [];
-        this.team1.forEach((player: Player, username:string,  map: Map<string, Player>) =>{
-            players.push({"username": username, "avatar": player.avatar, "team": 0});
+        this.team1.forEach((player: Player) =>{
+            players.push({"username": player.username, "avatar": player.avatar, "team": 0});
         })
         return players;
     } 

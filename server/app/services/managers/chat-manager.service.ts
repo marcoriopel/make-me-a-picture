@@ -36,7 +36,7 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                chatNames.push({ [chatId]: chatInfo["chatName"] });
+                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"]});
             }
             next(chatNames);
         }

@@ -34,13 +34,13 @@ export class LobbyManagerService {
         lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
                 break;
             case GameType.SOLO:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
                 break;
             case GameType.COOP:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
