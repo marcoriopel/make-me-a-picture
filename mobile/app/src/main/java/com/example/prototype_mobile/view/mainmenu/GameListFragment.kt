@@ -142,18 +142,8 @@ class GameListFragment : Fragment() {
             lastFilterClicked = binding.refresh
             gameListViewModel.getGameList()
         }
-
-        binding.searchgame.setOnKeyListener(object : View.OnKeyListener {
-            override fun onKey(view: View?, keyCode: Int, keyevent: KeyEvent): Boolean {
-                return if (keyevent.getAction() === KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    gameListViewModel.filterByGameName(binding.searchgame.toString())
-                    true
-                } else false
-            }
-        })
-
-        binding.searchgame.addTextChangedListener {
-            gameListViewModel.filterByGameName(it.toString())
-        }
+       binding.searchgame.addTextChangedListener {
+           gameListViewModel.filterByGameName(it.toString())
+       }
     }
 }
