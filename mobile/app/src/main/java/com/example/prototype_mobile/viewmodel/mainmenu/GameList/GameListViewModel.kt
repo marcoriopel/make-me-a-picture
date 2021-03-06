@@ -44,7 +44,7 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
             }
 
             if (result is Result.Success) {
-                    _gameListResult.postValue(GameListResult(result.data))
+                _gameListResult.postValue(GameListResult(result.data))
             }
 
             if (result is Result.Error){
