@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Stroke } from '@app/classes/drawing';
 import { Tool } from '@app/classes/tool';
-import { Pencil } from '@app/classes/tool-properties';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { Observable, Subject } from 'rxjs';
@@ -59,12 +59,12 @@ export class UndoRedoService extends Tool {
         if (!this.isUndoAvailable) {
             return;
         }
-        const modification = this.drawingService.undoStack.pop();
+        const modification = this.drawingService.strokeStack.pop();
         if (modification !== undefined) {
             this.drawingService.redoStack.push(modification);
         }
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
-        this.drawingService.undoStack.forEach((element) => {
+        this.drawingService.strokeStack.forEach((element) => {
             this.drawElement(element);
         });
         this.changeUndoAvailability();
@@ -83,7 +83,7 @@ export class UndoRedoService extends Tool {
             this.drawElement(element);
             const modification = this.drawingService.redoStack.pop();
             if (modification !== undefined) {
-                this.drawingService.undoStack.push(modification);
+                this.drawingService.strokeStack.push(modification);
             }
         }
         this.changeUndoAvailability();
@@ -91,7 +91,7 @@ export class UndoRedoService extends Tool {
     }
 
     changeUndoAvailability(): void {
-        if (this.drawingService.undoStack.length) {
+        if (this.drawingService.strokeStack.length) {
             this.setUndoAvailability(true);
         } else {
             this.setUndoAvailability(false);
@@ -106,11 +106,7 @@ export class UndoRedoService extends Tool {
         }
     }
 
-    drawElement(element: Pencil): void {
-        switch (element.type) {
-            case 'pencil':
-                this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Pencil);
-                break;
-        }
+    drawElement(element: Stroke): void {
+        this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Stroke);
     }
 }

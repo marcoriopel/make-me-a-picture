@@ -1,0 +1,32 @@
+#canvas-container {
+    position: relative;
+}
+
+canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#canvas {
+    z-index: 0;
+    background-color: #ffffff;
+}
+
+#drawCanvas {
+    z-index: 1;
+}
+
+#play-button {
+    position: absolute;
+    right: 0;
+    height: 70px;
+    width: 70px;
+}
+
+#quit-button {
+    position: absolute;
+    right: 0;
+    top: 100px;
+    width: 70px;
+}

@@ -42,6 +42,7 @@ import { GameBarComponent } from './components/game-bar/game-bar.component';
 import { SearchGameService } from './services/search-game/search-game.service';
 import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
+import { ViewingComponent } from './components/viewing/viewing.component';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyService } from './services/lobby/lobby.service'
@@ -65,8 +66,9 @@ import { LobbyService } from './services/lobby/lobby.service'
         GameBarComponent,
         GameMenuComponent,
         GameSearchComponent,
+        ViewingComponent,
         GamePreviewComponent,
-        LobbyComponent
+        LobbyComponent,
     ],
     imports: [
         BrowserModule,
