@@ -6,7 +6,7 @@ import { Lobby } from './lobby';
 
 @injectable()
 export class ClassicLobby extends Lobby {
-    private teams: Map<string, number>[] = [new Map<string, number>(), new Map<string, number>()];
+    private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private vPlayers: VirtualPlayer[] = new Array(2);
 
     constructor(difficulty: number, gameName: string) {
@@ -19,7 +19,7 @@ export class ClassicLobby extends Lobby {
 
     deleteLobby(): void { }
 
-    addPlayer(user: BasicUser): void {
+    addPlayer(user: BasicUser, socketId: string): void {
         if (this.isUserInLobby(user)) {
             throw new Error("You have already joined this lobby");
         }
@@ -27,11 +27,18 @@ export class ClassicLobby extends Lobby {
             throw new Error("Lobby is full");
         }
 
+        const player: Player = {
+            "username": user.username,
+            "avatar": user.avatar,
+            "isVirtual": false,
+            "socketId": socketId,
+        }
+
         if (this.teams[0].size <= this.teams[1].size) {
-            this.teams[0].set(user.username, Number(user.avatar));
+            this.teams[0].set(user.username, player);
         }
         else {
-            this.teams[1].set(user.username, Number(user.avatar));
+            this.teams[1].set(user.username, player);
         }
     }
 
@@ -50,7 +57,13 @@ export class ClassicLobby extends Lobby {
         if (this.teams[teamNumber].size < 2 && this.vPlayers[teamNumber] == undefined) {
             this.vPlayers[teamNumber] = tempVPlayer;
             const tempVPlayerBasicInfo: BasicUser = tempVPlayer.getBasicUser();
-            this.teams[teamNumber].set(tempVPlayerBasicInfo.username, tempVPlayerBasicInfo.avatar)
+            const vPlayer: Player = {
+                "username": tempVPlayerBasicInfo.username,
+                "avatar": tempVPlayerBasicInfo.avatar,
+                "isVirtual": true,
+                "socketId": null,
+            }
+            this.teams[teamNumber].set(tempVPlayerBasicInfo.username, vPlayer)
         }
         else {
             throw new Error("No more virtual players can be added to this team");
@@ -69,9 +82,8 @@ export class ClassicLobby extends Lobby {
     getPlayers(): any {
         let players = [];
         for (let i = 0; i < this.teams.length; ++i) {
-            this.teams[i].forEach((avatar: number, username: string, map: Map<string, number>) => {
-                const player: Player = { "username": username, "avatar": avatar, "team": i, "isVirtual": avatar > 6 }
-                players.push(player);
+            this.teams[i].forEach((player: Player, username: string, map: Map<string, Player>) => {
+                players.push({ "username": username, "avatar": player.avatar, "team": i});
             })
         }
         return players;

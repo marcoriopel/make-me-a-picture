@@ -60,7 +60,7 @@ export class LobbyManagerService {
         if (this.lobbyExist(req.body.lobbyId)) {
             try {
                 const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
-                lobby.addPlayer(user);
+                lobby.addPlayer(user, req.body.socketId);
                 this.dispatchTeams(req.body.lobbyId);
             }
             catch (err) {

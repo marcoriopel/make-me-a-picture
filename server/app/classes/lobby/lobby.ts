@@ -6,7 +6,6 @@ export abstract class Lobby {
     protected difficulty: number;
     protected gameName: string;
     protected gameType: number;
-    protected players: BasicUser[];
 
     constructor(difficulty: number, gameName: string) {
         this.difficulty = difficulty;
@@ -17,7 +16,7 @@ export abstract class Lobby {
 
     deleteLobby(): void { }
 
-    addPlayer(user: BasicUser): void {}
+    addPlayer(user: BasicUser, socketId: string): void {}
 
     getPlayers(): any{} 
 
