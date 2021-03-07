@@ -28,7 +28,7 @@ export class SocketConnectionService {
         this.tokenService = TokenService.getInstance();
     }
 
-    start():void {
+    start(): void {
         this.socketService.getSocket().on("connection", (socket: socketio.Socket) => {
             socket.on('message', (message: IncomingMessage) => {
                 if (!(message instanceof Object)) {
@@ -40,7 +40,7 @@ export class SocketConnectionService {
                     this.chatManagerService.addMessageToDB(user, message, date);
                     this.chatManagerService.dispatchMessage(user, message, date);
                 } catch (err) {
-                    // err
+                    console.log(err);
                 }
             });
 
@@ -51,7 +51,7 @@ export class SocketConnectionService {
                 try {
                     this.gameManagerService.dispatchDrawingEvent(drawingEvent);
                 } catch (err) {
-                    // err
+                    console.log(err);
                 }
             });
 
@@ -61,14 +61,14 @@ export class SocketConnectionService {
                 }
                 try {
                     socket.leave(request.oldLobbyId);
-                    if(this.lobbyManagerService.lobbyExist(request.lobbyId)){
+                    if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
                         throw new Error("this lobby does not exist")
                 } catch (err) {
-                    this.socketService.getSocket().emit('error', {"error": err.message});
+                    this.socketService.getSocket().emit('error', { "error": err.message });
                 }
             });
         });
