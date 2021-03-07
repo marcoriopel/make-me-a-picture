@@ -3,7 +3,7 @@ import { NewGame, Game ,GameType } from '@app/classes/game';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
-import { SocketService } from '../socket/socket.service';
+import { SocketService } from '@app/services/socket/socket.service';
 
 @Injectable({
   providedIn: 'root'

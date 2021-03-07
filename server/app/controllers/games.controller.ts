@@ -7,7 +7,7 @@ import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
-import { GameManagerService } from '@app/services/game-manager.service';
+import { GameManagerService } from '@app/services/managers/game-manager.service';
 
 
 @injectable()
