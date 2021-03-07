@@ -41,7 +41,7 @@ export class CoopLobby extends Lobby {
     getPlayers(): any{
         let players = [];
         this.team.forEach((player: Player) =>{
-            players.push({"username": player.username, "avatar": player.avatar, "team": 0});
+            players.push({"username": player.username, "avatar": player.avatar, "team": 0, "isVirtual": player.isVirtual});
         })
         return players;
     } 

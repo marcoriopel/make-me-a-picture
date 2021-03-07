@@ -78,6 +78,15 @@ export class LobbyManagerService {
                 const lobby: Lobby = LobbyManagerService.lobbies.get(req.query.lobbyId);
                 lobby.removePlayer(user);
                 this.dispatchTeams(req.query.lobbyId);
+                let hasRealPlayers: boolean = false;
+                for(const player of lobby.getPlayers()){
+                    if (!player.isVirtual){
+                        hasRealPlayers = true
+                    }
+                }
+                if(!hasRealPlayers){
+                    LobbyManagerService.lobbies.delete(req.query.lobbyId);
+                }
             }
             catch (err) {
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);

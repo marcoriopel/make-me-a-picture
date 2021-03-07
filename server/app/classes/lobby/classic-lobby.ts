@@ -83,7 +83,7 @@ export class ClassicLobby extends Lobby {
         let players = [];
         for (let i = 0; i < this.teams.length; ++i) {
             this.teams[i].forEach((player: Player) => {
-                players.push({ "username": player.username, "avatar": player.avatar, "team": i});
+                players.push({ "username": player.username, "avatar": player.avatar, "team": i, "isVirtual": player.isVirtual});
             })
         }
         return players;
