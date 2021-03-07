@@ -9,3 +9,11 @@ export enum GameType {
     SOLO = 1,
     COOP = 2
 }
+
+export enum drawingEventType {
+    MOUSEDOWN = 0,
+    MOUSEMOVE = 1,
+    MOUSEUP = 2,
+    UNDO = 3,
+    REDO = 4,
+}

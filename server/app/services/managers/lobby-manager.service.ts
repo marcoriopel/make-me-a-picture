@@ -108,8 +108,11 @@ export class LobbyManagerService {
     }
 
     removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
-        console.log(req.query);
-        if (req.query.teamNumber != 0 && req.query.teamNumber != 1 || req.query.username == undefined) {
+        if (req.query.username == undefined || req.query.teamNumber == undefined){
+            return res.status(StatusCodes.BAD_REQUEST).send("Username or teamNumber undefined");
+        }
+        req.query.teamNumber = <number>req.query.teamNumber;
+        if (req.query.teamNumber != 0 && req.query.teamNumber != 1) {
             return res.status(StatusCodes.BAD_REQUEST).send("Provided team number for virtual player is invalid");
         }
         if (this.lobbyExist(req.query.lobbyId)) {

@@ -10,6 +10,8 @@ import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.int
 import { LobbyManagerService } from '../managers/lobby-manager.service';
 import { TokenService } from '../token.service';
 import { SocketService } from './socket.service';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { GameManagerService } from '../managers/game-manager.service';
 
 @injectable()
 export class SocketConnectionService {
@@ -18,6 +20,7 @@ export class SocketConnectionService {
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
+        @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
     ) {
@@ -25,7 +28,7 @@ export class SocketConnectionService {
         this.tokenService = TokenService.getInstance();
     }
 
-    start():void {
+    start(): void {
         this.socketService.getSocket().on("connection", (socket: socketio.Socket) => {
             socket.on('message', (message: IncomingMessage) => {
                 if (!(message instanceof Object)) {
@@ -37,7 +40,18 @@ export class SocketConnectionService {
                     this.chatManagerService.addMessageToDB(user, message, date);
                     this.chatManagerService.dispatchMessage(user, message, date);
                 } catch (err) {
-                    // err
+                    console.log(err);
+                }
+            });
+
+            socket.on('drawingEvent', (drawingEvent: DrawingEvent) => {
+                if (!(drawingEvent instanceof Object)) {
+                    drawingEvent = JSON.parse(drawingEvent)
+                }
+                try {
+                    this.gameManagerService.dispatchDrawingEvent(drawingEvent);
+                } catch (err) {
+                    console.log(err);
                 }
             });
 
@@ -47,14 +61,14 @@ export class SocketConnectionService {
                 }
                 try {
                     socket.leave(request.oldLobbyId);
-                    if(this.lobbyManagerService.lobbyExist(request.lobbyId)){
+                    if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
                         throw new Error("this lobby does not exist")
                 } catch (err) {
-                    this.socketService.getSocket().emit('error', {"error": err.message});
+                    this.socketService.getSocket().emit('error', { "error": err.message });
                 }
             });
         });
