@@ -43,12 +43,11 @@ export class LobbyService {
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!
     });
-    const params = new HttpParams();
-    params.append('lobbyId', this.game.id);
-    params.append('teamNumber', teamNumber.toString());
-    params.append('username', username);
+    let params = new HttpParams();
+    params = params.append('lobbyId', this.game.id);
+    params = params.append('teamNumber', teamNumber.toString());
+    params = params.append('username', username);
     const options = { params: params, headers: headers,  responseType: 'text' as 'json'};
-    console.log(this.deleteVirtualPlayerUrl)
     this.http.delete(this.deleteVirtualPlayerUrl, options).subscribe();
   }
 
@@ -97,7 +96,6 @@ export class LobbyService {
   private listen() {
       this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
       this.socketService.bind('dispatchTeams', (res: any) => {
-        console.log(res)
         this.clearPlayers();
         res.players.forEach((user: { username: string; avatar: number; team: number}) => {
           this.game.player.push(user.username);
