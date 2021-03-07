@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel() {
-    // TODO: Implement the ViewModel
     private val _gameListResult = MutableLiveData<GameListResult>()
     val gameListResult: LiveData<GameListResult> = _gameListResult
 
@@ -45,7 +44,7 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
             }
 
             if (result is Result.Success) {
-                    _gameListResult.postValue(GameListResult(result.data))
+                _gameListResult.postValue(GameListResult(result.data))
             }
 
             if (result is Result.Error){
@@ -63,6 +62,11 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
 
     fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {
         gameListRepository.setFilter(filter, showThisTypeOfGame)
+        getGameList()
+    }
+
+    fun filterByGameName(gameName: String) {
+        gameListRepository.filterGameName = gameName
         getGameList()
     }
 

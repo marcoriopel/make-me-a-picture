@@ -26,7 +26,10 @@ export class ChatManagerService {
         let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        this.socketService.getSocket().emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000" });
+        this.socketService.getSocket().to(message.chatId).emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
+        if(message.chatId == 'General'){
+            this.socketService.getSocket().emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
+        }
     }
 
     async getAllUserChats(username: string, res: Response, next: NextFunction) {

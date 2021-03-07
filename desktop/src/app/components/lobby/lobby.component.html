@@ -1,39 +1,45 @@
-<div class="title-div">
-    <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
-    <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
-    <p class="title"> {{lobbyService.game.name}} </p>
-</div>
+<app-navbar cid="nav-bar"></app-navbar>
 
-<div class="teamList">
-
-    <div class="team">
-        <button class="button" id="joint-team-1" *ngIf="lobbyService.game.type == 0" (click)="lobbyService.joinTeam(1)"
-            [ngClass]="{'green' : !lobbyService.team1Full, 'white':  lobbyService.team1Full}"
-            > Rejoindre </button>
-        <div class="teammate" *ngFor="let teammate of lobbyService.game.team1 "> 
-            <p> {{teammate}} </p> 
-            <div class="add-bot" *ngIf="(teammate == 'Virtuel' && lobbyService.game.type == 0)" (click)="lobbyService.toggleVirtualPlayer(1)"> <p id="minus"> - </p> </div>
-        </div>
-        <div class="teammate" *ngIf="(lobbyService.game.team1.length < 2 && lobbyService.game.type == 0)"> 
-            <p> + Disponible </p>
-            <div class="add-bot" (click)="lobbyService.toggleVirtualPlayer(1)"> <p id="plus"> + </p> </div>
-        </div>
-        <div class="teammate" *ngIf="(lobbyService.game.team1.length < 4 && lobbyService.game.type == 1)"> <p id="plus"> + Disponible </p> </div>
+<div class="lobby">
+    <div class="title-div">
+        <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
+        <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
+        <img *ngIf="lobbyService.game.type == 2" [src]="sprintImgRef" class="sprint-logo"> 
+        <p class="title"> {{lobbyService.game.name}} </p>
     </div>
 
-    <div class="team" *ngIf="lobbyService.game.type == 0">
-        <button class="button" id="joint-team-2" (click)="lobbyService.joinTeam(2)" [ngClass]="{'green' : !lobbyService.isTeam2Full, 'white':  lobbyService.isTeam2Full}"> Rejoindre </button>
-        <div class="teammate" *ngFor="let teammate of lobbyService.game.team2 "> 
-            <p> {{teammate}} </p> 
-            <div class="add-bot" *ngIf="teammate == 'Virtuel'" (click)="lobbyService.toggleVirtualPlayer(2)"> <p id="minus"> - </p> </div>
+    <div class="teamList">
+
+        <div class="team">
+            <!-- <button class="button" id="joint-team-1" *ngIf="lobbyService.game.type == 0" (click)="lobbyService.joinTeam(1)" [ngClass]="{'green' : !lobbyService.team1Full, 'white':  lobbyService.team1Full}"> Rejoindre </button> -->
+            <div class="teammate" *ngFor="let teammate of lobbyService.game.team1 "> 
+                <p> {{teammate}} </p> 
+                <div class="add-bot" *ngIf="(teammate == lobbyService.virtalPlayer0)" (click)="lobbyService.removeVirtualPlayer(0)"> <p id="minus"> - </p> </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team1.length < 2 && lobbyService.game.type == 0)"> 
+                <p> + Disponible </p>
+                <div class="add-bot" (click)="lobbyService.addVirtualPlayer(0)"> <p id="plus"> + </p> </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team1.length < 4 && lobbyService.game.type == 1)"> <p id="plus"> + Disponible </p> </div>
         </div>
-        <div class="teammate" *ngIf="(lobbyService.game.team2.length < 2 && lobbyService.game.type == 0)">
-             <p> + Disponible </p>
-             <div class="add-bot" *ngIf="lobbyService.virtalPlayer2 == null" (click)="lobbyService.toggleVirtualPlayer(2)"> <p id="plus"> + </p> </div>
+
+        <div class="team" *ngIf="lobbyService.game.type == 0">
+            <!-- <button class="button" id="joint-team-2" (click)="lobbyService.joinTeam(2)" [ngClass]="{'green' : !lobbyService.isTeam2Full, 'white':  lobbyService.isTeam2Full}"> Rejoindre </button> -->
+            <div class="teammate" *ngFor="let teammate of lobbyService.game.team2 "> 
+                <p> {{teammate}} </p> 
+                <div class="add-bot" *ngIf="teammate == lobbyService.virtalPlayer1" (click)="lobbyService.removeVirtualPlayer(1)"> <p id="minus"> - </p> </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team2.length < 2 && lobbyService.game.type == 0)">
+                <p> + Disponible </p>
+                <div class="add-bot" *ngIf="lobbyService.virtalPlayer1 == null" (click)="lobbyService.addVirtualPlayer(1)"> <p id="plus"> + </p> </div>
+            </div>
         </div>
+
     </div>
 
+    <button class="button" id="start-game" (click)="lobbyService.start()" [ngClass]="{'green' : lobbyService.isLobbyFull, 'white':  !lobbyService.isLobbyFull}"> Commencer la partie </button>
 </div>
 
-<button class="button" id="start-game" (click)="lobbyService.start()" [ngClass]="{'green' : lobbyService.isLobbyFull, 'white':  !lobbyService.isLobbyFull}"> Commencer la partie </button>
-
+<div id="chat-bar">
+    <app-chat-bar></app-chat-bar>
+</div>

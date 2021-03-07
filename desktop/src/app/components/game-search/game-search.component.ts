@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { SearchGameService } from '@app/services/search-game/search-game.service';
+import { GamePreviewComponent } from '../game-preview/game-preview.component';
 
 @Component({
   selector: 'app-game-search',
@@ -17,6 +18,8 @@ export class GameSearchComponent implements OnInit {
     ["normal", true],
     ["hard", true]
   ])
+
+  @ViewChildren('preview') previews: QueryList<GamePreviewComponent>;
 
   sprintImgRef: string = "../../../assets/img/sprintLogo.png";
   classicBlackImgRef: string =  "../../../assets/img/classicLogoBlack.png";
@@ -50,6 +53,12 @@ export class GameSearchComponent implements OnInit {
     } else {
       this.searchGameService.filterName(gameName);
     }
+  }
+
+  closeAllPreview(): void {
+    this.previews.forEach(preview => {
+      preview.closePreview();
+    });
   }
 
 }

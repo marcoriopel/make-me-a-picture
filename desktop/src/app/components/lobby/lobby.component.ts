@@ -13,6 +13,7 @@ export class LobbyComponent implements OnInit {
   constructor(public lobbyService: LobbyService) { }
 
   ngOnInit(): void {
+    
   }
 
 }

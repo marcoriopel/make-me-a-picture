@@ -15,6 +15,7 @@ class GameListRepository {
 
     var lobbyRepository = LobbyRepository.getInstance()!!
     val filters = arrayOf(true, true, true, true, true)
+    var filterGameName: String = ""
 
     suspend fun getGameList(): Result<MutableList<Game>> {
         val response = HttpRequestDrawGuess.httpRequestGet("/api/games/list")
@@ -59,7 +60,8 @@ class GameListRepository {
         if (!filters[GameFilter.HARD.filter] && game.difficulty == GameDifficulty.HARD) {
             return false
         }
-        return true
+
+        return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }
 
     fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {
