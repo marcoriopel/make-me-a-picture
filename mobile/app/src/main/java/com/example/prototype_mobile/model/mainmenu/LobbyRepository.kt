@@ -51,6 +51,7 @@ class LobbyRepository() {
 
     fun listenLobby(lobbyID: String) {
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, lobbyID)))
+        currentListenLobby = lobbyID
     }
 
     suspend fun joinLobby(game: Game): Result<Game> {
@@ -74,5 +75,40 @@ class LobbyRepository() {
         }
     }
 
+    suspend fun addVirtualPlayer(team: Int): Result<String> {
+        val map = HashMap<String, String>()
+        map["lobbyId"] = currentListenLobby
+        map["teamNumber"] = team.toString()
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/add/virtual/player", map, true)
+        val result = analyseAddVirtualPlayerAnswer(response)
 
+        return result;
+    }
+
+    fun analyseAddVirtualPlayerAnswer(response: Response): Result<String> {
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success("Added")
+        } else {
+            return Result.Error(response.code())
+        }
+    }
+
+    suspend fun removeVirtualPlayer(team: Int, username: String): Result<String> {
+        val map = HashMap<String, String>()
+        map["lobbyId"] = currentListenLobby
+        map["teamNumber"] = team.toString()
+        map["username"] = username
+        val response = HttpRequestDrawGuess.httpRequestDelete("/api/games/remove/virtual/player", map, true)
+        val result = analyseRemoveVirtualPlayerAnswer(response)
+
+        return result;
+    }
+
+    fun analyseRemoveVirtualPlayerAnswer(response: Response): Result<String> {
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success("Removed")
+        } else {
+            return Result.Error(response.code())
+        }
+    }
 }
