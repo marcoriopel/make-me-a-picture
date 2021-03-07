@@ -1,112 +1,86 @@
 import { Injectable } from '@angular/core';
-import { ACCESS } from '@app/classes/acces';
-import { io } from "socket.io-client";
-
+import { Chat, Message } from '@app/classes/chat';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SocketService } from '@app/services/socket/socket.service';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-
+  private baseUrl = environment.api_url;
+  private getJoinedChatUrl = this.baseUrl + '/api/chat/joined';
   public isChatInExternalWindow: boolean = false;
-  private completeChatList: any[] = [];
+  private chatList: Chat[] = [{
+    name: 'Général',
+    messages: [],
+    chatId: 'General',
+  }];
   private index: number = 0;
-  private chatList: string[] = [];
-  private currentChat: string = "General";
+  private currentChatId: string = "General";
 
-  constructor() {
-    // TODO: Get all user's chat
-    this.connect();
+  constructor(private http: HttpClient, private socketService: SocketService) {
+    this.initializeChats();
+    this.initializeMessageListener();
   }
 
-  connect(): void {
-    // Prevent double connection
-    if (this.completeChatList.length == 0) {
-      // this.connectToNewChat("General", "http://18.217.235.167:3000/");
-      this.connectToNewChat("Local", "http://localhost:3000/");
-      this.setCurrentChat(this.chatList[0]);
-    }
+  async initializeChats() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    const options = { headers: headers};
+    this.http.get<any>(this.getJoinedChatUrl, options)
+      .subscribe((data: any) => {
+        this.chatList.pop(); // Temporary fix to async construction problem
+        data.chats.forEach((element: any) => {
+          const chat: Chat = {
+            name: element.chatName,
+            chatId: element.chatId,
+            messages: [],
+          }
+          this.chatList.push(chat);
+        });
+      });
   }
 
-  disconnect(): void {
-    this.completeChatList.forEach(chat => {
-      chat["socket"].off("message");
-      delete chat["socket"];
-    });
-    this.completeChatList = [];
-    this.chatList = [];
-    this.currentChat = '';
-  }
-
-  setCurrentChat(name: string): void {
-    for (let i = 0; i < this.completeChatList.length; i++) {
-      if (this.completeChatList[i]["name"] == name) {
+  setCurrentChat(chatId: string): void {
+    this.currentChatId = chatId;
+    for(let i = 0; i < this.chatList.length; i++){
+      if(this.chatList[i].chatId == chatId){
         this.index = i;
-        this.currentChat = name;
-        break;
       }
     }
   }
 
-  getChatMessages(): void {
-    return this.completeChatList[this.index]["messages"];
+  getChatMessages(): Message[] {
+    console.log(this.chatList[this.index]["messages"])
+    return this.chatList[this.index]["messages"];
   }
 
-  getChatList(): string[] {
+  getChatList(): Chat[] {
     return this.chatList;
   }
 
   getCurrentChat(): string {
-    return this.currentChat;
+    return this.currentChatId;
   }
 
   sendMessage(message: string): void {
     const jwt = localStorage.getItem('token');
-    this.completeChatList[this.index]["socket"].emit('message', { "text": message, "token": jwt, "chatId": this.currentChat });
+    this.socketService.emit('message', { "text": message, "token": jwt, "chatId": this.currentChatId })
   }
 
-  private connectToNewChat(name: string, url: string): void {
-    // TODO (Feature 85-90): try catch for non existant server
-    const jwt = localStorage.getItem(ACCESS.TOKEN) as string;
-    const socket = io(url, {
-      extraHeaders: {
-        "authorization": jwt
-      }
-    });
-    socket.connect();
-    const index = this.completeChatList.push({ name: name, url: url, socket: socket, messages: [] });
-    this.index = index - 1;
-    // TODO (Waiting for server side): Get history
-    this.bindMessage(index - 1, name);
-  }
-
-  private bindMessage(index: number, name: string): void {
-    this.completeChatList[index]["socket"].on('connect', () => {
-      this.chatList.push(name);
-      this.setCurrentChat(name);
-    });
-
-    this.completeChatList[index]["socket"].on('message', (message: any) => {
-      // TODO (Feature 85-90): Catch error if socket not connected
+  initializeMessageListener(): void {
+    this.socketService.bind('message', (message: any) => {
       const username = localStorage.getItem('username');
-      this.completeChatList[index]["messages"].push({
+      const msg: Message = {
         "username": message.user.username,
         "avatar": message.user.avatar,
         "text": message.text,
         "timeStamp": message.timeStamp,
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
-      });
-    });
-
-    this.completeChatList[index]["socket"].on('dispatchTeams', (players: any) => {
-      // TODO : change location of this code
-      console.log(players);
-    });
-
-    this.completeChatList[index]["socket"].on('error', (error: string) => {
-      // TODO : change location of this code
-      console.error(error);
+      }
+      this.chatList[this.index]["messages"].push(msg);
     });
   }
-
 }

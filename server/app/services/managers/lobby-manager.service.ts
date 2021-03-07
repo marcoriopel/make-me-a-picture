@@ -63,12 +63,7 @@ export class LobbyManagerService {
                 lobby.addPlayer(user);
                 this.dispatchTeams(req.body.lobbyId);
             }
-<<<<<<< HEAD:server/app/services/lobby-manager.service.ts
-            catch (err){
-                console.log(err);
-=======
             catch (err) {
->>>>>>> origin/dev:server/app/services/managers/lobby-manager.service.ts
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
             }
         }
@@ -121,11 +116,6 @@ export class LobbyManagerService {
 
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
-<<<<<<< HEAD:server/app/services/lobby-manager.service.ts
-        console.log(lobby.getPlayers());
-        LobbyManagerService.socket.to(lobbyId).emit('dispatchTeams', {"players": lobby.getPlayers()});
-=======
         this.socketService.getSocket().to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
->>>>>>> origin/dev:server/app/services/managers/lobby-manager.service.ts
     }
 }
