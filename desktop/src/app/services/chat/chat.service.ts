@@ -52,7 +52,6 @@ export class ChatService {
   }
 
   getChatMessages(): Message[] {
-    console.log(this.chatList[this.index]["messages"])
     return this.chatList[this.index]["messages"];
   }
 
