@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NewGame, Game ,GameType } from '@app/classes/game';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { SocketService } from '@app/services/socket/socket.service';
@@ -23,7 +23,7 @@ export class LobbyService {
   private createGameUrl = this.baseUrl + "/api/games/create";
   private joinUrl = this.baseUrl + "/api/games/join";
   private addVirtualPlayerUrl = this.baseUrl + "/api/games/add/virtual/player";
-  // private removeVirtualPlayerUrl = this.baseUrl + "/api/games/remove/virtual/player"
+  private deleteVirtualPlayerUrl = this.baseUrl + "/api/games/remove/virtual/player";
 
   constructor(private http: HttpClient, private socketService: SocketService) {}
 
@@ -37,8 +37,18 @@ export class LobbyService {
   }
 
   removeVirtualPlayer(teamNumber: number): void {
-    throw new Error('Method not implemented.');
-    // TODO: Http Request when it's update
+    const username = teamNumber ? this.virtalPlayer1: this.virtalPlayer0
+    if(!username) return;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!
+    });
+    let params = new HttpParams();
+    params = params.append('lobbyId', this.game.id);
+    params = params.append('teamNumber', teamNumber.toString());
+    params = params.append('username', username);
+    const options = { params: params, headers: headers,  responseType: 'text' as 'json'};
+    this.http.delete(this.deleteVirtualPlayerUrl, options).subscribe();
   }
 
   start(): void {
