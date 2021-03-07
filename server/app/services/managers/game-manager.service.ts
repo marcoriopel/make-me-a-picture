@@ -3,11 +3,12 @@ import { LobbyManagerService } from './lobby-manager.service';
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { GameType } from '@app/ressources/variables/game-variables';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { SocketService } from '../sockets/socket.service';
+import { TYPES } from '@app/types';
 import { Game } from '@app/classes/game/game';
 import { Lobby } from '@app/classes/lobby/lobby';
 import { ClassicGame } from '@app/classes/game/classic-game';
-import { SocketService } from '../sockets/socket.service';
-import { TYPES } from '@app/types';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
 
 
@@ -72,5 +73,9 @@ export class GameManagerService {
             return res.status(StatusCodes.UNAUTHORIZED).send(e.message);
         }
         next();
+    }
+
+    dispatchDrawingEvent(event: DrawingEvent){
+        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "event": event});
     }
 }
