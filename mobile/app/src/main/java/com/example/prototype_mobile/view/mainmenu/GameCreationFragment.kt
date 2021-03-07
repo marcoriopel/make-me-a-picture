@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match

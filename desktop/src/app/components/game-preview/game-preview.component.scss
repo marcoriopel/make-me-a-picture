@@ -17,19 +17,35 @@
     border: none;
     outline:none;
     transition: all 0.5s ease-out;
-    
-    .sprint-logo {
-        float:right;
-        margin: 10px;
-        height: 42px;
-        margin-right: 20px;
-    }
 
-    .classic-logo {
-        float:right;
-        margin: 15px;
-        height: 25px;
-        margin-right: 20px;
+    .all-info{ 
+        display: flex;
+        justify-content: space-between;
+
+        .info {
+            width: 100px;
+            display: flex;
+            justify-content: flex-end;
+            float: right;
+    
+            .difficulty {
+                width: 30px;
+                height: 30px;
+                margin-top: 15px;
+            }
+            
+            .sprint-logo {
+                margin: 10px;
+                height: 42px;
+                margin-right: 20px;
+            }
+        
+            .classic-logo {
+                margin: 15px;
+                height: 25px;
+                margin-right: 20px;
+            }
+        }
     }
 }
 
@@ -41,11 +57,14 @@
 .title {
     margin-left: 10%;
     line-height: 58px;
+    width: 70%;
+    overflow: hidden;
 }
 
 .preview {
     vertical-align: top;
     margin: 0%;
+    display: flex;
 }
 
 .joint-button {
@@ -67,4 +86,26 @@
     color:  #F2F2F2;
     border: none;
     outline:none;
+}
+
+.players {
+    width: 60%;
+    height: 80%;
+    overflow: scroll;
+    display: flex;
+    justify-content: flex-start;
+    .player {
+        margin: 5px;
+        display: flex;
+        flex-shrink: 3;
+
+        p {
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+    }
+}
+
+.players::-webkit-scrollbar {
+    display: none;
 }

@@ -40,11 +40,13 @@ import { ChatService } from './services/chat/chat.service';
 import { ImageCreationComponent } from './components/image-creation/image-creation.component';
 import { GameBarComponent } from './components/game-bar/game-bar.component';
 import { SearchGameService } from './services/search-game/search-game.service';
-import { GameMenuComponent } from './components/game-menu/game-menu.component';
 import { GameSearchComponent } from './components/game-search/game-search.component';
+import { ViewingComponent } from './components/viewing/viewing.component';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
-import { LobbyService } from './services/lobby/lobby.service'
+import { LobbyService } from './services/lobby/lobby.service';
+import { GameCreationComponent } from './components/game-creation/game-creation.component'
+import { SocketService } from './services/socket/socket.service';
 
 @NgModule({
     declarations: [
@@ -63,10 +65,11 @@ import { LobbyService } from './services/lobby/lobby.service'
         AvatarIconComponent,
         ChatComponent,
         GameBarComponent,
-        GameMenuComponent,
         GameSearchComponent,
+        ViewingComponent,
         GamePreviewComponent,
-        LobbyComponent
+        LobbyComponent,
+        GameCreationComponent
     ],
     imports: [
         BrowserModule,
@@ -98,7 +101,7 @@ import { LobbyService } from './services/lobby/lobby.service'
         BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

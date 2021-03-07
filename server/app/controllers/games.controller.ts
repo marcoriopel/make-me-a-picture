@@ -7,7 +7,7 @@ import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
-import { GameManagerService } from '@app/services/game-manager.service';
+import { GameManagerService } from '@app/services/managers/game-manager.service';
 
 
 @injectable()
@@ -69,6 +69,14 @@ export class GamesController {
     this.router.delete('/remove/virtual/player', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
         this.lobbyManagerService.removeVirtualPlayer(req, res, () => {
+          res.sendStatus(StatusCodes.OK)
+        });
+      });
+    });
+
+    this.router.post('/word/selection', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.gameManagerService.chooseDrawingWord(user.username, req, res, () => {
           res.sendStatus(StatusCodes.OK)
         });
       });

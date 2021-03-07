@@ -103,14 +103,20 @@ class LobbyFragment : Fragment() {
                 team2Count++
             }
         }
+        binding.lobbyVirtual1.visibility = View.GONE
+        binding.lobbyVirtual2.visibility = View.GONE
 
-        while (team1Count < 2) {
+        while(team1Count < 2) {
             usernameList[team1Count].text = getString(R.string.available)
+            binding.lobbyVirtual1.visibility = View.VISIBLE
             team1Count++
         }
 
-        if(team2Count < 4) {
+        while(team2Count < 4) {
             usernameList[team2Count].text = getString(R.string.available)
+            if(team2Count == 3) {
+                binding.lobbyVirtual2.visibility = View.VISIBLE
+            }
             team2Count++
         }
     }

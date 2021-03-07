@@ -29,5 +29,12 @@ export class DrawingsController {
             });
         });
 
+        this.router.get('/suggestions', (req, res) => {
+            this.tokenService.authenticateToken(req, res, () => {
+                const suggestions = this.drawingsService.drawingWordSuggestion();
+                res.status(StatusCodes.OK).send({ suggestions });
+            });
+        });
+
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Stroke } from '@app/classes/drawing';
 import { Tool } from '@app/classes/tool';
-import { Pencil } from '@app/classes/tool-properties';
 import { Vec2 } from '@app/classes/vec2';
 import { MouseButton } from '@app/ressources/global-variables/global-variables';
 import { TOOL_NAMES } from '@app/ressources/global-variables/tool-names';
@@ -12,7 +12,7 @@ import { DrawingService } from '@app/services/drawing/drawing.service';
 })
 export class PencilService extends Tool {
     private pathData: Vec2[];
-    private pencilData: Pencil;
+    private pencilData: Stroke;
     name: string = TOOL_NAMES.PENCIL_TOOL_NAME;
     width: number = 1;
 
@@ -72,9 +72,9 @@ export class PencilService extends Tool {
         }
     }
 
-    drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Pencil): void {
+    drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
         ctx.lineWidth = pencil.lineWidth;
-        ctx.strokeStyle = pencil.primaryColor;
+        ctx.strokeStyle = pencil.lineColor;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -90,10 +90,9 @@ export class PencilService extends Tool {
 
     private updatePencilData(): void {
         this.pencilData = {
-            type: 'pencil',
             path: this.pathData,
             lineWidth: this.drawingService.lineWidth,
-            primaryColor: this.drawingService.color,
+            lineColor: this.drawingService.color,
         };
     }
 

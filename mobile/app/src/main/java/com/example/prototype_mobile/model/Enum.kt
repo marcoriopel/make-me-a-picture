@@ -19,3 +19,7 @@ enum class GameType(val type: Int){
 enum class GameFilter(val filter: Int){
     CLASSIC(0), COOP(1), EASY(2), MEDIUM(3), HARD(4)
 }
+
+enum class SelectedButton(number: Int){
+    CLASSIC(0), SPRINT(1), COOP(2), NONE(3), SEARCH(4)
+}
