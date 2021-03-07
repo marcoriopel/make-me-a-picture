@@ -11,9 +11,9 @@ export class GameBarComponent {
   @ViewChild("classic") classicButtonRef: ElementRef;
   @ViewChild("solo") soloButtonRef: ElementRef;
   @ViewChild("coop") coopButtonRef: ElementRef;
-  private soloOpen: boolean = false;
-  private coopOpen: boolean = false;
-  private classicOpen: boolean = false;
+  soloOpen: boolean = false;
+  coopOpen: boolean = false;
+  classicOpen: boolean = false;
 
   sprintImgRef: string = "../../../assets/img/sprintLogo.png";
   classicBlackImgRef: string =  "../../../assets/img/classicLogoBlack.png";

@@ -4,6 +4,7 @@ import { AuthService } from '@app/services/auth/auth.service';
 import { User } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { ChatService } from '@app/services/chat/chat.service';
+import { ACCESS } from '@app/classes/acces';
 
 @Component({
   selector: 'app-login',
@@ -30,9 +31,9 @@ export class LoginComponent implements OnInit {
     this.authService.login(user)
       .subscribe(
         res => {
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('username', this.form.value.username);
-          localStorage.setItem('avatar', res.avatar);
+          localStorage.setItem(ACCESS.TOKEN, res.token);
+          localStorage.setItem(ACCESS.USERNAME, this.form.value.username);
+          localStorage.setItem(ACCESS.AVATAR, res.avatar);
           this.router.navigate(['/home']);
           this.chatService.connect();
         },

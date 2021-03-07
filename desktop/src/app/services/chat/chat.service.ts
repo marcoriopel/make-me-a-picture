@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ACCESS } from '@app/classes/acces';
 import { io } from "socket.io-client";
 
 @Injectable({
@@ -65,7 +66,7 @@ export class ChatService {
 
   private connectToNewChat(name: string, url: string): void {
     // TODO (Feature 85-90): try catch for non existant server
-    const jwt = localStorage.getItem('token') as string;
+    const jwt = localStorage.getItem(ACCESS.TOKEN) as string;
     const socket = io(url, {
       extraHeaders: {
         "authorization": jwt

@@ -5,6 +5,7 @@ import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
 import { ChatService } from '@app/services/chat/chat.service';
+import { ACCESS } from '@app/classes/acces';
 
 @Component({
   selector: 'app-register',
@@ -60,9 +61,9 @@ export class RegisterComponent implements OnInit {
     }
     this.authService.register(user).subscribe(
       res => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('username', this.userRegistrationForm.value.username);
-        localStorage.setItem('avatar', res.avatar);
+        localStorage.setItem(ACCESS.TOKEN, res.token);
+        localStorage.setItem(ACCESS.USERNAME, this.userRegistrationForm.value.username);
+        localStorage.setItem(ACCESS.USERNAME, res.avatar);
         this.router.navigate(['/home']);
         this.chatService.connect();
       },

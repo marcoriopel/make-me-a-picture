@@ -25,7 +25,7 @@
 
     <div class="game-list">
         <div *ngFor="let game of this.searchGameService.displayList">
-            <app-game-preview [name]=game.name [type]=game.type></app-game-preview>
+            <app-game-preview #preview [game]=game (closeAllPreview)="closeAllPreview()"></app-game-preview>
         </div>
     </div>
 
