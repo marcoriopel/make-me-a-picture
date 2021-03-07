@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.Nullable
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.prototype_mobile.Difficulty
@@ -16,9 +15,9 @@ import com.example.prototype_mobile.GameName
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameParameterBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
+import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.view.connection.login.afterTextChanged
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
-import com.example.prototype_mobile.viewmodel.mainmenu.GameList.SelectedButton
 import java.util.*
 
 class GameParameterFragment : Fragment() {
@@ -29,8 +28,6 @@ class GameParameterFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -149,8 +146,6 @@ class GameParameterFragment : Fragment() {
             SelectedButton.SPRINT -> {
                 binding.GameCreation.text = "Création d'une partie sprint solo"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
-
-               // binding.GameCreation.setCompoundDrawablesWithIntrinsicBounds(null,null,drawable ,null)
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"
