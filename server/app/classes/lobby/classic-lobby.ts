@@ -89,7 +89,15 @@ export class ClassicLobby extends Lobby {
         return players;
     }
 
-    removePlayer(): void { }
+    removePlayer(user: BasicUser): void {
+        for(let team of this.teams){
+            if(team.has(user.username)){
+                team.delete(user.username);
+                return
+            }
+        }
+        throw new Error("You are not part of this lobby")
+    }
 
     private isUserInLobby(user: BasicUser): boolean {
         return this.teams[0].has(user.username) || this.teams[1].has(user.username);

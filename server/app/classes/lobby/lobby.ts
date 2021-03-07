@@ -22,7 +22,7 @@ export abstract class Lobby {
 
     getPlayers(): any{} 
 
-    removePlayer(): void{}
+    removePlayer(user: BasicUser): void{}
 
     getGameName():string{
         return this.gameName;

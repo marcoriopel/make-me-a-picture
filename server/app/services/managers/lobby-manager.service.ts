@@ -72,6 +72,22 @@ export class LobbyManagerService {
         next();
     }
 
+    leave(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
+        if (this.lobbyExist(req.query.lobbyId)) {
+            try {
+                const lobby: Lobby = LobbyManagerService.lobbies.get(req.query.lobbyId);
+                lobby.removePlayer(user);
+                this.dispatchTeams(req.query.lobbyId);
+            }
+            catch (err) {
+                return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
+            }
+        }
+        else
+            return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
+        next();
+    }
+
     addVirtualPlayer(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (req.body.teamNumber != 0 && req.body.teamNumber != 1) {
             return res.status(StatusCodes.BAD_REQUEST).send("Provided team number for virtual player is invalid");
