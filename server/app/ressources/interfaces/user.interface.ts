@@ -15,3 +15,10 @@ export interface DetailedUser {
     password: string;
     avatar: number;
 }
+
+export interface Player {
+    username: string;
+    avatar: number;
+    isVirtual: boolean;
+    socketId: string;
+}

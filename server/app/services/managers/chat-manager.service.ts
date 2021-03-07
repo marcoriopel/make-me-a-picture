@@ -39,12 +39,12 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                chatNames.push({​​​​​ "chatId": chatId, "chatName": chatInfo["chatName"]}​​​​​);
+                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"]});
             }
             next(chatNames);
         }
         catch (e) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
     async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
@@ -59,7 +59,7 @@ export class ChatManagerService {
             next(chatsHistory);
         }
         catch (e) {
-            return res.sendStatus(StatusCodes.BAD_REQUEST);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
 

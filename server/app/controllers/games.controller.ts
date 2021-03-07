@@ -74,5 +74,13 @@ export class GamesController {
       });
     });
 
+    this.router.post('/word/selection', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.gameManagerService.chooseDrawingWord(user.username, req, res, () => {
+          res.sendStatus(StatusCodes.OK)
+        });
+      });
+    });
+
   }
 }
