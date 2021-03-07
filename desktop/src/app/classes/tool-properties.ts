@@ -1,10 +1,9 @@
 import { Vec2 } from './vec2';
 
 export interface Pencil {
-    type: string;
     path: Vec2[];
     lineWidth: number;
-    primaryColor: string;
+    lineColor: string;
 }
 
 export interface Eraser {

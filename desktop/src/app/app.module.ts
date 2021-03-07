@@ -41,6 +41,7 @@ import { ImageCreationComponent } from './components/image-creation/image-creati
 import { GameBarComponent } from './components/game-bar/game-bar.component';
 import { SearchGameService } from './services/search-game/search-game.service';
 import { GameSearchComponent } from './components/game-search/game-search.component';
+import { ViewingComponent } from './components/viewing/viewing.component';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyService } from './services/lobby/lobby.service';
@@ -65,6 +66,7 @@ import { SocketService } from './services/socket/socket.service';
         ChatComponent,
         GameBarComponent,
         GameSearchComponent,
+        ViewingComponent,
         GamePreviewComponent,
         LobbyComponent,
         GameCreationComponent

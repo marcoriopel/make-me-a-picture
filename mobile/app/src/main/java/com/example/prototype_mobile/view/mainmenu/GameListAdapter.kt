@@ -12,12 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
+import com.example.prototype_mobile.util.Drawable
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
+
 
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val viewModel: GameListViewModel): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
-    val difficultyDrawable = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
-    val gameTypeDrawable = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
-    val avatarsDrawable = arrayOf(R.drawable.avatar0, R.drawable.avatar1, R.drawable.avatar2, R.drawable.avatar3, R.drawable.avatar4, R.drawable.avatar5)
     var lastGameChecked: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
@@ -32,21 +31,32 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
     override fun onBindViewHolder(holder: GameListAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
         holder.gameName.setText(gameData.gameName)
-        holder.gameDifficulty.setImageResource(difficultyDrawable[gameData.difficulty.difficulty])
-        holder.gameType.setImageResource(gameTypeDrawable[gameData.gameType.type])
+        holder.gameDifficulty.setImageResource(Drawable.difficulty[gameData.difficulty.difficulty])
+        holder.gameType.setImageResource(Drawable.gameTypeDrawableWhite[gameData.gameType.type])
+        val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
 
         holder.view.setOnClickListener{
-            closeLastGame()
             if (it != lastGameChecked) {
-                val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
-                val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
-                val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
-                section1.visibility = View.VISIBLE
-                section2.visibility = View.VISIBLE
-                joinButton.visibility = View.VISIBLE
+                closeLastGame()
                 viewModel.listenLobby(gameData.gameID)
                 lastGameChecked = it
             }
+            val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
+            val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
+            if(section1.visibility == View.GONE) {
+                section1.visibility = View.VISIBLE
+                section2.visibility = View.VISIBLE
+                joinButton.visibility = View.VISIBLE
+
+            } else {
+                section1.visibility = View.GONE
+                section2.visibility = View.GONE
+                joinButton.visibility = View.GONE
+            }
+        }
+
+        joinButton.setOnClickListener {
+            viewModel.joinLobby(gameData)
         }
     }
 
@@ -77,7 +87,11 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
             var i = 0
             for(player in lobbyPlayers.players) {
                 usernameList[i].text = player.username
-                avatarList[i].setImageResource(avatarsDrawable[player.avatar])
+                avatarList[i].setImageResource(Drawable.avatars[player.avatar])
+                i++
+            }
+            while (i < 4) {
+                usernameList[i].text = context.getString(R.string.available)
                 i++
             }
         }

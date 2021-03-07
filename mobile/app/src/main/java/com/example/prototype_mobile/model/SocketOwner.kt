@@ -27,7 +27,7 @@ class SocketOwner() {
         try {
             //This address is the way you can connect to localhost with AVD(Android Virtual Device)
             socket = IO.socket("http://18.217.235.167:3000/")
-            //mSocket = IO.socket("http://10.0.2.2:3000/")
+           // socket = IO.socket("http://10.0.2.2:3000/")
 
         } catch (e: Exception) {
             e.printStackTrace()

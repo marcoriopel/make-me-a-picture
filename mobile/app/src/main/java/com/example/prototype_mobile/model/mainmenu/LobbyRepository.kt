@@ -4,11 +4,15 @@ package com.example.prototype_mobile.model.mainmenu
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.ListenLobby
-import com.example.prototype_mobile.LobbyPlayers
+import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.HttpRequestDrawGuess
+import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
+import okhttp3.Response
+import org.json.JSONObject
 
 class LobbyRepository() {
     companion object {
@@ -33,10 +37,13 @@ class LobbyRepository() {
     private val _lobbyPlayers = MutableLiveData<LobbyPlayers>()
     val lobbyPlayers: LiveData<LobbyPlayers> = _lobbyPlayers
 
+    private val _lobbyJoined = MutableLiveData<Game>()
+    val lobbyJoined: LiveData<Game> = _lobbyJoined
     var onTeamsUpdate = Emitter.Listener {
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
     }
+
     init {
         socket = SocketOwner.getInstance()!!.socket
         socket.on("dispatchTeams", onTeamsUpdate)
@@ -45,5 +52,27 @@ class LobbyRepository() {
     fun listenLobby(lobbyID: String) {
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, lobbyID)))
     }
+
+    suspend fun joinLobby(game: Game): Result<Game> {
+        val map = HashMap<String, String>()
+        map["lobbyId"] = game.gameID
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join", map, true)
+        val result = analyseJoinLobbyAnswer(response, game)
+
+        if (result is Result.Success) {
+            _lobbyJoined.postValue(game)
+        }
+
+        return result;
+    }
+
+    fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success(game)
+        } else {
+            return Result.Error(response.code())
+        }
+    }
+
 
 }

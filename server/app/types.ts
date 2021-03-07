@@ -9,6 +9,7 @@ export const TYPES = {
 
     TokenService: Symbol('TokenService'),
     SocketService: Symbol('SocketService'),
+    SocketConnectionService: Symbol('SocketConnectionService'),
     AuthService: Symbol('AuthService'),
     ChatManagerService: Symbol('ChatManagerService'),
     LobbyManagerService: Symbol('LobbyManagerService'),
