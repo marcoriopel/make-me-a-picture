@@ -104,6 +104,10 @@ class LobbyFragment : Fragment() {
 
         if (lobbyPlayers.players.size == 4) {
             binding.start.isActivated = true
+            binding.start.isClickable = true
+        } else {
+            binding.start.isActivated = false
+            binding.start.isClickable = false
         }
     }
 
@@ -179,6 +183,7 @@ class LobbyFragment : Fragment() {
 
     fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
         binding.start.isActivated = true
+        binding.start.isClickable = true
         binding.lobby4playerLayout.visibility = View.GONE
         binding.lobby1playerLayout.visibility = View.VISIBLE
         if(lobbyPlayers.players.size > 0) {
