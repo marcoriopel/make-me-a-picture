@@ -101,14 +101,6 @@ class LobbyFragment : Fragment() {
             GameType.SOLO -> updatePlayerSolo(lobbyPlayers)
             GameType.COOP -> updatePlayersCoop(lobbyPlayers)
         }
-
-        if (lobbyPlayers.players.size == 4) {
-            binding.start.isActivated = true
-            binding.start.isClickable = true
-        } else {
-            binding.start.isActivated = false
-            binding.start.isClickable = false
-        }
     }
 
     fun updatePlayersClassic(lobbyPlayers: LobbyPlayers) {
@@ -178,6 +170,14 @@ class LobbyFragment : Fragment() {
             binding.lobbyVirtual2.isClickable = true
             team2HasVirtualPlayer = false
         }
+
+        if (lobbyPlayers.players.size == 4) {
+            binding.start.isActivated = true
+            binding.start.isClickable = true
+        } else {
+            binding.start.isActivated = false
+            binding.start.isClickable = false
+        }
     }
 
 
@@ -193,6 +193,8 @@ class LobbyFragment : Fragment() {
     }
 
     fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){
+        binding.start.isActivated = true
+        binding.start.isClickable = true
         var i = 0
         for(player in lobbyPlayers.players) {
             usernameList[i].text = player.username
