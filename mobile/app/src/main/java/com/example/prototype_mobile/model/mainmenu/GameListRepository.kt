@@ -45,6 +45,9 @@ class GameListRepository {
     }
 
     private fun filterGame(game: Game) :Boolean {
+        if (game.gameType == GameType.SOLO) {
+            return false
+        }
         if (!filters[GameFilter.CLASSIC.filter] && game.gameType == GameType.CLASSIC) {
             return false
         }
