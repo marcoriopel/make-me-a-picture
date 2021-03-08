@@ -8,7 +8,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
-import com.example.prototype_mobile.R
+import com.example.prototype_mobile.*
+import java.util.*
 import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12f // has to be float
@@ -17,11 +18,7 @@ private const val GRID_WIDTH = 2f // has to be float
 // Inspired by: https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas#5
 class MyCanvasView(context: Context) : View(context) {
 
-    private lateinit var extraCanvas: Canvas
-    private lateinit var extraBitmap: Bitmap
-    private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
     private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
-    private var path = Path()
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
     private var currentX = 0f
@@ -32,52 +29,49 @@ class MyCanvasView(context: Context) : View(context) {
     // Path representing what's currently being drawn
     private val curPath = Path()
 
+    // (Future feature) Save Drawing
+    private var coordPath = mutableListOf<Coord>()
+    private val strokeList = mutableListOf<Stroke>()
+
     // Grid
-    private var isGrid = true;
+    private var isGrid = false;
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
     private val gridColor = ResourcesCompat.getColor(resources, R.color.gridColor, null)
 
+    // Undo Redo
+    private val undoStack = Stack<PathPaint>()
+    private var redoStack = Stack<PathPaint>()
+
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
 
-        // BITMAP VERSION
-//        if (::extraBitmap.isInitialized)
-//            extraBitmap.recycle()
-//
-//        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-//        extraCanvas = Canvas(extraBitmap)
-//        extraCanvas.drawColor(backgroundColor)
-
+        // Create grid canvas
         gridBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         gridCanvas = Canvas(gridBitmap)
-
         var x = 0F
         while(x < width) {
             gridCanvas.drawLine(x, 0F, x, height.toFloat(), gridPaint)
-            x += 50F
+            x += 50F // Change this value to change the grid size
         }
         var y = 0F
         while(y < height) {
             gridCanvas.drawLine(0F, y, width.toFloat(), y, gridPaint)
-            y += 50F
+            y += 50F // Change this value to change the grid size
         }
-
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // BITMAP VERSION
-//          canvas.drawBitmap(extraBitmap, 0f, 0f, null)
+        // Draw the drawing so far
+        canvas.drawPath(drawing, paint)
+        // Draw any current squiggle
+        canvas.drawPath(curPath, paint)
 
-        // PATH VERSION
-            // Draw the drawing so far
-            canvas.drawPath(drawing, paint)
-            // Draw any current squiggle
-            canvas.drawPath(curPath, paint)
-
-        canvas.drawBitmap(gridBitmap, 0f, 0f, null)
+        // Add if to activate / unactivated the grid
+        if (isGrid)
+            canvas.drawBitmap(gridBitmap, 0f, 0f, null)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -93,19 +87,22 @@ class MyCanvasView(context: Context) : View(context) {
     }
 
     private fun touchStart() {
-        // BITMAP VERSION
-//          path.reset()
-//          path.moveTo(motionTouchEventX, motionTouchEventY)
-        // PATH VERSION
-            curPath.reset()
-            curPath.moveTo(motionTouchEventX, motionTouchEventY)
-            // Add dot for touch feedback
-            curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
+        curPath.reset()
+        curPath.moveTo(motionTouchEventX, motionTouchEventY)
+        // Add dot for touch feedback
+        curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
 
         // Call the onDraw() method to update the view
         invalidate()
         currentX = motionTouchEventX
         currentY = motionTouchEventY
+        val coord = Coord(currentX, currentY)
+
+        // TODO: Send path start
+
+        // (Future feature) Save Drawing
+        coordPath = mutableListOf<Coord>()
+        coordPath.add(coord)
     }
 
     private fun touchMove() {
@@ -114,20 +111,15 @@ class MyCanvasView(context: Context) : View(context) {
         if (dx >= touchTolerance || dy >= touchTolerance) {
             // QuadTo() adds a quadratic bezier from the last point,
             // approaching control point (x1,y1), and ending at (x2,y2).
+            curPath.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
+            currentX = motionTouchEventX
+            currentY = motionTouchEventY
+            val coord = Coord(currentX, currentY)
 
-            // BITMAP VERSION
-//              path.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
-//              currentX = motionTouchEventX
-//              currentY = motionTouchEventY
-                // Draw the path in the extra bitmap to cache it.
-//              extraCanvas.drawPath(path, paint)
+            // TODO: Send path update
 
-            // PATH VERSION
-                curPath.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
-                currentX = motionTouchEventX
-                currentY = motionTouchEventY
-
-            // TODO: Add current point to data struct to send to the other player
+            // (Future feature) Save Drawing
+            coordPath.add(coord)
         }
         // Call the onDraw() method to update the view
         invalidate()
@@ -135,15 +127,19 @@ class MyCanvasView(context: Context) : View(context) {
     }
 
     private fun touchUp() {
-        // Reset the path so it doesn't get drawn again.
-        // BITMAP VERSION
-//          path.reset()
+        // Undo Redo Feature
+        redoStack = Stack<PathPaint>()
+        undoStack.push(PathPaint(curPath, paint))
 
-        // PATH VERSION
-            // Add the current path to the drawing so far
-            drawing.addPath(curPath)
-            // Rewind the current path for the next touch
-            curPath.reset()
+        // Add the current path to the drawing so far
+        drawing.addPath(curPath)
+        // Rewind the current path for the next touch
+        curPath.reset()
+
+        // TODO: Send path end
+
+        // (Future feature) Save Drawing
+        strokeList.add(Stroke(coordPath, STROKE_WIDTH, paint.color.toString()))
     }
 
     private val paint = Paint().apply {
