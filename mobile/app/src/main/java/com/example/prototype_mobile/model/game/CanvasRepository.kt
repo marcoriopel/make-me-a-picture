@@ -13,6 +13,7 @@ class CanvasRepository {
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
+    private val toolRepo = ToolRepository.getInstance()
 
     // Path representing the drawing so far
     private val drawing = Path()
@@ -73,7 +74,9 @@ class CanvasRepository {
     fun touchUp() {
         // Undo Redo Feature
         redoStack = Stack<PathPaint>()
-        undoStack.push(PathPaint(curPath, paint))
+        if (toolRepo != null) {
+            undoStack.push(PathPaint(curPath, toolRepo.getPaint()))
+        }
 
         // Add the current path to the drawing so far
         drawing.addPath(curPath)
@@ -83,7 +86,8 @@ class CanvasRepository {
         // TODO: Send path end
 
         // (Future feature) Save Drawing
-        strokeList.add(Stroke(coordPath, STROKE_WIDTH, paint.color.toString()))
+        val paint = toolRepo.getPaint()
+        strokeList.add(Stroke(coordPath, paint.strokeWidth, paint.color.toString()))
     }
 
 }

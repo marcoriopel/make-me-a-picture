@@ -15,5 +15,4 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
     }
 
-
 }

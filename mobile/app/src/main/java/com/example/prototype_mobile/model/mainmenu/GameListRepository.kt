@@ -12,7 +12,6 @@ import org.json.JSONObject
 
 class GameListRepository {
 
-
     var lobbyRepository = LobbyRepository.getInstance()!!
     val filters = arrayOf(true, true, true, true, true)
 

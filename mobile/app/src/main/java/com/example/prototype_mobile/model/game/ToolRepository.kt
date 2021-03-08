@@ -3,8 +3,24 @@ package com.example.prototype_mobile.model.game
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 
 class ToolRepository {
+
+    companion object {
+        private var instance: ToolRepository? = null
+
+        fun getInstance(): ToolRepository? {
+            if (instance == null) {
+                synchronized(ToolRepository::class.java) {
+                    if (instance == null) {
+                        instance = ToolRepository()
+                    }
+                }
+            }
+            return instance
+        }
+    }
 
     // Pencil attribute
     private var strokeWidth: Float = 12f // has to be float
