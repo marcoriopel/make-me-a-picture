@@ -86,8 +86,10 @@ class CanvasRepository {
         // TODO: Send path end
 
         // (Future feature) Save Drawing
-        val paint = toolRepo.getPaint()
-        strokeList.add(Stroke(coordPath, paint.strokeWidth, paint.color.toString()))
+        val paint = toolRepo?.getPaint()
+        if (paint != null) {
+            strokeList.add(Stroke(coordPath, paint.strokeWidth, paint.color.toString()))
+        }
     }
 
 }
