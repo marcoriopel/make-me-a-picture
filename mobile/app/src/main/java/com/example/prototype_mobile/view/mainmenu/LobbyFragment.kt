@@ -101,14 +101,6 @@ class LobbyFragment : Fragment() {
             GameType.SOLO -> updatePlayerSolo(lobbyPlayers)
             GameType.COOP -> updatePlayersCoop(lobbyPlayers)
         }
-
-        if (lobbyPlayers.players.size == 4) {
-            binding.start.isActivated = true
-            binding.start.isClickable = true
-        } else {
-            binding.start.isActivated = false
-            binding.start.isClickable = false
-        }
     }
 
     fun updatePlayersClassic(lobbyPlayers: LobbyPlayers) {
@@ -178,18 +170,27 @@ class LobbyFragment : Fragment() {
             binding.lobbyVirtual2.isClickable = true
             team2HasVirtualPlayer = false
         }
+
+        if (lobbyPlayers.players.size == 4) {
+            binding.start.isActivated = true
+            binding.start.isClickable = true
+        } else {
+            binding.start.isActivated = false
+            binding.start.isClickable = false
+        }
     }
 
 
     fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
-        binding.start.isActivated = true
-        binding.start.isClickable = true
         binding.lobby4playerLayout.visibility = View.GONE
         binding.lobby1playerLayout.visibility = View.VISIBLE
         if(lobbyPlayers.players.size > 0) {
             binding.lobbyPlayerSoloAvatar.setImageResource(Drawable.avatars[lobbyPlayers.players[0].avatar])
             binding.lobbyPlayerSoloName.text = lobbyPlayers.players[0].username
         }
+
+        binding.start.isActivated = true
+        binding.start.isClickable = true
     }
 
     fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){
@@ -207,6 +208,14 @@ class LobbyFragment : Fragment() {
 
         binding.lobbyTeam1.visibility = View.GONE
         binding.lobbyTeam2.visibility = View.GONE
+
+        if (lobbyPlayers.players.size > 1) {
+            binding.start.isActivated = true
+            binding.start.isClickable = true
+        } else {
+            binding.start.isActivated = false
+            binding.start.isClickable = false
+        }
     }
 
     companion object {
