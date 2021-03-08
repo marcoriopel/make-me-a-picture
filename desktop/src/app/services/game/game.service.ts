@@ -16,7 +16,6 @@ export class GameService {
   initialize(): void {
     this.socketService.bind('gameStart', (data: any) => {
       this.drawingPlayer = data.player;
-      console.log(data.player);
       this.router.navigate(['/game']);
     })
 

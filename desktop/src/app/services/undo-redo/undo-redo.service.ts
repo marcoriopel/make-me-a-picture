@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Stroke } from '@app/classes/drawing';
+import { DrawingEvent, drawingEventType } from '@app/classes/game';
 import { Tool } from '@app/classes/tool';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { Observable, Subject } from 'rxjs';
+import { GameService } from '../game/game.service';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,6 +23,8 @@ export class UndoRedoService extends Tool {
     constructor(
         public drawingService: DrawingService,
         public pencilService: PencilService,
+        private socketService: SocketService,
+        private gameService: GameService,
     ) {
         super(drawingService);
         this.drawingService.getIsToolInUse().subscribe((value) => {
@@ -69,6 +74,14 @@ export class UndoRedoService extends Tool {
         });
         this.changeUndoAvailability();
         this.changeRedoAvailability();
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const event: DrawingEvent = {
+                event: {},
+                eventType: drawingEventType.UNDO,
+                gameId: this.gameService.gameId
+            }
+            this.socketService.emit('drawingEvent', event);        
+        }
     }
 
     redo(): void {
@@ -88,6 +101,14 @@ export class UndoRedoService extends Tool {
         }
         this.changeUndoAvailability();
         this.changeRedoAvailability();
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const event: DrawingEvent = {
+                event: {},
+                eventType: drawingEventType.REDO,
+                gameId: this.gameService.gameId
+            }
+            this.socketService.emit('drawingEvent', event);        
+        }
     }
 
     changeUndoAvailability(): void {

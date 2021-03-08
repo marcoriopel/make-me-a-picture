@@ -53,7 +53,7 @@ export class PencilService extends Tool {
             const mouseDown: MouseDown = {
                 coords: this.mouseDownCoord,
                 lineColor: this.drawingService.color,
-                lineWidth: this.width
+                lineWidth: this.drawingService.lineWidth,
             }
             const drawingEvent: DrawingEvent = {
                 eventType: drawingEventType.MOUSEDOWN,

@@ -18,7 +18,6 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) =>{
-      console.log('receive');
       this.handleDrawingEvent(data.drawingEvent);
     });
   }
@@ -28,7 +27,7 @@ export class GameComponent implements OnInit {
       switch(data.eventType){
         case drawingEventType.MOUSEDOWN:
           const mouseDown = data.event as MouseDown;          
-          this.pencilService.changeWidth(mouseDown.lineWidth);
+          this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;          
