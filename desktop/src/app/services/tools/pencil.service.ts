@@ -61,7 +61,6 @@ export class PencilService extends Tool {
                 gameId: this.gameService.gameId,
             }
             this.socketService.emit('drawingEvent', drawingEvent);
-            console.log('EMIT!!!');
         }
     }
 

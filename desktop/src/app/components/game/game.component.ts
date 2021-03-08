@@ -18,7 +18,7 @@ export class GameComponent implements OnInit {
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) =>{
-      console.log(data);
+      console.log('receive');
       this.handleDrawingEvent(data.drawingEvent);
     });
   }
