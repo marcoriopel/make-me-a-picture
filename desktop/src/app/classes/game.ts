@@ -39,3 +39,28 @@ export interface Player {
     username: string,
     avatar: number
 }
+
+export interface DrawingEvent {
+    eventType: number;
+    event: Object;
+    gameId: string;
+}
+
+export interface MouseDown {
+    lineColor: string;
+    lineWidth: number;
+    coords: Vec2;
+}
+
+export interface Vec2 {
+    x: number;
+    y: number;
+}
+
+export enum drawingEventType {
+    MOUSEDOWN = 0,
+    MOUSEMOVE = 1,
+    MOUSEUP = 2,
+    UNDO = 3,
+    REDO = 4,
+}

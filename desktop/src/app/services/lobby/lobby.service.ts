@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { SocketService } from '@app/services/socket/socket.service';
+import { GameService } from '@app/services/game/game.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,11 @@ export class LobbyService {
   private joinUrl = this.baseUrl + "/api/games/join";
   private addVirtualPlayerUrl = this.baseUrl + "/api/games/add/virtual/player";
   private deleteVirtualPlayerUrl = this.baseUrl + "/api/games/remove/virtual/player";
+  private startGameUrl = this.baseUrl + "/api/games/start";
 
-  constructor(private http: HttpClient, private socketService: SocketService) {}
+  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService) {
+    this.gameService.initialize();
+  }
 
   addVirtualPlayer(teamNumber: number): void {
     const headers = new HttpHeaders({
@@ -52,8 +56,15 @@ export class LobbyService {
   }
 
   start(): void {
-    throw new Error('Method not implemented.');
-    // TODO: Http request
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!});
+    const options = { headers: headers,  responseType: 'text' as 'json'};
+    const body = {
+      lobbyId: this.game.id,
+    }
+    this.http.post<any>(this.startGameUrl, body, options).subscribe();
+    this.gameService.gameId = this.game.id;
   }
 
   quit(): void {

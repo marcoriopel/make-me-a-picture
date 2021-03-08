@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Stroke } from '@app/classes/drawing';
+import { DrawingEvent, drawingEventType, MouseDown } from '@app/classes/game';
 import { Tool } from '@app/classes/tool';
 import { Vec2 } from '@app/classes/vec2';
 import { MouseButton } from '@app/ressources/global-variables/global-variables';
 import { TOOL_NAMES } from '@app/ressources/global-variables/tool-names';
 import { ColorSelectionService } from '@app/services/color-selection/color-selection.service';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { GameService } from '../game/game.service';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +19,7 @@ export class PencilService extends Tool {
     name: string = TOOL_NAMES.PENCIL_TOOL_NAME;
     width: number = 1;
 
-    constructor(drawingService: DrawingService, public colorSelectionService: ColorSelectionService) {
+    constructor(drawingService: DrawingService, public colorSelectionService: ColorSelectionService, public gameService: GameService, private socketService: SocketService) {
         super(drawingService);
         this.clearPath();
     }
@@ -46,6 +49,19 @@ export class PencilService extends Tool {
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
             this.drawingService.setIsToolInUse(true);
         }
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const mouseDown: MouseDown = {
+                coords: this.mouseDownCoord,
+                lineColor: this.drawingService.color,
+                lineWidth: this.drawingService.lineWidth,
+            }
+            const drawingEvent: DrawingEvent = {
+                eventType: drawingEventType.MOUSEDOWN,
+                event: mouseDown,
+                gameId: this.gameService.gameId,
+            }
+            this.socketService.emit('drawingEvent', drawingEvent);
+        }
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -57,6 +73,14 @@ export class PencilService extends Tool {
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawingService.setIsToolInUse(false);
+            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+                const drawingEvent: DrawingEvent = {
+                    eventType: drawingEventType.MOUSEUP,
+                    event: mousePosition,
+                    gameId: this.gameService.gameId,
+                }
+                this.socketService.emit('drawingEvent', drawingEvent);
+            }
         }
         this.mouseDown = false;
         this.clearPath();
@@ -69,6 +93,14 @@ export class PencilService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
+            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+                const drawingEvent: DrawingEvent = {
+                    eventType: drawingEventType.MOUSEMOVE,
+                    event: mousePosition,
+                    gameId: this.gameService.gameId,
+                }
+                this.socketService.emit('drawingEvent', drawingEvent);
+            }
         }
     }
 

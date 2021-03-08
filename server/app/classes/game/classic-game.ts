@@ -32,8 +32,8 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
+        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username })
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
-        this.socketService.getSocket().to(this.id).emit('newRound', { "player": this.drawingPlayer[this.drawingTeam].username })
     }
 
     guessDrawing(username: string, guess: string): void {

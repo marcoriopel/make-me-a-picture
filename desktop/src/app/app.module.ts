@@ -47,6 +47,7 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyService } from './services/lobby/lobby.service';
 import { GameCreationComponent } from './components/game-creation/game-creation.component'
 import { SocketService } from './services/socket/socket.service';
+import { GameComponent } from './components/game/game.component';
 
 @NgModule({
     declarations: [
@@ -69,7 +70,8 @@ import { SocketService } from './services/socket/socket.service';
         ViewingComponent,
         GamePreviewComponent,
         LobbyComponent,
-        GameCreationComponent
+        GameCreationComponent,
+        GameComponent
     ],
     imports: [
         BrowserModule,

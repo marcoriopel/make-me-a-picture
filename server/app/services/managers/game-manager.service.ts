@@ -76,6 +76,15 @@ export class GameManagerService {
     }
 
     dispatchDrawingEvent(event: DrawingEvent){
-        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "event": event});
+        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "drawingEvent": event});
+    }
+
+    guessDrawing(gameId: string, username: string, guess: string) {
+        // const drawingName = req.body.drawingName;
+        // if (!gameId || !GameManagerService.games.has(gameId)) {
+        //     return;
+        // }
+        // let game = GameManagerService.games.get(gameId);
+        // game.guessDrawing(username, guess);
     }
 }
