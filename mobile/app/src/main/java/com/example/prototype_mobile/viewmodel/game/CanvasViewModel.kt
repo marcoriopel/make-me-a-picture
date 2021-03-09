@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Coord
-import com.example.prototype_mobile.PathPaint
+import com.example.prototype_mobile.PaintedPath
 import com.example.prototype_mobile.Stroke
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
@@ -18,23 +18,29 @@ import kotlin.math.abs
 
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
+    // Path
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
-    val drawing = Path()
-    val curPath = Path()
-
+    var curPath = Path()
     private val _newCurPath = MutableLiveData<Path>()
     val newCurPath: LiveData<Path> = _newCurPath
 
     // Undo-Redo
-    private val undoStack = Stack<PathPaint>()
-    private var redoStack = Stack<PathPaint>()
+    val pathStack = Stack<PaintedPath>()
+    private var redoStack = Stack<PaintedPath>()
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
     private val canvasRepo = CanvasRepository()
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Get the current paint
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun getPaint(): Paint {
+        return toolRepo!!.getPaint()
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch user event
@@ -60,17 +66,16 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         // Add dot for touch feedback
         curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
 
-        // Call the onDraw() method to update the view
         currentX = motionTouchEventX
         currentY = motionTouchEventY
 
-        // TODO: Send path start
+        // Call the onDraw() method to update the view
         _newCurPath.value = curPath
+
         // (Future feature) Save Drawing
         val coord = Coord(currentX, currentY)
         canvasRepo.coordPath = mutableListOf<Coord>()
         canvasRepo.coordPath.add(coord)
-
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -88,12 +93,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             currentX = motionTouchEventX
             currentY = motionTouchEventY
 
-            // TODO: Send path update
+            // Call the onDraw() method to update the view
             _newCurPath.value = curPath
             // (Future feature) Save Drawing
             val coord = Coord(currentX, currentY)
             canvasRepo.coordPath.add(coord)
-
         }
     }
 
@@ -103,22 +107,18 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun touchUp() {
         // Undo Redo Feature
-        redoStack = Stack<PathPaint>()
-        undoStack.push(toolRepo?.getPaint()?.let { PathPaint(curPath, it) })
+        redoStack = Stack<PaintedPath>()
+        pathStack.push(PaintedPath(curPath, toolRepo!!.getPaintCopy()))
 
-        // Add the current path to the drawing so far
-        drawing.addPath(curPath)
         // Rewind the current path for the next touch
-        curPath.reset()
+        curPath = Path()
 
-        // TODO: Send path end
+        // Call the onDraw() method to update the view
         _newCurPath.value = curPath
 
         // (Future feature) Save Drawing
-        val paint = toolRepo?.getPaint()
-        if (paint != null) {
-            canvasRepo.strokeList.add(Stroke(canvasRepo.coordPath, paint.strokeWidth, paint.color.toString()))
-        }
+        val paint = toolRepo.getPaint()
+        canvasRepo.strokeList.add(Stroke(canvasRepo.coordPath, paint.strokeWidth, paint.color.toString()))
     }
     
     // Grid attribute

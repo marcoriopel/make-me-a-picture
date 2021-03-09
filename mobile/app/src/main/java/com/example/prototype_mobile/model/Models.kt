@@ -38,4 +38,4 @@ data class Players(val username: String, val avatar: Int, val team: Int)
 // Data class for the drawing
 data class Coord(val x: Float, val y: Float)
 data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
-data class PathPaint(val path: Path, val paint: Paint)
+data class PaintedPath(val path: Path, val paint: Paint)
