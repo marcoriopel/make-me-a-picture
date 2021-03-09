@@ -1,13 +1,66 @@
 export enum GameType {
     Classic,
-    Sprint
+    SprintSolo,
+    SprintCoop
 }
 
+export enum Difficulty {
+    Easy,
+    Normal,
+    Hard
+}
+export interface NewGame {
+    gameType: GameType,
+    gameName: string,
+    difficulty: Difficulty
+}
+
+export interface AvailableGame {
+    gameType: GameType,
+    gameName: string,
+    difficulty: Difficulty,
+    id: string
+}
 export interface Game {
-    id: string;
-    name: string;
-    type: GameType;
-    player: string[];
-    team1: string[];
+    id: string,
+    name: string,
+    type: GameType,
+    difficulty: Difficulty,
+    player: string[],
+    team1: string[],
     team2: string[]
+}
+
+export interface JoinLobby {
+    lobbyId: string
+}
+
+export interface Player {
+    username: string,
+    avatar: number
+}
+
+export interface DrawingEvent {
+    eventType: number;
+    event: Object;
+    gameId: string;
+}
+
+export interface MouseDown {
+    lineColor: string;
+    lineWidth: number;
+    coords: Vec2;
+}
+
+export interface Vec2 {
+    x: number;
+    y: number;
+}
+
+export enum drawingEventType {
+    MOUSEDOWN = 0,
+    MOUSEMOVE = 1,
+    MOUSEUP = 2,
+    UNDO = 3,
+    REDO = 4,
 }

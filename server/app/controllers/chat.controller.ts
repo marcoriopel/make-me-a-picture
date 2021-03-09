@@ -2,7 +2,7 @@ import { TokenService } from '@app/services/token.service';
 import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
-import { ChatManagerService } from '@app/services/chat-manager.service';
+import { ChatManagerService } from '@app/services/managers/chat-manager.service';
 import { StatusCodes } from 'http-status-codes';
 
 

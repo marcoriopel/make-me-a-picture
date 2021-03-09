@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
+import { Stroke } from '@app/classes/drawing';
+import { DrawingEvent, drawingEventType, MouseDown } from '@app/classes/game';
 import { Tool } from '@app/classes/tool';
-import { Pencil } from '@app/classes/tool-properties';
 import { Vec2 } from '@app/classes/vec2';
 import { MouseButton } from '@app/ressources/global-variables/global-variables';
 import { TOOL_NAMES } from '@app/ressources/global-variables/tool-names';
 import { ColorSelectionService } from '@app/services/color-selection/color-selection.service';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { GameService } from '../game/game.service';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PencilService extends Tool {
     private pathData: Vec2[];
-    private pencilData: Pencil;
+    private pencilData: Stroke;
     name: string = TOOL_NAMES.PENCIL_TOOL_NAME;
     width: number = 1;
 
-    constructor(drawingService: DrawingService, public colorSelectionService: ColorSelectionService) {
+    constructor(drawingService: DrawingService, public colorSelectionService: ColorSelectionService, public gameService: GameService, private socketService: SocketService) {
         super(drawingService);
         this.clearPath();
     }
@@ -46,6 +49,19 @@ export class PencilService extends Tool {
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
             this.drawingService.setIsToolInUse(true);
         }
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const mouseDown: MouseDown = {
+                coords: this.mouseDownCoord,
+                lineColor: this.drawingService.color,
+                lineWidth: this.drawingService.lineWidth,
+            }
+            const drawingEvent: DrawingEvent = {
+                eventType: drawingEventType.MOUSEDOWN,
+                event: mouseDown,
+                gameId: this.gameService.gameId,
+            }
+            this.socketService.emit('drawingEvent', drawingEvent);
+        }
     }
 
     onMouseUp(event: MouseEvent): void {
@@ -57,6 +73,14 @@ export class PencilService extends Tool {
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawingService.setIsToolInUse(false);
+            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+                const drawingEvent: DrawingEvent = {
+                    eventType: drawingEventType.MOUSEUP,
+                    event: mousePosition,
+                    gameId: this.gameService.gameId,
+                }
+                this.socketService.emit('drawingEvent', drawingEvent);
+            }
         }
         this.mouseDown = false;
         this.clearPath();
@@ -69,12 +93,20 @@ export class PencilService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
+            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+                const drawingEvent: DrawingEvent = {
+                    eventType: drawingEventType.MOUSEMOVE,
+                    event: mousePosition,
+                    gameId: this.gameService.gameId,
+                }
+                this.socketService.emit('drawingEvent', drawingEvent);
+            }
         }
     }
 
-    drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Pencil): void {
+    drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
         ctx.lineWidth = pencil.lineWidth;
-        ctx.strokeStyle = pencil.primaryColor;
+        ctx.strokeStyle = pencil.lineColor;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.beginPath();
@@ -90,10 +122,9 @@ export class PencilService extends Tool {
 
     private updatePencilData(): void {
         this.pencilData = {
-            type: 'pencil',
             path: this.pathData,
             lineWidth: this.drawingService.lineWidth,
-            primaryColor: this.drawingService.color,
+            lineColor: this.drawingService.color,
         };
     }
 

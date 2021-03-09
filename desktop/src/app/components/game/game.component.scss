@@ -1,0 +1,20 @@
+.wrapper {
+    background-color: #4F4F4F;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+}
+
+#editor {
+    position: absolute;
+    height: 95%;
+}
+
+#chat-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}

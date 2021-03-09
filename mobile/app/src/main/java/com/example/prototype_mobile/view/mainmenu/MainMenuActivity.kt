@@ -6,10 +6,10 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
-
 
 class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
@@ -20,16 +20,29 @@ class MainMenuActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container, GameCreationFragment.newInstance())
-                    .commitNow()
+                    .commit()
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container2, GameListFragment.newInstance())
-                .commitNow()
+                .commit()
             supportFragmentManager.beginTransaction()
                     .replace(R.id.container3, ChatFragment.newInstance())
-                    .commitNow()
+                    .commit()
+
         }
 
-        mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory()).get(MainMenuViewModel::class.java)
+        mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory())
+                .get(MainMenuViewModel::class.java)
+
+        mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, Observer {
+            if(it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
+                    supportFragmentManager.beginTransaction().replace(R.id.container2,GameListFragment.newInstance()).commit()
+
+            }
+            else {
+                supportFragmentManager.beginTransaction().replace(R.id.container2,GameParameterFragment.newInstance()).commit()
+            }
+        })
+
 
         mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
             val gameJoined = it ?: return@Observer
@@ -41,4 +54,6 @@ class MainMenuActivity : AppCompatActivity() {
         })
 
     }
+
+    
 }

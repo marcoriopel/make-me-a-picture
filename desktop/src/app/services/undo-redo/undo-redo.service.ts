@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Stroke } from '@app/classes/drawing';
+import { DrawingEvent, drawingEventType } from '@app/classes/game';
 import { Tool } from '@app/classes/tool';
-import { Pencil } from '@app/classes/tool-properties';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { Observable, Subject } from 'rxjs';
+import { GameService } from '../game/game.service';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,6 +23,8 @@ export class UndoRedoService extends Tool {
     constructor(
         public drawingService: DrawingService,
         public pencilService: PencilService,
+        private socketService: SocketService,
+        private gameService: GameService,
     ) {
         super(drawingService);
         this.drawingService.getIsToolInUse().subscribe((value) => {
@@ -59,16 +64,24 @@ export class UndoRedoService extends Tool {
         if (!this.isUndoAvailable) {
             return;
         }
-        const modification = this.drawingService.undoStack.pop();
+        const modification = this.drawingService.strokeStack.pop();
         if (modification !== undefined) {
             this.drawingService.redoStack.push(modification);
         }
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
-        this.drawingService.undoStack.forEach((element) => {
+        this.drawingService.strokeStack.forEach((element) => {
             this.drawElement(element);
         });
         this.changeUndoAvailability();
         this.changeRedoAvailability();
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const event: DrawingEvent = {
+                event: {},
+                eventType: drawingEventType.UNDO,
+                gameId: this.gameService.gameId
+            }
+            this.socketService.emit('drawingEvent', event);        
+        }
     }
 
     redo(): void {
@@ -83,15 +96,23 @@ export class UndoRedoService extends Tool {
             this.drawElement(element);
             const modification = this.drawingService.redoStack.pop();
             if (modification !== undefined) {
-                this.drawingService.undoStack.push(modification);
+                this.drawingService.strokeStack.push(modification);
             }
         }
         this.changeUndoAvailability();
         this.changeRedoAvailability();
+        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            const event: DrawingEvent = {
+                event: {},
+                eventType: drawingEventType.REDO,
+                gameId: this.gameService.gameId
+            }
+            this.socketService.emit('drawingEvent', event);        
+        }
     }
 
     changeUndoAvailability(): void {
-        if (this.drawingService.undoStack.length) {
+        if (this.drawingService.strokeStack.length) {
             this.setUndoAvailability(true);
         } else {
             this.setUndoAvailability(false);
@@ -106,11 +127,7 @@ export class UndoRedoService extends Tool {
         }
     }
 
-    drawElement(element: Pencil): void {
-        switch (element.type) {
-            case 'pencil':
-                this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Pencil);
-                break;
-        }
+    drawElement(element: Stroke): void {
+        this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Stroke);
     }
 }

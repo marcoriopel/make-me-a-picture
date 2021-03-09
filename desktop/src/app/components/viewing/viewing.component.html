@@ -1,0 +1,6 @@
+<div id="canvas-container">
+    <button id="play-button" color="primary" mat-raised-button (click)="simulateDrawing()" [disabled]="!isPlayButtonAvailable"><i class="fas fa-play fa-2x"></i></button>
+    <button mat-button mat-dialog-close id="quit-button" color="accent" mat-raised-button (click)="simulateDrawing()">Retour</button>
+    <canvas id="canvas" #baseCanvas width="800" height="600"></canvas>
+</div>
+

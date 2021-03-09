@@ -13,7 +13,8 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.util.Drawable
-import com.example.prototype_mobile.viewmodel.mainmenu.GameListViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
+
 
 class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val viewModel: GameListViewModel): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     var lastGameChecked: View? = null
@@ -33,16 +34,24 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
         holder.gameDifficulty.setImageResource(Drawable.difficulty[gameData.difficulty.difficulty])
         holder.gameType.setImageResource(Drawable.gameTypeDrawableWhite[gameData.gameType.type])
         val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)
+
         holder.view.setOnClickListener{
-            closeLastGame()
             if (it != lastGameChecked) {
-                val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
-                val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
+                closeLastGame()
+                viewModel.listenLobby(gameData.gameID)
+                lastGameChecked = it
+            }
+            val section1 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
+            val section2 = holder.view.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
+            if(section1.visibility == View.GONE) {
                 section1.visibility = View.VISIBLE
                 section2.visibility = View.VISIBLE
                 joinButton.visibility = View.VISIBLE
-                viewModel.listenLobby(gameData.gameID)
-                lastGameChecked = it
+
+            } else {
+                section1.visibility = View.GONE
+                section2.visibility = View.GONE
+                joinButton.visibility = View.GONE
             }
         }
 

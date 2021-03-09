@@ -1,6 +1,10 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { SearchGameService } from '@app/services/search-game/search-game.service';
+import { Component, ElementRef, Input, Output, Renderer2, ViewChild, EventEmitter } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { AvailableGame } from '@app/classes/game';
+import { LobbyService } from '@app/services/lobby/lobby.service';
+import { SocketService } from '@app/services/socket/socket.service';
+import { Router } from '@angular/router';
+import { GameService } from '@app/services/game/game.service';
 
 @Component({
   selector: 'app-game-preview',
@@ -36,26 +40,53 @@ export class GamePreviewComponent{
   sprintImgRef: string = "../../../assets/img/sprintLogo.png";
 
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
-
-  @Input() name: string;
-  @Input() type: string;
-  @Input() id: string;
+  @Input() game: AvailableGame;
+  @Output() closeAllPreview: EventEmitter<any> = new EventEmitter();
+  
+  players: any[];
 
   isPreview: boolean = false;
 
-  constructor(private searchGameService: SearchGameService, private renderer: Renderer2) { }
+  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router, private gameService: GameService) {}
 
   preview() {
-    if (this.isPreview)
+    if (this.isPreview) {
       this.renderer.removeClass(this.gamePreviewRef.nativeElement, "game-preview");
-    else
+      this.socketService.unbind('dispatchTeams');
+    } else {
+      this.closeAllPreview.emit();
       this.renderer.addClass(this.gamePreviewRef.nativeElement, "game-preview");
+      this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
+      this.socketService.bind('dispatchTeams', (res: any) => {
+          this.players = res.players;
+      });
+    }
     this.isPreview = !this.isPreview;
-
   }
 
-  join(id: string) {
-    this.searchGameService.joint(id);
+  closePreview(): void {
+    if (this.isPreview) {
+      this.renderer.removeClass(this.gamePreviewRef.nativeElement, "game-preview");
+      this.socketService.unbind('dispatchTeams');
+      this.isPreview = false;
+    }
   }
 
+  join() {
+    this.closePreview();
+    const game = {
+      gameType: this.game.gameType,
+      gameName: this.game.gameName,
+      difficulty: this.game.difficulty
+    }
+    this.lobbyService.join(this.game.id, game).subscribe(
+      res => {
+        this.gameService.gameId = this.game.id;
+        this.router.navigate(['/lobby']);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 }

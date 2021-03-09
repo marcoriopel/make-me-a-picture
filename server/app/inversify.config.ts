@@ -13,11 +13,12 @@ import { ChatModel } from './models/chat.model';
 import { TYPES } from './types';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
-import { SocketService } from './services/socket.service';
-import { ChatManagerService } from './services/chat-manager.service';
-import { LobbyManagerService } from './services/lobby-manager.service';
-import { GameManagerService } from './services/game-manager.service';
+import { SocketService } from './services/sockets/socket.service';
+import { ChatManagerService } from './services/managers/chat-manager.service';
+import { LobbyManagerService } from './services/managers/lobby-manager.service';
+import { GameManagerService } from './services/managers/game-manager.service';
 import { DrawingsService } from './services/drawings.service';
+import { SocketConnectionService } from './services/sockets/socket-connection.service';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
@@ -32,6 +33,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
 
     container.bind(TYPES.TokenService).to(TokenService);
     container.bind(TYPES.SocketService).to(SocketService);
+    container.bind(TYPES.SocketConnectionService).to(SocketConnectionService);
     container.bind(TYPES.AuthService).to(AuthService);
     container.bind(TYPES.ChatManagerService).to(ChatManagerService);
     container.bind(TYPES.LobbyManagerService).to(LobbyManagerService);
