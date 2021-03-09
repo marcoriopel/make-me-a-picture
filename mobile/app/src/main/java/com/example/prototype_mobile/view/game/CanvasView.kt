@@ -48,11 +48,15 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+
+        // Color background white
         canvas.drawColor(-1)
+
         // Draw the drawing so far
-        canvas.drawPath(canvasViewModel.drawing, paint)
+        for (paintedPath in canvasViewModel.pathStack)
+            canvas.drawPath(paintedPath.path, paintedPath.paint)
         // Draw any current squiggle
-        canvas.drawPath(canvasViewModel.curPath, paint)
+        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
 
         // Add if to activate / unactivated the grid
         if (isGrid)
@@ -61,19 +65,6 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return canvasViewModel.onTouchEvent(event, touchTolerance)
-    }
-
-
-    private val paint = Paint().apply {
-        color = drawColor
-        // Smooths out edges of what is drawn without affecting shape.
-        isAntiAlias = true
-        // Dithering affects how colors with higher-precision than the device are down-sampled.
-        isDither = true
-        style = Paint.Style.STROKE // default: FILL
-        strokeJoin = Paint.Join.ROUND // default: MITER
-        strokeCap = Paint.Cap.ROUND // default: BUTT
-        strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
     }
 
     private val gridPaint = Paint().apply {
