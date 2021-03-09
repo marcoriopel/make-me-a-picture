@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"    package="com.example.prototype_mobile">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.prototype_mobile">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,23 +13,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Prototype_mobile"
         android:usesCleartextTraffic="true">
+        <activity android:name=".view.game.GameActivity"
+            android:screenOrientation="landscape">
+        </activity>
         <activity
             android:name=".view.mainmenu.MainMenuActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".view.connection.sign_up.SignUpActivity"
-            android:screenOrientation="landscape"
-            />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".view.connection.login.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

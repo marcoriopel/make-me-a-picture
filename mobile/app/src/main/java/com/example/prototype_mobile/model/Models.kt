@@ -1,5 +1,7 @@
 package com.example.prototype_mobile
 
+import android.graphics.Paint
+import android.graphics.Path
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 
@@ -30,5 +32,10 @@ data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 data class CreateGame(val gameType: GameType?, val gameName: String?, val gameDifficulty: GameDifficulty?)
 
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
-data class LobbyPlayers(val players: Array<Player>)
-data class Player(val username: String, val avatar: Int, val team: Int)
+data class LobbyPlayers(val players: Array<Players>)
+data class Players(val username: String, val avatar: Int, val team: Int)
+
+// Data class for the drawing
+data class Coord(val x: Float, val y: Float)
+data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
+data class PathPaint(val path: Path, val paint: Paint)
