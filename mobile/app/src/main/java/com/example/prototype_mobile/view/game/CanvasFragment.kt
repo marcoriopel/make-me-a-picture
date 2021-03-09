@@ -1,35 +1,37 @@
 package com.example.prototype_mobile.view.game
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.AttributeSet
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.Nullable
+import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
+import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 
 
 
 class CanvasFragment : Fragment() {
 
-    private lateinit var viewModel: CanvasViewModel
+    private lateinit var canvasViewModel: CanvasViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+        canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
+            .get(CanvasViewModel::class.java)
         if (container != null) {
-            return MyCanvasView(container.context)
+            return MyCanvasView(container.context, canvasViewModel)
         };
         return inflater.inflate(R.layout.fragment_canvas, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(CanvasViewModel::class.java)
+    override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        canvasViewModel.newCurPath.observe(viewLifecycleOwner, Observer {
+            view.invalidate()
+        })
     }
-
 }

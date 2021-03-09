@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.MotionEvent
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Coord
 import com.example.prototype_mobile.PathPaint
@@ -20,8 +22,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
-    private val drawing = Path()
-    private val curPath = Path()
+    val drawing = Path()
+    val curPath = Path()
+
+    private val _newCurPath = MutableLiveData<Path>()
+    val newCurPath: LiveData<Path> = _newCurPath
 
     // Undo-Redo
     private val undoStack = Stack<PathPaint>()
@@ -34,7 +39,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch user event
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun onTouchEvent(event: MotionEvent, touchTolerance: Int = 0) {
+    fun onTouchEvent(event: MotionEvent, touchTolerance: Int = 0): Boolean {
         motionTouchEventX = event.x
         motionTouchEventY = event.y
         when(event.action) {
@@ -42,6 +47,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             MotionEvent.ACTION_MOVE -> touchMove(touchTolerance)
             MotionEvent.ACTION_UP -> touchUp()
         }
+        return true
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -59,7 +65,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         currentY = motionTouchEventY
 
         // TODO: Send path start
-
+        _newCurPath.value = curPath
         // (Future feature) Save Drawing
         val coord = Coord(currentX, currentY)
         canvasRepo.coordPath = mutableListOf<Coord>()
@@ -72,7 +78,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  the server in live
      *  -> Bezier quadratic is use so it smoother (Important)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    private fun touchMove(touchTolerance: Int) {
+     private fun touchMove(touchTolerance: Int) {
         val dx = abs(motionTouchEventX - currentX)
         val dy = abs(motionTouchEventY - currentY)
         if (dx >= touchTolerance || dy >= touchTolerance) {
@@ -83,7 +89,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             currentY = motionTouchEventY
 
             // TODO: Send path update
-
+            _newCurPath.value = curPath
             // (Future feature) Save Drawing
             val coord = Coord(currentX, currentY)
             canvasRepo.coordPath.add(coord)
@@ -106,6 +112,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         curPath.reset()
 
         // TODO: Send path end
+        _newCurPath.value = curPath
 
         // (Future feature) Save Drawing
         val paint = toolRepo?.getPaint()
