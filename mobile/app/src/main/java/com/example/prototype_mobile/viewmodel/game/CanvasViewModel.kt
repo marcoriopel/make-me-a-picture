@@ -1,18 +1,18 @@
 package com.example.prototype_mobile.viewmodel.game
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.view.MotionEvent
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Coord
 import com.example.prototype_mobile.PathPaint
+import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Stroke
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
+import com.example.prototype_mobile.view.game.GRID_WIDTH
 import java.util.*
 import kotlin.math.abs
 
@@ -110,7 +110,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         drawing.addPath(curPath)
         // Rewind the current path for the next touch
         curPath.reset()
-
+        
         // TODO: Send path end
         _newCurPath.value = curPath
 
@@ -125,7 +125,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     var isGrid = false;
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
-    private val gridColor = 1
+    private val gridColor = Color.parseColor("#a8a8a8")
     private val gridWith = 2f // has to be float
     private val gridPaint = Paint().apply {
         color = gridColor
@@ -143,7 +143,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Prepare a canvas with a grid to put one top of the
      * view if needed
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun prepareGrid(width: Int, height: Int, padding: Float) {
+    fun prepareGrid(padding: Float) {
+        val width = 800
+        val height = 550
         gridBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         gridCanvas = Canvas(gridBitmap)
         var x = 0F
@@ -158,6 +160,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
     }
 
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the bitmap of the grid to be able to draw it on a
      * canvas
@@ -166,5 +169,12 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return gridBitmap
     }
 
+    init {
+        canvasRepository.isGrid.observeForever {
+            isGrid = it
+            _newCurPath.value = curPath
+        }
 
+        prepareGrid(padding = 50F)
+    }
 }
