@@ -20,4 +20,20 @@ class ToolsViewModel(private val toolRepository: ToolRepository) : ViewModel() {
     fun usePen(width: Float = 12F) {
         toolRepository.setPen(width)
     }
+
+    fun undo() {
+
+    }
+
+    fun redo() {
+
+    }
+
+    fun activateGrid() {
+
+    }
+
+    fun deactivateGrid() {
+
+    }
 }
