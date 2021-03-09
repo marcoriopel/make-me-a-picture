@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.LobbyPlayers
-import com.example.prototype_mobile.Player
+import com.example.prototype_mobile.Players
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentLobbyBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
@@ -106,8 +106,8 @@ class LobbyFragment : Fragment() {
     fun updatePlayersClassic(lobbyPlayers: LobbyPlayers) {
         var team1Count = 0
         var team2Count = 2 // Starts at player 3
-        val realPlayers = lobbyPlayers.players.filter{ it.avatar < 6 } as MutableList<Player>
-        val virtualPlayers = lobbyPlayers.players.filter{ it.avatar > 5 } as MutableList<Player>
+        val realPlayers = lobbyPlayers.players.filter{ it.avatar < 6 } as MutableList<Players>
+        val virtualPlayers = lobbyPlayers.players.filter{ it.avatar > 5 } as MutableList<Players>
         binding.lobbyVirtual1.visibility = View.GONE
         binding.lobbyVirtual2.visibility = View.GONE
         team1HasVirtualPlayer = false
