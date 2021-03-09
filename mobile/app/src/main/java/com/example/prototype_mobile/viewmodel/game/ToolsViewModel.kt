@@ -6,7 +6,7 @@ import com.example.prototype_mobile.model.game.ToolRepository
 class ToolsViewModel(private val toolRepository: ToolRepository) : ViewModel() {
 
     fun prepareGrid(width: Int, height: Int, padding: Float = 75F) {
-        toolRepository.prepareGrid(width, height, padding)
+        //toolRepository.prepareGrid(width, height, padding)
     }
 
     fun setColor(color: Int) {

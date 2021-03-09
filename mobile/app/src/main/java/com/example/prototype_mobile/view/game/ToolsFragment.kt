@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
+import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModel
+import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
 
 class ToolsFragment : Fragment() {
 
@@ -24,7 +27,8 @@ class ToolsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ToolsViewModel::class.java)
+        viewModel = ViewModelProvider(this, ToolsViewModelFactory())
+            .get(ToolsViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

@@ -63,7 +63,7 @@ class MyCanvasView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
+        canvas.drawColor(-1)
         // Draw the drawing so far
         canvas.drawPath(drawing, paint)
         // Draw any current squiggle
