@@ -55,8 +55,9 @@ class LobbyRepository() {
 
     var onStart = Emitter.Listener {
         val player: String = it[0].toString()
-        println(player)
-        println(LoginRepository.getInstance()!!.user!!.username)
+        Log.e("player:", player)
+        Log.e("username", LoginRepository.getInstance()!!.user!!.username )
+        Log.e("result is player drawing", player.contentEquals(LoginRepository.getInstance()!!.user!!.username).toString())
         _isPlayerDrawing.postValue(player.contentEquals(LoginRepository.getInstance()!!.user!!.username))
     }
 
