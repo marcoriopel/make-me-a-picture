@@ -1,7 +1,6 @@
 package com.example.prototype_mobile.model.game
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 
@@ -23,10 +22,9 @@ class ToolRepository {
 
     // Pencil attribute
     private var strokeWidth: Float = 12f // has to be float
-    private var drawColor: Int = 32
-    private var lastColor: Int = 0
+    private var drawColor: Int = 0
     private val paint = Paint().apply {
-        color = drawColor
+        color = Color.BLACK
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -37,27 +35,41 @@ class ToolRepository {
         strokeWidth = strokeWidth // default: Hairline-width (really thin)
     }
 
+    fun getPaintCopy(): Paint {
+        return Paint().apply {
+            color = paint.color
+            // Smooths out edges of what is drawn without affecting shape.
+            isAntiAlias = true
+            // Dithering affects how colors with higher-precision than the device are down-sampled.
+            isDither = true
+            style = Paint.Style.STROKE // default: FILL
+            strokeJoin = Paint.Join.ROUND // default: MITER
+            strokeCap = Paint.Cap.ROUND // default: BUTT
+            strokeWidth = paint.strokeWidth // default: Hairline-width (really thin)
+        }
+    }
+
     fun getPaint(): Paint {
         return paint
     }
 
-    fun setEraser() {
-        // TODO: save last color
-        lastColor = paint.color
-        setColor(0) // TODO: Find white value + Remove magic number
+    fun setEraser(width: Float = 12f) {
+        drawColor = paint.color
+        setColor(Color.WHITE)
+        setStrokeWidth(width)
     }
 
     fun setPen(width: Float = 12f) {
-        setColor(lastColor)
+        setColor(drawColor)
         setStrokeWidth(width)
     }
 
     private fun setStrokeWidth(width: Float = 12f) {
-        strokeWidth = width
+        paint.strokeWidth = width
     }
 
     fun setColor(color: Int) {
-        drawColor = color
+        paint.color = color
     }
 
 }
