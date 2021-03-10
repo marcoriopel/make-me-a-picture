@@ -6,10 +6,7 @@ import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.prototype_mobile.Coord
-import com.example.prototype_mobile.DrawingEvent
-import com.example.prototype_mobile.PaintedPath
-import com.example.prototype_mobile.Stroke
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
@@ -38,6 +35,29 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private val canvasRepo = CanvasRepository()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Bind observer
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    init {
+        canvasRepository.isGrid.observeForever {
+            isGrid = it
+            _newCurPath.value = curPath
+        }
+        prepareGrid(padding = 50F)
+
+        canvasRepository.undo.observeForever {
+            undo()
+        }
+        canvasRepository.redo.observeForever {
+            redo()
+        }
+
+        canvasRepository.gridSize.observeForever {
+            prepareGrid(padding = it.toFloat())
+            _newCurPath.value = curPath
+        }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun getPaint(): Paint {
@@ -48,6 +68,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Dispatch user event
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onTouchEvent(event: MotionEvent): Boolean {
+        // TODO: Check if user have right to draw
+
         motionTouchEventX = event.x
         motionTouchEventY = event.y
         when(event.action) {
@@ -58,13 +80,38 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return true
     }
 
-//    fun onDrawingEvent(event: DrawingEvent ) {
-//        when(event.eventType) {
-//            DrawingEventType.TOUCHDOWN -> touchStart()
-//            DrawingEventType.TOUCHMOVE -> touchMove()
-//            DrawingEventType.TOUCHUP -> touchUp()
-//        }
-//    }
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Dispatch socketEvent
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun onDrawingEvent(drawingEvent: DrawingEvent ) {
+
+        when(drawingEvent.eventType) {
+            DrawingEventType.TOUCHDOWN -> {
+                val touchDown: TouchDown = drawingEvent.event as TouchDown
+                motionTouchEventX = touchDown.coord.x.toFloat()
+                motionTouchEventY = touchDown.coord.y.toFloat()
+                touchStart()
+            }
+            DrawingEventType.TOUCHMOVE -> {
+                val touchMove: Vec2 = drawingEvent.event as Vec2
+                motionTouchEventX = touchMove.x.toFloat()
+                motionTouchEventY = touchMove.y.toFloat()
+                touchMove()
+            }
+            DrawingEventType.TOUCHUP -> {
+                val touchUp: Vec2 = drawingEvent.event as Vec2
+                motionTouchEventX = touchUp.x.toFloat()
+                motionTouchEventY = touchUp.y.toFloat()
+                touchUp()
+            }
+            DrawingEventType.UNDO -> {
+                undo()
+            }
+            DrawingEventType.REDO ->{
+                redo()
+            }
+        }
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Handle user event touch down and send data to
@@ -176,26 +223,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun getGrid(): Bitmap {
         return gridBitmap
-    }
-
-    init {
-        canvasRepository.isGrid.observeForever {
-            isGrid = it
-            _newCurPath.value = curPath
-        }
-        prepareGrid(padding = 50F)
-
-        canvasRepository.undo.observeForever {
-            undo()
-        }
-        canvasRepository.redo.observeForever {
-            redo()
-        }
-
-        canvasRepository.gridSize.observeForever {
-            prepareGrid(padding = it.toFloat())
-            _newCurPath.value = curPath
-        }
     }
 
     // Undo - Redo
