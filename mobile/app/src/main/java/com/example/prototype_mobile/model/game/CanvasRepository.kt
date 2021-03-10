@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.Coord
 import com.example.prototype_mobile.Stroke
+import com.example.prototype_mobile.model.SocketOwner
+import io.socket.emitter.Emitter
 
 
 class CanvasRepository {
@@ -24,10 +26,12 @@ class CanvasRepository {
     }
 
     
-    // (Future feature) Save Drawing
+    // Attribute
     var coordPath = mutableListOf<Coord>()
     val strokeList = mutableListOf<Stroke>()
+    var socket: io.socket.client.Socket
 
+    // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
     val isGrid : LiveData<Boolean> = _isGrid
 
@@ -39,6 +43,18 @@ class CanvasRepository {
 
     private val _undo = MutableLiveData<Boolean>()
     var undo : LiveData<Boolean> = _undo
+
+    var onDrawingEvent = Emitter.Listener {
+        // Cast the event
+
+        // Dispatch the event
+
+    }
+
+    init {
+        socket = SocketOwner.getInstance()!!.socket
+        socket.on("drawingEvent", onDrawEvent)
+    }
 
     fun setGrid(addGrid: Boolean) {
         _isGrid.value = addGrid
