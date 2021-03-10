@@ -14,8 +14,8 @@ class ToolsViewModel(private val toolRepository: ToolRepository) : ViewModel() {
         toolRepository.setEraser()
     }
 
-    fun usePen(width: Float = 12F) {
-        toolRepository.setPen(width)
+    fun usePen() {
+        toolRepository.setPen()
     }
 
     fun undo() {

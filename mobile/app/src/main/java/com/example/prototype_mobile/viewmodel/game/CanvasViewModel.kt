@@ -179,6 +179,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         canvasRepository.redo.observeForever {
             redo()
         }
+
+        canvasRepository.gridSize.observeForever {
+            prepareGrid(padding = it.toFloat())
+            _newCurPath.value = curPath
+        }
     }
 
     // Undo - Redo
