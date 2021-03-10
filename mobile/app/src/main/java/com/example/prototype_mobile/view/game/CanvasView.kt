@@ -24,6 +24,8 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
 
     // Grid
     private lateinit var gridBitmap: Bitmap
+    private val gridColor = ResourcesCompat.getColor(resources, R.color.gridColor, null)
+
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -43,6 +45,7 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return canvasViewModel.onTouchEvent(event, touchTolerance)
     }
+
 
     private val paint = Paint().apply {
         color = drawColor

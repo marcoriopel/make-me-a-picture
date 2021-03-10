@@ -2,13 +2,11 @@ package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
 import android.view.MotionEvent
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Coord
 import com.example.prototype_mobile.PathPaint
-import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Stroke
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
@@ -16,6 +14,7 @@ import com.example.prototype_mobile.view.game.GRID_WIDTH
 import java.util.*
 import kotlin.math.abs
 
+const val GRID_WIDTH = 2f // has to be float
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
     private var motionTouchEventX = 0f
@@ -110,7 +109,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         drawing.addPath(curPath)
         // Rewind the current path for the next touch
         curPath.reset()
-        
+
         // TODO: Send path end
         _newCurPath.value = curPath
 
@@ -126,7 +125,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
     private val gridColor = Color.parseColor("#a8a8a8")
-    private val gridWith = 2f // has to be float
     private val gridPaint = Paint().apply {
         color = gridColor
         // Smooths out edges of what is drawn without affecting shape.
@@ -136,7 +134,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         style = Paint.Style.STROKE // default: FILL
         strokeJoin = Paint.Join.ROUND // default: MITER
         strokeCap = Paint.Cap.ROUND // default: BUTT
-        strokeWidth = gridWith // default: Hairline-width (really thin)
+        strokeWidth = GRID_WIDTH // default: Hairline-width (really thin)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -144,8 +142,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * view if needed
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun prepareGrid(padding: Float) {
-        val width = 800
-        val height = 550
+        val width = 1200
+        val height = 820
         gridBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         gridCanvas = Canvas(gridBitmap)
         var x = 0F
