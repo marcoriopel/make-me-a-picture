@@ -14,7 +14,6 @@ import java.util.*
 import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12f // has to be float
-const val GRID_WIDTH = 2f // has to be float
 
 // Inspired by: https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas#5
 class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View(context) {

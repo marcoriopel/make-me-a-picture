@@ -10,7 +10,6 @@ import com.example.prototype_mobile.PathPaint
 import com.example.prototype_mobile.Stroke
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
-import com.example.prototype_mobile.view.game.GRID_WIDTH
 import java.util.*
 import kotlin.math.abs
 
@@ -124,7 +123,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     var isGrid = false;
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
-    private val gridColor = Color.parseColor("#a8a8a8")
+    private val gridColor = Color.GRAY
     private val gridPaint = Paint().apply {
         color = gridColor
         // Smooths out edges of what is drawn without affecting shape.
