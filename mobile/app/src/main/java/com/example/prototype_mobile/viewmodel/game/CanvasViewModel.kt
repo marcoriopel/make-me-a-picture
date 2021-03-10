@@ -1,19 +1,23 @@
 package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Coord
+import com.example.prototype_mobile.DrawingEvent
 import com.example.prototype_mobile.PaintedPath
 import com.example.prototype_mobile.Stroke
+import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
 import java.util.*
 import kotlin.math.abs
 
 const val GRID_WIDTH = 2f // has to be float
+const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
     // Path
@@ -43,16 +47,24 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch user event
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun onTouchEvent(event: MotionEvent, touchTolerance: Int = 0): Boolean {
+    fun onTouchEvent(event: MotionEvent): Boolean {
         motionTouchEventX = event.x
         motionTouchEventY = event.y
         when(event.action) {
             MotionEvent.ACTION_DOWN -> touchStart()
-            MotionEvent.ACTION_MOVE -> touchMove(touchTolerance)
+            MotionEvent.ACTION_MOVE -> touchMove()
             MotionEvent.ACTION_UP -> touchUp()
         }
         return true
     }
+
+//    fun onDrawingEvent(event: DrawingEvent ) {
+//        when(event.eventType) {
+//            DrawingEventType.TOUCHDOWN -> touchStart()
+//            DrawingEventType.TOUCHMOVE -> touchMove()
+//            DrawingEventType.TOUCHUP -> touchUp()
+//        }
+//    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Handle user event touch down and send data to
@@ -84,7 +96,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      private fun touchMove(touchTolerance: Int) {
         val dx = abs(motionTouchEventX - currentX)
         val dy = abs(motionTouchEventY - currentY)
-        if (dx >= touchTolerance || dy >= touchTolerance) {
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             // QuadTo() adds a quadratic bezier from the last point,
             // approaching control point (x1,y1), and ending at (x2,y2).
             curPath.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)

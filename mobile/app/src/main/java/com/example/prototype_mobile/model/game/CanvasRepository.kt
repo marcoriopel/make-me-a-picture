@@ -4,8 +4,11 @@ import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.Coord
+import com.example.prototype_mobile.DrawingEvent
+import com.example.prototype_mobile.MessageReceive
 import com.example.prototype_mobile.Stroke
 import com.example.prototype_mobile.model.SocketOwner
+import com.google.gson.Gson
 import io.socket.emitter.Emitter
 
 
@@ -29,7 +32,8 @@ class CanvasRepository {
     // Attribute
     var coordPath = mutableListOf<Coord>()
     val strokeList = mutableListOf<Stroke>()
-    var socket: io.socket.client.Socket
+//    var socket: io.socket.client.Socket
+    val gson: Gson = Gson()
 
     // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
@@ -44,17 +48,17 @@ class CanvasRepository {
     private val _undo = MutableLiveData<Boolean>()
     var undo : LiveData<Boolean> = _undo
 
-    var onDrawingEvent = Emitter.Listener {
-        // Cast the event
+//    var onDrawingEvent = Emitter.Listener {
+//        // Cast the event
+//        val event: DrawingEvent = gson.fromJson(it[0].toString())
+//        // Dispatch the event
+//
+//    }
 
-        // Dispatch the event
-
-    }
-
-    init {
-        socket = SocketOwner.getInstance()!!.socket
-        socket.on("drawingEvent", onDrawEvent)
-    }
+//    init {
+//        socket = SocketOwner.getInstance()!!.socket
+//        socket.on("drawingEvent", onDrawingEvent)
+//    }
 
     fun setGrid(addGrid: Boolean) {
         _isGrid.value = addGrid

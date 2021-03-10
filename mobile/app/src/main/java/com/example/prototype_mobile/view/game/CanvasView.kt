@@ -19,8 +19,6 @@ private const val STROKE_WIDTH = 12f // has to be float
 class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View(context) {
 
     private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
-    private val touchTolerance = ViewConfiguration.get(context).scaledTouchSlop
-
     // Grid
     private lateinit var gridBitmap: Bitmap
     private val gridColor = ResourcesCompat.getColor(resources, R.color.gridColor, null)
@@ -46,7 +44,7 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return canvasViewModel.onTouchEvent(event, touchTolerance)
+        return canvasViewModel.onTouchEvent(event)
     }
 
 }
