@@ -23,3 +23,7 @@ enum class GameFilter(val filter: Int){
 enum class SelectedButton(number: Int){
     CLASSIC(0), SPRINT(1), COOP(2), NONE(3), SEARCH(4)
 }
+
+enum class Tool(number: Int){
+    PEN(0), ERASER(1)
+}

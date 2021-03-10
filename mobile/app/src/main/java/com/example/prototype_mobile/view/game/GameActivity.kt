@@ -23,6 +23,9 @@ class GameActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerTools, ToolsFragment())
                 .commitNow()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerGuess, ToolsAdjustmentFragment())
+                .commitNow()
         }
     }
 }

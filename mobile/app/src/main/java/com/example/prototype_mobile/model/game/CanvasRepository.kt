@@ -8,7 +8,6 @@ import com.example.prototype_mobile.Stroke
 
 
 class CanvasRepository {
-
     companion object {
         private var instance: CanvasRepository? = null
 
@@ -32,12 +31,22 @@ class CanvasRepository {
     private val _isGrid = MutableLiveData<Boolean>()
     val isGrid : LiveData<Boolean> = _isGrid
 
+    private val _gridSize = MutableLiveData<Int>()
+    val gridSize : LiveData<Int> = _gridSize
+
+    private val _redo = MutableLiveData<Boolean>()
+    val redo : LiveData<Boolean> = _redo
+
+    private val _undo = MutableLiveData<Boolean>()
+    var undo : LiveData<Boolean> = _undo
+
     fun setGrid(addGrid: Boolean) {
         _isGrid.value = addGrid
     }
 
-    private val _undo = MutableLiveData<Boolean>()
-    var undo : LiveData<Boolean> = _undo
+    fun setGridSize(size: Int) {
+        _gridSize.value = size
+    }
 
     fun undo() {
         if (_undo.value != null)
@@ -45,9 +54,6 @@ class CanvasRepository {
         else
             _undo.value = true
     }
-
-    private val _redo = MutableLiveData<Boolean>()
-    val redo : LiveData<Boolean> = _redo
 
     fun redo() {
         if (_redo.value != null)

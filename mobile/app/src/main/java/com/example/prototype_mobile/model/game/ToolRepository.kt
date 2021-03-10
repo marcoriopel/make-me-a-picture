@@ -2,7 +2,10 @@ package com.example.prototype_mobile.model.game
 
 import android.graphics.Color
 import android.graphics.Paint
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 
 class ToolRepository {
     companion object {
@@ -19,9 +22,12 @@ class ToolRepository {
             return instance
         }
     }
+    private val _selectedTool = MutableLiveData<Tool>()
+    var selectedTool : LiveData<Tool> = _selectedTool
 
     // Pencil attribute
-    private var strokeWidth: Float = 12f // has to be float
+    var strokeWidthEraser: Float = 12f // has to be float
+    var strokeWidthPen: Float = 12f // has to be float
     private var drawColor: Int = 0
     private val paint = Paint().apply {
         color = Color.BLACK
@@ -56,12 +62,14 @@ class ToolRepository {
     fun setEraser(width: Float = 12f) {
         drawColor = paint.color
         setColor(Color.WHITE)
-        setStrokeWidth(width)
+        setStrokeWidth(strokeWidthEraser)
+        _selectedTool.value = Tool.ERASER
     }
 
     fun setPen(width: Float = 12f) {
-        setColor(drawColor)
-        setStrokeWidth(width)
+        setColor(Color.BLACK) // Connecter color picker
+        setStrokeWidth(strokeWidthPen)
+        _selectedTool.value = Tool.PEN
     }
 
     private fun setStrokeWidth(width: Float = 12f) {
