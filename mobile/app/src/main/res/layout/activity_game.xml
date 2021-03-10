@@ -17,8 +17,8 @@
     android:orientation="vertical">
     <FrameLayout
         android:id="@+id/containerCanvas"
-        android:layout_width="800dp"
-        android:layout_height="550dp">
+        android:layout_width="1200px"
+        android:layout_height="820px">
     </FrameLayout>
     <FrameLayout
         android:id="@+id/containerGuess"

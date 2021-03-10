@@ -13,7 +13,6 @@ import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 
 
-
 class CanvasFragment : Fragment() {
 
     private lateinit var canvasViewModel: CanvasViewModel
