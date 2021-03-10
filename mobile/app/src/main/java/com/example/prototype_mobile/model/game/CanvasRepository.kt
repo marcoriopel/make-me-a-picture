@@ -1,13 +1,10 @@
 package com.example.prototype_mobile.model.game
 
-import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.Coord
-import com.example.prototype_mobile.DrawingEvent
-import com.example.prototype_mobile.MessageReceive
-import com.example.prototype_mobile.Stroke
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 
@@ -42,12 +39,6 @@ class CanvasRepository {
     private val _gridSize = MutableLiveData<Int>()
     val gridSize : LiveData<Int> = _gridSize
 
-    private val _redo = MutableLiveData<Boolean>()
-    val redo : LiveData<Boolean> = _redo
-
-    private val _undo = MutableLiveData<Boolean>()
-    var undo : LiveData<Boolean> = _undo
-
     private val _drawingEvent = MutableLiveData<DrawingEvent>()
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
 
@@ -68,18 +59,45 @@ class CanvasRepository {
         _gridSize.value = size
     }
 
-    fun undo() {
-        if (_undo.value != null)
-            _undo.value = !_undo.value!!
-        else
-            _undo.value = true
+    fun undoEvent() {
+        // Create Event
+        val event = DrawingEvent(DrawingEventType.UNDO, null, "1234")
+        _drawingEvent.value = event
+        // TODO Send to other player
+
     }
 
-    fun redo() {
-        if (_redo.value != null)
-            _redo.value = !_redo.value!!
-        else
-            _redo.value = true
+    fun redoEvent() {
+        // Create Event
+        val event = DrawingEvent(DrawingEventType.REDO, null, "1234")
+        _drawingEvent.value = event
+        // TODO Send to other player
+
+    }
+
+    fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String) {
+        // Create Event
+        val touchDown = TouchDown(lineColor, lineWith, coord)
+        val event = DrawingEvent(DrawingEventType.TOUCHDOWN, touchDown, "1234")
+        _drawingEvent.value = event
+        // TODO Send to other player
+
+    }
+
+    fun touchMoveEvent(coord: Vec2) {
+        // Create Event
+        val event = DrawingEvent(DrawingEventType.TOUCHMOVE, coord, "1234")
+        _drawingEvent.value = event
+        // TODO Send to other player
+
+    }
+
+    fun touchUpEvent(coord: Vec2) {
+        // Create Event
+        val event = DrawingEvent(DrawingEventType.TOUCHUP, coord, "1234")
+        _drawingEvent.value = event
+        // TODO Send to other player
+
     }
 
 }

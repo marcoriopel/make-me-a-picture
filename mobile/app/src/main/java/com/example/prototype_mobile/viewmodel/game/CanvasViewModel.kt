@@ -32,31 +32,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
-    private val canvasRepo = CanvasRepository()
-
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * Bind observer
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    init {
-        prepareGrid(padding = 50F)
-        canvasRepository.isGrid.observeForever {
-            isGrid = it
-            _newCurPath.value = curPath
-        }
-        canvasRepository.undo.observeForever {
-            undo()
-        }
-        canvasRepository.redo.observeForever {
-            redo()
-        }
-        canvasRepository.gridSize.observeForever {
-            prepareGrid(padding = it.toFloat())
-            _newCurPath.value = curPath
-        }
-        canvasRepository.drawingEvent.observeForever {
-            onDrawingEvent(it)
-        }
-    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
@@ -70,15 +45,16 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onTouchEvent(event: MotionEvent): Boolean {
         // TODO: Check if user have right to draw
-
-        // TODO: Send doata to server
-
-        motionTouchEventX = event.x
-        motionTouchEventY = event.y
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> touchStart()
-            MotionEvent.ACTION_MOVE -> touchMove()
-            MotionEvent.ACTION_UP -> touchUp()
+        if(true) {
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> canvasRepository.touchMoveEvent(Vec2(event.x.toInt(), event.y.toInt()))
+                MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(Vec2(event.x.toInt(), event.y.toInt()))
+                MotionEvent.ACTION_DOWN -> {
+                    val coord: Vec2 = Vec2(event.x.toInt(), event.y.toInt())
+                    val paint = toolRepo!!.getPaint()
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), paint.color.toString())
+                }
+            }
         }
         return true
     }
@@ -132,11 +108,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
         // Call the onDraw() method to update the view
         _newCurPath.value = curPath
-
-        // (Future feature) Save Drawing
-        val coord = Coord(currentX, currentY)
-        canvasRepo.coordPath = mutableListOf<Coord>()
-        canvasRepo.coordPath.add(coord)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -156,9 +127,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
             // Call the onDraw() method to update the view
             _newCurPath.value = curPath
-            // (Future feature) Save Drawing
-            val coord = Coord(currentX, currentY)
-            canvasRepo.coordPath.add(coord)
         }
     }
 
@@ -176,10 +144,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
         // Call the onDraw() method to update the view
         _newCurPath.value = curPath
-
-        // (Future feature) Save Drawing
-        val paint = toolRepo.getPaint()
-        canvasRepo.strokeList.add(Stroke(canvasRepo.coordPath, paint.strokeWidth, paint.color.toString()))
     }
     
     // Grid attribute
@@ -243,6 +207,24 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
         _newCurPath.value = null
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Bind observer
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    init {
+        prepareGrid(padding = 50F)
+        canvasRepository.isGrid.observeForever {
+            isGrid = it
+            _newCurPath.value = curPath
+        }
+        canvasRepository.gridSize.observeForever {
+            prepareGrid(padding = it.toFloat())
+            _newCurPath.value = curPath
+        }
+        canvasRepository.drawingEvent.observeForever {
+            onDrawingEvent(it)
+        }
     }
 
 
