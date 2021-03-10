@@ -19,11 +19,11 @@ class ToolsViewModel(private val toolRepository: ToolRepository) : ViewModel() {
     }
 
     fun undo() {
-
+        CanvasRepository.getInstance()!!.undo()
     }
 
     fun redo() {
-
+        CanvasRepository.getInstance()!!.redo()
     }
 
     fun activateGrid() {

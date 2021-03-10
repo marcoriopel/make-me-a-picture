@@ -171,7 +171,31 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             isGrid = it
             _newCurPath.value = curPath
         }
-
         prepareGrid(padding = 50F)
+
+        canvasRepository.undo.observeForever {
+            undo()
+        }
+        canvasRepository.redo.observeForever {
+            redo()
+        }
     }
+
+    // Undo - Redo
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Undo: Remove the last action
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun undo() {
+        if (!pathStack.empty())
+            redoStack.push(pathStack.pop())
+        _newCurPath.value = null
+    }
+
+    private fun redo() {
+        if (!redoStack.empty())
+            pathStack.push(redoStack.pop())
+        _newCurPath.value = null
+    }
+
+
 }
