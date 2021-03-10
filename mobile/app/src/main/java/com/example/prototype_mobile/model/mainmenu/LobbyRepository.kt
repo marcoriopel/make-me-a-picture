@@ -58,7 +58,7 @@ class LobbyRepository() {
         Log.e("player:", player)
         Log.e("username", LoginRepository.getInstance()!!.user!!.username )
         Log.e("result is player drawing", player.contentEquals(LoginRepository.getInstance()!!.user!!.username).toString())
-        _isPlayerDrawing.postValue(player.contentEquals(LoginRepository.getInstance()!!.user!!.username))
+        _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
     }
 
     init {
