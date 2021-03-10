@@ -27,8 +27,11 @@ class ToolRepository {
 
     // Pencil attribute
     var strokeWidthEraser: Float = 12f // has to be float
+    var drawColor: Int = Color.BLACK // change with color picker
+
+    // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
-    private var drawColor: Int = 0
+    
     private val paint = Paint().apply {
         color = Color.BLACK
         // Smooths out edges of what is drawn without affecting shape.
@@ -59,15 +62,14 @@ class ToolRepository {
         return paint
     }
 
-    fun setEraser(width: Float = 12f) {
-        drawColor = paint.color
+    fun setEraser() {
         setColor(Color.WHITE)
         setStrokeWidth(strokeWidthEraser)
         _selectedTool.value = Tool.ERASER
     }
 
-    fun setPen(width: Float = 12f) {
-        setColor(Color.BLACK) // Connecter color picker
+    fun setPen() {
+        setColor(drawColor)
         setStrokeWidth(strokeWidthPen)
         _selectedTool.value = Tool.PEN
     }
