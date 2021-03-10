@@ -1,5 +1,6 @@
 import { Drawing } from '@app/ressources/interfaces/drawings.interface';
-import { Player } from '@app/ressources/interfaces/user.interface';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { TYPES } from '@app/types';
@@ -134,5 +135,14 @@ export class ClassicGame extends Game {
         if (this.drawingPlayer[this.drawingTeam].username != username)
             throw new Error("User not authorized to select drawing name");
         this.currentDrawingName = drawingName;
+    }
+
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+        if(user.username == this.drawingPlayer[this.drawingTeam].username){
+            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": event});
+        }
+        else{
+            throw new Error("It is not your turn to draw");
+        }
     }
 }
