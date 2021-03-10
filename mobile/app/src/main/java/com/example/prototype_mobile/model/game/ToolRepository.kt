@@ -33,7 +33,7 @@ class ToolRepository {
         style = Paint.Style.STROKE // default: FILL
         strokeJoin = Paint.Join.ROUND // default: MITER
         strokeCap = Paint.Cap.ROUND // default: BUTT
-        strokeWidth = strokeWidth // default: Hairline-width (really thin)
+        strokeWidth = 100F // default: Hairline-width (really thin)
     }
 
     fun getPaintCopy(): Paint {
