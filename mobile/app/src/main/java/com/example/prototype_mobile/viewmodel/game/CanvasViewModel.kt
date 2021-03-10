@@ -38,22 +38,23 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Bind observer
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     init {
+        prepareGrid(padding = 50F)
         canvasRepository.isGrid.observeForever {
             isGrid = it
             _newCurPath.value = curPath
         }
-        prepareGrid(padding = 50F)
-
         canvasRepository.undo.observeForever {
             undo()
         }
         canvasRepository.redo.observeForever {
             redo()
         }
-
         canvasRepository.gridSize.observeForever {
             prepareGrid(padding = it.toFloat())
             _newCurPath.value = curPath
+        }
+        canvasRepository.drawingEvent.observeForever {
+            onDrawingEvent(it)
         }
     }
 

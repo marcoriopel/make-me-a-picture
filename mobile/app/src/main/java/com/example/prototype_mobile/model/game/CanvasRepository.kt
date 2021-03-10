@@ -32,7 +32,7 @@ class CanvasRepository {
     // Attribute
     var coordPath = mutableListOf<Coord>()
     val strokeList = mutableListOf<Stroke>()
-//    var socket: io.socket.client.Socket
+    var socket: io.socket.client.Socket
     val gson: Gson = Gson()
 
     // Live Data
@@ -48,17 +48,17 @@ class CanvasRepository {
     private val _undo = MutableLiveData<Boolean>()
     var undo : LiveData<Boolean> = _undo
 
-//    var onDrawingEvent = Emitter.Listener {
-//        // Cast the event
-//        val event: DrawingEvent = gson.fromJson(it[0].toString())
-//        // Dispatch the event
-//
-//    }
+    private val _drawingEvent = MutableLiveData<DrawingEvent>()
+    var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
 
-//    init {
-//        socket = SocketOwner.getInstance()!!.socket
-//        socket.on("drawingEvent", onDrawingEvent)
-//    }
+    var onDrawingEvent = Emitter.Listener {
+        _drawingEvent.value = gson.fromJson(it[0].toString(), DrawingEvent::class.java)
+    }
+
+    init {
+        socket = SocketOwner.getInstance()!!.socket
+        socket.on("drawingEvent", onDrawingEvent)
+    }
 
     fun setGrid(addGrid: Boolean) {
         _isGrid.value = addGrid
