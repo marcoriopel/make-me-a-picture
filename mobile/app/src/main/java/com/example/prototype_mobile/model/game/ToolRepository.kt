@@ -5,7 +5,6 @@ import android.graphics.Paint
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 
 class ToolRepository {
-
     companion object {
         private var instance: ToolRepository? = null
 
