@@ -57,9 +57,6 @@ class LobbyRepository() {
         val Jobject = JSONObject(it[0].toString())
         val Jarray = Jobject.getString("player")
         val player: String = Jarray.toString()
-        Log.e("player:", player)
-        Log.e("username", LoginRepository.getInstance()!!.user!!.username )
-        Log.e("result is player drawing", player.equals(LoginRepository.getInstance()!!.user!!.username).toString())
         _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
     }
 
