@@ -93,7 +93,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  the server in live
      *  -> Bezier quadratic is use so it smoother (Important)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-     private fun touchMove(touchTolerance: Int) {
+     private fun touchMove() {
         val dx = abs(motionTouchEventX - currentX)
         val dy = abs(motionTouchEventY - currentY)
         if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
