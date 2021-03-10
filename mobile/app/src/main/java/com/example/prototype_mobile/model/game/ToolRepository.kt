@@ -5,7 +5,6 @@ import android.graphics.Paint
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 
 class ToolRepository {
-
     companion object {
         private var instance: ToolRepository? = null
 
@@ -70,7 +69,13 @@ class ToolRepository {
     }
 
     fun setColor(color: Int) {
+        // Ex: Color.RED
         paint.color = color
+    }
+
+    fun setColorByValue(color: String) {
+        // Ex: "#a8a8a8"
+        paint.color = Color.parseColor(color)
     }
 
 }
