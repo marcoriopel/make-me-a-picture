@@ -70,7 +70,13 @@ class ToolRepository {
     }
 
     fun setColor(color: Int) {
+        // Ex: Color.RED
         paint.color = color
+    }
+
+    fun setColorByValue(color: String) {
+        // Ex: "#a8a8a8"
+        paint.color = Color.parseColor(color)
     }
 
 }

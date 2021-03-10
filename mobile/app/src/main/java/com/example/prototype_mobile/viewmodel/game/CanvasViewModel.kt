@@ -166,5 +166,20 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return gridBitmap
     }
 
+    // Undo - Redo
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Undo: Remove the last action
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun undo() {
+        if (!pathStack.empty())
+            redoStack.push(pathStack.pop())
+        _newCurPath.value = null
+    }
+
+    fun redo() {
+        if (!redoStack.empty())
+            pathStack.push(redoStack.pop())
+        _newCurPath.value = null
+    }
 
 }
