@@ -57,7 +57,7 @@ class LobbyRepository() {
         val player: String = it[0].toString()
         Log.e("player:", player)
         Log.e("username", LoginRepository.getInstance()!!.user!!.username )
-        Log.e("result is player drawing", player.contentEquals(LoginRepository.getInstance()!!.user!!.username).toString())
+        Log.e("result is player drawing", player.equals(LoginRepository.getInstance()!!.user!!.username).toString())
         _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
     }
 
