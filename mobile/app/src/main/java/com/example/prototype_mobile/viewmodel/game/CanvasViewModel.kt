@@ -71,6 +71,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     fun onTouchEvent(event: MotionEvent): Boolean {
         // TODO: Check if user have right to draw
 
+        // TODO: Send doata to server
+
         motionTouchEventX = event.x
         motionTouchEventY = event.y
         when(event.action) {
@@ -85,6 +87,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Dispatch socketEvent
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onDrawingEvent(drawingEvent: DrawingEvent ) {
+        // TODO: Dont display if the user is the one that is drawing
 
         when(drawingEvent.eventType) {
             DrawingEventType.TOUCHDOWN -> {
