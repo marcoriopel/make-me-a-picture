@@ -66,7 +66,16 @@ class ToolsFragment : Fragment() {
         populateSecondaryColor(colorList)
 
         binding.secondary1.setOnClickListener{
-            swapColor()
+            swapColor(binding.secondary1)
+        }
+        binding.secondary2.setOnClickListener{
+            swapColor(binding.secondary2)
+        }
+        binding.secondary3.setOnClickListener{
+            swapColor(binding.secondary3)
+        }
+        binding.secondary4.setOnClickListener{
+            swapColor(binding.secondary4)
         }
 
 
@@ -133,19 +142,27 @@ class ToolsFragment : Fragment() {
         }
         colorList= tempArray
     }
-    fun swapColor(){
+    private fun swapColor(secondary:Button){
 
-        binding.primaryColor.background = binding.secondary1.background
-        binding.secondary1.background = ColorDrawable(primaryColor)
+        binding.primaryColor.background = secondary.background
+        secondary.background = ColorDrawable(primaryColor)
         val background: android.graphics.drawable.Drawable? = binding.primaryColor.getBackground()
         if (background is ColorDrawable) {
             primaryColor = (background as ColorDrawable).color
             viewModel.setColor(primaryColor)
         }
-
-
-
+        updateListColor()
     }
+    private fun updateListColor() {
+        secondaryButtons.forEachIndexed { index, button ->
+            val background: android.graphics.drawable.Drawable? = button.getBackground()
+            if (background is ColorDrawable) {
+                colorList[index] = (background as ColorDrawable).color
+
+            }
+        }
+    }
+
 
 
 
