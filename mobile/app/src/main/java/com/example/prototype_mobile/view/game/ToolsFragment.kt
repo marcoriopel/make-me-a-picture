@@ -1,27 +1,22 @@
 package com.example.prototype_mobile.view.game
 
-import android.content.Context
+import android.R.color
 import android.graphics.Color.rgb
 import android.graphics.drawable.ColorDrawable
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.databinding.FragmentChatBinding
 import com.example.prototype_mobile.databinding.FragmentToolsBinding
-import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
-import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
+import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModel
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
-import com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM
-import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import java.util.*
-import kotlin.math.absoluteValue
+
 
 class ToolsFragment : Fragment() {
 
@@ -69,6 +64,10 @@ class ToolsFragment : Fragment() {
         secondaryButtons.add(binding.secondary3)
         secondaryButtons.add(binding.secondary4)
         populateSecondaryColor(colorList)
+
+        binding.secondary1.setOnClickListener{
+            swapColor()
+        }
 
 
 
@@ -123,7 +122,28 @@ class ToolsFragment : Fragment() {
     //Since we don't have lots of button we will procede this way.
     // If we have more color use a for loop
     fun newColorSelectionArrayUpdate(color: Int) {
-        colorList = intArrayOf(color, colorList[0],colorList[1],colorList[2])
+        val tempArray = IntArray(4)
+        colorList.forEachIndexed { i, element ->
+            if(i == 0) {
+                tempArray[i]=color
+            }
+            else
+                tempArray[i]=colorList[i-1]
+
+        }
+        colorList= tempArray
+    }
+    fun swapColor(){
+
+        binding.primaryColor.background = binding.secondary1.background
+        binding.secondary1.background = ColorDrawable(primaryColor)
+        val background: android.graphics.drawable.Drawable? = binding.primaryColor.getBackground()
+        if (background is ColorDrawable) {
+            primaryColor = (background as ColorDrawable).color
+            viewModel.setColor(primaryColor)
+        }
+
+
 
     }
 
