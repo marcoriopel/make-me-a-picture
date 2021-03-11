@@ -21,12 +21,14 @@ import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
 import com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import java.util.*
+import kotlin.math.absoluteValue
 
 class ToolsFragment : Fragment() {
 
     private lateinit var binding: FragmentToolsBinding
     private var isGrid = false
     private var isEraser = false
+
     var primaryColor = rgb(0,0,0)
     var colorList:IntArray = intArrayOf(rgb(255,0,0),rgb(0,255,0),rgb(0,0,255), rgb(255,0,255))
     var secondaryButtons:Vector<Button> = Vector<Button>()
@@ -67,6 +69,8 @@ class ToolsFragment : Fragment() {
         secondaryButtons.add(binding.secondary3)
         secondaryButtons.add(binding.secondary4)
         populateSecondaryColor(colorList)
+
+
 
     }
 
@@ -115,6 +119,12 @@ class ToolsFragment : Fragment() {
         secondaryButtons.forEachIndexed { i, element ->
             element.background =  ColorDrawable(colors[i])
         }
+    }
+    //Since we don't have lots of button we will procede this way.
+    // If we have more color use a for loop
+    fun newColorSelectionArrayUpdate(color: Int) {
+        colorList = intArrayOf(color, colorList[0],colorList[1],colorList[2])
+
     }
 
 
