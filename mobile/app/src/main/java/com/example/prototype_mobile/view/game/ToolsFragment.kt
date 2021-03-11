@@ -19,9 +19,11 @@ import com.github.dhaval2404.colorpicker.ColorPickerDialog
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.model.ColorSwatch
+import com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import java.util.*
 
-class ToolsFragment : Fragment() {
+class ToolsFragment : Fragment() , ColorPickerDialogListener {
 
     private lateinit var binding: FragmentToolsBinding
     private var isGrid = false
@@ -57,7 +59,9 @@ class ToolsFragment : Fragment() {
         binding.buttonPencil.setImageResource(R.drawable.button_pencil_selected)
         binding.primaryColor.setOnClickListener{
             openColorPicker()
-
+        }
+        binding.secondary1.setOnClickListener{
+            openColorPicker2()
         }
     }
 
@@ -107,6 +111,33 @@ class ToolsFragment : Fragment() {
                     .show()
             }
         }
+    private fun openColorPicker2() {
+
+            com.jaredrummler.android.colorpicker.ColorPickerDialog.newBuilder().setColor(primaryColor)
+                .setAllowPresets(false).setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM).show(it)
+
+
+    }
+
+    override fun onDialogDismissed(dialogId: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onColorSelected(dialogId: Int, color: Int) {
+        TODO("Not yet implemented")
+        if (com.jaredrummler.android.colorpicke != null) {
+            colorPickerDialogListener.onColorSelected(dialogId, color);
+            return;
+        }
+        Activity activity = getActivity();
+        if (activity instanceof ColorPickerDialogListener) {
+            ((ColorPickerDialogListener) activity).onColorSelected(dialogId, color);
+        } else {
+            throw new IllegalStateException("The activity must implement ColorPickerDialogListener");
+        }
+    }
+
+}
 
 
 }
