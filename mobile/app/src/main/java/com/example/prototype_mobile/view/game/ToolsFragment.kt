@@ -2,12 +2,15 @@ package com.example.prototype_mobile.view.game
 
 import android.content.Context
 import android.graphics.Color.rgb
+import android.graphics.drawable.ColorDrawable
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.core.content.ContextCompat
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChatBinding
 import com.example.prototype_mobile.databinding.FragmentToolsBinding
@@ -24,8 +27,9 @@ class ToolsFragment : Fragment() {
     private lateinit var binding: FragmentToolsBinding
     private var isGrid = false
     private var isEraser = false
-    var primaryColor = rgb(255,0,0)
-
+    var primaryColor = rgb(0,0,0)
+    var colorList:IntArray = intArrayOf(rgb(255,0,0),rgb(0,255,0),rgb(0,0,255), rgb(255,0,255))
+    var secondaryButtons:Vector<Button> = Vector<Button>()
     companion object {
         fun newInstance() = ToolsFragment()
     }
@@ -41,11 +45,12 @@ class ToolsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, ToolsViewModelFactory())
             .get(ToolsViewModel::class.java)
+        viewModel.setColor(primaryColor)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding = FragmentToolsBinding.bind(view)
         binding.buttonPencil.setOnClickListener { pen() }
         binding.buttonEraser.setOnClickListener { eraser() }
@@ -56,9 +61,13 @@ class ToolsFragment : Fragment() {
         binding.primaryColor.setOnClickListener{
             openColorPicker()
         }
-        binding.secondary1.setOnClickListener{
+        updateButtonColor(primaryColor)
+        secondaryButtons.add(binding.secondary1)
+        secondaryButtons.add(binding.secondary2)
+        secondaryButtons.add(binding.secondary3)
+        secondaryButtons.add(binding.secondary4)
+        populateSecondaryColor(colorList)
 
-        }
     }
 
     private fun pen() {
@@ -97,6 +106,17 @@ class ToolsFragment : Fragment() {
 
         }
     }
+
+    fun updateButtonColor(color: Int) {
+        binding.primaryColor.background =  ColorDrawable(color)
+        binding.secondary1.background =ColorDrawable(color)
+    }
+    fun populateSecondaryColor(colors:IntArray){
+        secondaryButtons.forEachIndexed { i, element ->
+            element.background =  ColorDrawable(colors[i])
+        }
+    }
+
 
 
 }

@@ -42,6 +42,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         // Todo: Setter and getter if we want private member in fragment
         toolFragment.primaryColor= color
         toolFragment.viewModel.setColor(color)
+        toolFragment.updateButtonColor(color)
     }
     fun findToolFragment(): Fragment? {
         for (fragment in supportFragmentManager.fragments)

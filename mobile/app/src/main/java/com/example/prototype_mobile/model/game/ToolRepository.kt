@@ -27,6 +27,9 @@ class ToolRepository {
     var selectedTool : LiveData<Tool> = _selectedTool
     private var selectedColor = Color.BLACK
 
+    init{
+        _selectedTool.value = Tool.PEN
+    }
     // Pencil attribute
     var strokeWidthEraser: Float = 12f // has to be float
     var strokeWidthPen: Float = 12f // has to be float
