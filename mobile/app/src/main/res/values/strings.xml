@@ -45,4 +45,5 @@
     <string name="pen_size">Grosseur du crayon</string>
     <string name="eraser_size">Grosseur de l\'efface</string>
     <string name="grid_size">Grosseur de la grille</string>
+    <string name="colorPickerToolTitle">Choisir une couleur</string>
 </resources>

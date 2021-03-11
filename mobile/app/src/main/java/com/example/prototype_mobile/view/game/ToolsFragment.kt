@@ -15,26 +15,22 @@ import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModel
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
-import com.github.dhaval2404.colorpicker.ColorPickerDialog
-import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
-import com.github.dhaval2404.colorpicker.model.ColorShape
-import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import java.util.*
 
-class ToolsFragment : Fragment() , ColorPickerDialogListener {
+class ToolsFragment : Fragment() {
 
     private lateinit var binding: FragmentToolsBinding
     private var isGrid = false
     private var isEraser = false
-    private var primaryColor = rgb(255,0,0)
+    var primaryColor = rgb(255,0,0)
 
     companion object {
         fun newInstance() = ToolsFragment()
     }
 
-    private lateinit var viewModel: ToolsViewModel
+    lateinit var viewModel: ToolsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -61,7 +57,7 @@ class ToolsFragment : Fragment() , ColorPickerDialogListener {
             openColorPicker()
         }
         binding.secondary1.setOnClickListener{
-            openColorPicker2()
+
         }
     }
 
@@ -93,51 +89,14 @@ class ToolsFragment : Fragment() , ColorPickerDialogListener {
         }
         isGrid = !isGrid
     }
-        private fun openColorPicker() {
-            // Kotlin Code
-            activity?.let {
-                ColorPickerDialog
-                    .Builder(it)
-                    // Pass Activity Instance
-                    .setTitle("Choisissez une couleur")  // Default "Choose Color"
-                    .setColorShape(ColorShape.CIRCLE)   // Default ColorShape.CIRCLE
-                    .setDefaultColor(primaryColor) 		// Pass Default Color
-                    .setColorListener { color, colorHex ->
-                        // Handle Color Selection
-                        primaryColor = color
-                        viewModel.setColor(primaryColor)
 
-                    }
-                    .show()
-            }
-        }
-    private fun openColorPicker2() {
-
+    private fun openColorPicker() {
+        activity?.let{
             com.jaredrummler.android.colorpicker.ColorPickerDialog.newBuilder().setColor(primaryColor)
-                .setAllowPresets(false).setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM).show(it)
+                .setAllowPresets(false).setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM).setDialogTitle(R.string.colorPickerToolTitle).show(it)
 
-
-    }
-
-    override fun onDialogDismissed(dialogId: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onColorSelected(dialogId: Int, color: Int) {
-        TODO("Not yet implemented")
-        if (com.jaredrummler.android.colorpicke != null) {
-            colorPickerDialogListener.onColorSelected(dialogId, color);
-            return;
-        }
-        Activity activity = getActivity();
-        if (activity instanceof ColorPickerDialogListener) {
-            ((ColorPickerDialogListener) activity).onColorSelected(dialogId, color);
-        } else {
-            throw new IllegalStateException("The activity must implement ColorPickerDialogListener");
         }
     }
-
-}
 
 
 }
