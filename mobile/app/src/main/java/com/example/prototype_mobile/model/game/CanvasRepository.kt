@@ -85,7 +85,7 @@ class CanvasRepository {
 
     fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String) {
         // Create Event
-        val touchDown = TouchDown(lineColor, lineWith, coord)
+        val touchDown = MouseDown(lineColor, lineWith, coord)
         val event = DrawingEvent(DrawingEventType.TOUCHDOWN, touchDown, gameRepo.gameId.toString())
         _drawingEvent.value = event
         // Send to other players
