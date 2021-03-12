@@ -26,6 +26,7 @@ import {
     YELLOW,
 } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { GameService } from '@app/services/game/game.service';
 import { HotkeyService } from '@app/services/hotkey/hotkey.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 
@@ -72,6 +73,7 @@ export class EditorComponent implements AfterViewInit {
         public hotkeyService: HotkeyService,
         public drawingService: DrawingService,
         public undoRedoService: UndoRedoService,
+        public gameService: GameService,
     ) {
         this.drawingService.color = BLACK;
         this.drawingService.lineWidth = this.lineWidth;
@@ -80,7 +82,11 @@ export class EditorComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const workspaceElement: HTMLElement = this.workSpaceRef.nativeElement;
-            this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
+            try {
+                this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
+            } catch(e) {
+                return;
+            }
             this.drawingService.gridCanvas.style.cursor = 'crosshair';
             this.workSpaceSize.x = workspaceElement.offsetWidth;
             this.workSpaceSize.y = workspaceElement.offsetHeight;
@@ -105,7 +111,11 @@ export class EditorComponent implements AfterViewInit {
 
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
-        this.previewDiv.style.display = 'none';
+        try{
+            this.previewDiv.style.display = 'none';
+        } catch(e) {
+            return;
+        }
     }
 
     setColor(color: string){

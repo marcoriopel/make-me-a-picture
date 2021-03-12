@@ -56,6 +56,7 @@ export class DrawingComponent implements AfterViewInit {
     onMouseLeave(): void {
         this.pencilService.onMouseLeave();
     }
+
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
         this.pencilService.onMouseEnter(event);
