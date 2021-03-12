@@ -19,23 +19,9 @@ export class DrawingsModel {
         }
     }
 
-    async getRandomWords(difficulty: number) {
-        let wordSuggestions: string[] = [];
-        let words: any[];
+    async getWordsOfDifficulty(difficulty: number) {
         try {
-            wordSuggestions = [];
-            words = await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty.toString() }, { "drawingName": 1, "_id": 0 }).toArray();
-            if (words.length < 3) {
-                throw new Error('Database is empty')
-            }
-            while (wordSuggestions.length < 3) {
-                let random = Math.floor(Math.random() * words.length);
-                if (!wordSuggestions.includes(words[random].drawingName)) {
-                    wordSuggestions.push(words[random].drawingName)
-                }
-            }
-            console.log("out of model");
-            return wordSuggestions;
+            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty.toString() }, { "drawingName": 1, "_id": 0 }).toArray();
         } catch (e) {
             console.error(e);
             throw e;

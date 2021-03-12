@@ -1,6 +1,7 @@
 import { Drawing } from '@app/ressources/interfaces/drawings.interface';
 import { Player } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
+import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
@@ -8,7 +9,6 @@ import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Game } from './game';
-import { DrawingsModel } from '@app/models/drawings.model'
 
 @injectable()
 export class ClassicGame extends Game {
@@ -21,7 +21,7 @@ export class ClassicGame extends Game {
     private currentDrawingName: string;
 
     constructor(lobby: ClassicLobby, socketService: SocketService,
-        @inject(TYPES.DrawingsModel) private drawingsModel: DrawingsModel) {
+        @inject(TYPES.DrawingsService) private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -40,8 +40,7 @@ export class ClassicGame extends Game {
 
     async getDrawingSuggestions() {
         console.log("Sent suggestion to: " + this.drawingPlayer[this.drawingTeam].username);
-        let drawingNames = await this.drawingsModel.getRandomWords(this.difficulty);
-        console.log(drawingNames);
+        let drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
         this.currentDrawingName = drawingNames[0];
         this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
     }
