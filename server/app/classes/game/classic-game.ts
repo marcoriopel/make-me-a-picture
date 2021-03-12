@@ -15,11 +15,11 @@ export class ClassicGame extends Game {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private drawingTeam: number;
     private drawingPlayer: Player[] = new Array(2);
-    private score: number[] = [0,0];
+    private score: number[] = [0, 0];
     private isGuessingOk: boolean[] = [false, false];
     private round: number = 0;
     private currentDrawingName: string;
-    
+
     constructor(lobby: ClassicLobby, socketService: SocketService,
         @inject(TYPES.DrawingsModel) private drawingsModel: DrawingsModel) {
         super(<Lobby>lobby, socketService);
@@ -34,7 +34,7 @@ export class ClassicGame extends Game {
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username });
-        this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });  
+        this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.getDrawingSuggestions();
     }
 
@@ -43,18 +43,18 @@ export class ClassicGame extends Game {
         let drawingNames = await this.drawingsModel.getRandomWords(this.difficulty);
         console.log(drawingNames);
         this.currentDrawingName = drawingNames[0];
-        this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": "Velo" });
+        this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
     }
 
     guessDrawing(username: string, guess: string): void {
         console.log("Guessed " + guess)
         if (this.drawingPlayer[this.drawingTeam].username == username)
             throw Error("Drawing player can not guess his own word")
-        if (this.teams[this.drawingTeam].get(username)){
-            if(!this.isGuessingOk[this.drawingTeam]){
+        if (this.teams[this.drawingTeam].get(username)) {
+            if (!this.isGuessingOk[this.drawingTeam]) {
                 throw Error("It's not your turn to guess")
             }
-            if(this.currentDrawingName == guess) {
+            if (this.currentDrawingName == guess) {
                 console.log("woohoo!")
                 this.score[this.drawingTeam] += 1;
                 this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
@@ -66,10 +66,10 @@ export class ClassicGame extends Game {
             }
         }
         else if (this.teams[this.getOpposingTeam()].get(username)) {
-            if(!this.isGuessingOk[this.getOpposingTeam()]){
+            if (!this.isGuessingOk[this.getOpposingTeam()]) {
                 throw Error("It's not your turn to guess")
             }
-            if(this.currentDrawingName == guess) {
+            if (this.currentDrawingName == guess) {
                 console.log("woohoo!")
                 this.score[this.getOpposingTeam()] += 1;
                 this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
@@ -85,8 +85,8 @@ export class ClassicGame extends Game {
     }
 
     private checkIfTeamHasVirtualPlayer(teamNumber: number): boolean {
-        this.teams[teamNumber].forEach((player: Player) =>{
-            if(player.isVirtual)
+        this.teams[teamNumber].forEach((player: Player) => {
+            if (player.isVirtual)
                 return true
         })
         return false
@@ -109,7 +109,7 @@ export class ClassicGame extends Game {
     }
 
     private setupNextRound() {
-        if(this.round < 4){
+        if (this.round < 4) {
             ++this.round
             this.drawingTeam = this.getOpposingTeam();
             this.changeDrawingPlayer();
@@ -122,7 +122,7 @@ export class ClassicGame extends Game {
 
     private endGame() {
         this.isGuessingOk = [false, false];
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score})
+        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score })
     }
 
     private getOpposingTeam(): number {
@@ -136,7 +136,7 @@ export class ClassicGame extends Game {
         const players: Player[] = Array.from(this.teams[this.drawingTeam].values());
 
         if (!this.checkIfTeamHasVirtualPlayer(this.drawingTeam)) {
-            if(players[0].username == this.drawingPlayer[this.drawingTeam].username)
+            if (players[0].username == this.drawingPlayer[this.drawingTeam].username)
                 this.drawingPlayer[this.drawingTeam] = players[1];
             else
                 this.drawingPlayer[this.drawingTeam] = players[0];

@@ -19,50 +19,50 @@ export class GameComponent implements OnInit {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, private gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.socketService.bind('drawingEvent', (data: any) =>{
+    this.socketService.bind('drawingEvent', (data: any) => {
       this.handleDrawingEvent(data.drawingEvent);
     });
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
-    if(this.gameService.drawingPlayer != localStorage.getItem('username')){
-      switch(data.eventType){
+    if (this.gameService.drawingPlayer != localStorage.getItem('username')) {
+      switch (data.eventType) {
         case drawingEventType.MOUSEDOWN:
-          const mouseDown = data.event as MouseDown;          
+          const mouseDown = data.event as MouseDown;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
-          break;          
+          break;
 
         case drawingEventType.MOUSEUP:
-          const mouseUp = data.event as Vec2;          
+          const mouseUp = data.event as Vec2;
           this.pencilService.onMouseUp(this.createMouseEvent(mouseUp));
           break;
 
         case drawingEventType.MOUSEMOVE:
-          const mouseMove = data.event as Vec2;          
+          const mouseMove = data.event as Vec2;
           this.pencilService.onMouseMove(this.createMouseEvent(mouseMove));
           break;
 
         case drawingEventType.UNDO:
           this.undoRedoService.undo();
           break;
-        
+
         case drawingEventType.REDO:
           this.undoRedoService.redo();
-          break;    
+          break;
 
         default:
           console.error('oups');
-      }      
+      }
     }
 
   }
 
-  createMouseEvent(mousePosition : Vec2): MouseEvent{
+  createMouseEvent(mousePosition: Vec2): MouseEvent {
     return {
       offsetX: mousePosition.x,
       offsetY: mousePosition.y,
@@ -70,7 +70,7 @@ export class GameComponent implements OnInit {
     } as MouseEvent
   }
 
-  onGuessSubmit() : void {
+  onGuessSubmit(): void {
     const body = {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,
