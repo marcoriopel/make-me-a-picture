@@ -8,10 +8,11 @@ import { SocketService } from '../socket/socket.service';
 export class GameService {
 
   isInGame: boolean = false;
-  score: number[];
+  score: number[] = [0,0];
   drawingPlayer: string;
   gameId: string;
   username: string | null;
+  drawingName: string = "";
 
   constructor(private socketService: SocketService, private router: Router) { 
     this.username = localStorage.getItem('username');
@@ -26,6 +27,11 @@ export class GameService {
 
     this.socketService.bind('score', (data: any) => {
       this.score = data.score;
+    })
+
+    this.socketService.bind('drawingName', (data: any) => {
+      this.drawingName = data.drawingName;
+      console.log(data);
     })
   }
 }

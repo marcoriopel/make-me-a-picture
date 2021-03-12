@@ -101,7 +101,7 @@ export class LobbyService {
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers, responseType: 'text' as 'json'};
-    return this.http.post<any>(this.joinUrl, {lobbyId: id}, options);
+    return this.http.post<any>(this.joinUrl, {lobbyId: id, socketId: this.socketService.socketId}, options);
   }
 
   private listen() {

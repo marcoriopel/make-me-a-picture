@@ -71,7 +71,11 @@ export class GameComponent implements OnInit {
   }
 
   onGuessSubmit() : void {
-    // SERVER REQUEST
+    const body = {
+      "gameId": this.gameService.gameId,
+      "guess": this.guessForm.value.guess,
+    }
+    this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
 

@@ -71,7 +71,6 @@ export class GameCreationComponent implements OnInit {
     }
     this.lobbyService.create(game).subscribe(
       res => {
-        console.log(res.lobbyId);
         this.join(res.lobbyId, game);
       },
       err => { 

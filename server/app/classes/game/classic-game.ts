@@ -8,19 +8,20 @@ import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Game } from './game';
+import { DrawingsModel } from '@app/models/drawings.model'
 
 @injectable()
 export class ClassicGame extends Game {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private drawingTeam: number;
     private drawingPlayer: Player[] = new Array(2);
-
     private score: number[] = [0,0];
     private isGuessingOk: boolean[] = [false, false];
     private round: number = 0;
     private currentDrawingName: string;
     
-    constructor(lobby: ClassicLobby, socketService: SocketService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService,
+        @inject(TYPES.DrawingsModel) private drawingsModel: DrawingsModel) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -32,11 +33,21 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username })
-        this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
+        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username });
+        this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });  
+        this.getDrawingSuggestions();
+    }
+
+    async getDrawingSuggestions() {
+        console.log("Sent suggestion to: " + this.drawingPlayer[this.drawingTeam].username);
+        let drawingNames = await this.drawingsModel.getRandomWords(this.difficulty);
+        console.log(drawingNames);
+        this.currentDrawingName = drawingNames[0];
+        this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": "Velo" });
     }
 
     guessDrawing(username: string, guess: string): void {
+        console.log("Guessed " + guess)
         if (this.drawingPlayer[this.drawingTeam].username == username)
             throw Error("Drawing player can not guess his own word")
         if (this.teams[this.drawingTeam].get(username)){
@@ -44,6 +55,7 @@ export class ClassicGame extends Game {
                 throw Error("It's not your turn to guess")
             }
             if(this.currentDrawingName == guess) {
+                console.log("woohoo!")
                 this.score[this.drawingTeam] += 1;
                 this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
                 this.setupNextRound();
@@ -58,6 +70,7 @@ export class ClassicGame extends Game {
                 throw Error("It's not your turn to guess")
             }
             if(this.currentDrawingName == guess) {
+                console.log("woohoo!")
                 this.score[this.getOpposingTeam()] += 1;
                 this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             }

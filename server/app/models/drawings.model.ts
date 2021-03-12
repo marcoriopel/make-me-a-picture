@@ -18,6 +18,49 @@ export class DrawingsModel {
             throw e;
         }
     }
+
+    // async getRandomWords(difficulty: number) {
+    //     try {
+    //         let words: string[] = [];
+    //         let areRadomWordsCorrectDifficulty = false;
+    //         while(!areRadomWordsCorrectDifficulty){
+    //             let drawings =  await this.databaseModel.client.db("database").collection("drawings").aggregate([ { $sample: { size: 5 } } ]);
+    //             for(let drawing of drawings){
+    //                 if(drawing.difficulty == difficulty){
+    //                     words.push(drawing.name)
+    //                 }
+    //             }
+    //             if(words.length >= 3){
+    //                 return words.slice(0, 3);
+    //             }
+    //         }
+    //     } catch (e) {
+    //         console.error(e);
+    //         throw e;
+    //     }
+    // }
+
+    async getRandomWords(difficulty: number) {
+        let wordSuggestions: string[] = [];
+        let words;
+        try {
+            wordSuggestions = [];
+            words =  await this.databaseModel.client.db("database").collection("drawings").find( { "difficulty": difficulty }, {"drawingName": 1, "_id": 0} );
+            // console.log(words);
+            console.log("in model");
+            while(wordSuggestions.length < 3){
+                let random = Math.floor(Math.random() * words.length);
+                if(!wordSuggestions.includes(words[random])){
+                    wordSuggestions.push(words[random])
+                }
+            }
+            console.log("out of model");
+            return wordSuggestions;
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
 }
 
 

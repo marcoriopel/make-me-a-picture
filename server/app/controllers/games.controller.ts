@@ -43,7 +43,6 @@ export class GamesController {
     });
 
     this.router.post('/start', (req, res) => {
-      console.log(req);
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
         this.gameManagerService.start(user.username, req, res, () => {
           res.sendStatus(StatusCodes.OK)
