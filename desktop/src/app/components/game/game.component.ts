@@ -6,6 +6,7 @@ import { MouseButton } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { GameService } from '@app/services/game/game.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-game',
@@ -14,7 +15,11 @@ import { GameService } from '@app/services/game/game.service';
 })
 export class GameComponent implements OnInit {
 
-  constructor(private socketService: SocketService, private gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService) { }
+  guessForm = this.formBuilder.group({
+    guess: '',
+  });
+
+  constructor(private socketService: SocketService, private gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) =>{
@@ -63,6 +68,11 @@ export class GameComponent implements OnInit {
       offsetY: mousePosition.y,
       button: MouseButton.LEFT
     } as MouseEvent
+  }
+
+  onGuessSubmit() : void {
+    // SERVER REQUEST
+    this.guessForm.reset();
   }
 
 }

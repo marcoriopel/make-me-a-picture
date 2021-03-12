@@ -3,6 +3,27 @@
     <div id="editor">
         <app-editor></app-editor>
     </div>
+    <div id="game">
+        <div id="score">
+            <div id="team1" class="team">
+                team1
+                <h3>score</h3>
+            </div>
+            <div id="team2" class="team">
+                team2
+                <h3>score</h3>
+            </div>
+        </div>
+        <div id="guess">
+            <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                <input type="text" formControlName="guess">
+                <button type="submit">Guess</button>
+            </form>
+        </div>
+        <div id="tips">
+            <button type="submit">Plz give me a tip</button>
+        </div>
+    </div>
     <div id="chat-bar">
         <app-chat-bar></app-chat-bar>
     </div>       
