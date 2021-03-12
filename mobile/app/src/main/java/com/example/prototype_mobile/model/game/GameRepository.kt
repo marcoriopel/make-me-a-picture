@@ -27,4 +27,8 @@ class GameRepository {
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
     }
+
+//    init {
+//        _isPlayerDrawing.value = true
+//    }
 }

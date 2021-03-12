@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.Tool
+import org.jetbrains.anko._ScrollView
 
 class ToolRepository {
     companion object {
@@ -24,7 +25,11 @@ class ToolRepository {
     }
     private val _selectedTool = MutableLiveData<Tool>()
     var selectedTool : LiveData<Tool> = _selectedTool
+    var selectedColor = Color.BLACK
 
+    init{
+        _selectedTool.value = Tool.PEN
+    }
     // Pencil attribute
     var strokeWidthEraser: Float = 12f // has to be float
     var drawColor: Int = Color.BLACK // change with color picker
@@ -33,7 +38,7 @@ class ToolRepository {
     var strokeWidthPen: Float = 12f // has to be float
     
     private val paint = Paint().apply {
-        color = Color.BLACK
+        color = selectedColor
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -46,7 +51,11 @@ class ToolRepository {
 
     fun getPaintCopy(): Paint {
         return Paint().apply {
-            color = paint.color
+            if(_selectedTool.value == Tool.ERASER)
+                color = Color.WHITE
+            else
+                color = selectedColor
+
             // Smooths out edges of what is drawn without affecting shape.
             isAntiAlias = true
             // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -63,15 +72,17 @@ class ToolRepository {
     }
 
     fun setEraser() {
+        //Needs to be before setColor
+        _selectedTool.value = Tool.ERASER
         setColor(Color.WHITE)
         setStrokeWidth(strokeWidthEraser)
-        _selectedTool.value = Tool.ERASER
     }
 
+
     fun setPen() {
-        setColor(drawColor)
-        setStrokeWidth(strokeWidthPen)
         _selectedTool.value = Tool.PEN
+        setColor(selectedColor)
+        setStrokeWidth(strokeWidthPen)
     }
 
     private fun setStrokeWidth(width: Float = 12f) {
@@ -80,6 +91,7 @@ class ToolRepository {
 
     fun setColor(color: Int) {
         // Ex: Color.RED
+        //We refer to color in getPaintCopy through selected copy..
         paint.color = color
     }
 
