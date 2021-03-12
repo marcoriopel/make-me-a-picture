@@ -52,7 +52,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_DOWN -> {
                     val coord: Vec2 = Vec2(event.x.toInt(), event.y.toInt())
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), paint.color.toString())
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), Integer.toHexString(paint.color))
                 }
             }
         }
@@ -68,6 +68,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         when(drawingEvent.eventType) {
             DrawingEventType.TOUCHDOWN -> {
                 val touchDown: TouchDown = drawingEvent.event as TouchDown
+                toolRepo!!.setColorByValue(touchDown.lineColor)
                 motionTouchEventX = touchDown.coord.x.toFloat()
                 motionTouchEventY = touchDown.coord.y.toFloat()
                 touchStart()
