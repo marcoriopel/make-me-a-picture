@@ -10,6 +10,7 @@ import { Game } from '@app/classes/game/game';
 import { Lobby } from '@app/classes/lobby/lobby';
 import { ClassicGame } from '@app/classes/game/classic-game';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 
 
@@ -75,8 +76,18 @@ export class GameManagerService {
         next();
     }
 
-    dispatchDrawingEvent(event: DrawingEvent){
-        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "drawingEvent": event});
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+        if (this.gameExist(event.gameId)) {
+            const game: Game =  GameManagerService.games.get(event.gameId);
+            (game as ClassicGame).dispatchDrawingEvent(user, event);
+        }
+        else{
+            throw new Error("This game does not exist");
+        }
+    }
+
+    gameExist(gameId: string): boolean {
+        return GameManagerService.games.has(gameId);
     }
 
     guessDrawing(gameId: string, username: string, guess: string) {
