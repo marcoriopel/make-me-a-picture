@@ -53,6 +53,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.containerGuess, ToolsAdjustmentFragment())
                         .commitNow()
+                toolFragment =  (findToolFragment() as ToolsFragment?)!!
             } else {
                 // TODO: Add fragments to guess
             }
@@ -73,12 +74,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         toolFragment.updateButtonColor(color)
         toolFragment.populateSecondaryColor(toolFragment.colorList)
     }
+
     fun findToolFragment(): Fragment? {
         for (fragment in supportFragmentManager.fragments)
             if(fragment is ToolsFragment)
                 return fragment
         return null
     }
-
-
 }

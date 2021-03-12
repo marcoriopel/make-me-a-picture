@@ -25,7 +25,7 @@ class ToolRepository {
     }
     private val _selectedTool = MutableLiveData<Tool>()
     var selectedTool : LiveData<Tool> = _selectedTool
-    private var selectedColor = Color.BLACK
+    var selectedColor = Color.BLACK
 
     init{
         _selectedTool.value = Tool.PEN
@@ -89,10 +89,7 @@ class ToolRepository {
     fun setColor(color: Int) {
         // Ex: Color.RED
         //We refer to color in getPaintCopy through selected copy..
-        if(_selectedTool.value == Tool.PEN)
-            selectedColor = color
         paint.color = color
-
     }
 
     fun setColorByValue(color: String) {
