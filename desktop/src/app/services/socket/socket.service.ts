@@ -14,6 +14,7 @@ export class SocketService {
 
   constructor() {
     this.connect(this.baseUrl);
+    this.bindErrors();
   }
 
   connect(url: string): void {
@@ -44,5 +45,10 @@ export class SocketService {
     this.socket.off(event);
   }
 
+  bindErrors(){
+    this.bind('error', (errorMsg: string) =>{
+      console.error(errorMsg);
+    })
+  }
 }
 

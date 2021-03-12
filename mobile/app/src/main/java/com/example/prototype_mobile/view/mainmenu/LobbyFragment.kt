@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentLobbyBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.util.Drawable
+import com.example.prototype_mobile.view.game.GameActivity
 import com.example.prototype_mobile.viewmodel.mainmenu.LobbyViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.LobbyViewModelFactory
 import org.jetbrains.anko.image
@@ -64,6 +66,10 @@ class LobbyFragment : Fragment() {
             updatePlayers(lobbyPlayers)
         })
 
+        lobbyViewModel.isPlayerDrawing.observe(viewLifecycleOwner, Observer {
+            startGame(view)
+        })
+
         usernameList = arrayOf(
                 binding.lobbyPlayer1Name,
                 binding.lobbyPlayer2Name,
@@ -92,6 +98,9 @@ class LobbyFragment : Fragment() {
                 lobbyViewModel.removeVirtualPlayer(1, binding.lobbyPlayer4Name.text as String)
             }
             binding.lobbyVirtual2.isClickable = false
+        }
+        binding.start.setOnClickListener {
+            lobbyViewModel.startGame()
         }
     }
 
@@ -216,6 +225,11 @@ class LobbyFragment : Fragment() {
             binding.start.isActivated = false
             binding.start.isClickable = false
         }
+    }
+
+    fun startGame(view: View) {
+        val intent = Intent(view.context, GameActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {
