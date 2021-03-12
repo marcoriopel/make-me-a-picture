@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(username: String) {
         val intent = Intent(this, MainMenuActivity::class.java);
-        //val intent = Intent(this, GameActivity::class.java)
+//        val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
         Toast.makeText(
                 applicationContext,

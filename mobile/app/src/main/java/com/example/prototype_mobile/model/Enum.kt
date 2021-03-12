@@ -27,3 +27,7 @@ enum class SelectedButton(number: Int){
 enum class Tool(number: Int){
     PEN(0), ERASER(1)
 }
+
+enum class DrawingEventType(type: Int) {
+    TOUCHDOWN(0), TOUCHMOVE(1), TOUCHUP(2), UNDO(3), REDO(4)
+}

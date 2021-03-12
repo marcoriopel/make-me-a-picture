@@ -1,19 +1,20 @@
 package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.prototype_mobile.Coord
-import com.example.prototype_mobile.PaintedPath
-import com.example.prototype_mobile.Stroke
+import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.ToolRepository
 import java.util.*
 import kotlin.math.abs
 
 const val GRID_WIDTH = 2f // has to be float
+const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
     // Path
@@ -31,7 +32,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
-    private val canvasRepo = CanvasRepository()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
@@ -43,15 +43,54 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch user event
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun onTouchEvent(event: MotionEvent, touchTolerance: Int = 0): Boolean {
-        motionTouchEventX = event.x
-        motionTouchEventY = event.y
-        when(event.action) {
-            MotionEvent.ACTION_DOWN -> touchStart()
-            MotionEvent.ACTION_MOVE -> touchMove(touchTolerance)
-            MotionEvent.ACTION_UP -> touchUp()
+    fun onTouchEvent(event: MotionEvent): Boolean {
+        // TODO: Check if user have right to draw
+        if(true) {
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> canvasRepository.touchMoveEvent(Vec2(event.x.toInt(), event.y.toInt()))
+                MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(Vec2(event.x.toInt(), event.y.toInt()))
+                MotionEvent.ACTION_DOWN -> {
+                    val coord: Vec2 = Vec2(event.x.toInt(), event.y.toInt())
+                    val paint = toolRepo!!.getPaint()
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), paint.color.toString())
+                }
+            }
         }
         return true
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Dispatch socketEvent
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun onDrawingEvent(drawingEvent: DrawingEvent ) {
+        // TODO: Dont display if the user is the one that is drawing
+
+        when(drawingEvent.eventType) {
+            DrawingEventType.TOUCHDOWN -> {
+                val touchDown: TouchDown = drawingEvent.event as TouchDown
+                motionTouchEventX = touchDown.coord.x.toFloat()
+                motionTouchEventY = touchDown.coord.y.toFloat()
+                touchStart()
+            }
+            DrawingEventType.TOUCHMOVE -> {
+                val touchMove: Vec2 = drawingEvent.event as Vec2
+                motionTouchEventX = touchMove.x.toFloat()
+                motionTouchEventY = touchMove.y.toFloat()
+                touchMove()
+            }
+            DrawingEventType.TOUCHUP -> {
+                val touchUp: Vec2 = drawingEvent.event as Vec2
+                motionTouchEventX = touchUp.x.toFloat()
+                motionTouchEventY = touchUp.y.toFloat()
+                touchUp()
+            }
+            DrawingEventType.UNDO -> {
+                undo()
+            }
+            DrawingEventType.REDO ->{
+                redo()
+            }
+        }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -69,11 +108,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
         // Call the onDraw() method to update the view
         _newCurPath.value = curPath
-
-        // (Future feature) Save Drawing
-        val coord = Coord(currentX, currentY)
-        canvasRepo.coordPath = mutableListOf<Coord>()
-        canvasRepo.coordPath.add(coord)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -81,10 +115,10 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  the server in live
      *  -> Bezier quadratic is use so it smoother (Important)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-     private fun touchMove(touchTolerance: Int) {
+     private fun touchMove() {
         val dx = abs(motionTouchEventX - currentX)
         val dy = abs(motionTouchEventY - currentY)
-        if (dx >= touchTolerance || dy >= touchTolerance) {
+        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
             // QuadTo() adds a quadratic bezier from the last point,
             // approaching control point (x1,y1), and ending at (x2,y2).
             curPath.quadTo(currentX, currentY, (motionTouchEventX + currentX) / 2, (motionTouchEventY + currentY) / 2)
@@ -93,9 +127,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
             // Call the onDraw() method to update the view
             _newCurPath.value = curPath
-            // (Future feature) Save Drawing
-            val coord = Coord(currentX, currentY)
-            canvasRepo.coordPath.add(coord)
         }
     }
 
@@ -113,10 +144,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
         // Call the onDraw() method to update the view
         _newCurPath.value = curPath
-
-        // (Future feature) Save Drawing
-        val paint = toolRepo.getPaint()
-        canvasRepo.strokeList.add(Stroke(canvasRepo.coordPath, paint.strokeWidth, paint.color.toString()))
     }
     
     // Grid attribute
@@ -166,26 +193,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return gridBitmap
     }
 
-    init {
-        canvasRepository.isGrid.observeForever {
-            isGrid = it
-            _newCurPath.value = curPath
-        }
-        prepareGrid(padding = 50F)
-
-        canvasRepository.undo.observeForever {
-            undo()
-        }
-        canvasRepository.redo.observeForever {
-            redo()
-        }
-
-        canvasRepository.gridSize.observeForever {
-            prepareGrid(padding = it.toFloat())
-            _newCurPath.value = curPath
-        }
-    }
-
     // Undo - Redo
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Undo: Remove the last action
@@ -200,6 +207,24 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
         _newCurPath.value = null
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Bind observer
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    init {
+        prepareGrid(padding = 50F)
+        canvasRepository.isGrid.observeForever {
+            isGrid = it
+            _newCurPath.value = curPath
+        }
+        canvasRepository.gridSize.observeForever {
+            prepareGrid(padding = it.toFloat())
+            _newCurPath.value = curPath
+        }
+        canvasRepository.drawingEvent.observeForever {
+            onDrawingEvent(it)
+        }
     }
 
 
