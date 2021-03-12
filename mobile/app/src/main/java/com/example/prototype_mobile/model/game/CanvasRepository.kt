@@ -44,12 +44,19 @@ class CanvasRepository {
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
 
     var onDrawingEvent = Emitter.Listener {
+        print(it[0])
         _drawingEvent.value = gson.fromJson(it[0].toString(), DrawingEvent::class.java)
     }
+
+    var onError = Emitter.Listener {
+        print(it[0].toString())
+    }
+
 
     init {
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_EVENT, onDrawingEvent)
+        socket.on("error", onError)
     }
 
     fun setGrid(addGrid: Boolean) {
@@ -82,6 +89,7 @@ class CanvasRepository {
         val event = DrawingEvent(DrawingEventType.TOUCHDOWN, touchDown, gameRepo.gameId.toString())
         _drawingEvent.value = event
         // Send to other players
+        print(gson.toJson(event))
         socket.emit(DRAWING_EVENT, gson.toJson(event))
 
     }

@@ -97,7 +97,7 @@ class ToolRepository {
 
     fun setColorByValue(color: String) {
         // Ex: "#a8a8a8"
-        paint.color = color.toInt()
+        paint.color = Color.parseColor(color)
     }
 
 }
