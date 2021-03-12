@@ -52,7 +52,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_DOWN -> {
                     val coord: Vec2 = Vec2(event.x.toInt(), event.y.toInt())
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), Integer.toHexString(paint.color))
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
                 }
             }
         }
