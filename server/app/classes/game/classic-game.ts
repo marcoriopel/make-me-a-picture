@@ -10,7 +10,7 @@ import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Game } from './game';
-import { Difficulty, CLASSIC_GAME_DRAWING_TEAM_TIMER, CLASSIC_GAME_OPPOSING_TEAM_TIMER } from '@app/ressources/variables/game-variables'
+import { Difficulty } from '@app/ressources/variables/game-variables'
 
 @injectable()
 export class ClassicGame extends Game {
@@ -22,7 +22,9 @@ export class ClassicGame extends Game {
     private round: number = 0;
     private currentDrawingName: string;
     private timerCount: number = 0;
-    private timer_interval: NodeJS.Timeout;
+    private timerInterval: NodeJS.Timeout;
+    private drawingTeamGuessingTime = 0;
+    private opposingTeamGuessingTime = 0;
 
     constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
@@ -114,7 +116,7 @@ export class ClassicGame extends Game {
     private switchGuessingTeam() {
         this.guessesLeft[this.getOpposingTeam()] = 1;
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        clearInterval(this.timer_interval);
+        clearInterval(this.timerInterval);
         this.startTimer(false);
     }
 
@@ -147,7 +149,7 @@ export class ClassicGame extends Game {
     }
 
     private setupNextRound(): void {
-        clearInterval(this.timer_interval);
+        clearInterval(this.timerInterval);
         if (this.round < 4) {
             ++this.round;
             this.drawingTeam = this.getOpposingTeam();
@@ -163,7 +165,7 @@ export class ClassicGame extends Game {
     }
 
     private endGame(): void {
-        clearInterval(this.timer_interval);
+        clearInterval(this.timerInterval);
         this.guessesLeft = [0, 0];
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
     }
@@ -202,46 +204,35 @@ export class ClassicGame extends Game {
     }
 
     setGuesses(): void {
+        this.opposingTeamGuessingTime = 10;
         switch (this.difficulty) {
             case Difficulty.EASY:
                 this.guessesLeft[this.drawingTeam] = 3;
+                this.drawingTeamGuessingTime = 60;
                 break;
             case Difficulty.MEDIUM:
                 this.guessesLeft[this.drawingTeam] = 2;
+                this.drawingTeamGuessingTime = 45;
                 break;
             case Difficulty.HARD:
                 this.guessesLeft[this.drawingTeam] = 1;
+                this.drawingTeamGuessingTime = 30;
                 break;
         }
         this.guessesLeft[this.getOpposingTeam()] = 0;
     }
 
     startTimer(isDrawingTeam: boolean) {
-        if (isDrawingTeam) {
-            this.timerCount = CLASSIC_GAME_DRAWING_TEAM_TIMER;
-            this.timer_interval = setInterval(() => {
-                this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
-                console.log("Drawing team time remaining: " + this.timerCount);
-                if (!this.timerCount) {
-                    this.switchGuessingTeam();
-                }
-                else {
-                    --this.timerCount;
-                }
-            }, 1000);
-        }
-        else {
-            this.timerCount = CLASSIC_GAME_OPPOSING_TEAM_TIMER;
-            this.timer_interval = setInterval(() => {
-                this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
-                console.log("Opposing team time remaining: " + this.timerCount);
-                if (!this.timerCount) {
-                    this.setupNextRound();
-                }
-                else {
-                    --this.timerCount;
-                }
-            }, 1000);
-        }
+        isDrawingTeam ? this.timerCount = this.drawingTeamGuessingTime : this.timerCount = this.opposingTeamGuessingTime;
+        this.timerInterval = setInterval(() => {
+            this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
+            if (!this.timerCount) {
+                isDrawingTeam ? this.switchGuessingTeam() : this.setupNextRound();
+                this.switchGuessingTeam();
+            }
+            else {
+                --this.timerCount;
+            }
+        }, 1000);
     }
 }
