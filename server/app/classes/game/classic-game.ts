@@ -142,7 +142,7 @@ export class ClassicGame extends Game {
             this.getDrawingSuggestions();
         }
         else {
-            this.endGame()
+            this.endGame();
         }
     }
 
