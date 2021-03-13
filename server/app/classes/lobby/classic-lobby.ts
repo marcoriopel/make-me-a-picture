@@ -107,7 +107,11 @@ export class ClassicLobby extends Lobby {
         return this.teams[0].size == 2 && this.teams[1].size == 2;
     }
 
-    getTeams() : Map<string, Player>[]{
+    getTeams(): Map<string, Player>[]{
         return this.teams;
+    }
+
+    getVPlayers(): VirtualPlayer[]{
+        return this.vPlayers;
     }
 }

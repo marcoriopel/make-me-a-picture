@@ -15,6 +15,7 @@ import { Difficulty } from '@app/ressources/variables/game-variables'
 @injectable()
 export class ClassicGame extends Game {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
+    private vPlayers: VirtualPlayer[] = new Array(2);
     private drawingTeam: number;
     private drawingPlayer: Player[] = new Array(2);
     private score: number[] = [0, 0];
@@ -25,6 +26,7 @@ export class ClassicGame extends Game {
     constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
+        this.vPlayers = lobby.getVPlayers();
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
@@ -37,7 +39,12 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.getDrawingSuggestions();
+        if(this.drawingPlayer[this.drawingTeam].isVirtual){
+
+        }
+        else {
+            this.getDrawingSuggestions();
+        }
     }
 
     async getDrawingSuggestions(): Promise<void> {
