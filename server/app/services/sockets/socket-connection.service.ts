@@ -49,9 +49,10 @@ export class SocketConnectionService {
                     drawingEvent = JSON.parse(drawingEvent)
                 }
                 try {
-                    this.gameManagerService.dispatchDrawingEvent(drawingEvent);
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
+                    this.gameManagerService.dispatchDrawingEvent(user, drawingEvent);
                 } catch (err) {
-                    console.log(err);
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
 
@@ -66,9 +67,9 @@ export class SocketConnectionService {
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
-                        throw new Error("this lobby does not exist")
+                        throw new Error("This lobby does not exist")
                 } catch (err) {
-                    this.socketService.getSocket().emit('error', { "error": err.message });
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
 

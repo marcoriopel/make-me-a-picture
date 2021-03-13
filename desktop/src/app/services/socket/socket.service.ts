@@ -19,6 +19,8 @@ export class SocketService {
     this.bind("connect", () => {
       this.socketId = this.socket.id;
     });
+    
+    this.bindErrors();
   }
 
   connect(url: string): void {
@@ -49,5 +51,10 @@ export class SocketService {
     this.socket.off(event);
   }
 
+  bindErrors(){
+    this.bind('error', (errorMsg: string) =>{
+      console.error(errorMsg);
+    })
+  }
 }
 

@@ -23,4 +23,9 @@
     <color name="light_orange">#ffb669</color>
     <color name="light_blue">#a8dbff</color>
     <color name= "light_red">#f55656</color>
+    <color name="colorBackground">#FFFF5500</color>
+    <color name="colorPaint">#FFFFEB3B</color>
+    <color name="gridColor">#231F20</color>
+
+
 </resources>

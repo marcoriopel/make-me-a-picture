@@ -6,7 +6,7 @@ import { Lobby } from './lobby';
 
 @injectable()
 export class CoopLobby extends Lobby {
-    private team1: Map<string, Player> = new Map<string, Player>();
+    private team: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
     
     constructor(difficulty: number, gameName: string, id: string) {
@@ -21,10 +21,10 @@ export class CoopLobby extends Lobby {
     deleteLobby(): void{}
 
     addPlayer(user: BasicUser, socketId: string): void{
-        if(this.team1.has(user.username)){
+        if(this.team.has(user.username)){
             throw new Error("You have already joined this lobby");
         }
-        if(this.team1.size >= 4){
+        if(this.team.size >= 4){
             throw new Error("Lobby is full");
         }
         
@@ -35,16 +35,22 @@ export class CoopLobby extends Lobby {
             "socketId": socketId,
         }
 
-        this.team1.set(user.username, player);
+        this.team.set(user.username, player);
     }    
 
     getPlayers(): any{
         let players = [];
-        this.team1.forEach((player: Player) =>{
-            players.push({"username": player.username, "avatar": player.avatar, "team": 0});
+        this.team.forEach((player: Player) =>{
+            players.push({"username": player.username, "avatar": player.avatar, "team": 0, "isVirtual": player.isVirtual});
         })
         return players;
     } 
 
-    removePlayer(): void{}
+    removePlayer(user: BasicUser): void {
+        if(this.team.has(user.username)){
+            this.team.delete(user.username);
+            return
+        }
+        throw new Error("You are not part of this lobby")
+    }
 }

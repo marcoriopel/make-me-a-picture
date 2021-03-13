@@ -1,5 +1,6 @@
 import { Drawing } from '@app/ressources/interfaces/drawings.interface';
-import { Player } from '@app/ressources/interfaces/user.interface';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
@@ -20,8 +21,7 @@ export class ClassicGame extends Game {
     private round: number = 0;
     private currentDrawingName: string;
 
-    constructor(lobby: ClassicLobby, socketService: SocketService,
-        @inject(TYPES.DrawingsService) private drawingsService: DrawingsService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -40,9 +40,14 @@ export class ClassicGame extends Game {
 
     async getDrawingSuggestions() {
         console.log("Sent suggestion to: " + this.drawingPlayer[this.drawingTeam].username);
-        let drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
-        this.currentDrawingName = drawingNames[0];
-        this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
+        let drawingNames;
+        try {
+            drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
+            this.currentDrawingName = drawingNames[0];
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
+        } catch(e) {
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', {"error": e.message});
+        }
     }
 
     guessDrawing(username: string, guess: string): void {
@@ -146,5 +151,14 @@ export class ClassicGame extends Game {
         if (this.drawingPlayer[this.drawingTeam].username != username)
             throw new Error("User not authorized to select drawing name");
         this.currentDrawingName = drawingName;
+    }
+
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+        if(user.username == this.drawingPlayer[this.drawingTeam].username){
+            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": event});
+        }
+        else{
+            throw new Error("It is not your turn to draw");
+        }
     }
 }

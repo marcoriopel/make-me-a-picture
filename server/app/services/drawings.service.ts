@@ -42,6 +42,7 @@ export class DrawingsService {
         let words: any[];
         wordSuggestions = [];
         words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
+        console.log(words);
         if (words.length < 3) {
             throw new Error('Database is empty')
         }

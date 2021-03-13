@@ -7,10 +7,10 @@ import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { SocketService } from '../sockets/socket.service';
 import { TYPES } from '@app/types';
 import { Game } from '@app/classes/game/game';
-import { Lobby } from '@app/classes/lobby/lobby';
 import { ClassicGame } from '@app/classes/game/classic-game';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
-import { DrawingsModel } from '@app/models/drawings.model'
+import { DrawingsService } from '@app/services/drawings.service'
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 
 
@@ -22,7 +22,7 @@ export class GameManagerService {
     
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
-        @inject(TYPES.DrawingsModel) private drawingsModel: DrawingsModel,) {
+        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,) {
         this.socketService = SocketService.getInstance();
     }
 
@@ -37,7 +37,7 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingsModel);
+                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
                 GameManagerService.games.set(req.body.lobbyId, game);
                 game.startGame();
                 break;
@@ -78,8 +78,18 @@ export class GameManagerService {
         next();
     }
 
-    dispatchDrawingEvent(event: DrawingEvent){
-        this.socketService.getSocket().to(event.gameId).emit('drawingEvent', { "drawingEvent": event});
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+        if (this.gameExist(event.gameId)) {
+            const game: Game =  GameManagerService.games.get(event.gameId);
+            (game as ClassicGame).dispatchDrawingEvent(user, event);
+        }
+        else{
+            throw new Error("This game does not exist");
+        }
+    }
+
+    gameExist(gameId: string): boolean {
+        return GameManagerService.games.has(gameId);
     }
 
     guessDrawing(gameId: string, username: string, guess: string) {
