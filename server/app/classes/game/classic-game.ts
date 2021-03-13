@@ -73,7 +73,7 @@ export class ClassicGame extends Game {
             throw Error("It's not your turn to guess")
         }
         if (this.currentDrawingName == guess) {
-            console.log("Drawing team guessed drawing correctly!")
+            console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
@@ -93,7 +93,7 @@ export class ClassicGame extends Game {
             throw Error("It's not your turn to guess")
         }
         if (this.currentDrawingName == guess) {
-            "Opposing team guessed drawing correctly!"
+            console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
