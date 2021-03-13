@@ -17,3 +17,6 @@ export enum drawingEventType {
     UNDO = 3,
     REDO = 4,
 }
+
+export const CLASSIC_GAME_DRAWING_TEAM_TIMER = 30;
+export const CLASSIC_GAME_OPPOSING_TEAM_TIMER = 10;

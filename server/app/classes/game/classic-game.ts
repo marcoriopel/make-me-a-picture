@@ -10,7 +10,7 @@ import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Game } from './game';
-import { Difficulty } from '@app/ressources/variables/game-variables'
+import { Difficulty, CLASSIC_GAME_DRAWING_TEAM_TIMER, CLASSIC_GAME_OPPOSING_TEAM_TIMER } from '@app/ressources/variables/game-variables'
 
 @injectable()
 export class ClassicGame extends Game {
@@ -21,6 +21,8 @@ export class ClassicGame extends Game {
     private guessesLeft: number[] = [0, 0];
     private round: number = 0;
     private currentDrawingName: string;
+    private timerCount: number = 0;
+    private timer_interval: NodeJS.Timeout;
 
     constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
@@ -37,6 +39,7 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
+        this.startTimer(true);
         this.getDrawingSuggestions();
     }
 
@@ -65,7 +68,6 @@ export class ClassicGame extends Game {
         else {
             throw Error("User is not part of the game")
         }
-        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
     }
 
     private drawingTeamGuess(username: string, guess: string): void {
@@ -76,14 +78,18 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
+            this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
+            this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
             this.setupNextRound();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft[this.drawingTeam];
             if (!this.guessesLeft[this.drawingTeam]) {
-                this.guessesLeft[this.getOpposingTeam()] = 1;
+                this.switchGuessingTeam();
+            }
+            else {
+                this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
             }
         }
     }
@@ -96,12 +102,20 @@ export class ClassicGame extends Game {
             console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
+            this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
         }
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.setupNextRound();
+    }
+
+    private switchGuessingTeam() {
+        this.guessesLeft[this.getOpposingTeam()] = 1;
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
+        clearInterval(this.timer_interval);
+        this.startTimer(false);
     }
 
     private selectRandomBinary(): number {
@@ -133,6 +147,7 @@ export class ClassicGame extends Game {
     }
 
     private setupNextRound(): void {
+        clearInterval(this.timer_interval);
         if (this.round < 4) {
             ++this.round;
             this.drawingTeam = this.getOpposingTeam();
@@ -140,6 +155,7 @@ export class ClassicGame extends Game {
             this.setGuesses();
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
             this.getDrawingSuggestions();
+            this.startTimer(true);
         }
         else {
             this.endGame();
@@ -147,6 +163,7 @@ export class ClassicGame extends Game {
     }
 
     private endGame(): void {
+        clearInterval(this.timer_interval);
         this.guessesLeft = [0, 0];
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
     }
@@ -197,5 +214,34 @@ export class ClassicGame extends Game {
                 break;
         }
         this.guessesLeft[this.getOpposingTeam()] = 0;
+    }
+
+    startTimer(isDrawingTeam: boolean) {
+        if (isDrawingTeam) {
+            this.timerCount = CLASSIC_GAME_DRAWING_TEAM_TIMER;
+            this.timer_interval = setInterval(() => {
+                this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
+                console.log("Drawing team time remaining: " + this.timerCount);
+                if (!this.timerCount) {
+                    this.switchGuessingTeam();
+                }
+                else {
+                    --this.timerCount;
+                }
+            }, 1000);
+        }
+        else {
+            this.timerCount = CLASSIC_GAME_OPPOSING_TEAM_TIMER;
+            this.timer_interval = setInterval(() => {
+                this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
+                console.log("Opposing team time remaining: " + this.timerCount);
+                if (!this.timerCount) {
+                    this.setupNextRound();
+                }
+                else {
+                    --this.timerCount;
+                }
+            }, 1000);
+        }
     }
 }
