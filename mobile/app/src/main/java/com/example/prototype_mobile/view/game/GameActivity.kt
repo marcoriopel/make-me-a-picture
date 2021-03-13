@@ -43,6 +43,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                         .commitNow()
                 toolFragment =  (findToolFragment() as ToolsFragment?)!!
             }
+
+            if (gameViewModel.isPlayerGuessing.value!!) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGuess, GuessFragment())
+                    .commitNow()
+            }
         }
 
         gameViewModel.isPlayerDrawing.observe(this, Observer {
@@ -54,6 +60,16 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                         .replace(R.id.containerGuess, ToolsAdjustmentFragment())
                         .commitNow()
                 toolFragment =  (findToolFragment() as ToolsFragment?)!!
+            } else {
+                // TODO: Add fragments to guess
+            }
+        })
+
+        gameViewModel.isPlayerGuessing.observe(this, Observer {
+            if (it) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGuess, GuessFragment())
+                    .commitNow()
             } else {
                 // TODO: Add fragments to guess
             }
