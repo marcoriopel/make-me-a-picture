@@ -12,7 +12,7 @@ export enum Difficulty {
 export interface NewGame {
     gameType: GameType,
     gameName: string,
-    difficulty: Difficulty
+    difficulty: Difficulty,
 }
 
 export interface AvailableGame {

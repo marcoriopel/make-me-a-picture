@@ -73,16 +73,18 @@ export class SocketConnectionService {
                 }
             });
 
-            // socket.on('guessDrawing', (request: any) => {
-            //     if (!(request instanceof Object)) {
-            //         request = JSON.parse(request)
-            //     }
-            //     try {
-            //         this.gameManagerService.dispatchTeams(request.lobbyId)
-            //     } catch (err) {
-            //         this.socketService.getSocket().emit('error', { "error": err.message });
-            //     }
-            // });
+            socket.on('guessDrawing', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                console.log("Entered socket call");
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
+                try {
+                    this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess)
+                } catch (err) {
+                    this.socketService.getSocket().emit('error', { "error": err.message });
+                }
+            });
         });
     }
 }

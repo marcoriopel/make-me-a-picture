@@ -7,10 +7,11 @@ import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { SocketService } from '../sockets/socket.service';
 import { TYPES } from '@app/types';
 import { Game } from '@app/classes/game/game';
-import { Lobby } from '@app/classes/lobby/lobby';
 import { ClassicGame } from '@app/classes/game/classic-game';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
+import { DrawingsService } from '@app/services/drawings.service'
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
+
 
 
 
@@ -20,7 +21,8 @@ export class GameManagerService {
     static games: Map<string, Game> = new Map<string, Game>();
     
     constructor(
-        @inject(TYPES.SocketService) private socketService: SocketService,) {
+        @inject(TYPES.SocketService) private socketService: SocketService,
+        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,) {
         this.socketService = SocketService.getInstance();
     }
 
@@ -35,7 +37,7 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService);
+                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
                 GameManagerService.games.set(req.body.lobbyId, game);
                 game.startGame();
                 break;
@@ -91,11 +93,10 @@ export class GameManagerService {
     }
 
     guessDrawing(gameId: string, username: string, guess: string) {
-        // const drawingName = req.body.drawingName;
-        // if (!gameId || !GameManagerService.games.has(gameId)) {
-        //     return;
-        // }
-        // let game = GameManagerService.games.get(gameId);
-        // game.guessDrawing(username, guess);
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            return;
+        }
+        let game = GameManagerService.games.get(gameId);
+        game.guessDrawing(username, guess);
     }
 }

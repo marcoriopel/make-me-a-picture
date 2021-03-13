@@ -21,7 +21,7 @@ export abstract class Game {
 
     startGame(): void { }
 
-    // guessDrawing(): void {}
+    guessDrawing(username: string, guess: string): void {}
 
     getGameName(): string {
         return this.gameName;
