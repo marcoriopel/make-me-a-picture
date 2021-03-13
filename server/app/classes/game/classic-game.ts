@@ -74,7 +74,7 @@ export class ClassicGame extends Game {
         }
         if (this.currentDrawingName == guess) {
             console.log("Drawing team guessed drawing correctly!")
-            this.score[this.drawingTeam] += 1;
+            ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             this.setupNextRound();
