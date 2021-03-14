@@ -8,14 +8,17 @@
 
 .chat-bar {
   display: flex;
+  position: absolute;
+  width: 380px;
   margin: auto;
   justify-content: center;
   align-items: center;
-  height: 80%;
+  height: 300px;
+  bottom: 100px;
 }
 
 .container{
-  width: 100%;
+  width: 90%;
   margin:fit-content 0 auto;
   border: solid 1px #ccc;
   border-radius: 5px;

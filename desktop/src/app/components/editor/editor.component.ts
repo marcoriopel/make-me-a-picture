@@ -18,11 +18,9 @@ import {
     MIN_LINE_WIDTH,
     ORANGE,
     PINK,
-    POLY_RED,
     PURPLE,
     RED,
     TURQUOISE,
-    WHITE,
     YELLOW,
 } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '@app/services/drawing/drawing.service';
@@ -82,11 +80,6 @@ export class EditorComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         setTimeout(() => {
             const workspaceElement: HTMLElement = this.workSpaceRef.nativeElement;
-            try {
-                this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
-            } catch(e) {
-                return;
-            }
             this.drawingService.gridCanvas.style.cursor = 'crosshair';
             this.workSpaceSize.x = workspaceElement.offsetWidth;
             this.workSpaceSize.y = workspaceElement.offsetHeight;
@@ -121,20 +114,7 @@ export class EditorComponent implements AfterViewInit {
     setColor(color: string){
         this.drawingService.color = color;
         this.pencilColor = color;
-        this.setPencil();
-    }
-
-    setEraser(): void {
-        this.pencilColor = this.drawingService.color;
-        this.drawingService.color = WHITE;
-        this.pencilRef.nativeElement.style.backgroundColor = WHITE;
-        this.eraserRef.nativeElement.style.backgroundColor = POLY_RED;
-    }
-
-    setPencil(): void {
-        this.drawingService.color = this.pencilColor;
-        this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
-        this.eraserRef.nativeElement.style.backgroundColor = WHITE;
+        // this.setPencil();
     }
 
     changeLineWidth(): void {

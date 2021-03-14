@@ -3,6 +3,11 @@
     display: flex;
 }
 
+#draw-space {
+    width: 800px;
+    height: 600px;
+}
+
 #workSpace {
     height: 95%;
 }
@@ -18,8 +23,11 @@
 }
 
 #tool-space {
-    position: absolute;
-    top: 600px;
+    // position: absolute;
+    // top: 600px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
     height: 100px;
     width: 800px;
     // background-color: powderblue;
@@ -49,14 +57,9 @@
 
 .colors {
     padding-top: 20px;
-    padding-left: 50px;
-    width: 400px;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
-}
-
-.slider {
-    padding-left: 50px;
+    // width: 400px;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 mat-slider {
@@ -64,10 +67,10 @@ mat-slider {
 }
 
 .tool-buttons-container {
-    position: absolute;
-    display: grid;
-    grid-template-columns: auto auto auto;
-    right: 100px;
+    // position: absolute;
+    // display: grid;
+    // grid-template-columns: auto auto auto;
+    // right: 100px;
     top: 10px;
 }
 
@@ -86,10 +89,17 @@ mat-slider {
 	border: none;
     border-radius: 40%;
     height: 30px;
-    left: 53px;
-    top: 20px;
+    // left: 53px;
+    // top: 20px;
     width: 80px;
-    position: absolute;
+    // position: absolute;
     cursor: pointer;
     opacity: 0;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
 }
