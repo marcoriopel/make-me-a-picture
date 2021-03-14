@@ -80,6 +80,7 @@ export class SocketConnectionService {
                 console.log("Entered socket call");
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
                 try {
+                    console.log(request.gameId)
                     this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess)
                 } catch (err) {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });

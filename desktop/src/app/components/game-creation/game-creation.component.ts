@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GameType, NewGame } from '@app/classes/game';
+import { GameService } from '@app/services/game/game.service';
 import { LobbyService } from '@app/services/lobby/lobby.service';
 import { errorMessages } from '../register/custom-validator';
 
@@ -42,7 +43,7 @@ export class GameCreationComponent implements OnInit {
   errors = errorMessages;
   private onlySpaceRegExp = /^\s+$/;
 
-  constructor(private fb: FormBuilder, private lobbyService: LobbyService, private router: Router) { }
+  constructor(private fb: FormBuilder, private lobbyService: LobbyService, private gameService: GameService, private router: Router) { }
 
   ngOnInit(): void {
     this.gameForm = this.fb.group({
@@ -72,6 +73,7 @@ export class GameCreationComponent implements OnInit {
     this.lobbyService.create(game).subscribe(
       res => {
         this.join(res.lobbyId, game);
+        this.gameService.gameId = res.lobbyId;
       },
       err => { 
         console.log(err);
