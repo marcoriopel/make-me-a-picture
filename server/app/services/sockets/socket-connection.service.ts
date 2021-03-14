@@ -82,7 +82,7 @@ export class SocketConnectionService {
                 try {
                     this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess)
                 } catch (err) {
-                    this.socketService.getSocket().emit('error', { "error": err.message });
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
         });
