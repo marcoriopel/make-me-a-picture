@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MINIMUM_CANVAS_HEIGHT, MINIMUM_CANVAS_WIDTH } from '@app/ressources/global-variables/global-variables';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
+import { Difficulty, GuessTime } from '@app/classes/game';
 @Component({
   selector: 'app-viewing',
   templateUrl: './viewing.component.html',
@@ -13,6 +14,7 @@ export class ViewingComponent implements AfterViewInit {
 
   private baseCtx: CanvasRenderingContext2D;
   public isPlayButtonAvailable = true;
+  private drawingSpeed: number;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public drawing: Drawing,
@@ -29,6 +31,8 @@ export class ViewingComponent implements AfterViewInit {
     this.baseCtx.lineJoin = 'round';
     this.baseCtx.lineCap = 'round';
 
+    this.drawingSpeed = this.calculateDrawingSpeed();
+
     for(let i = 0; i < this.drawing.strokes.length; i++){
       this.baseCtx.lineWidth = this.drawing.strokes[i].lineWidth;
       this.baseCtx.strokeStyle = this.drawing.strokes[i].lineColor;
@@ -43,10 +47,37 @@ export class ViewingComponent implements AfterViewInit {
       this.baseCtx.lineTo(path[i].x, path[i].y);
       this.baseCtx.lineTo(path[i + 1].x, path[i + 1].y);
       this.baseCtx.stroke();
-      await this.timer(this.drawing.difficulty);
+      await this.delay();
     }
   }
 
-  timer = (difficultyMultiplier: number) => new Promise(res => setTimeout(res, 50 * difficultyMultiplier))
+  delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))
 
+
+  private calculateDrawingSpeed(): number {
+    let drawingSpeed = 0;
+    let pointsNumber: number = this.calculatePointsInDrawing();
+    switch(this.drawing.difficulty){
+        case Difficulty.EASY:
+            drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
+            break;
+        case Difficulty.EASY:
+            drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
+            break;
+        case Difficulty.EASY:
+            drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
+            break;
+    }
+    return drawingSpeed;
+  }  
+
+  private calculatePointsInDrawing(): number {
+      let pointsNumber = 0;
+      for(let stroke of this.drawing.strokes){
+          for(let {} of stroke.path){
+              ++pointsNumber;
+          }
+      }
+      return pointsNumber;
+  } 
 }

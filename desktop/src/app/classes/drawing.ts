@@ -1,10 +1,5 @@
 import { Vec2 } from './vec2';
-
-export enum Difficulty {
-    easy = 3,
-    normal = 2,
-    hard = 1,
-}
+import { Difficulty } from './game';
 
 export interface Drawing {
     difficulty: Difficulty,

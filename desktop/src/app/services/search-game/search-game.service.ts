@@ -59,11 +59,11 @@ export class SearchGameService {
         filteredList.push(game);
     });
     filteredList.forEach(game => {
-      if (game.difficulty == Difficulty.Easy && filter.get('easy'))
+      if (game.difficulty == Difficulty.EASY && filter.get('easy'))
         this.displayList.push(game);
-      if (game.difficulty == Difficulty.Normal && filter.get('normal')) 
+      if (game.difficulty == Difficulty.MEDIUM && filter.get('normal')) 
         this.displayList.push(game);
-      if (game.difficulty == Difficulty.Hard && filter.get('hard')) 
+      if (game.difficulty == Difficulty.HARD && filter.get('hard')) 
         this.displayList.push(game);
     });
   }

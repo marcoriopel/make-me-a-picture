@@ -135,7 +135,7 @@ export class VirtualPlayer {
     private calculatePointsInDrawing(): number {
         let pointsNumber = 0;
         for(let stroke of this.currentDrawing.strokes){
-            for(let point of stroke.path){
+            for(let {} of stroke.path){
                 ++pointsNumber;
             }
         }
