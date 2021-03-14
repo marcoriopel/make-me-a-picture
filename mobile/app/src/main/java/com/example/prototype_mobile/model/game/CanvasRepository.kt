@@ -45,20 +45,22 @@ class CanvasRepository {
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
 
     var onDrawingEvent = Emitter.Listener {
-        val Jobject = JSONObject(it[0].toString())
-        val j = Jobject.getString("drawingEvent")
-        val Jj = JSONObject(j)
-        var d: DrawingEvent = if ("lineColor" in j) {
-            val Jevent = JSONObject(Jj.getString("event"))
-            val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt() )
-            val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
-            DrawingEvent(Jj.getString("eventType").toInt(), event, Jj.getString("gameId") )
-        } else {
-            val Jevent = JSONObject(Jj.getString("event"))
-            val coords = Vec2( JSONObject(Jj.getString("event")).getString("x").toInt(),  JSONObject(Jj.getString("event")).getString("y").toInt() )
-            DrawingEvent(Jj.getString("eventType").toInt(), coords, Jj.getString("gameId") )
+        if(!gameRepo.isPlayerDrawing.value!!) {
+            val Jobject = JSONObject(it[0].toString())
+            val j = Jobject.getString("drawingEvent")
+            val Jj = JSONObject(j)
+            val d: DrawingEvent = if ("lineColor" in j) {
+                val Jevent = JSONObject(Jj.getString("event"))
+                val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                DrawingEvent(Jj.getString("eventType").toInt(), event, Jj.getString("gameId"))
+            } else {
+                val Jevent = JSONObject(Jj.getString("event"))
+                val coords = Vec2(JSONObject(Jj.getString("event")).getString("x").toInt(), JSONObject(Jj.getString("event")).getString("y").toInt())
+                DrawingEvent(Jj.getString("eventType").toInt(), coords, Jj.getString("gameId"))
+            }
+            _drawingEvent.postValue(d)
         }
-        _drawingEvent.postValue(d)
     }
 
     var onError = Emitter.Listener {

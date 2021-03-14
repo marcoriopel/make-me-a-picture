@@ -139,6 +139,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private fun touchUp() {
         // Undo Redo Feature
         redoStack = Stack<PaintedPath>()
+        val paint = toolRepo!!.getPaintCopy()
+        Log.e("color", paint.color.toString())
         pathStack.push(PaintedPath(curPath, toolRepo!!.getPaintCopy()))
 
         // Rewind the current path for the next touch
