@@ -16,6 +16,9 @@ const val GRID_WIDTH = 2f // has to be float
 const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
+
+
+
     // Path
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
