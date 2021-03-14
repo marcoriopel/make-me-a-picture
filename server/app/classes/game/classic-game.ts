@@ -1,16 +1,12 @@
-import { Drawing } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { GameType } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
-import { TYPES } from '@app/types';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { Game } from './game';
-import { Difficulty } from '@app/ressources/variables/game-variables'
 
 @injectable()
 export class ClassicGame extends Game {
@@ -154,14 +150,20 @@ export class ClassicGame extends Game {
         }
     }
 
-    private setupNextRound(): void {
+    private async setupNextRound() {
         if (this.round < 4) {
             ++this.round;
             this.drawingTeam = this.getOpposingTeam();
             this.changeDrawingPlayer();
             this.setGuesses();
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
-            this.getDrawingSuggestions();
+            if(this.drawingPlayer[this.drawingTeam].isVirtual){
+                this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+                this.vPlayers[this.drawingTeam].startDrawing();
+            }
+            else {
+                this.getDrawingSuggestions();
+            }
         }
         else {
             this.endGame();
@@ -171,6 +173,7 @@ export class ClassicGame extends Game {
     private endGame(): void {
         this.guessesLeft = [0, 0];
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": {username: "System"}, "text": "The Game is now over", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
     }
 
     private getOpposingTeam(): number {
@@ -207,17 +210,7 @@ export class ClassicGame extends Game {
     }
 
     setGuesses(): void {
-        switch (this.difficulty) {
-            case Difficulty.EASY:
-                this.guessesLeft[this.drawingTeam] = 3;
-                break;
-            case Difficulty.MEDIUM:
-                this.guessesLeft[this.drawingTeam] = 2;
-                break;
-            case Difficulty.HARD:
-                this.guessesLeft[this.drawingTeam] = 1;
-                break;
-        }
+        this.guessesLeft[this.drawingTeam] = 1;
         this.guessesLeft[this.getOpposingTeam()] = 0;
     }
 }
