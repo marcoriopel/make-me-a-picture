@@ -9,6 +9,7 @@ export enum Difficulty {
     Normal,
     Hard
 }
+
 export interface NewGame {
     gameType: GameType,
     gameName: string,
