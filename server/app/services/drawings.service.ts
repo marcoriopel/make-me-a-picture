@@ -37,12 +37,9 @@ export class DrawingsService {
         }
     }
 
-    async getWordSuggestions(difficulty) {
+    async getWordSuggestions(difficulty): Promise<string[]> {
         let wordSuggestions: string[] = [];
-        let words: any[];
-        wordSuggestions = [];
-        words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
-        console.log(words);
+        let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
         if (words.length < 3) {
             throw new Error('Database is empty')
         }
@@ -53,6 +50,16 @@ export class DrawingsService {
             }
         }
         return wordSuggestions;
+    }
+
+    async getRandomDrawing(difficulty): Promise<Drawing> {
+        let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
+        console.log(words);
+        if (words.length < 1) {
+            throw new Error('Database is empty')
+        }
+        let random = Math.floor(Math.random() * words.length);
+        return await this.drawingsModel.getDrawing(words[random]._id)
     }
 
 }
