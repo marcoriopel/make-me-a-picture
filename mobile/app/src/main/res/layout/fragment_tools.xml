@@ -50,42 +50,4 @@
         android:background="@drawable/button_redo"
         app:backgroundTint="@null" />
 
-    <Button
-        android:id="@+id/primaryColor"
-        android:layout_width="113dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/button_rounded"
-        app:backgroundTint="@null" />
-
-    <Button
-        android:id="@+id/secondary1"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/button_round"
-        app:backgroundTint="@null" />
-    <Button
-        android:id="@+id/secondary2"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/button_round"
-        app:backgroundTint="@null" />
-
-    <Button
-        android:id="@+id/secondary3"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/button_round"
-        app:backgroundTint="@null" />
-    <Button
-        android:id="@+id/secondary4"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/button_round"
-        app:backgroundTint="@null" />
-
 </LinearLayout>

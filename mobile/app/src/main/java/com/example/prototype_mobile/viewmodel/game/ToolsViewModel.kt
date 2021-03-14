@@ -7,13 +7,6 @@ import com.example.prototype_mobile.model.game.ToolRepository
 
 class ToolsViewModel(private val toolRepository: ToolRepository) : ViewModel() {
 
-    fun setColor(color: Int) {
-        toolRepository.selectedColor = color
-        if (toolRepository.selectedTool.value == Tool.PEN) {
-            toolRepository.setPen()
-        }
-    }
-
     fun useEraser() {
         toolRepository.setEraser()
     }

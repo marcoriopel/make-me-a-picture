@@ -24,9 +24,6 @@ class ToolsFragment : Fragment() {
     private var isGrid = false
     private var isEraser = false
 
-    var primaryColor = rgb(0,0,0)
-    var colorList:IntArray = intArrayOf(rgb(255,0,0),rgb(0,255,0),rgb(0,0,255), rgb(255,0,255))
-    var secondaryButtons:Vector<Button> = Vector<Button>()
     companion object {
         fun newInstance() = ToolsFragment()
     }
@@ -42,7 +39,6 @@ class ToolsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this, ToolsViewModelFactory())
             .get(ToolsViewModel::class.java)
-        viewModel.setColor(primaryColor)
 
     }
 
@@ -55,31 +51,6 @@ class ToolsFragment : Fragment() {
         binding.buttonUndo.setOnClickListener { viewModel.undo() }
         binding.buttonRedo.setOnClickListener { viewModel.redo() }
         binding.buttonPencil.setImageResource(R.drawable.button_pencil_selected)
-        binding.primaryColor.setOnClickListener{
-            openColorPicker()
-        }
-        updateButtonColor(primaryColor)
-        secondaryButtons.add(binding.secondary1)
-        secondaryButtons.add(binding.secondary2)
-        secondaryButtons.add(binding.secondary3)
-        secondaryButtons.add(binding.secondary4)
-        populateSecondaryColor(colorList)
-
-        binding.secondary1.setOnClickListener{
-            swapColor(binding.secondary1)
-        }
-        binding.secondary2.setOnClickListener{
-            swapColor(binding.secondary2)
-        }
-        binding.secondary3.setOnClickListener{
-            swapColor(binding.secondary3)
-        }
-        binding.secondary4.setOnClickListener{
-            swapColor(binding.secondary4)
-        }
-
-
-
     }
 
     private fun pen() {
@@ -110,60 +81,4 @@ class ToolsFragment : Fragment() {
         }
         isGrid = !isGrid
     }
-
-    private fun openColorPicker() {
-        activity?.let{
-            com.jaredrummler.android.colorpicker.ColorPickerDialog.newBuilder().setColor(primaryColor)
-                .setAllowPresets(false).setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM).setDialogTitle(R.string.colorPickerToolTitle).show(it)
-
-        }
-    }
-
-    fun updateButtonColor(color: Int) {
-        binding.primaryColor.background =  ColorDrawable(color)
-        binding.secondary1.background =ColorDrawable(color)
-    }
-    fun populateSecondaryColor(colors:IntArray){
-        secondaryButtons.forEachIndexed { i, element ->
-            element.background =  ColorDrawable(colors[i])
-        }
-    }
-    //Since we don't have lots of button we will procede this way.
-    // If we have more color use a for loop
-    fun newColorSelectionArrayUpdate(color: Int) {
-        val tempArray = IntArray(4)
-        colorList.forEachIndexed { i, element ->
-            if(i == 0) {
-                tempArray[i]=color
-            }
-            else
-                tempArray[i]=colorList[i-1]
-
-        }
-        colorList= tempArray
-    }
-    private fun swapColor(secondary:Button){
-
-        binding.primaryColor.background = secondary.background
-        secondary.background = ColorDrawable(primaryColor)
-        val background: android.graphics.drawable.Drawable? = binding.primaryColor.getBackground()
-        if (background is ColorDrawable) {
-            primaryColor = (background as ColorDrawable).color
-            viewModel.setColor(primaryColor)
-        }
-        updateListColor()
-    }
-    private fun updateListColor() {
-        secondaryButtons.forEachIndexed { index, button ->
-            val background: android.graphics.drawable.Drawable? = button.getBackground()
-            if (background is ColorDrawable) {
-                colorList[index] = (background as ColorDrawable).color
-
-            }
-        }
-    }
-
-
-
-
 }
