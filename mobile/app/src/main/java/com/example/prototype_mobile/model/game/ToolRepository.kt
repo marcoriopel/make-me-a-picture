@@ -72,6 +72,7 @@ class ToolRepository {
 
     fun setEraser() {
         _selectedTool.value = Tool.ERASER
+        selectedColor = paint.color
         setColor(Color.WHITE)
         setStrokeWidth(strokeWidthEraser)
     }

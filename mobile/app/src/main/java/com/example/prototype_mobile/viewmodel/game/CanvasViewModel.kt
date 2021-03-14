@@ -8,8 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
-import com.example.prototype_mobile.model.game.CanvasRepository
-import com.example.prototype_mobile.model.game.ToolRepository
+import com.example.prototype_mobile.model.game.*
 import java.util.*
 import kotlin.math.abs
 
@@ -32,6 +31,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
+    private val gameRepo = GameRepository.getInstance()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
@@ -45,7 +45,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onTouchEvent(event: MotionEvent): Boolean {
         // TODO: Check if user have right to draw
-        if(true) {
+        if(gameRepo!!.isPlayerDrawing.value!!) {
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> canvasRepository.touchMoveEvent(Vec2(event.x.toInt(), event.y.toInt()))
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(Vec2(event.x.toInt(), event.y.toInt()))
@@ -63,10 +63,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Dispatch socketEvent
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onDrawingEvent(drawingEvent: DrawingEvent ) {
-        // TODO: Dont display if the user is the one that is drawing
-
         when(drawingEvent.eventType) {
-            0 -> {
+            EVENT_TOUCH_DOWN -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
                 toolRepo.setStrokeWidth(touchDown.lineWidth.toFloat())
@@ -74,22 +72,22 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 motionTouchEventY = touchDown.coords.y.toFloat()
                 touchStart()
             }
-            1 -> {
+            EVENT_TOUCH_MOVE -> {
                 val touchMove: Vec2 = drawingEvent.event as Vec2
                 motionTouchEventX = touchMove.x.toFloat()
                 motionTouchEventY = touchMove.y.toFloat()
                 touchMove()
             }
-            2 -> {
+            EVENT_TOUCH_UP -> {
                 val touchUp: Vec2 = drawingEvent.event as Vec2
                 motionTouchEventX = touchUp.x.toFloat()
                 motionTouchEventY = touchUp.y.toFloat()
                 touchUp()
             }
-            3 -> {
+            EVENT_UNDO -> {
                 undo()
             }
-            4 ->{
+            EVENT_REDO ->{
                 redo()
             }
         }
