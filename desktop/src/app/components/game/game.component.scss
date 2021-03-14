@@ -16,6 +16,10 @@
 .team {
     width: 50%;
     border: 3px solid blue;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 300px;
 }
 
 * {
@@ -46,6 +50,7 @@
     border: 1px solid black;
     height: 100%;
     flex-grow: 1;
+    padding-top: 10%;
 }
 
 #editor {
