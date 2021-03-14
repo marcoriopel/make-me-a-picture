@@ -2,7 +2,6 @@ package com.example.prototype_mobile
 
 import android.graphics.Paint
 import android.graphics.Path
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 
@@ -40,7 +39,7 @@ data class Players(val username: String, val avatar: Int, val team: Int)
 data class Coord(val x: Float, val y: Float)
 data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
 data class PaintedPath(val path: Path, val paint: Paint)
-data class DrawingEvent(val eventType: DrawingEventType, val event: Event?, val gameId: String)
+data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event()
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()

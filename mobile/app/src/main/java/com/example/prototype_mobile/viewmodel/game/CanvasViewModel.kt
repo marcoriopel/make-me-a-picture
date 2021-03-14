@@ -66,29 +66,29 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         // TODO: Dont display if the user is the one that is drawing
 
         when(drawingEvent.eventType) {
-            DrawingEventType.TOUCHDOWN -> {
+            0 -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
                 motionTouchEventX = touchDown.coords.x.toFloat()
                 motionTouchEventY = touchDown.coords.y.toFloat()
                 touchStart()
             }
-            DrawingEventType.TOUCHMOVE -> {
+            1 -> {
                 val touchMove: Vec2 = drawingEvent.event as Vec2
                 motionTouchEventX = touchMove.x.toFloat()
                 motionTouchEventY = touchMove.y.toFloat()
                 touchMove()
             }
-            DrawingEventType.TOUCHUP -> {
+            2 -> {
                 val touchUp: Vec2 = drawingEvent.event as Vec2
                 motionTouchEventX = touchUp.x.toFloat()
                 motionTouchEventY = touchUp.y.toFloat()
                 touchUp()
             }
-            DrawingEventType.UNDO -> {
+            3 -> {
                 undo()
             }
-            DrawingEventType.REDO ->{
+            4 ->{
                 redo()
             }
         }

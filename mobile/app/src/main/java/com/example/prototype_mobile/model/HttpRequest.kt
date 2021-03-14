@@ -8,8 +8,8 @@ import okhttp3.*
 
 class HttpRequestDrawGuess {
     companion object {
-        //val url = "http://10.0.2.2:3000"
-       val url = "http://18.217.235.167:3000"
+        val url = "http://10.0.2.2:3000"
+//       val url = "http://18.217.235.167:3000"
 
         suspend fun httpRequestPost(urlPath: String, parameters: HashMap<String, String>, addToken: Boolean = false): Response {
             return withContext(Dispatchers.IO) {
