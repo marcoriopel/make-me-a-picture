@@ -11,9 +11,15 @@ export class SocketService {
 
   private socket: Socket;
   private baseUrl = environment.api_url;
+  public socketId: string;
 
   constructor() {
     this.connect(this.baseUrl);
+
+    this.bind("connect", () => {
+      this.socketId = this.socket.id;
+    });
+    
     this.bindErrors();
   }
 

@@ -37,8 +37,22 @@ export class DrawingsService {
         }
     }
 
-    drawingWordSuggestion() {
-        return ["Bateau", "Vélo", "Chameau"];
+    async getWordSuggestions(difficulty) {
+        let wordSuggestions: string[] = [];
+        let words: any[];
+        wordSuggestions = [];
+        words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
+        console.log(words);
+        if (words.length < 3) {
+            throw new Error('Database is empty')
+        }
+        while (wordSuggestions.length < 3) {
+            let random = Math.floor(Math.random() * words.length);
+            if (!wordSuggestions.includes(words[random].drawingName)) {
+                wordSuggestions.push(words[random].drawingName)
+            }
+        }
+        return wordSuggestions;
     }
 
 }

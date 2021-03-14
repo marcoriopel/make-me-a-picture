@@ -2,7 +2,7 @@
     <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
     <div #previewDiv id="previewDiv" [ngStyle]="{ height: previewSize.y + 'px', width: previewSize.x + 'px' }"></div>
 </div>
-<div id="tool-space">
+<div id="tool-space" *ngIf="(this.gameService.drawingPlayer == this.gameService.username) || !this.gameService.isInGame">
     <div class="colors">
         <button class="add-button" [ngStyle]="{'background-color': pencilColor}">                
             <input
