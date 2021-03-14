@@ -95,7 +95,7 @@ export class GameManagerService {
 
     guessDrawing(gameId: string, username: string, guess: string) {
         if (!gameId || !GameManagerService.games.has(gameId)) {
-            return;
+            throw new Error("Game was not found");
         }
         let game = GameManagerService.games.get(gameId);
         game.guessDrawing(username, guess);

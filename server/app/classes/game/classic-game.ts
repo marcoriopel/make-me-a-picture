@@ -92,12 +92,18 @@ export class ClassicGame extends Game {
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
+            if(this.drawingPlayer[this.drawingTeam].isVirtual){
+                this.vPlayers[this.drawingTeam].stopDrawing();
+            }
             this.setupNextRound();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft[this.drawingTeam];
             if (!this.guessesLeft[this.drawingTeam]) {
+                if(this.drawingPlayer[this.drawingTeam].isVirtual){
+                    this.vPlayers[this.drawingTeam].stopDrawing();
+                }
                 this.guessesLeft[this.getOpposingTeam()] = 1;
             }
         }

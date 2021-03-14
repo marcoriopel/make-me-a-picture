@@ -17,6 +17,7 @@ export class VirtualPlayer {
     private socketService: SocketService;
     private currentDrawing: Drawing;
     private gameId: string;
+    private isVPlayerTurn: boolean = false;
     
     constructor(gameId: string) { 
         this.gameId = gameId;
@@ -61,7 +62,12 @@ export class VirtualPlayer {
         }
     }
 
+    stopDrawing() {
+        this.isVPlayerTurn = false;
+    }
+
     async startDrawing() {
+        this.isVPlayerTurn = true;
         for(let stroke of this.currentDrawing.strokes){
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
@@ -73,15 +79,25 @@ export class VirtualPlayer {
                 event: mouseDown,
                 gameId: this.gameId,
             }
-            this.socketService.getSocket().to(this.gameId).emit('drawingEvent', { "drawingEvent": drawingEvent });
-            await this.drawStroke(stroke.path);
+            if(this.isVPlayerTurn){
+                this.socketService.getSocket().to(this.gameId).emit('drawingEvent', { "drawingEvent": drawingEvent });
+                await this.drawStroke(stroke.path);
+            }
+            else {
+                return
+            } 
         }
     }
 
     async drawStroke(path: Vec2[]) {
         for(let point of path){
             let isLastPoint: boolean = point == path[path.length - 1] ? true : false;
-            await this.drawPoint(point, isLastPoint);
+            if(this.isVPlayerTurn){
+                await this.drawPoint(point, isLastPoint);
+            }
+            else {
+                return
+            }
         }
     }
 
@@ -91,7 +107,7 @@ export class VirtualPlayer {
             eventType: eventType,
             event: point,
             gameId: this.gameId,
-        }
+        } 
         this.socketService.getSocket().to(this.gameId).emit('drawingEvent', { "drawingEvent": drawingEvent });
         await this.delay();
     }
