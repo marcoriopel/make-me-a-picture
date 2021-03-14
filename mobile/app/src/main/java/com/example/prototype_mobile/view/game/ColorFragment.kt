@@ -22,12 +22,18 @@ class ColorFragment : Fragment() {
     private lateinit var binding: FragmentColorBinding
     var primaryColor = Color.rgb(0, 0, 0)
     var colorList:IntArray = intArrayOf(
-        Color.rgb(255, 0, 0),
-        Color.rgb(0, 255, 0),
-        Color.rgb(0, 0, 255),
-        Color.rgb(255, 0, 255)
+        Color.rgb(235, 87, 87),
+        Color.rgb(242, 153, 74),
+        Color.rgb(242, 201, 76),
+        Color.rgb(33, 150, 83),
+        Color.rgb(39, 174,96),
+        Color.rgb(47, 128, 237),
+        Color.rgb(86, 204, 242),
+        Color.rgb(155, 81, 224),
+        Color.rgb(0, 0, 0),
     )
     var secondaryButtons: Vector<ImageView> = Vector<ImageView>()
+
     companion object {
         fun newInstance() = ColorFragment()
     }
@@ -59,19 +65,18 @@ class ColorFragment : Fragment() {
         secondaryButtons.add(binding.secondary2)
         secondaryButtons.add(binding.secondary3)
         secondaryButtons.add(binding.secondary4)
-        populateSecondaryColor(colorList)
-
-        binding.secondary1.setOnClickListener{
-            swapColor(binding.secondary1)
-        }
-        binding.secondary2.setOnClickListener{
-            swapColor(binding.secondary2)
-        }
-        binding.secondary3.setOnClickListener{
-            swapColor(binding.secondary3)
-        }
-        binding.secondary4.setOnClickListener{
-            swapColor(binding.secondary4)
+        secondaryButtons.add(binding.secondary5)
+        secondaryButtons.add(binding.secondary6)
+        secondaryButtons.add(binding.secondary7)
+        secondaryButtons.add(binding.secondary8)
+        secondaryButtons.add(binding.secondary9)
+        var i = 0
+        for(button in secondaryButtons) {
+            button.setColorFilter(colorList[i])
+            button.setOnClickListener{
+                swapColor(button)
+            }
+            i++
         }
     }
 
@@ -85,47 +90,11 @@ class ColorFragment : Fragment() {
 
     fun updateButtonColor(color: Int) {
         binding.primaryColor.setColorFilter(color)
-        binding.secondary1.setColorFilter(color)
-    }
-    fun populateSecondaryColor(colors:IntArray){
-        secondaryButtons.forEachIndexed { i, element ->
-            element.setColorFilter(colors[i])
-        }
-    }
-    //Since we don't have lots of button we will procede this way.
-    // If we have more color use a for loop
-    fun newColorSelectionArrayUpdate(color: Int) {
-        val tempArray = IntArray(4)
-        colorList.forEachIndexed { i, element ->
-            if(i == 0) {
-                tempArray[i]=color
-            }
-            else
-                tempArray[i]=colorList[i-1]
-
-        }
-        colorList= tempArray
     }
 
-    private fun swapColor(secondary:ImageView){
-
-//        binding.primaryColor.setColorFilter() = secondary.background
-//        secondary.background = ColorDrawable(primaryColor)
-//        val background: android.graphics.drawable.Drawable? = binding.primaryColor.getBackground()
-//        if (background is ColorDrawable) {
-//            primaryColor = (background as ColorDrawable).color
-//            viewModel.setColor(primaryColor)
-//        }
-//        updateListColor()
-    }
-
-    private fun updateListColor() {
-        secondaryButtons.forEachIndexed { index, button ->
-            val background: android.graphics.drawable.Drawable? = button.getBackground()
-            if (background is ColorDrawable) {
-                colorList[index] = (background as ColorDrawable).color
-
-            }
-        }
+    private fun swapColor(button: ImageView){
+        val index = secondaryButtons.indexOf(button)
+        binding.primaryColor.setColorFilter(colorList[index])
+        viewModel.setColor(colorList[index])
     }
 }

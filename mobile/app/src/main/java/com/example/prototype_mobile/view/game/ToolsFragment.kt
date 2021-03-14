@@ -1,22 +1,15 @@
 package com.example.prototype_mobile.view.game
 
-import android.R.color
-import android.graphics.Color.rgb
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentToolsBinding
-import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModel
 import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
-import java.util.*
-
 
 class ToolsFragment : Fragment() {
 

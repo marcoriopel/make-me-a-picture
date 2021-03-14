@@ -69,12 +69,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     override fun onColorSelected(dialogId: Int, color: Int) {
         // Todo: Setter and getter if we want private member in fragment
-        val previousColor = colorFragment.primaryColor
-        colorFragment.newColorSelectionArrayUpdate(previousColor)
-        colorFragment.primaryColor= color
         colorFragment.viewModel.setColor(color)
         colorFragment.updateButtonColor(color)
-        colorFragment.populateSecondaryColor(colorFragment.colorList)
     }
 
     fun findColorFragment(): Fragment? {
