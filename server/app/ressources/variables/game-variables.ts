@@ -4,6 +4,12 @@ export enum Difficulty {
     HARD = 2
 }
 
+export enum GuessTime {
+    EASY = 60,
+    MEDIUM = 45,
+    HARD = 30
+}
+
 export enum GameType {
     CLASSIC = 0,
     SOLO = 1,
