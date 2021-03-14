@@ -28,7 +28,7 @@ class GameRepository {
         _isPlayerDrawing.value = isDrawing
     }
 
-    init {
-        _isPlayerDrawing.value = true
-    }
+//    init {
+//        _isPlayerDrawing.value = true
+//    }
 }
