@@ -1,8 +1,8 @@
 <div class="container">
     <div #workSpace id="draw-space">
-        <app-drawing #drawingComponent class="drawing" tabindex="0" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
+        <app-drawing #drawingComponent class="drawing" tabindex="0" [isInGame]="isInGame" [canvasSize]="canvasSize" [previewSize]="previewSize"></app-drawing>
     </div>
-    <div id="color-space" *ngIf="(this.gameService.drawingPlayer == this.gameService.username) || !this.gameService.isInGame">
+    <div id="tool-space" *ngIf="(this.gameService.drawingPlayer == this.gameService.username) || !this.gameService.isInGame">
         <div class="colors">
             <button class="add-button" [ngStyle]="{'background-color': pencilColor}">                
                 <input

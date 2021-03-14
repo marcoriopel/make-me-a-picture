@@ -15,16 +15,16 @@
                 </div>
             </div>
             <div id="editor">
-                <app-editor></app-editor>
-                <div id="guess-box">
-                    <form *ngIf="(this.gameService.drawingPlayer != this.gameService.username)" [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                <app-editor [isInGame]="true"></app-editor>
+                <div id="guess-box" *ngIf="(this.gameService.drawingPlayer != this.gameService.username)" [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                    <form>
                         <input matInput id="guess-input" type="text" formControlName="guess" placeholder="Supposition...">
                         <button id="guess-button" type="submit"><span class="material-icons">check_circle</span></button>                            
                     </form>
                 </div>
             </div>
             <div id="tools">
-                <app-tools></app-tools>
+                <app-tools *ngIf="(this.gameService.drawingPlayer == this.gameService.username) || !this.gameService.isInGame"></app-tools>
             </div>            
         </div>
         <div id="chat-column">
