@@ -49,7 +49,7 @@ export class ClassicLobby extends Lobby {
         let vPlayerIsUnique: boolean = false;
         let tempVPlayer: VirtualPlayer;
         while (!vPlayerIsUnique) {
-            tempVPlayer = new VirtualPlayer();
+            tempVPlayer = new VirtualPlayer(this.id);
             if (!this.isUserInLobby(tempVPlayer.getBasicUser())) {
                 vPlayerIsUnique = true;
             }
@@ -107,7 +107,11 @@ export class ClassicLobby extends Lobby {
         return this.teams[0].size == 2 && this.teams[1].size == 2;
     }
 
-    getTeams() : Map<string, Player>[]{
+    getTeams(): Map<string, Player>[]{
         return this.teams;
+    }
+
+    getVPlayers(): VirtualPlayer[]{
+        return this.vPlayers;
     }
 }

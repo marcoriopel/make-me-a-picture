@@ -39,6 +39,7 @@ export class GameManagerService {
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
                 const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
                 GameManagerService.games.set(req.body.lobbyId, game);
+                LobbyManagerService.lobbies.delete(req.body.lobbyId);
                 game.startGame();
                 break;
             case GameType.SOLO:
@@ -94,7 +95,7 @@ export class GameManagerService {
 
     guessDrawing(gameId: string, username: string, guess: string) {
         if (!gameId || !GameManagerService.games.has(gameId)) {
-            return;
+            throw new Error("Game was not found");
         }
         let game = GameManagerService.games.get(gameId);
         game.guessDrawing(username, guess);
