@@ -28,7 +28,6 @@ class CanvasRepository {
         }
     }
 
-    
     // Attribute
     var socket: io.socket.client.Socket
     val gson: Gson = Gson()
@@ -43,30 +42,37 @@ class CanvasRepository {
 
     private val _drawingEvent = MutableLiveData<DrawingEvent>()
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
+    private var lastCoordsReceive: Vec2 = Vec2(0,0)
 
     var onDrawingEvent = Emitter.Listener {
         if(!gameRepo.isPlayerDrawing.value!!) {
-            val Jobject = JSONObject(it[0].toString())
-            val j = Jobject.getString("drawingEvent")
-            val Jj = JSONObject(j)
-            val d: DrawingEvent = if ("lineColor" in j) {
-                val Jevent = JSONObject(Jj.getString("event"))
-                val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
-                DrawingEvent(Jj.getString("eventType").toInt(), event, Jj.getString("gameId"))
-            } else {
-                val Jevent = JSONObject(Jj.getString("event"))
-                val coords = Vec2(JSONObject(Jj.getString("event")).getString("x").toInt(), JSONObject(Jj.getString("event")).getString("y").toInt())
-                DrawingEvent(Jj.getString("eventType").toInt(), coords, Jj.getString("gameId"))
+            val objectString = JSONObject(it[0].toString()).getString("drawingEvent")
+            val objectJson = JSONObject(objectString)
+            val drawingEventReceive = when(objectJson.getString("eventType").toInt()) {
+                0 -> {
+                    val Jevent = JSONObject(objectJson.getString("event"))
+                    val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                    val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                    DrawingEvent(0, event, objectJson.getString("gameId"))
+                }
+                1 -> {
+                    lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+                    DrawingEvent(1, lastCoordsReceive, objectJson.getString("gameId"))
+                }
+                2 -> {
+                    DrawingEvent(2, lastCoordsReceive, objectJson.getString("gameId"))
+                }
+                else -> {
+                    DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+                }
             }
-            _drawingEvent.postValue(d)
+            _drawingEvent.postValue(drawingEventReceive)
         }
     }
 
     var onError = Emitter.Listener {
         print(it[0].toString())
     }
-
 
     init {
         socket = SocketOwner.getInstance()!!.socket
