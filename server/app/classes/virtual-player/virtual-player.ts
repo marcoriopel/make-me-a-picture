@@ -54,7 +54,6 @@ export class VirtualPlayer {
     async getNewDrawing(difficulty: number): Promise<string>{
         try {
             this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty);
-            this.currentDrawing.difficulty = parseInt(<string><unknown>this.currentDrawing.difficulty);
             this.drawingSpeed = this.calculateDrawingSpeed();
             return this.currentDrawing.drawingName;
         }
