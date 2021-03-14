@@ -69,6 +69,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             0 -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
+                toolRepo.setStrokeWidth(touchDown.lineWidth.toFloat())
                 motionTouchEventX = touchDown.coords.x.toFloat()
                 motionTouchEventY = touchDown.coords.y.toFloat()
                 touchStart()

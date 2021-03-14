@@ -8,6 +8,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
+import org.json.JSONObject
 
 const val DRAWING_EVENT = "drawingEvent"
 
@@ -44,10 +45,20 @@ class CanvasRepository {
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
 
     var onDrawingEvent = Emitter.Listener {
-        Log.e("Json", it.toString())
-        val d = gson.fromJson(it[0].toString(), DrawingEvent::class.java)
-        Log.e("Receive", d.toString())
-//        _drawingEvent.postValue(d)
+        val Jobject = JSONObject(it[0].toString())
+        val j = Jobject.getString("drawingEvent")
+        val Jj = JSONObject(j)
+        var d: DrawingEvent = if ("lineColor" in j) {
+            val Jevent = JSONObject(Jj.getString("event"))
+            val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt() )
+            val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+            DrawingEvent(Jj.getString("eventType").toInt(), event, Jj.getString("gameId") )
+        } else {
+            val Jevent = JSONObject(Jj.getString("event"))
+            val coords = Vec2( JSONObject(Jj.getString("event")).getString("x").toInt(),  JSONObject(Jj.getString("event")).getString("y").toInt() )
+            DrawingEvent(Jj.getString("eventType").toInt(), coords, Jj.getString("gameId") )
+        }
+        _drawingEvent.postValue(d)
     }
 
     var onError = Emitter.Listener {

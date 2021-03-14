@@ -78,14 +78,13 @@ class ToolRepository {
         setStrokeWidth(strokeWidthEraser)
     }
 
-
     fun setPen() {
         _selectedTool.value = Tool.PEN
         setColor(selectedColor)
         setStrokeWidth(strokeWidthPen)
     }
 
-    private fun setStrokeWidth(width: Float = 12f) {
+    fun setStrokeWidth(width: Float = 12f) {
         paint.strokeWidth = width
     }
 

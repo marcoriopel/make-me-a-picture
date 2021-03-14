@@ -24,7 +24,6 @@ data class Game(val gameID: String, val gameName: String, val difficulty: GameDi
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
 //Merge data change in form
-sealed class GameCreationMergeData
 data class GameName(val name:String): GameCreationMergeData()
 data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 
@@ -35,6 +34,7 @@ data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)
 
+sealed class GameCreationMergeData
 // Data class for the drawing
 data class Coord(val x: Float, val y: Float)
 data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
