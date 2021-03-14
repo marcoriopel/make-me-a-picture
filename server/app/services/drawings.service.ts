@@ -54,6 +54,7 @@ export class DrawingsService {
 
     async getRandomDrawing(difficulty): Promise<Drawing> {
         let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
+        console.log(words);
         if (words.length < 1) {
             throw new Error('Database is empty')
         }

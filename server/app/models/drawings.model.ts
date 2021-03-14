@@ -21,7 +21,7 @@ export class DrawingsModel {
 
     async getDrawing(id: string) {
         try {
-            return await this.databaseModel.client.db("database").collection("drawings").find({ '_id': id });
+            return await this.databaseModel.client.db("database").collection("drawings").findOne({ '_id': id });
         } catch (e) {
             console.error(e);
             throw e;
@@ -30,7 +30,7 @@ export class DrawingsModel {
 
     async getWordsOfDifficulty(difficulty: number) {
         try {
-            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty.toString() }, { "drawingName": 1 }).toArray();
+            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty.toString() }, { projection: { "drawingName": 1, "_id": 1}}).toArray();
         } catch (e) {
             console.error(e);
             throw e;

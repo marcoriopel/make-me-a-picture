@@ -49,7 +49,7 @@ export class ClassicLobby extends Lobby {
         let vPlayerIsUnique: boolean = false;
         let tempVPlayer: VirtualPlayer;
         while (!vPlayerIsUnique) {
-            tempVPlayer = new VirtualPlayer();
+            tempVPlayer = new VirtualPlayer(this.id);
             if (!this.isUserInLobby(tempVPlayer.getBasicUser())) {
                 vPlayerIsUnique = true;
             }

@@ -30,17 +30,25 @@ export class ClassicGame extends Game {
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
-    startGame(): void {
+    async startGame(): Promise<void> {
         this.drawingTeam = this.selectRandomBinary();
         this.setGuesses();
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
+
+        for(let vPlayer of this.vPlayers){
+            if(vPlayer != undefined){
+                vPlayer.setServices(this.drawingsService, this.socketService)
+            }
+        }
+
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         if(this.drawingPlayer[this.drawingTeam].isVirtual){
-
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
             this.getDrawingSuggestions();
@@ -116,25 +124,26 @@ export class ClassicGame extends Game {
     }
 
     private checkIfTeamHasVirtualPlayer(teamNumber: number): boolean {
+        let returnValue = false;
         this.teams[teamNumber].forEach((player: Player) => {
-            if (player.isVirtual)
-                return true;
+            if(player.isVirtual){
+                returnValue =  true;
+            }
         })
-        return false;
+        return returnValue;
     }
 
     private assignRandomDrawingPlayer(teamNumber: number): void {
         const players: Player[] = Array.from(this.teams[teamNumber].values());
-
-        if (!this.checkIfTeamHasVirtualPlayer(teamNumber)) {
+        if(!this.checkIfTeamHasVirtualPlayer(teamNumber)) {
             this.drawingPlayer[teamNumber] = players[this.selectRandomBinary()];
         }
         else {
             if (players[0].isVirtual) {
-                this.drawingPlayer[teamNumber] = players[1];
+                this.drawingPlayer[teamNumber] = players[0];
             }
             else {
-                this.drawingPlayer[teamNumber] = players[0];
+                this.drawingPlayer[teamNumber] = players[1];
             }
         }
     }
