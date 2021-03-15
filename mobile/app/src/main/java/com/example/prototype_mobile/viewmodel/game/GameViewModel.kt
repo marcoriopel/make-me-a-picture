@@ -9,12 +9,21 @@ class GameViewModel():ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
+    private val _isPlayerGuessing = MutableLiveData<Boolean>()
+    val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
+
     val gameRepository = GameRepository.getInstance()!!
     init {
         _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
 
         gameRepository.isPlayerDrawing.observeForever {
             _isPlayerDrawing.value = it
+        }
+
+        _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
+
+        gameRepository.isPlayerGuessing.observeForever {
+            _isPlayerGuessing.value = it
         }
     }
 }
