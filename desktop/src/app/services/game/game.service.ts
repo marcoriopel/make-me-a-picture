@@ -64,7 +64,6 @@ export class GameService {
     })
 
     this.socketService.bind('guessesLeft', (data: any) => {
-      //TODO handle guessesLeft, data contains { "guessesLeft": number[] } guessesLeft[0] is the number of guesses left for team1 and guessesLeft[1] is the number of guesses left for team2
       console.log('Socket: guessesLeft');
       console.log(data);
       if(this.username){
@@ -83,7 +82,6 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
-      //TODO handle newRound, data contains { "newDrawingPlayer": string }
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
       this.drawingService.strokeStack = [];
