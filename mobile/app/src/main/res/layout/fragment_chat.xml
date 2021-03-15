@@ -100,8 +100,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="0dp"
             android:textColor="@color/black"
-            android:textSize="17dp"
-/>
+            android:textSize="17dp" />
 
         <ImageView
             android:id="@+id/send"

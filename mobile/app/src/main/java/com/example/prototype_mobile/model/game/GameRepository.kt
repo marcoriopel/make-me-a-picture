@@ -35,9 +35,9 @@ class GameRepository {
         _isPlayerGuessing.value = isGuessing
     }
 
-//    init {
-//        _isPlayerDrawing.value = false
-//        _isPlayerGuessing.value = true
-//
-//    }
+    init {
+        _isPlayerDrawing.value = false
+        _isPlayerGuessing.value = true
+
+    }
 }
