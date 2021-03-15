@@ -30,7 +30,7 @@ export class DrawingsModel {
 
     async getWordsOfDifficulty(difficulty: number) {
         try {
-            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty.toString() }, { projection: { "drawingName": 1, "_id": 1}}).toArray();
+            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty }, { projection: { "drawingName": 1, "_id": 1}}).toArray();
         } catch (e) {
             console.error(e);
             throw e;
