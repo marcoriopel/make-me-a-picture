@@ -46,4 +46,7 @@
     <string name="eraser_size">Grosseur de l\'efface</string>
     <string name="grid_size">Grosseur de la grille</string>
     <string name="colorPickerToolTitle">Choisir une couleur</string>
+
+    <!-- Strings related to the game -->
+    <string name="guess">Supposition...</string>
 </resources>

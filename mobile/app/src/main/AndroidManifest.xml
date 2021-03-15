@@ -14,7 +14,8 @@
         android:theme="@style/Theme.Prototype_mobile"
         android:usesCleartextTraffic="true">
         <activity android:name=".view.game.GameActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         <activity
             android:name=".view.mainmenu.MainMenuActivity"

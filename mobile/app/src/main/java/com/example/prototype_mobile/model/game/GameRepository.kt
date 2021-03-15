@@ -22,13 +22,22 @@ class GameRepository {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
+    private val _isPlayerGuessing = MutableLiveData<Boolean>()
+    val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
+
     var gameId: String? = null
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
     }
 
-//    init {
-//        _isPlayerDrawing.value = true
-//    }
+    fun setIsPlayerGuessing(isGuessing: Boolean) {
+        _isPlayerGuessing.value = isGuessing
+    }
+
+    init {
+        _isPlayerDrawing.value = false
+        _isPlayerGuessing.value = true
+
+    }
 }
