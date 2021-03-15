@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { GameService } from '@app/services/game/game.service';
 import { PencilService } from '@app/services/tools/pencil.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class DrawingComponent implements AfterViewInit {
 
     @Input() canvasSize: Vec2;
     @Input() previewSize: Vec2;
+    @Input() isInGame: boolean;
 
     private baseCtx: CanvasRenderingContext2D;
     private previewCtx: CanvasRenderingContext2D;
@@ -23,6 +25,7 @@ export class DrawingComponent implements AfterViewInit {
     constructor(
         private drawingService: DrawingService,
         private pencilService: PencilService,
+        private gameService: GameService,
     ) {}
 
     ngAfterViewInit(): void {
@@ -39,26 +42,33 @@ export class DrawingComponent implements AfterViewInit {
 
     @HostListener('mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
+        if(this.gameService.drawingPlayer != localStorage.getItem('username') && this.isInGame) return;
         this.pencilService.onMouseMove(event);
     }
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent): void {
+        if(this.gameService.drawingPlayer != localStorage.getItem('username') && this.isInGame) return;
         this.pencilService.onMouseDown(event);
     }
 
     @HostListener('mouseup', ['$event'])
     onMouseUp(event: MouseEvent): void {
+        if(this.gameService.drawingPlayer != localStorage.getItem('username') && this.isInGame) return;
         this.pencilService.onMouseUp(event);
     }
 
     @HostListener('mouseleave', ['$event'])
     onMouseLeave(): void {
+        if(this.gameService.drawingPlayer != localStorage.getItem('username') && this.isInGame) return;
+        this.drawingService.gridCanvas.style.cursor = 'default';
         this.pencilService.onMouseLeave();
     }
 
     @HostListener('mouseenter', ['$event'])
     onMouseEnter(event: MouseEvent): void {
+        if(this.gameService.drawingPlayer != localStorage.getItem('username') && this.isInGame) return;
+        this.drawingService.gridCanvas.style.cursor = 'crosshair';
         this.pencilService.onMouseEnter(event);
     }
 

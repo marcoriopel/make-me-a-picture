@@ -15,8 +15,8 @@ export class GameBarComponent {
   coopOpen: boolean = false;
   classicOpen: boolean = false;
 
-  sprintImgRef: string = "../../../assets/img/sprintLogo.png";
-  classicBlackImgRef: string =  "../../../assets/img/classicLogoBlack.png";
+  sprintImgRef: string = "./assets/img/sprintLogo.png";
+  classicBlackImgRef: string =  "./assets/img/classicLogoBlack.png";
 
   constructor(public searchGameService: SearchGameService, private renderer: Renderer2) { }
 
