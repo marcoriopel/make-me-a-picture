@@ -2,9 +2,9 @@
     <div class="all-info">
         <p class="title"> {{game.gameName}} </p>
         <div class="info">
-            <img *ngIf="game.difficulty == 0" src="../../../assets/img/easyLogo2.png" class="difficulty">
-            <img *ngIf="game.difficulty == 1" src="../../../assets/img/normalLogo2.png" class="difficulty">
-            <img *ngIf="game.difficulty == 2" src="../../../assets/img/hardLogo2.png" class="difficulty">
+            <img *ngIf="game.difficulty == 0" src="./assets/img/easyLogo2.png" class="difficulty">
+            <img *ngIf="game.difficulty == 1" src="./assets/img/normalLogo2.png" class="difficulty">
+            <img *ngIf="game.difficulty == 2" src="./assets/img/hardLogo2.png" class="difficulty">
 
             <img *ngIf="game.gameType == 0" [src]="classicGreyImgRef" class="classic-logo"> 
             <img *ngIf="game.gameType == 2" [src]="sprintImgRef" class="sprint-logo"> 

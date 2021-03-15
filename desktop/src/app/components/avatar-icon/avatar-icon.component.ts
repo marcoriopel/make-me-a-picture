@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AvatarIconComponent implements OnInit {
 
   @Input() avatar : number;
-  avatarImgRef : string = "../../../assets/img/";
+  avatarImgRef : string = "./assets/img/";
 
   constructor() { }
 
