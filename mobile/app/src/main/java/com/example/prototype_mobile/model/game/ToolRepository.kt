@@ -25,14 +25,13 @@ class ToolRepository {
     }
     private val _selectedTool = MutableLiveData<Tool>()
     var selectedTool : LiveData<Tool> = _selectedTool
-    var selectedColor = Color.BLACK
 
     init{
         _selectedTool.value = Tool.PEN
     }
     // Pencil attribute
-    var strokeWidthEraser: Float = 12f // has to be float
-    var drawColor: Int = Color.BLACK // change with color picker
+    var strokeWidthEraser: Float = 12f
+    var selectedColor = Color.BLACK
 
     // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
@@ -72,12 +71,11 @@ class ToolRepository {
     }
 
     fun setEraser() {
-        //Needs to be before setColor
         _selectedTool.value = Tool.ERASER
+        selectedColor = paint.color
         setColor(Color.WHITE)
         setStrokeWidth(strokeWidthEraser)
     }
-
 
     fun setPen() {
         _selectedTool.value = Tool.PEN
@@ -85,19 +83,19 @@ class ToolRepository {
         setStrokeWidth(strokeWidthPen)
     }
 
-    private fun setStrokeWidth(width: Float = 12f) {
+    fun setStrokeWidth(width: Float = 12f) {
         paint.strokeWidth = width
     }
 
     fun setColor(color: Int) {
-        // Ex: Color.RED
-        //We refer to color in getPaintCopy through selected copy..
+        // We refer to color in getPaintCopy through selected copy..
         paint.color = color
     }
 
     fun setColorByValue(color: String) {
         // Ex: "#a8a8a8"
         paint.color = Color.parseColor(color)
+        selectedColor = Color.parseColor(color)
     }
 
 }

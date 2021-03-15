@@ -36,8 +36,8 @@ import { GameService } from '@app/services/game/game.service';
 })
 export class GamePreviewComponent{
 
-  classicGreyImgRef: string = "../../../assets/img/classicLogoWhite.png"
-  sprintImgRef: string = "../../../assets/img/sprintLogo.png";
+  classicGreyImgRef: string = "./assets/img/classicLogoWhite.png"
+  sprintImgRef: string = "./assets/img/sprintLogo.png";
 
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
   @Input() game: AvailableGame;

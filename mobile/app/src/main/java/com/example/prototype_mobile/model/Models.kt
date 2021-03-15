@@ -2,7 +2,6 @@ package com.example.prototype_mobile
 
 import android.graphics.Paint
 import android.graphics.Path
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 
@@ -25,7 +24,6 @@ data class Game(val gameID: String, val gameName: String, val difficulty: GameDi
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
 //Merge data change in form
-sealed class GameCreationMergeData
 data class GameName(val name:String): GameCreationMergeData()
 data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 
@@ -36,11 +34,12 @@ data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)
 
+sealed class GameCreationMergeData
 // Data class for the drawing
 data class Coord(val x: Float, val y: Float)
 data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
 data class PaintedPath(val path: Path, val paint: Paint)
-data class DrawingEvent(val eventType: DrawingEventType, val event: Event?, val gameID: String)
+data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event()
-data class TouchDown(val lineColor: String, val lineWidth: Int, val coord: Vec2): Event()
+data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()
