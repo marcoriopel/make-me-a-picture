@@ -2,22 +2,18 @@ package com.example.prototype_mobile.view.game
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
-import com.example.prototype_mobile.viewmodel.game.GameViewModel
-import com.example.prototype_mobile.viewmodel.game.ToolsAdjustmentViewModel
-import com.example.prototype_mobile.viewmodel.game.ToolsViewModel
-import com.example.prototype_mobile.viewmodel.game.ToolsViewModelFactory
+import com.example.prototype_mobile.viewmodel.game.*
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
-    private lateinit var toolFragment: ToolsFragment
+    private lateinit var colorFragment: ColorFragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +37,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.containerGuess, ToolsAdjustmentFragment())
                         .commitNow()
-                toolFragment =  (findToolFragment() as ToolsFragment?)!!
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerColor, ColorFragment())
+                    .commitNow()
+                colorFragment =  (findColorFragment() as ColorFragment?)!!
             }
 
             if (gameViewModel.isPlayerGuessing.value!!) {
@@ -59,7 +58,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.containerGuess, ToolsAdjustmentFragment())
                         .commitNow()
-                toolFragment =  (findToolFragment() as ToolsFragment?)!!
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerColor, ColorFragment())
+                    .commitNow()
+                colorFragment =  (findColorFragment() as ColorFragment?)!!
             } else {
                 // TODO: Add fragments to guess
             }
@@ -83,17 +85,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     override fun onColorSelected(dialogId: Int, color: Int) {
         // Todo: Setter and getter if we want private member in fragment
-        val previousColor = toolFragment.primaryColor
-        toolFragment.newColorSelectionArrayUpdate(previousColor)
-        toolFragment.primaryColor= color
-        toolFragment.viewModel.setColor(color)
-        toolFragment.updateButtonColor(color)
-        toolFragment.populateSecondaryColor(toolFragment.colorList)
+        colorFragment.viewModel.setColor(color)
+        colorFragment.updateButtonColor(color)
     }
 
-    fun findToolFragment(): Fragment? {
+    fun findColorFragment(): Fragment? {
         for (fragment in supportFragmentManager.fragments)
-            if(fragment is ToolsFragment)
+            if(fragment is ColorFragment)
                 return fragment
         return null
     }
