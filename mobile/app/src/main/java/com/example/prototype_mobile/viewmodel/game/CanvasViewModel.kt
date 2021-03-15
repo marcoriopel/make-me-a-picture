@@ -49,11 +49,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     fun onTouchEvent(event: MotionEvent): Boolean {
         // TODO: Check if user have right to draw
         if(gameRepo!!.isPlayerDrawing.value!!) {
+            val coord = Vec2((event.x.toInt() / 1.5).toInt(), (event.y.toInt() / 1.5).toInt())
             when (event.action) {
-                MotionEvent.ACTION_MOVE -> canvasRepository.touchMoveEvent(Vec2(event.x.toInt(), event.y.toInt()))
-                MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(Vec2(event.x.toInt(), event.y.toInt()))
+                MotionEvent.ACTION_MOVE -> canvasRepository.touchMoveEvent(coord)
+                MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
-                    val coord: Vec2 = Vec2(event.x.toInt(), event.y.toInt())
                     val paint = toolRepo!!.getPaint()
                     canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
                 }
@@ -71,20 +71,20 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
                 toolRepo.setStrokeWidth(touchDown.lineWidth.toFloat())
-                motionTouchEventX = touchDown.coords.x.toFloat()
-                motionTouchEventY = touchDown.coords.y.toFloat()
+                motionTouchEventX = (touchDown.coords.x.toFloat() * 1.5).toFloat()
+                motionTouchEventY = (touchDown.coords.y.toFloat() * 1.5).toFloat()
                 touchStart()
             }
             EVENT_TOUCH_MOVE -> {
                 val touchMove: Vec2 = drawingEvent.event as Vec2
-                motionTouchEventX = touchMove.x.toFloat()
-                motionTouchEventY = touchMove.y.toFloat()
+                motionTouchEventX = (touchMove.x.toFloat() * 1.5).toFloat()
+                motionTouchEventY = (touchMove.y.toFloat() * 1.5).toFloat()
                 touchMove()
             }
             EVENT_TOUCH_UP -> {
                 val touchUp: Vec2 = drawingEvent.event as Vec2
-                motionTouchEventX = touchUp.x.toFloat()
-                motionTouchEventY = touchUp.y.toFloat()
+                motionTouchEventX = (touchUp.x.toFloat() * 1.5).toFloat()
+                motionTouchEventY = (touchUp.y.toFloat() * 1.5).toFloat()
                 touchUp()
             }
             EVENT_UNDO -> {
@@ -140,8 +140,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private fun touchUp() {
         // Undo Redo Feature
         redoStack = Stack<PaintedPath>()
-        val paint = toolRepo!!.getPaintCopy()
-        Log.e("color", paint.color.toString())
         pathStack.push(PaintedPath(curPath, toolRepo!!.getPaintCopy()))
 
         // Rewind the current path for the next touch
