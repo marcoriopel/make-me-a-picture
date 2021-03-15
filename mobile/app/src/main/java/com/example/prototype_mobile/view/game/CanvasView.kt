@@ -18,11 +18,7 @@ private const val STROKE_WIDTH = 12f // has to be float
 // Inspired by: https://developer.android.com/codelabs/advanced-android-kotlin-training-canvas#5
 class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View(context) {
 
-    private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
-    // Grid
     private lateinit var gridBitmap: Bitmap
-    private val gridColor = ResourcesCompat.getColor(resources, R.color.gridColor, null)
-
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
