@@ -1,20 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { DrawingService } from '../drawing/drawing.service';
 import { SocketService } from '../socket/socket.service';
+
+interface Player {
+  username: string;
+  avatar: number;
+  isVirtual: boolean;
+  team: number;
+}
+
+interface Teams {
+  "team1": string[],
+  "team2": string[],
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-
   isInGame: boolean = false;
   score: number[] = [0, 0];
   drawingPlayer: string;
   gameId: string;
   username: string | null;
   drawingName: string = "";
+  teams: Teams;
+  isGuessing: boolean = false;
+  currentUserTeam: number;
 
-  constructor(private socketService: SocketService, private router: Router) {
+  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService) {
     this.username = localStorage.getItem('username');
   }
 
@@ -22,6 +37,19 @@ export class GameService {
     this.socketService.bind('gameStart', (data: any) => {
       this.isInGame = true;
       this.drawingPlayer = data.player;
+
+      this.teams = {
+        team1: [],
+        team2: [],
+      }
+
+      data.teams.forEach((player: Player) => {
+        player.team == 0 ? this.teams.team1.push(player.username) : this.teams.team2.push(player.username);
+        if(player.username == this.username){
+          this.currentUserTeam = player.team;
+        }
+      });
+      console.log(this.teams);
       this.router.navigate(['/game']);
     })
 
@@ -36,9 +64,15 @@ export class GameService {
     })
 
     this.socketService.bind('guessesLeft', (data: any) => {
-      //TODO handle guessesLeft, data contains { "guessesLeft": number[] } guessesLeft[0] is the number of guesses left for team1 and guessesLeft[1] is the number of guesses left for team2
       console.log('Socket: guessesLeft');
       console.log(data);
+      if(this.username){
+        if(data.guessesLeft[this.currentUserTeam] == 1 && this.drawingPlayer != this.username){
+          this.isGuessing = true;
+        } else {
+          this.isGuessing = false;
+        }
+      }
     })
 
     this.socketService.bind('guessCallback', (data: any) => {
@@ -48,7 +82,10 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
-      //TODO handle newRound, data contains { "newDrawingPlayer": string }
+      this.drawingPlayer = data.newDrawingPlayer;
+      this.drawingService.clearCanvas(this.drawingService.baseCtx);
+      this.drawingService.strokeStack = [];
+      this.drawingService.redoStack = [];
       console.log('Socket: newRound');
       console.log(data);
     })

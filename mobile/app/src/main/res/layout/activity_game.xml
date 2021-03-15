@@ -26,15 +26,11 @@
         android:layout_height="wrap_content">
     </FrameLayout>
 </LinearLayout>
-    <Space
-        android:layout_width="20dp"
-        android:layout_height="1dp">
-    </Space>
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1">
-    </Space>
+    <FrameLayout
+        android:id="@+id/containerColor"
+        android:layout_width="60dp"
+        android:layout_height="match_parent">
+    </FrameLayout>
     <FrameLayout
         android:id="@+id/containerChat"
         android:layout_width="265dp"

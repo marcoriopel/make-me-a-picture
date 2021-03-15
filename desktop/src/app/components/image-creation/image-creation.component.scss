@@ -1,23 +1,22 @@
 #chat-bar {
-    height: 95%;
-    position: absolute;
-    right: 0;
+    height: 100%;
+    width: 380px;
+    float: right;
 }
 
 #image-form {
-    height: 95%;
-    position: absolute;
-    left: 0;
+    height: 100%;
     width: 250px;
     background-color: #E0E0E0;
     overflow-x: hidden; 
     overflow-y: auto; 
 }
 
-#editor {
-    position: absolute;
-    left: 250px;
-    height: 95%;
+#editor-column {
+    flex: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    max-height: 700px;
 }
 
 .wrapper {
@@ -67,4 +66,27 @@
 
 button {
     width: 70%;
+}
+
+.column-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 95%;
+}
+
+#form-column {
+    width: 250px;
+}
+
+#chat-column {
+    width: 380px;
+}
+
+#tools {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: left;
+    padding-left: 10px;
 }

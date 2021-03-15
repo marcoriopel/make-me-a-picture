@@ -7,8 +7,8 @@ import { LobbyService } from '@app/services/lobby/lobby.service';
 })
 export class LobbyComponent implements OnInit {
 
-  classicBlackImgRef: string = "../../../assets/img/classicLogoBlack.png"
-  sprintImgRef: string = "../../../assets/img/sprintLogo.png";
+  classicBlackImgRef: string = "./assets/img/classicLogoBlack.png"
+  sprintImgRef: string = "./assets/img/sprintLogo.png";
 
   constructor(public lobbyService: LobbyService) { }
 

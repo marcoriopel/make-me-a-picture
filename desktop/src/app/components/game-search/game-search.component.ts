@@ -21,13 +21,13 @@ export class GameSearchComponent implements OnInit {
 
   @ViewChildren('preview') previews: QueryList<GamePreviewComponent>;
 
-  sprintImgRef: string = "../../../assets/img/sprintLogo.png";
-  classicBlackImgRef: string =  "../../../assets/img/classicLogoBlack.png";
-  classicGreyImgRef: string = "../../../assets/img/classicLogoWhite.png"
-  allLogoBlackImgRef: string =  "../../../assets/img/allLogoBlack.png";
-  easyImgRef: string =  "../../../assets/img/easyLogo.png";
-  normalImgRef: string =  "../../../assets/img/normalLogo.png";
-  hardImgRef: string =  "../../../assets/img/hardLogo.png";
+  sprintImgRef: string = "./assets/img/sprintLogo.png";
+  classicBlackImgRef: string =  "./assets/img/classicLogoBlack.png";
+  classicGreyImgRef: string = "./assets/img/classicLogoWhite.png"
+  allLogoBlackImgRef: string =  "./assets/img/allLogoBlack.png";
+  easyImgRef: string =  "./assets/img/easyLogo.png";
+  normalImgRef: string =  "./assets/img/normalLogo.png";
+  hardImgRef: string =  "./assets/img/hardLogo.png";
 
   searchForm = this.formBuilder.group({
     gameNameOrId: ''

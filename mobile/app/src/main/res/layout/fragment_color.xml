@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/grey"
+    tools:context=".view.game.ColorFragment">
+
+    <ImageView
+        android:id="@+id/secondary1"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@null" />
+    <ImageView
+        android:id="@+id/secondary2"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@null" />
+
+    <ImageView
+        android:id="@+id/secondary3"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@null" />
+    <ImageView
+        android:id="@+id/secondary4"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@null" />
+    <ImageView
+        android:id="@+id/secondary5"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@color/poly_blue" />
+    <ImageView
+        android:id="@+id/secondary6"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round" />
+    <ImageView
+        android:id="@+id/secondary7"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round" />
+    <ImageView
+        android:id="@+id/secondary8"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round" />
+    <ImageView
+        android:id="@+id/secondary9"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round" />
+
+    <ImageView
+        android:id="@+id/primaryColor"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/button_round"
+        app:backgroundTint="@null" />
+
+</LinearLayout>
