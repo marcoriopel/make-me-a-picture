@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty } from '@app/ressources/variables/game-variables';
+import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
@@ -247,13 +247,13 @@ export class ClassicGame extends Game {
         this.guessesLeft[this.drawingTeam] = 1;
         switch (this.difficulty) {
             case Difficulty.EASY:
-                this.drawingTeamGuessingTime = 60;
+                this.drawingTeamGuessingTime = GuessTime.EASY;
                 break;
             case Difficulty.MEDIUM:
-                this.drawingTeamGuessingTime = 45;
+                this.drawingTeamGuessingTime = GuessTime.MEDIUM;
                 break;
             case Difficulty.HARD:
-                this.drawingTeamGuessingTime = 30;
+                this.drawingTeamGuessingTime = GuessTime.HARD;
                 break;
         }
         this.guessesLeft[this.getOpposingTeam()] = 0;

@@ -1,12 +1,6 @@
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
-import { UserLogsModel } from '@app/models/user-logs.model';
-import { TYPES } from '@app/types';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import * as socketio from "socket.io";
-import * as jwt from 'jsonwebtoken';
 import * as http from 'http';
-import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.interface';
-import { TokenService } from '../token.service';
 
 @injectable()
 export class SocketService {
