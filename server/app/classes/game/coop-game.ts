@@ -12,8 +12,6 @@ import { Game } from './game';
 export class CoopGame extends Game {
     private players: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
-    private drawingTeam: number;
-    private drawingPlayer: Player[] = new Array(2);
     private score: number = 0;
     private guessesLeft: number = 0;
     private round: number = 0;
@@ -27,7 +25,6 @@ export class CoopGame extends Game {
     }
 
     async startGame(): Promise<void> {
-        this.drawingTeam = this.selectRandomBinary();
         this.setGuesses();
         this.round = 1;
         if (this.vPlayer != undefined) {
@@ -40,7 +37,6 @@ export class CoopGame extends Game {
     }
 
     guessDrawing(username: string, guess: string): void {
-        console.log("Guessed " + guess)
         if (this.players.has(username)) {
             this.drawingTeamGuess(username, guess);
         }
@@ -48,11 +44,7 @@ export class CoopGame extends Game {
     }
 
     private drawingTeamGuess(username: string, guess: string): void {
-        if (!this.guessesLeft[this.drawingTeam]) {
-            throw Error("It's not your turn to guess")
-        }
         if (this.currentDrawingName == guess) {
-            console.log("Drawing team guessed drawing correctly!");
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
@@ -61,7 +53,7 @@ export class CoopGame extends Game {
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
-            --this.guessesLeft[this.drawingTeam];
+            --this.guessesLeft;
             if (!this.guessesLeft) {
                 this.vPlayer.stopDrawing();
                 this.setupNextRound();
@@ -98,16 +90,6 @@ export class CoopGame extends Game {
             players.push({ "username": player.username, "avatar": player.avatar });
         })
         return players;
-    }
-
-
-    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent): void {
-        if (user.username == this.drawingPlayer[this.drawingTeam].username) {
-            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": event });
-        }
-        else {
-            throw new Error("It is not your turn to draw");
-        }
     }
 
     setGuesses(): void {
