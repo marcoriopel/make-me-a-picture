@@ -26,6 +26,7 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         // Draw the drawing so far
         for (paintedPath in canvasViewModel.pathStack)
             canvas.drawPath(paintedPath.path, paintedPath.paint)
+
         // Draw any current squiggle
         canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
 
@@ -38,7 +39,7 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         // Add the word to draw on the upper left of the canvas
         val word = canvasViewModel.getDrawingWord()
         if (word != null) {
-            canvas.drawText(word, 10F, 20F, canvasViewModel.getPaint())
+            canvas.drawText("Le mot à dessiner est: $word", 10F, 30F, canvasViewModel.getTextPaint())
         }
 
     }

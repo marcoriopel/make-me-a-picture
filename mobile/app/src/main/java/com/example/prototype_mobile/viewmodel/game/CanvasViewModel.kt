@@ -39,7 +39,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     // Text Paint
     private val textPaint = Paint().apply {
         color = Color.BLACK
-        textSize = 20F
+        textSize = 30F
+        isAntiAlias = true
+        isDither = true
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *

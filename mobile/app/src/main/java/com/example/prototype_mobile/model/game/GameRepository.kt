@@ -9,7 +9,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
-//const val DRAWING_NAME_EVENT = "drawingName"
+const val DRAWING_NAME_EVENT = "drawingName"
 
 class GameRepository {
     companion object {
@@ -36,9 +36,9 @@ class GameRepository {
     lateinit var socket: io.socket.client.Socket
     var gameId: String? = null
     var drawingName: String? = null
-//    private var onDrawingNameEvent = Emitter.Listener {
-//       drawingName = JSONObject(it[0].toString()).getString("drawingName")
-//    }
+    private var onDrawingNameEvent = Emitter.Listener {
+       drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
@@ -52,6 +52,6 @@ class GameRepository {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = true
         socket = SocketOwner.getInstance()!!.socket
-//        socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
     }
 }
