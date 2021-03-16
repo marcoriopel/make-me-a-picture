@@ -87,7 +87,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     }
 
-
     //override must be in activity
     override fun onDialogDismissed(dialogId: Int) {
     }
@@ -106,8 +105,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
     fun endGameEvent() {
         for(fragment in supportFragmentManager.fragments)
-            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment)
+            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.containerCanvas, EndGameFragment()).commitNow()
+            }
+
     }
 
 
