@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BLACK, INITIAL_LINE_WIDTH } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '../drawing/drawing.service';
 import { SocketService } from '../socket/socket.service';
 
@@ -88,6 +89,8 @@ export class GameService {
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
+      this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
+      this.drawingService.color = BLACK;
       console.log('Socket: newRound');
       console.log(data);
     })
