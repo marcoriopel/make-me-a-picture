@@ -64,7 +64,7 @@ export class ClassicGame extends Game {
         try {
             drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
             this.currentDrawingName = drawingNames[0];
-            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingName", { "drawingName": drawingNames[0] });
         } catch (e) {
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
         }
