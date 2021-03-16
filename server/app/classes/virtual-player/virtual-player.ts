@@ -123,10 +123,10 @@ export class VirtualPlayer {
             case Difficulty.EASY:
                 drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.MEDIUM:
                 drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.HARD:
                 drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
                 break;
         }
