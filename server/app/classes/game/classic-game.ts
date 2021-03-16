@@ -179,7 +179,7 @@ export class ClassicGame extends Game {
             this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
             this.startTimer(true);
-            const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
+            const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
             this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
             if (this.drawingPlayer[this.drawingTeam].isVirtual) {
                 this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);

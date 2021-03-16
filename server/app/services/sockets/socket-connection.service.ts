@@ -90,15 +90,18 @@ export class SocketConnectionService {
                 }
             });
 
-            socket.on('quitRoom', (request: any) => {
+            socket.on('leaveLobby', (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                try {
-                    socket.leave(request.lobbyId);
-                } catch (err) {
-                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                this.leaveRoom(socket, request.lobbyId);
+            });
+
+            socket.on('leaveGame', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
                 }
+                this.leaveRoom(socket, request.gameId);
             });
 
             socket.on('guessDrawing', (request: any) => {
@@ -115,5 +118,13 @@ export class SocketConnectionService {
                 }
             });
         });
+    }
+
+    leaveRoom(socket: socketio.Socket, roomId: string){
+        try {
+            socket.leave(roomId);
+        } catch (err) {
+            this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+        }
     }
 }
