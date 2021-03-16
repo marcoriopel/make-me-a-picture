@@ -74,6 +74,10 @@ class CanvasRepository {
         }
     }
 
+    var onNextRound = Emitter.Listener {
+
+    }
+
     init {
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_EVENT, onDrawingEvent)

@@ -34,6 +34,4 @@ class SocketOwner() {
         }
         socket.connect()
     }
-
-
 }

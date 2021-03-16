@@ -6,6 +6,7 @@ import com.example.prototype_mobile.DrawingEvent
 import com.example.prototype_mobile.MouseDown
 import com.example.prototype_mobile.Vec2
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
@@ -38,6 +39,18 @@ class GameRepository {
     var drawingName: String? = null
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
+
+    private var onNewRound = Emitter.Listener {
+        var playerDrawing = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+        if (playerDrawing.equals(LoginRepository.getInstance()!!.user!!.username)) {
+            _isPlayerDrawing.postValue(true)
+        } else {
+            _isPlayerDrawing.postValue(false)
+        }
+
+        _isPlayerGuessing.postValue(false)
+
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
