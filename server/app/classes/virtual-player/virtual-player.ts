@@ -113,7 +113,7 @@ export class VirtualPlayer {
         await this.delay();
     }
 
-    delay = () => new Promise(res => setTimeout(res, 50))
+    delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))
     wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
     private calculateDrawingSpeed(): number {
