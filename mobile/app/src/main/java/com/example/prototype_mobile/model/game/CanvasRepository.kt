@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
 const val DRAWING_EVENT = "drawingEvent"
+const val DRAWING_NAME_EVENT = "drawingName"
 const val EVENT_TOUCH_DOWN = 0
 const val EVENT_TOUCH_MOVE = 1
 const val EVENT_TOUCH_UP = 2
@@ -75,8 +75,15 @@ class CanvasRepository {
         }
     }
 
+    var drawingName: String? = null
+
+    private var onDrawingNameEvent = Emitter.Listener {
+        drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
+
     init {
         socket = SocketOwner.getInstance()!!.socket
+        socket.on("drawingName", onDrawingNameEvent)
         socket.on(DRAWING_EVENT, onDrawingEvent)
     }
 

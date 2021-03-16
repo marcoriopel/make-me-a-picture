@@ -1,17 +1,13 @@
 package com.example.prototype_mobile.view.game
+import android.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
-import androidx.core.content.res.ResourcesCompat
-import com.example.prototype_mobile.*
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
-import java.util.*
-import kotlin.math.abs
 
 private const val STROKE_WIDTH = 12f // has to be float
 
@@ -19,6 +15,7 @@ private const val STROKE_WIDTH = 12f // has to be float
 class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View(context) {
 
     private lateinit var gridBitmap: Bitmap
+    private lateinit var wordBitmap: Bitmap
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -35,8 +32,15 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         // Add if to activate / unactivated the grid
         if (canvasViewModel.isGrid) {
             gridBitmap = canvasViewModel.getGrid()
-            canvas.drawBitmap(gridBitmap, 0f, 0f, null)
+            canvas.drawBitmap(gridBitmap, 0F, 0F, null)
         }
+
+        // Add the word to draw on the upper left of the canvas
+        val word = canvasViewModel.getDrawingWord()
+        if (word != null) {
+            canvas.drawText(word, 10F, 20F, canvasViewModel.getPaint())
+        }
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

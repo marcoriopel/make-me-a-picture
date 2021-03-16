@@ -58,7 +58,9 @@ export class ClassicGame extends Game {
         try {
             drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
             this.currentDrawingName = drawingNames[0];
-            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('drawingName', { "drawingName": drawingNames[0] });
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingName", { "drawingName": drawingNames[0] });
+            this.socketService.getSocket().to(this.id).emit("drawingName", { "drawingName": drawingNames[0] });
+            console.log("Drawing name send to: " + this.drawingPlayer[this.drawingTeam].username)
         } catch (e) {
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
         }
@@ -143,10 +145,10 @@ export class ClassicGame extends Game {
         }
         else {
             if (players[0].isVirtual) {
-                this.drawingPlayer[teamNumber] = players[0];
+                this.drawingPlayer[teamNumber] = players[1];
             }
             else {
-                this.drawingPlayer[teamNumber] = players[1];
+                this.drawingPlayer[teamNumber] = players[0];
             }
         }
     }
