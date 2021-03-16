@@ -28,6 +28,7 @@ export class GameService {
   drawingName: string = "";
   teams: Teams;
   isGuessing: boolean = false;
+  isUserTeamGuessing: boolean = false;
   currentUserTeam: number;
   timer: number = 69;
 
@@ -66,16 +67,17 @@ export class GameService {
     })
 
     this.socketService.bind('guessesLeft', (data: any) => {
-      console.log('Socket: guessesLeft');
-      console.log(data);
       if (this.username) {
-        if (data.guessesLeft[this.currentUserTeam] == 1 && this.drawingPlayer != this.username) {
-          this.isGuessing = true;
+        if (data.guessesLeft[this.currentUserTeam] == 1) {
+          this.isUserTeamGuessing = true;
         } else {
-          this.isGuessing = false;
+          this.isUserTeamGuessing = false;
         }
       }
+      this.updateGuessingStatus();
     })
+
+
 
     this.socketService.bind('guessCallback', (data: any) => {
       //TODO handle guessCallback, data contains { "isCorrectGuess": boolean, "guessingPlayer": string }
@@ -91,8 +93,7 @@ export class GameService {
       this.drawingService.redoStack = [];
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
-      console.log('Socket: newRound');
-      console.log(data);
+      this.updateGuessingStatus();
     })
 
     this.socketService.bind('endGame', (data: any) => {
@@ -104,5 +105,13 @@ export class GameService {
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
     })
+  }
+
+  updateGuessingStatus() : void {
+      if(this.isUserTeamGuessing && this.drawingPlayer != this.username){
+        this.isGuessing = true;
+      } else {
+        this.isGuessing = false;
+      }
   }
 }
