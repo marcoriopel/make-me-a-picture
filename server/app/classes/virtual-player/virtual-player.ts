@@ -1,12 +1,11 @@
 import { Drawing, Vec2 } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent, MouseDown } from '@app/ressources/interfaces/game-events';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
-import { drawingEventType } from '@app/ressources/variables/game-variables';
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { Personnality, NB_PERSONNALITIES } from '@app/ressources/variables/virtual-player-variables'
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
-import { isBreakOrContinueStatement } from 'typescript';
 
 @injectable()
 export class VirtualPlayer {
@@ -18,6 +17,7 @@ export class VirtualPlayer {
     private currentDrawing: Drawing;
     private gameId: string;
     private isVPlayerTurn: boolean = false;
+    private drawingSpeed: number;
     
     constructor(gameId: string) { 
         this.gameId = gameId;
@@ -54,7 +54,7 @@ export class VirtualPlayer {
     async getNewDrawing(difficulty: number): Promise<string>{
         try {
             this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty);
-            // console.log(this.currentDrawing);
+            this.drawingSpeed = this.calculateDrawingSpeed();
             return this.currentDrawing.drawingName;
         }
         catch(err){
@@ -68,6 +68,7 @@ export class VirtualPlayer {
 
     async startDrawing() {
         this.isVPlayerTurn = true;
+        await this.wait(500)
         for(let stroke of this.currentDrawing.strokes){
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
@@ -112,8 +113,35 @@ export class VirtualPlayer {
         await this.delay();
     }
 
-    delay = () => new Promise(res => setTimeout(res, 50))
-        
+    delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))
+    wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+    private calculateDrawingSpeed(): number {
+        let drawingSpeed = 0;
+        let pointsNumber: number = this.calculatePointsInDrawing();
+        switch(this.currentDrawing.difficulty){
+            case Difficulty.EASY:
+                drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
+                break;
+            case Difficulty.MEDIUM:
+                drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
+                break;
+            case Difficulty.HARD:
+                drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
+                break;
+        }
+        return drawingSpeed;
+    }  
+
+    private calculatePointsInDrawing(): number {
+        let pointsNumber = 0;
+        for(let stroke of this.currentDrawing.strokes){
+            for(let {} of stroke.path){
+                ++pointsNumber;
+            }
+        }
+        return pointsNumber;
+    }        
 
     getBasicUser(): BasicUser{
         return {"username": this.username, "avatar": this.avatar}

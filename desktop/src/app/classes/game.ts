@@ -5,9 +5,15 @@ export enum GameType {
 }
 
 export enum Difficulty {
-    Easy,
-    Normal,
-    Hard
+    EASY = 0,
+    MEDIUM = 1,
+    HARD = 2
+}
+
+export enum GuessTime {
+    EASY = 60,
+    MEDIUM = 45,
+    HARD = 30
 }
 
 export interface NewGame {

@@ -4,8 +4,9 @@ import { DrawingService } from '@app/services/drawing/drawing.service';
 import {MatDialog} from '@angular/material/dialog';
 import { ViewingComponent } from '../viewing/viewing.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Difficulty, Drawing } from '@app/classes/drawing';
+import { Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
+import { Difficulty } from '@app/classes/game';
 
 @Component({
   selector: 'app-image-creation',
@@ -98,11 +99,11 @@ export class ImageCreationComponent implements OnInit {
 
   convertDifficulty(difficulty: string): number {
     switch(difficulty) {
-      case 'Facile': return Difficulty.easy;
-      case 'Normale': return Difficulty.normal;
-      case 'Difficile': return Difficulty.hard;
+      case 'Facile': return Difficulty.EASY;
+      case 'Normale': return Difficulty.MEDIUM;
+      case 'Difficile': return Difficulty.HARD;
     }
-    return Difficulty.easy // Default
+    return Difficulty.EASY // Default
   }
 
   sendDrawing(drawing: Drawing) {
