@@ -85,6 +85,7 @@ export class GameService {
     this.socketService.bind('newRound', (data: any) => {
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       console.log('Socket: newRound');

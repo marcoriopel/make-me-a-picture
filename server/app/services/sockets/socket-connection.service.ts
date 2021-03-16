@@ -78,8 +78,8 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 try {
-                    socket.leave("tmp"+request.lobbyId);
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
+                        socket.leave("tmp"+request.lobbyId);
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
@@ -95,6 +95,7 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.lobbyId);
+                this.lobbyManagerService.dispatchTeams(request.lobbyId)
             });
 
             socket.on('leaveGame', (request: any) => {
