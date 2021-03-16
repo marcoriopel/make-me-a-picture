@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
@@ -93,6 +93,12 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
+            const drawingEvent: DrawingEvent = {
+                eventType: drawingEventType.MOUSEUP,
+                event: {x:0, y:0},
+                gameId: this.id,
+            } 
+            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             if (this.drawingPlayer[this.drawingTeam].isVirtual) {
                 this.vPlayers[this.drawingTeam].stopDrawing();
@@ -125,6 +131,12 @@ export class ClassicGame extends Game {
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
         }
+        const drawingEvent: DrawingEvent = {
+            eventType: drawingEventType.MOUSEUP,
+            event: {x:0, y:0},
+            gameId: this.id,
+        } 
+        this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.setupNextRound();
     }
