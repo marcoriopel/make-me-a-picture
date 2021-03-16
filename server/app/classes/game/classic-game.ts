@@ -131,6 +131,7 @@ export class ClassicGame extends Game {
 
     private switchGuessingTeam() {
         this.guessesLeft[this.getOpposingTeam()] = 1;
+        this.guessesLeft[this.drawingTeam] = 0;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.vPlayers[this.drawingTeam].stopDrawing();
         }
@@ -175,6 +176,7 @@ export class ClassicGame extends Game {
             this.drawingTeam = this.getOpposingTeam();
             this.changeDrawingPlayer();
             this.setGuesses();
+            this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
             this.startTimer(true);
             const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
@@ -265,7 +267,6 @@ export class ClassicGame extends Game {
             this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
             if (!this.timerCount) {
                 isDrawingTeam ? this.switchGuessingTeam() : this.setupNextRound();
-                this.switchGuessingTeam();
             }
             else {
                 --this.timerCount;
