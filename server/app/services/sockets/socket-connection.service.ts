@@ -61,13 +61,41 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 try {
-                    socket.leave(request.oldLobbyId);
+                    socket.leave("tmp"+request.oldLobbyId);
+                    if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
+                        socket.join('tmp'+request.lobbyId);
+                        this.lobbyManagerService.dispatchTeams(request.lobbyId)
+                    }
+                    else
+                        throw new Error("This lobby does not exist")
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
+            });
+
+            socket.on('joinLobby', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                try {
+                    socket.leave("tmp"+request.lobbyId);
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
                         throw new Error("This lobby does not exist")
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
+            });
+
+            socket.on('quitRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                try {
+                    socket.leave(request.lobbyId);
                 } catch (err) {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }

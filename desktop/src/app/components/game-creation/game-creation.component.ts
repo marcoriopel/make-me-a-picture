@@ -6,6 +6,7 @@ import { GameType, NewGame } from '@app/classes/game';
 import { GameService } from '@app/services/game/game.service';
 import { LobbyService } from '@app/services/lobby/lobby.service';
 import { errorMessages } from '../register/custom-validator';
+import { SocketService } from '@app/services/socket/socket.service';
 
 @Component({
   selector: 'app-game-creation',
@@ -43,7 +44,7 @@ export class GameCreationComponent implements OnInit {
   errors = errorMessages;
   private onlySpaceRegExp = /^\s+$/;
 
-  constructor(private fb: FormBuilder, private lobbyService: LobbyService, private gameService: GameService, private router: Router) { }
+  constructor(private fb: FormBuilder, private lobbyService: LobbyService, private gameService: GameService, private router: Router, private socketService: SocketService) { }
 
   ngOnInit(): void {
     this.gameForm = this.fb.group({
@@ -85,6 +86,7 @@ export class GameCreationComponent implements OnInit {
     this.lobbyService.join(id, game).subscribe(
       res => {
         this.router.navigate(['/lobby']);
+        this.socketService.emit('joinLobby', {lobbyId: id});
       },
       err => {
         console.log(err);
