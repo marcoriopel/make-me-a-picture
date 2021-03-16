@@ -40,7 +40,9 @@ class ToolsFragment : Fragment() {
         binding = FragmentToolsBinding.bind(view)
         binding.buttonPencil.setOnClickListener { pen() }
         binding.buttonEraser.setOnClickListener { eraser() }
-        binding.buttonGrid.setOnClickListener { toggleGrid() }
+        binding.buttonGrid.setOnClickListener { //toggleGrid()
+            (activity as GameActivity).endGameEvent()
+            }
         binding.buttonUndo.setOnClickListener { viewModel.undo() }
         binding.buttonRedo.setOnClickListener { viewModel.redo() }
         binding.buttonPencil.setImageResource(R.drawable.button_pencil_selected)

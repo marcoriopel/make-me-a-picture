@@ -50,7 +50,7 @@ class GameRepository {
 
     init {
         _isPlayerDrawing.value = true
-        _isPlayerGuessing.value = true
+        _isPlayerGuessing.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.game.*
+import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
@@ -15,13 +16,16 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
     private var score = arrayOf(0,0)
+    private lateinit var binding: ActivityGameBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+        binding = ActivityGameBinding.inflate(layoutInflater)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -51,6 +55,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         }
 
+
         gameViewModel.isPlayerDrawing.observe(this, Observer {
             if (it) {
                 supportFragmentManager.beginTransaction()
@@ -78,7 +83,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         })
 
+
+
     }
+
 
     //override must be in activity
     override fun onDialogDismissed(dialogId: Int) {
@@ -95,6 +103,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             if(fragment is ColorFragment)
                 return fragment
         return null
+    }
+    fun endGameEvent() {
+        for(fragment in supportFragmentManager.fragments)
+            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment)
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
     }
 
 
