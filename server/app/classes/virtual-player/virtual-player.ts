@@ -68,6 +68,7 @@ export class VirtualPlayer {
 
     async startDrawing() {
         this.isVPlayerTurn = true;
+        await this.wait(500)
         for(let stroke of this.currentDrawing.strokes){
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
@@ -113,7 +114,7 @@ export class VirtualPlayer {
     }
 
     delay = () => new Promise(res => setTimeout(res, 50))
-        
+    wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
     getBasicUser(): BasicUser{
         return {"username": this.username, "avatar": this.avatar}
