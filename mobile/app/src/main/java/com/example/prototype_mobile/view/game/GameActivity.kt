@@ -14,6 +14,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
+    private var score = arrayOf(0,0)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,4 +96,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 return fragment
         return null
     }
+
+
 }
