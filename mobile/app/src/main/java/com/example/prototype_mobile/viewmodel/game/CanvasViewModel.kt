@@ -36,6 +36,14 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private val toolRepo = ToolRepository.getInstance()
     private val gameRepo = GameRepository.getInstance()
 
+    // Text Paint
+    private val textPaint = Paint().apply {
+        color = Color.BLACK
+        textSize = 30F
+        isAntiAlias = true
+        isDither = true
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -44,10 +52,23 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Get the paint for the text
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun getTextPaint(): Paint {
+        return textPaint
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * Get the current paint
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun getDrawingWord(): String? {
+        return gameRepo!!.drawingName
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch user event
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun onTouchEvent(event: MotionEvent): Boolean {
-        // TODO: Check if user have right to draw
         if(gameRepo!!.isPlayerDrawing.value!!) {
             val coord = Vec2((event.x.toInt() / 1.5).toInt(), (event.y.toInt() / 1.5).toInt())
             when (event.action) {
