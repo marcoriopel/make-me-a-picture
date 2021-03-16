@@ -143,10 +143,10 @@ export class ClassicGame extends Game {
         }
         else {
             if (players[0].isVirtual) {
-                this.drawingPlayer[teamNumber] = players[1];
+                this.drawingPlayer[teamNumber] = players[0];
             }
             else {
-                this.drawingPlayer[teamNumber] = players[0];
+                this.drawingPlayer[teamNumber] = players[1];
             }
         }
     }
