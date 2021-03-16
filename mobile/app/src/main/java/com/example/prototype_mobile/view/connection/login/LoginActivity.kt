@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.databinding.ActivityLoginBinding
-import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.view.game.GameActivity
@@ -65,9 +64,6 @@ class LoginActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK)
                 finish()
             }
-
-            // Initialize canvas repos
-            CanvasRepository.getInstance()
 
         })
 

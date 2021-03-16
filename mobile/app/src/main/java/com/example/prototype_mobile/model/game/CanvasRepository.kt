@@ -52,7 +52,6 @@ class CanvasRepository {
     var onDrawingEvent = Emitter.Listener {
         if(!gameRepo.isPlayerDrawing.value!!) {
             val objectString = JSONObject(it[0].toString()).getString("drawingEvent")
-            Log.e("drawing event", objectString)
             val objectJson = JSONObject(objectString)
             val drawingEventReceive = when(objectJson.getString("eventType").toInt()) {
                 EVENT_TOUCH_DOWN -> {
