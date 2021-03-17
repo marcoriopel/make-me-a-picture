@@ -20,6 +20,7 @@ data class LoggedInUser(val token: String, val username: String)
 data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies
+data class LobbyId(val lobbyId: String)
 data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
@@ -43,4 +44,5 @@ data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: Strin
 abstract class Event()
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()
+data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)

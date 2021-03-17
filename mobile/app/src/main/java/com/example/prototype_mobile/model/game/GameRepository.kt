@@ -2,7 +2,7 @@ package com.example.prototype_mobile.model.game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.*
+import com.example.prototype_mobile.GuessEvent
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
@@ -10,6 +10,8 @@ import io.socket.emitter.Emitter
 import org.json.JSONObject
 
 const val DRAWING_NAME_EVENT = "drawingName"
+const val SCORE_EVENT = "score"
+const val GUESS_DRAWING_EVENT = "guessDrawing"
 const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 
@@ -29,19 +31,29 @@ class GameRepository {
         }
     }
 
+    var socket: io.socket.client.Socket
+    val gson: Gson = Gson()
+    var gameId: String? = null
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
-    lateinit var socket: io.socket.client.Socket
-    var gameId: String? = null
     var drawingName: String? = null
+    var score: IntArray = intArrayOf(0,0)
+
+    // Listener
     var team = 0
 
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
+
+    private  var onScoreEvent = Emitter.Listener {
+        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+
     }
 
     private var onNewRound = Emitter.Listener {
@@ -66,6 +78,11 @@ class GameRepository {
 
     fun setIsPlayerGuessing(isGuessing: Boolean) {
         _isPlayerGuessing.value = isGuessing
+    }
+
+    fun guessDrawing(guess: String) {
+        val guessEvent = GuessEvent(this.gameId!!, guess)
+        socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent))
     }
 
     init {

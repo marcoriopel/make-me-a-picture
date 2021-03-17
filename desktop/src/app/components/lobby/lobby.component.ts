@@ -16,4 +16,7 @@ export class LobbyComponent implements OnInit {
     
   }
 
+  leaveLobby(): void {
+    this.lobbyService.quit();
+  }
 }
