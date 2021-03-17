@@ -71,6 +71,7 @@ export class GameService {
         if (data.guessesLeft[this.currentUserTeam] == 1) {
           this.isUserTeamGuessing = true;
         } else {
+          this.drawingPlayer = "";
           this.isUserTeamGuessing = false;
         }
       }
