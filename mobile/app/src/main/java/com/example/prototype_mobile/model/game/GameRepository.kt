@@ -1,10 +1,13 @@
 package com.example.prototype_mobile.model.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
+import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
@@ -38,6 +41,9 @@ class GameRepository {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    private val _teamScore = MutableLiveData<IntArray>()
+    var teamScore: LiveData<IntArray> = _teamScore
+
     var drawingName: String? = null
     var score: IntArray = intArrayOf(0,0)
 
@@ -47,7 +53,8 @@ class GameRepository {
     }
 
     private  var onScoreEvent = Emitter.Listener {
-        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+        val test = JSONObject(it[0].toString()).getString("score")
+        Log.e("test", "Test")
 
     }
 
@@ -60,8 +67,10 @@ class GameRepository {
     }
 
     fun guessDrawing(guess: String) {
+        val opts = IO.Options()
+        opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
         val guessEvent = GuessEvent(this.gameId!!, guess)
-        socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent))
+        socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
 
     init {
