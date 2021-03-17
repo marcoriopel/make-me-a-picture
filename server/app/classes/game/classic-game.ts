@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
+import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
@@ -21,6 +21,8 @@ export class ClassicGame extends Game {
     private currentDrawingName: string;
     private timerCount: number = 0;
     private timerInterval: NodeJS.Timeout;
+    private transitionInterval: NodeJS.Timeout;
+    private transitionTimerCount: number = 5;
     private drawingTeamGuessingTime = 0;
     private opposingTeamGuessingTime = 0;
 
@@ -37,7 +39,6 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-
         for (let vPlayer of this.vPlayers) {
             if (vPlayer != undefined) {
                 vPlayer.setServices(this.drawingsService, this.socketService)
@@ -47,7 +48,36 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username, "teams": this.getPlayers() });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
-        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
+        this.gameTransition(transitionType.GAMESTART);
+        
+    }
+
+    gameTransition(type: number) {
+        this.transitionInterval = setInterval(() => {
+            this.socketService.getSocket().to(this.id).emit('transitionTimer', { "timer": this.transitionTimerCount, "state": type });
+            if (!this.transitionTimerCount) {
+                switch (type) {
+                    case transitionType.GAMESTART:
+                        this.startDrawing();
+                        break;
+                    case transitionType.OPPOSITION:
+                        this.opposingTeamTurnStart();
+                        break;
+                    case transitionType.NEWROUND:
+                        this.sendNextRoundInfo();
+                        break;
+                }
+            }
+            else {
+                --this.transitionTimerCount;
+            }
+        }, 1000);
+    }
+
+    async startDrawing(): Promise<void> {
+        clearInterval(this.transitionInterval);
+        this.transitionTimerCount = 5;
         this.startTimer(true);
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
@@ -93,6 +123,12 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
+            const drawingEvent: DrawingEvent = {
+                eventType: drawingEventType.MOUSEUP,
+                event: {x:0, y:0},
+                gameId: this.id,
+            } 
+            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             if (this.drawingPlayer[this.drawingTeam].isVirtual) {
                 this.vPlayers[this.drawingTeam].stopDrawing();
@@ -125,18 +161,32 @@ export class ClassicGame extends Game {
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
         }
+        const drawingEvent: DrawingEvent = {
+            eventType: drawingEventType.MOUSEUP,
+            event: {x:0, y:0},
+            gameId: this.id,
+        } 
+        this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.setupNextRound();
     }
 
     private switchGuessingTeam() {
+        clearInterval(this.timerInterval);
         this.guessesLeft[this.getOpposingTeam()] = 1;
+        this.guessesLeft[this.drawingTeam] = 0;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.vPlayers[this.drawingTeam].stopDrawing();
         }
+        this.gameTransition(transitionType.OPPOSITION);    
+    }
+
+    private opposingTeamTurnStart() {
+        clearInterval(this.transitionInterval);
+        this.transitionTimerCount = 5;
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        clearInterval(this.timerInterval);
         this.startTimer(false);
+
     }
 
     private selectRandomBinary(): number {
@@ -175,20 +225,28 @@ export class ClassicGame extends Game {
             this.drawingTeam = this.getOpposingTeam();
             this.changeDrawingPlayer();
             this.setGuesses();
+            this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
-            this.startTimer(true);
-            const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
-            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
-            if (this.drawingPlayer[this.drawingTeam].isVirtual) {
-                this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
-                this.vPlayers[this.drawingTeam].startDrawing();
-            }
-            else {
-                this.getDrawingSuggestions();
-            }
+            this.gameTransition(transitionType.NEWROUND);    
         }
         else {
             this.endGame();
+        }
+    }
+
+
+    async sendNextRoundInfo() {
+        clearInterval(this.transitionInterval);
+        this.transitionTimerCount = 5;
+        this.startTimer(true);
+        const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
+        if (this.drawingPlayer[this.drawingTeam].isVirtual) {
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.vPlayers[this.drawingTeam].startDrawing();
+        }
+        else {
+            this.getDrawingSuggestions();
         }
     }
 
@@ -264,8 +322,8 @@ export class ClassicGame extends Game {
         this.timerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('timer', { "timer": this.timerCount });
             if (!this.timerCount) {
+                clearInterval(this.timerInterval);
                 isDrawingTeam ? this.switchGuessingTeam() : this.setupNextRound();
-                this.switchGuessingTeam();
             }
             else {
                 --this.timerCount;

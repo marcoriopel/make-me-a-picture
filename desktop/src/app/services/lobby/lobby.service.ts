@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { SocketService } from '@app/services/socket/socket.service';
 import { GameService } from '@app/services/game/game.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class LobbyService {
   team1Full: boolean = false;
   isTeam2Full: boolean = false;
   isLobbyFull: boolean = false;
+  oldLobbyId: string = "";
 
   // URL
   private baseUrl = environment.api_url;
@@ -26,8 +28,9 @@ export class LobbyService {
   private addVirtualPlayerUrl = this.baseUrl + "/api/games/add/virtual/player";
   private deleteVirtualPlayerUrl = this.baseUrl + "/api/games/remove/virtual/player";
   private startGameUrl = this.baseUrl + "/api/games/start";
+  private leaveUrl = this.baseUrl + "/api/games/leave";
 
-  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService) {
+  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) {
     this.gameService.initialize();
   }
 
@@ -68,14 +71,17 @@ export class LobbyService {
   }
 
   quit(): void {
-    throw new Error('Method not implemented.');
-
-    // Unbind event from socket
     this.socketService.unbind('dispatchTeams');
-
-    // TODO: Http request to quit the lobby
-
-    // TODO: Add Router Link to last page
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!
+    });
+    let params = new HttpParams();
+    params = params.append('lobbyId', this.game.id);
+    const options = { params: params, headers: headers,  responseType: 'text' as 'json'};
+    this.http.delete(this.leaveUrl, options).subscribe(() => {
+      this.router.navigate(['/home']);
+    });
   }
 
   create(game: NewGame) {
@@ -105,7 +111,8 @@ export class LobbyService {
   }
 
   private listen() {
-      this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
+      this.socketService.emit('listenLobby', {oldLobbyId: this.oldLobbyId, lobbyId: this.game.id});
+      this.oldLobbyId = this.game.id;
       this.socketService.bind('dispatchTeams', (res: any) => {
         this.clearPlayers();
         res.players.forEach((user: { username: string; avatar: number; team: number}) => {

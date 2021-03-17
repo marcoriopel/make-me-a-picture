@@ -46,6 +46,7 @@ class LobbyRepository() {
     // Game Start
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
+    val gson: Gson = Gson()
 
     var onTeamsUpdate = Emitter.Listener {
         val gson: Gson = Gson()
@@ -80,6 +81,7 @@ class LobbyRepository() {
 
         if (result is Result.Success) {
             _lobbyJoined.postValue(game)
+            socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
         }
 
         return result;

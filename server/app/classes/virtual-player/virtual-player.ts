@@ -113,7 +113,7 @@ export class VirtualPlayer {
         await this.delay();
     }
 
-    delay = () => new Promise(res => setTimeout(res, 50))
+    delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))
     wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
     private calculateDrawingSpeed(): number {
@@ -123,10 +123,10 @@ export class VirtualPlayer {
             case Difficulty.EASY:
                 drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.MEDIUM:
                 drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.HARD:
                 drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
                 break;
         }
