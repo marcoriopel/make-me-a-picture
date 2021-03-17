@@ -43,3 +43,4 @@ data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: Strin
 abstract class Event()
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()
+data class GuessesLeft(val guessesLeft: Array<Int>)

@@ -2,15 +2,16 @@ package com.example.prototype_mobile.model.game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.DrawingEvent
-import com.example.prototype_mobile.MouseDown
-import com.example.prototype_mobile.Vec2
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
 const val DRAWING_NAME_EVENT = "drawingName"
+const val NEW_ROUND_EVENT = "newRound"
+const val GUESSES_LEFT_EVENT = "guessesLeft"
 
 class GameRepository {
     companion object {
@@ -37,6 +38,7 @@ class GameRepository {
     lateinit var socket: io.socket.client.Socket
     var gameId: String? = null
     var drawingName: String? = null
+
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
     }
@@ -46,10 +48,14 @@ class GameRepository {
         if (playerDrawing.equals(LoginRepository.getInstance()!!.user!!.username)) {
             _isPlayerDrawing.postValue(true)
         } else {
-            _isPlayerDrawing.postValue(false)
+            _isPlayerGuessing.postValue(true)
         }
+        CanvasRepository.getInstance()!!.resetCanvas()
+    }
 
-        _isPlayerGuessing.postValue(false)
+    private var onGuessesLeft = Emitter.Listener {
+        val gson: Gson = Gson()
+        val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
 
     }
 
@@ -66,5 +72,6 @@ class GameRepository {
         _isPlayerGuessing.value = true
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+
     }
 }

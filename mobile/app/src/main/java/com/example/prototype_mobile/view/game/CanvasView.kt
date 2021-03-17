@@ -23,6 +23,9 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         // Color background white
         canvas.drawColor(-1)
 
+        if (canvasViewModel.pathStack.empty() && canvasViewModel.curPath.isEmpty) {
+            return
+        }
         // Draw the drawing so far
         for (paintedPath in canvasViewModel.pathStack)
             canvas.drawPath(paintedPath.path, paintedPath.paint)
