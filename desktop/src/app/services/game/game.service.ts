@@ -52,7 +52,6 @@ export class GameService {
           this.currentUserTeam = player.team;
         }
       });
-      console.log(this.teams);
       this.router.navigate(['/game']);
     })
 
@@ -62,8 +61,6 @@ export class GameService {
 
     this.socketService.bind('drawingName', (data: any) => {
       this.drawingName = data.drawingName;
-      console.log('Socket: drawingName');
-      console.log(data);
     })
 
     this.socketService.bind('guessesLeft', (data: any) => {
@@ -82,8 +79,6 @@ export class GameService {
 
     this.socketService.bind('guessCallback', (data: any) => {
       //TODO handle guessCallback, data contains { "isCorrectGuess": boolean, "guessingPlayer": string }
-      console.log('Socket: guessCallback');
-      console.log(data);
     })
 
     this.socketService.bind('newRound', (data: any) => {
@@ -99,8 +94,6 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       //TODO handle endGame, data contains { "finalScore": number[] }
-      console.log('Socket: endGame');
-      console.log(data);
     })
 
     this.socketService.bind('timer', (data: any) => {
