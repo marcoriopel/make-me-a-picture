@@ -10,6 +10,7 @@ import io.socket.emitter.Emitter
 import org.json.JSONObject
 
 const val DRAWING_NAME_EVENT = "drawingName"
+const val SCORE_EVENT = "score"
 
 class GameRepository {
     companion object {
@@ -36,8 +37,16 @@ class GameRepository {
     lateinit var socket: io.socket.client.Socket
     var gameId: String? = null
     var drawingName: String? = null
+    var score: IntArray = intArrayOf(0,0)
+
+    // Listener
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
+
+    private  var onScoreEvent = Emitter.Listener {
+        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
