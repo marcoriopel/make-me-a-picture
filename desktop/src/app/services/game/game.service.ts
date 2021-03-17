@@ -28,6 +28,7 @@ export class GameService {
   teams: Teams;
   isGuessing: boolean = false;
   currentUserTeam: number;
+  timer: number = 69;
 
   constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService) {
     this.username = localStorage.getItem('username');
@@ -45,7 +46,7 @@ export class GameService {
 
       data.teams.forEach((player: Player) => {
         player.team == 0 ? this.teams.team1.push(player.username) : this.teams.team2.push(player.username);
-        if(player.username == this.username){
+        if (player.username == this.username) {
           this.currentUserTeam = player.team;
         }
       });
@@ -66,8 +67,8 @@ export class GameService {
     this.socketService.bind('guessesLeft', (data: any) => {
       console.log('Socket: guessesLeft');
       console.log(data);
-      if(this.username){
-        if(data.guessesLeft[this.currentUserTeam] == 1 && this.drawingPlayer != this.username){
+      if (this.username) {
+        if (data.guessesLeft[this.currentUserTeam] == 1 && this.drawingPlayer != this.username) {
           this.isGuessing = true;
         } else {
           this.isGuessing = false;
@@ -84,6 +85,7 @@ export class GameService {
     this.socketService.bind('newRound', (data: any) => {
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       console.log('Socket: newRound');
@@ -94,6 +96,10 @@ export class GameService {
       //TODO handle endGame, data contains { "finalScore": number[] }
       console.log('Socket: endGame');
       console.log(data);
+    })
+
+    this.socketService.bind('timer', (data: any) => {
+      this.timer = data.timer;
     })
   }
 }

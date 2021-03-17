@@ -56,7 +56,8 @@ export class GamePreviewComponent{
     } else {
       this.closeAllPreview.emit();
       this.renderer.addClass(this.gamePreviewRef.nativeElement, "game-preview");
-      this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
+      this.socketService.emit('listenLobby', {oldLobbyId: this.lobbyService.oldLobbyId, lobbyId: this.game.id});
+      this.lobbyService.oldLobbyId = this.game.id;
       this.socketService.bind('dispatchTeams', (res: any) => {
           this.players = res.players;
       });
@@ -83,6 +84,7 @@ export class GamePreviewComponent{
       res => {
         this.gameService.gameId = this.game.id;
         this.router.navigate(['/lobby']);
+        this.socketService.emit('joinLobby', {lobbyId:this.game.id});
       },
       err => {
         console.log(err);

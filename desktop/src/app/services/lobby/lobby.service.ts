@@ -18,6 +18,7 @@ export class LobbyService {
   team1Full: boolean = false;
   isTeam2Full: boolean = false;
   isLobbyFull: boolean = false;
+  oldLobbyId: string = "";
 
   // URL
   private baseUrl = environment.api_url;
@@ -105,7 +106,8 @@ export class LobbyService {
   }
 
   private listen() {
-      this.socketService.emit('listenLobby', {oldLobbyId: '', lobbyId: this.game.id});
+      this.socketService.emit('listenLobby', {oldLobbyId: this.oldLobbyId, lobbyId: this.game.id});
+      this.oldLobbyId = this.game.id;
       this.socketService.bind('dispatchTeams', (res: any) => {
         this.clearPlayers();
         res.players.forEach((user: { username: string; avatar: number; team: number}) => {
