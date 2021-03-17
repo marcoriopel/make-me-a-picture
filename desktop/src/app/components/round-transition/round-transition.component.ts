@@ -13,8 +13,6 @@ export class RoundTransitionComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService) {
 
-    console.log(data.state);
-    console.log(gameService.drawingPlayer)
     switch (data.state) {
       case 0:
         this.message = "Bienvenue dans la partie! C'est " + this.gameService.drawingPlayer + " qui commence à dessiner!";
