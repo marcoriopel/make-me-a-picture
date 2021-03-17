@@ -11,6 +11,15 @@
 #score {
     display: flex;
     height: 200px;
+
+    h1 {
+        color: white;
+        font-size: 30px;
+    }
+
+    p {
+        color: white;
+    }
 }
 
 .team {
@@ -19,6 +28,11 @@
     flex-flow: column;
     align-items: center;
     height: 300px;
+    #team-score {
+        color: white;
+        font-size: 50px;
+        font-weight: 600;
+    }
 }
 
 * {
@@ -55,6 +69,11 @@
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
+
+    h1 {
+        color: white;
+        font-size: 30px;
+    }
 }
 
 #tools {
@@ -120,6 +139,14 @@
 }
 
 #timer-container {
+    width: 100%;
     display: flex;
     justify-content: center;
+    margin-bottom: 50px;
+
+    h1 {
+        color: white;
+        font-size: 50px;
+        font-weight: 600;
+    }
 }

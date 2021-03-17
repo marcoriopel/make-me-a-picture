@@ -32,7 +32,7 @@ export class GameService {
   isGuessing: boolean = false;
   isUserTeamGuessing: boolean = false;
   currentUserTeam: number;
-  timer: number = 69;
+  timer: number = 60;
   transitionTimer: number = 5;
   dialogRef: any;
 
