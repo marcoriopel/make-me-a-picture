@@ -9,13 +9,14 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.game.*
 import com.example.prototype_mobile.databinding.ActivityGameBinding
+import com.example.prototype_mobile.databinding.FragmentEndGameBinding
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
-    private var score = arrayOf(0,0)
+
     private lateinit var binding: ActivityGameBinding
 
 
@@ -104,6 +105,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         return null
     }
     fun endGameEvent() {
+
         for(fragment in supportFragmentManager.fragments)
             if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()

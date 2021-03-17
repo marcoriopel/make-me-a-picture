@@ -40,8 +40,10 @@ class ToolsFragment : Fragment() {
         binding = FragmentToolsBinding.bind(view)
         binding.buttonPencil.setOnClickListener { pen() }
         binding.buttonEraser.setOnClickListener { eraser() }
-        binding.buttonGrid.setOnClickListener { //toggleGrid()
-            (activity as GameActivity).endGameEvent()
+        binding.buttonGrid.setOnClickListener {
+            toggleGrid()
+            //To simulate endGameEvent
+//            (activity as GameActivity).endGameEvent()
             }
         binding.buttonUndo.setOnClickListener { viewModel.undo() }
         binding.buttonRedo.setOnClickListener { viewModel.redo() }

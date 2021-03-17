@@ -1,11 +1,20 @@
 package com.example.prototype_mobile.view.game
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.Nullable
+import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
+import com.example.prototype_mobile.viewmodel.game.GameViewModel
+import com.example.prototype_mobile.databinding.FragmentEndGameBinding
+import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
+import org.jetbrains.anko.editText
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,12 +30,13 @@ class EndGameFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val sharedViewModel: GameViewModel by activityViewModels()
+    private lateinit var binding : FragmentEndGameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -36,6 +46,40 @@ class EndGameFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_end_game, container, false)
+    }
+
+    override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?){
+        super.onViewCreated(view, savedInstanceState)
+        binding= FragmentEndGameBinding.bind(view)
+        val teamScore = sharedViewModel.teamScore.value
+        setTextLabel(teamScore!![0], teamScore[1])
+        setScore(teamScore)
+
+        binding.goToMenu.setOnClickListener {
+            goToMenu()
+        }
+
+
+    }
+    @SuppressLint("SetTextI18n")
+    fun setTextLabel(team1Score: Int, team2Score:Int){
+        if( team1Score== team2Score) {
+            binding.gameWinner.text = "Égalité !!!"
+        } else if ( team1Score > team2Score) {
+            binding.gameWinner.text = "L'équipe 1 gagne !!!"
+        }
+        else if ( team1Score < team2Score) {
+            binding.gameWinner.text = " L'équipe 2 gagne !!!"
+        }
+    }
+    @SuppressLint("SetTextI18n")
+    fun setScore(teamScore: IntArray){
+        binding.score.text =  teamScore[0].toString() + "   -   " + teamScore[1].toString()
+    }
+
+    fun goToMenu(){
+        val intent = Intent(activity, MainMenuActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {
