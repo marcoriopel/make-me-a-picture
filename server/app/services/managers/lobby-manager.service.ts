@@ -73,6 +73,7 @@ export class LobbyManagerService {
     }
 
     leave(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
+        console.log(1, req.query.lobbyId);
         if (this.lobbyExist(req.query.lobbyId)) {
             try {
                 const lobby: Lobby = LobbyManagerService.lobbies.get(req.query.lobbyId);

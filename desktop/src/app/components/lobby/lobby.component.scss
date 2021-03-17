@@ -175,3 +175,12 @@
     }
 }
 
+.leave-button {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 50px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
