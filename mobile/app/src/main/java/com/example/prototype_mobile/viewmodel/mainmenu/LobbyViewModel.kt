@@ -3,6 +3,7 @@ package com.example.prototype_mobile.viewmodel.mainmenu
 import androidx.lifecycle.*
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.GameRepository
@@ -19,18 +20,28 @@ class LobbyViewModel:  ViewModel() {
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
     val lobbyRepository: LobbyRepository = LobbyRepository.getInstance()!!
+    val gameRepository = GameRepository.getInstance()!!
 
     init {
         lobbyRepository.lobbyPlayers.observeForever(Observer {
             _lobbyPlayers.value = it ?: return@Observer
+            var i = 0
+            for(player in _lobbyPlayers.value!!.players) {
+                if (player.username.equals(LoginRepository.getInstance()!!.user!!.username)) {
+                    if (i < 2) {
+                        gameRepository.team = 0
+                    } else {
+                        gameRepository.team = 1
+                    }
+                }
+                i++
+            }
         })
 
         lobbyRepository.isPlayerDrawing.observeForever(Observer {
             _isPlayerDrawing.value = it ?: return@Observer
-            val gameRepository = GameRepository.getInstance()!!
             gameRepository.setIsPlayerDrawing(it)
             gameRepository.gameId = lobbyRepository.currentListenLobby
-            _lobbyPlayers.value.players.
         })
 
         // Initialize Singleton

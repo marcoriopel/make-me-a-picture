@@ -63,13 +63,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .commitNow()
                 colorFragment =  (findColorFragment() as ColorFragment?)!!
 
+            } else {
                 for (fragment in supportFragmentManager.fragments) {
-                    if(fragment is GuessFragment) {
+                    if(checkIfDrawingFragment(fragment)) {
                         supportFragmentManager.beginTransaction().remove(fragment).commit();
                     }
                 }
-            } else {
-                // TODO: Add fragments to guess
             }
         })
 
@@ -78,13 +77,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
+            } else {
                 for (fragment in supportFragmentManager.fragments) {
-                    if(checkIfDrawingFragment(fragment)) {
+                    if(fragment is GuessFragment) {
                         supportFragmentManager.beginTransaction().remove(fragment).commit();
                     }
                 }
-            } else {
-                //TODO: Remove guess fragment
             }
         })
 
