@@ -16,6 +16,7 @@ const iconPath = app.isPackaged
 function createWindow () {
   mainWindow = new BrowserWindow({
     // icon: iconPath,
+    resizable: false,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -34,7 +35,7 @@ function createWindow () {
   );
   
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
