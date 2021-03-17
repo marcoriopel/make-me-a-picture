@@ -1,6 +1,9 @@
 <div class="wrapper">
     <app-navbar></app-navbar>
     <div class="column-container">
+        <div id="timer-container">
+            <h1>{{this.gameService.timer}}</h1>
+        </div>
         <div id="editor-column">
             <div id="game-data">
                 <div id="score">
@@ -19,15 +22,14 @@
                 </div>
             </div>
             <div id="editor">
-                <h1>{{this.gameService.timer}}</h1>
                 <h1 *ngIf="(this.gameService.drawingPlayer == this.gameService.username)">C'est à votre tour de
                     dessiner! Le mot est: {{this.gameService.drawingName}}</h1>
                 <app-editor [isInGame]="true"></app-editor>
-                <div id="guess-box" *ngIf="this.gameService.isGuessing">
+                <div #guessBox id="guess-box" *ngIf="this.gameService.isGuessing">
                     <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
                         <input matInput id="guess-input" type="text" formControlName="guess"
                             placeholder="Supposition...">
-                        <button id="guess-button" type="submit"><span
+                        <button #guessButton id="guess-button" type="submit"><span
                                 class="material-icons">check_circle</span></button>
                     </form>
                 </div>

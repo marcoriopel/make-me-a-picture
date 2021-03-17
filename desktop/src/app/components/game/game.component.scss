@@ -15,7 +15,6 @@
 
 .team {
     width: 50%;
-    border: 3px solid blue;
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -34,7 +33,6 @@
 }
 
 #editor-column {
-    border: 1px solid pink;
     flex: 1;
     margin-top: 1%;
     display: flex;
@@ -43,18 +41,15 @@
 
 #chat-column {
     width: 380px;
-    border: 1px solid green;
 }
 
 #game-data {
-    border: 1px solid black;
     height: 100%;
     flex-grow: 1;
     padding-top: 10%;
 }
 
 #editor {
-    border: 1px solid black;
     height: 100%;
     display: flex;
     flex-flow: column nowrap;
@@ -63,7 +58,6 @@
 }
 
 #tools {
-    border: 1px solid black;
     height: 100%;
     flex-grow: 1;
     display: flex;
@@ -74,7 +68,6 @@
 }
 
 #chat-bar {
-    border: 1px solid red;
     height: 100%;
     width: 380px;
     float: right;
@@ -124,4 +117,9 @@
     font-size: 30px;
     position: absolute;
     top: 10px;
+}
+
+#timer-container {
+    display: flex;
+    justify-content: center;
 }

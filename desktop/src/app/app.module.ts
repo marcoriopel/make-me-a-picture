@@ -49,6 +49,7 @@ import { GameCreationComponent } from './components/game-creation/game-creation.
 import { SocketService } from './services/socket/socket.service';
 import { GameComponent } from './components/game/game.component';
 import { ToolsComponent } from './components/tools/tools.component';
+import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 
 @NgModule({
     declarations: [
@@ -73,7 +74,8 @@ import { ToolsComponent } from './components/tools/tools.component';
         LobbyComponent,
         GameCreationComponent,
         GameComponent,
-        ToolsComponent
+        ToolsComponent,
+        RoundTransitionComponent
     ],
     imports: [
         BrowserModule,
