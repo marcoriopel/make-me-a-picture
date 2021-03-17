@@ -30,6 +30,7 @@ class LobbyViewModel:  ViewModel() {
             val gameRepository = GameRepository.getInstance()!!
             gameRepository.setIsPlayerDrawing(it)
             gameRepository.gameId = lobbyRepository.currentListenLobby
+            _lobbyPlayers.value.players.
         })
 
         // Initialize Singleton

@@ -38,6 +38,7 @@ class GameRepository {
     lateinit var socket: io.socket.client.Socket
     var gameId: String? = null
     var drawingName: String? = null
+    var team = 0
 
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
