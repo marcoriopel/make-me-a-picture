@@ -68,6 +68,7 @@ export class VirtualPlayer {
 
     async startDrawing() {
         this.isVPlayerTurn = true;
+        await this.wait(500)
         for(let stroke of this.currentDrawing.strokes){
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
@@ -113,6 +114,7 @@ export class VirtualPlayer {
     }
 
     delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))
+    wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
     private calculateDrawingSpeed(): number {
         let drawingSpeed = 0;
@@ -121,10 +123,10 @@ export class VirtualPlayer {
             case Difficulty.EASY:
                 drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.MEDIUM:
                 drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
                 break;
-            case Difficulty.EASY:
+            case Difficulty.HARD:
                 drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
                 break;
         }

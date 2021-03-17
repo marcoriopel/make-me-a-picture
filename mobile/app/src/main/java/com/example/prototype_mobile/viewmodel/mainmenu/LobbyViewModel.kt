@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.CanvasRepository
 import com.example.prototype_mobile.model.game.GameRepository
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,9 @@ class LobbyViewModel:  ViewModel() {
             gameRepository.setIsPlayerDrawing(it)
             gameRepository.gameId = lobbyRepository.currentListenLobby
         })
+
+        // Initialize Singleton
+        GameRepository.getInstance()
     }
 
     fun addVirtualPlayer(team: Int) {

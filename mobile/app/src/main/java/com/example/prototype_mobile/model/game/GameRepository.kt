@@ -5,7 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
 import com.example.prototype_mobile.model.SocketOwner
 import com.google.gson.Gson
+import io.socket.emitter.Emitter
+import org.json.JSONObject
 
+const val DRAWING_NAME_EVENT = "drawingName"
+const val SCORE_EVENT = "score"
 const val GUESS_DRAWING_EVENT = "guessDrawing"
 
 class GameRepository {
@@ -34,6 +38,19 @@ class GameRepository {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    var drawingName: String? = null
+    var score: IntArray = intArrayOf(0,0)
+
+    // Listener
+    private var onDrawingNameEvent = Emitter.Listener {
+       drawingName = JSONObject(it[0].toString()).getString("drawingName")
+    }
+
+    private  var onScoreEvent = Emitter.Listener {
+        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+
+    }
+
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
     }
@@ -51,5 +68,6 @@ class GameRepository {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = true
         socket = SocketOwner.getInstance()!!.socket
+        socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
     }
 }

@@ -61,4 +61,8 @@ export class GameSearchComponent implements OnInit {
     });
   }
 
+  onRefreshClick() : void {
+    this.searchGameService.fetchGameList();
+  }
+
 }
