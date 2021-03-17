@@ -1,6 +1,7 @@
 <app-navbar cid="nav-bar"></app-navbar>
 
 <div class="lobby">
+    <span class="material-icons leave-button" (click)="leaveLobby()">exit_to_app</span>
     <div class="title-div">
         <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
         <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 

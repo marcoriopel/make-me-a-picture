@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BLACK, INITIAL_LINE_WIDTH } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '../drawing/drawing.service';
 import { SocketService } from '../socket/socket.service';
 
@@ -27,6 +28,7 @@ export class GameService {
   drawingName: string = "";
   teams: Teams;
   isGuessing: boolean = false;
+  isUserTeamGuessing: boolean = false;
   currentUserTeam: number;
   timer: number = 69;
 
@@ -50,7 +52,6 @@ export class GameService {
           this.currentUserTeam = player.team;
         }
       });
-      console.log(this.teams);
       this.router.navigate(['/game']);
     })
 
@@ -60,26 +61,24 @@ export class GameService {
 
     this.socketService.bind('drawingName', (data: any) => {
       this.drawingName = data.drawingName;
-      console.log('Socket: drawingName');
-      console.log(data);
     })
 
     this.socketService.bind('guessesLeft', (data: any) => {
-      console.log('Socket: guessesLeft');
-      console.log(data);
       if (this.username) {
-        if (data.guessesLeft[this.currentUserTeam] == 1 && this.drawingPlayer != this.username) {
-          this.isGuessing = true;
+        if (data.guessesLeft[this.currentUserTeam] == 1) {
+          this.isUserTeamGuessing = true;
         } else {
-          this.isGuessing = false;
+          this.drawingPlayer = "";
+          this.isUserTeamGuessing = false;
         }
       }
+      this.updateGuessingStatus();
     })
+
+
 
     this.socketService.bind('guessCallback', (data: any) => {
       //TODO handle guessCallback, data contains { "isCorrectGuess": boolean, "guessingPlayer": string }
-      console.log('Socket: guessCallback');
-      console.log(data);
     })
 
     this.socketService.bind('newRound', (data: any) => {
@@ -88,18 +87,25 @@ export class GameService {
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
-      console.log('Socket: newRound');
-      console.log(data);
+      this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
+      this.drawingService.color = BLACK;
+      this.updateGuessingStatus();
     })
 
     this.socketService.bind('endGame', (data: any) => {
       //TODO handle endGame, data contains { "finalScore": number[] }
-      console.log('Socket: endGame');
-      console.log(data);
     })
 
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
     })
+  }
+
+  updateGuessingStatus() : void {
+      if(this.isUserTeamGuessing && this.drawingPlayer != this.username){
+        this.isGuessing = true;
+      } else {
+        this.isGuessing = false;
+      }
   }
 }
