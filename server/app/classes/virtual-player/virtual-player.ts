@@ -66,11 +66,10 @@ export class VirtualPlayer {
 
     stopDrawing() {
         this.isVPlayerTurn = false;
-        this.nextHintIndex = 0;
     }
 
     async startDrawing() {
-        this.nextHintIndex = 0;;
+        this.nextHintIndex = 0;
         this.isVPlayerTurn = true;
         await this.wait(500)
         for (let stroke of this.currentDrawing.strokes) {
