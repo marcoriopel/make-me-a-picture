@@ -28,9 +28,34 @@ export class ChatModel {
         }
     }
 
+    async getChatsList() {
+        try {
+            return await this.databaseModel.client.db("database").collection("chat-names").find({}, { projection: { _id: 0 } }).toArray();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
     async addChatMessage(chatRoomId, message, username, timestamp, avatar) {
         try {
             await this.databaseModel.client.db("chats").collection(chatRoomId).insertOne({ "username": username, "message": message, "timestamp": timestamp, "avatar": avatar });
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async createChat(chatRoomId) {
+        try {
+            await this.databaseModel.client.db("chats").createCollection(chatRoomId);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async linkChatNameToId(chatRoomId, chatName) {
+        try {
+            return await this.databaseModel.client.db("database").collection("chat-names").insertOne({ "chatId": chatRoomId, "chatName": chatName });
         } catch (e) {
             throw e;
         }

@@ -61,9 +61,9 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 try {
-                    socket.leave("tmp"+request.oldLobbyId);
+                    socket.leave("tmp" + request.oldLobbyId);
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
-                        socket.join('tmp'+request.lobbyId);
+                        socket.join('tmp' + request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
@@ -79,7 +79,7 @@ export class SocketConnectionService {
                 }
                 try {
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
-                        socket.leave("tmp"+request.lobbyId);
+                        socket.leave("tmp" + request.lobbyId);
                         socket.join(request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
@@ -118,10 +118,24 @@ export class SocketConnectionService {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
+
+            socket.on('joinChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                socket.join(request.chatId);
+            });
+
+            socket.on('leaveChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                socket.leave(request.chatId);
+            });
         });
     }
 
-    leaveRoom(socket: socketio.Socket, roomId: string){
+    leaveRoom(socket: socketio.Socket, roomId: string) {
         try {
             socket.leave(roomId);
         } catch (err) {

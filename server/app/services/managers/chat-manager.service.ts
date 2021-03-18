@@ -8,6 +8,8 @@ import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { SocketService } from '../sockets/socket.service';
+import { v4 as uuid } from 'uuid';
+
 
 @injectable()
 export class ChatManagerService {
@@ -27,7 +29,7 @@ export class ChatManagerService {
         let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
         let timeStamp: string = hours + ":" + minutes + ":" + seconds;
         this.socketService.getSocket().to(message.chatId).emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
-        if(message.chatId == 'General'){
+        if (message.chatId == 'General') {
             this.socketService.getSocket().emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
         }
     }
@@ -39,7 +41,7 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"]});
+                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"] });
             }
             next(chatNames);
         }
@@ -63,6 +65,27 @@ export class ChatManagerService {
         }
     }
 
+    async getChatHistory(chatId: any, res: Response, next: NextFunction) {
+        try {
+            const chatHistory = await this.chatModel.getChatHistory(chatId);
+            next(chatHistory);
+        }
+        catch (e) {
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+    }
+
+    async getAllChats(res: Response, next: NextFunction) {
+        try {
+            const chats = await this.chatModel.getChatsList();
+            next(chats);
+        }
+        catch (e) {
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+
+    }
+
     async addMessageToDB(user: BasicUser, message: IncomingMessage, date: Date) {
         const timestamp = date.getTime();
         try {
@@ -71,6 +94,19 @@ export class ChatManagerService {
         catch (e) {
             console.log(e);
         }
+    }
+
+    async createChat(chatName: string, res: Response, next: NextFunction) {
+        try {
+            const chatId = uuid();
+            await this.chatModel.linkChatNameToId(chatId, chatName);
+            await this.chatModel.createChat(chatId);
+            next(chatId);
+        }
+        catch (e) {
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+
     }
 
 }
