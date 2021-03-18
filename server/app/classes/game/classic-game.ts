@@ -292,12 +292,7 @@ export class ClassicGame extends Game {
     }
 
     dispatchDrawingEvent(user: BasicUser, event: DrawingEvent): void {
-        if (user.username == this.drawingPlayer[this.drawingTeam].username) {
-            this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": event });
-        }
-        else {
-            throw new Error("It is not your turn to draw");
-        }
+        this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": event });
     }
 
     setGuesses(): void {
