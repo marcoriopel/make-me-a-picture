@@ -21,12 +21,12 @@ class ColorFragment : Fragment() {
 
     private lateinit var binding: FragmentColorBinding
     var primaryColor = Color.rgb(0, 0, 0)
-    var colorList:IntArray = intArrayOf(
+    var colorList: IntArray = intArrayOf(
         Color.rgb(235, 87, 87),
         Color.rgb(242, 153, 74),
         Color.rgb(242, 201, 76),
         Color.rgb(33, 150, 83),
-        Color.rgb(39, 174,96),
+        Color.rgb(39, 174, 96),
         Color.rgb(47, 128, 237),
         Color.rgb(86, 204, 242),
         Color.rgb(155, 81, 224),
@@ -56,7 +56,7 @@ class ColorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentColorBinding.bind(view)
-        binding.primaryColor.setOnClickListener{
+        binding.primaryColor.setOnClickListener {
             openColorPicker()
         }
 
@@ -71,9 +71,9 @@ class ColorFragment : Fragment() {
         secondaryButtons.add(binding.secondary8)
         secondaryButtons.add(binding.secondary9)
         var i = 0
-        for(button in secondaryButtons) {
+        for (button in secondaryButtons) {
             button.setColorFilter(colorList[i])
-            button.setOnClickListener{
+            button.setOnClickListener {
                 swapColor(button)
             }
             i++
@@ -81,9 +81,12 @@ class ColorFragment : Fragment() {
     }
 
     private fun openColorPicker() {
-        activity?.let{
-            com.jaredrummler.android.colorpicker.ColorPickerDialog.newBuilder().setColor(primaryColor)
-                .setAllowPresets(false).setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM).setDialogTitle(R.string.colorPickerToolTitle).show(it)
+        activity?.let {
+            com.jaredrummler.android.colorpicker.ColorPickerDialog.newBuilder()
+                .setColor(primaryColor)
+                .setAllowPresets(false)
+                .setDialogType(com.jaredrummler.android.colorpicker.ColorPickerDialog.TYPE_CUSTOM)
+                .setDialogTitle(R.string.colorPickerToolTitle).show(it)
 
         }
     }
@@ -92,7 +95,7 @@ class ColorFragment : Fragment() {
         binding.primaryColor.setColorFilter(color)
     }
 
-    private fun swapColor(button: ImageView){
+    private fun swapColor(button: ImageView) {
         val index = secondaryButtons.indexOf(button)
         binding.primaryColor.setColorFilter(colorList[index])
         viewModel.setColor(colorList[index])
