@@ -43,6 +43,7 @@ class EndGameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_end_game, container, false)
     }
 
@@ -52,10 +53,11 @@ class EndGameFragment : Fragment() {
         val teamScore = sharedViewModel.teamScore.value
         setTextLabel(teamScore!![0], teamScore[1])
         setScore(teamScore)
-
         binding.goToMenu.setOnClickListener {
-            goToMenu()
+            val intent = Intent(view.context, MainMenuActivity::class.java)
+            requireContext().startActivity(intent)
         }
+
 
 
 
@@ -76,10 +78,7 @@ class EndGameFragment : Fragment() {
         binding.score.text =  teamScore[0].toString() + "   -   " + teamScore[1].toString()
     }
 
-    fun goToMenu(){
-        val intent = Intent(activity, MainMenuActivity::class.java)
-        startActivity(intent)
-    }
+
 
     companion object {
         /**
