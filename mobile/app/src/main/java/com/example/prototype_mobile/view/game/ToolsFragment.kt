@@ -42,8 +42,6 @@ class ToolsFragment : Fragment() {
         binding.buttonEraser.setOnClickListener { eraser() }
         binding.buttonGrid.setOnClickListener {
             toggleGrid()
-            //To simulate endGameEvent
-//            (activity as GameActivity).endGameEvent()
             }
         binding.buttonUndo.setOnClickListener { viewModel.undo() }
         binding.buttonRedo.setOnClickListener { viewModel.redo() }

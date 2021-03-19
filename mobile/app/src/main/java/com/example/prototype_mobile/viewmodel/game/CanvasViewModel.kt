@@ -111,6 +111,12 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             EVENT_REDO ->{
                 redo()
             }
+            EVENT_CLEAR ->{
+                pathStack.clear()
+                redoStack.clear()
+                curPath.reset()
+                _newCurPath.value = curPath
+            }
         }
     }
 
