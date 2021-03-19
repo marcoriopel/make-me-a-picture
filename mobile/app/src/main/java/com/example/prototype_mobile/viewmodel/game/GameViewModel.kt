@@ -9,6 +9,9 @@ class GameViewModel():ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
+    private val _teamScore = MutableLiveData<IntArray>()
+    val teamScore: LiveData<IntArray> = _teamScore
+
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
@@ -24,6 +27,8 @@ class GameViewModel():ViewModel() {
 
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
+
+            _teamScore.value = intArrayOf(0,0)
         }
     }
 }
