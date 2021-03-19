@@ -1,12 +1,15 @@
 package com.example.prototype_mobile.model.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
+import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.GuessesLeft
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
+import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
@@ -42,6 +45,9 @@ class GameRepository {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    private val _teamScore = MutableLiveData<IntArray>()
+    var teamScore: LiveData<IntArray> = _teamScore
+
     var drawingName: String? = null
     var score: IntArray = intArrayOf(0,0)
 
@@ -53,8 +59,8 @@ class GameRepository {
     }
 
     private  var onScoreEvent = Emitter.Listener {
-        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
-
+        val test2 = gson.fromJson(it[0].toString(), Score::class.java)
+        Log.e("test", "Test")
     }
 
     private var onNewRound = Emitter.Listener {
@@ -75,8 +81,10 @@ class GameRepository {
 
 
     fun guessDrawing(guess: String) {
+        val opts = IO.Options()
+        opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
         val guessEvent = GuessEvent(this.gameId!!, guess)
-        socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent))
+        socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
 
     init {
@@ -84,8 +92,8 @@ class GameRepository {
         _isPlayerGuessing.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(SCORE_EVENT, onScoreEvent)
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
-
     }
 }

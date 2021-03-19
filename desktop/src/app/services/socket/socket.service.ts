@@ -29,6 +29,9 @@ export class SocketService {
       this.socket = io(url, {
         extraHeaders: {
           "authorization": jwt
+        },
+        query: {
+          "authorization": jwt
         }
       });
     }

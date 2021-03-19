@@ -28,17 +28,18 @@ data class GameListResult(val success: MutableList<Game>? = null, val error: Int
 data class GameName(val name:String): GameCreationMergeData()
 data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 
-//Game creation
+// Game creation
 data class CreateGame(val gameType: GameType?, val gameName: String?, val gameDifficulty: GameDifficulty?)
 
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)
-
 sealed class GameCreationMergeData
+
+// Data class for the Game
+data class Score(val score: IntArray)
+
 // Data class for the drawing
-data class Coord(val x: Float, val y: Float)
-data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event()
