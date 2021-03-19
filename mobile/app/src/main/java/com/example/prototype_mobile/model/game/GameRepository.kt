@@ -11,6 +11,7 @@ import org.json.JSONObject
 const val DRAWING_NAME_EVENT = "drawingName"
 const val SCORE_EVENT = "score"
 const val GUESS_DRAWING_EVENT = "guessDrawing"
+const val END_GAME_EVENT = "endGame"
 
 class GameRepository {
     companion object {
@@ -41,13 +42,23 @@ class GameRepository {
     var drawingName: String? = null
     var score: IntArray = intArrayOf(0,0)
 
+    private val _isGameEnded=  MutableLiveData<Boolean>()
+    val isGameEnded: LiveData<Boolean> = _isGameEnded
+
     // Listener
     private var onDrawingNameEvent = Emitter.Listener {
-       drawingName = JSONObject(it[0].toString()).getString("drawingName")
+        drawingName = JSONObject(it[0].toString()).getString("drawingName")
     }
 
     private  var onScoreEvent = Emitter.Listener {
         score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+
+    }
+    private var onEndGameEvent = Emitter.Listener {
+        println("game ended score")
+        _isGameEnded.value = true
+        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
+
 
     }
 
@@ -69,5 +80,7 @@ class GameRepository {
         _isPlayerGuessing.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(END_GAME_EVENT, onEndGameEvent)
+        _isGameEnded.value = false
     }
 }
