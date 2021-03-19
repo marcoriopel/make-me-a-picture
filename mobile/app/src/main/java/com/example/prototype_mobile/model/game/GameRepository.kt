@@ -73,8 +73,8 @@ class GameRepository {
         CanvasRepository.getInstance()!!.resetCanvas()
     }
     private var onEndGameEvent = Emitter.Listener {
-        println("game ended score")
-        _isGameEnded.value = true
+        println("game ended")
+        _isGameEnded.postValue(true)
 
     }
 

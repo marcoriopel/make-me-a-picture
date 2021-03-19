@@ -94,7 +94,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         })
 
         gameViewModel.isGameEnded.observe(this, Observer {
-            endGameEvent()
+            if(gameViewModel.isGameEnded.value!! && gameViewModel.isGameEnded.value != null)
+                endGameEvent()
         })
 
 
