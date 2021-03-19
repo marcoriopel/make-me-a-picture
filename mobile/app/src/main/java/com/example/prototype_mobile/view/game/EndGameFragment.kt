@@ -54,8 +54,9 @@ class EndGameFragment : Fragment() {
         setTextLabel(teamScore!![0], teamScore[1])
         setScore(teamScore)
         binding.goToMenu.setOnClickListener {
-            val intent = Intent(activity, MainMenuActivity::class.java)
-            requireContext().startActivity(intent)
+            val openMainActivity =  Intent(activity, MainMenuActivity::class.java)
+            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(openMainActivity);
         }
 
 
