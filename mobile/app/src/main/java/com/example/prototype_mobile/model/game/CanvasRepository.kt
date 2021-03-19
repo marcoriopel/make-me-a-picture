@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
@@ -15,6 +16,7 @@ const val EVENT_TOUCH_MOVE = 1
 const val EVENT_TOUCH_UP = 2
 const val EVENT_UNDO = 3
 const val EVENT_REDO = 4
+const val EVENT_CLEAR = 5
 
 class CanvasRepository {
     companion object {
@@ -136,6 +138,10 @@ class CanvasRepository {
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
 
+    }
+
+    fun resetCanvas() {
+        _drawingEvent.postValue(DrawingEvent(EVENT_CLEAR, null, "clear"))
     }
 
 }

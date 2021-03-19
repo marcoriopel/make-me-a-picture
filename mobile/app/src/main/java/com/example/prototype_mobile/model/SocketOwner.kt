@@ -5,7 +5,7 @@ import com.example.prototype_mobile.model.connection.login.LoginRepository
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
-import java.util.*
+
 
 class SocketOwner() {
     companion object {
@@ -45,6 +45,5 @@ class SocketOwner() {
         socket.connect()
         socket.on("error", onErrorEvent)
     }
-
 
 }

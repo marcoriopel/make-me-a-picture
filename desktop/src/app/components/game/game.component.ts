@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { DrawingEvent, drawingEventType, MouseDown, Vec2 } from '@app/classes/game';
 import { PencilService } from '@app/services/tools/pencil.service';
