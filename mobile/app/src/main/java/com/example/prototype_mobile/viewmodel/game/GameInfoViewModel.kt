@@ -3,6 +3,7 @@ package com.example.prototype_mobile.viewmodel.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.prototype_mobile.Players
 import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.Timer
 import com.example.prototype_mobile.model.game.GameRepository
@@ -26,4 +27,11 @@ class GameInfoViewModel : ViewModel() {
         }
     }
 
+    fun getTeam1(): MutableList<Players> {
+        return gameRepo.team1
+    }
+
+    fun getTeam2(): MutableList<Players> {
+        return gameRepo.team2
+    }
 }

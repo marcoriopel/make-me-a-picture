@@ -3,10 +3,7 @@ package com.example.prototype_mobile.model.game
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.GuessEvent
-import com.example.prototype_mobile.Score
-import com.example.prototype_mobile.GuessesLeft
-import com.example.prototype_mobile.Timer
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
@@ -41,6 +38,9 @@ class GameRepository {
     val gson: Gson = Gson()
     var gameId: String? = null
 
+    var team1: MutableList<Players> = mutableListOf()
+    var team2: MutableList<Players> = mutableListOf()
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -57,6 +57,8 @@ class GameRepository {
 
     // Listener
     var team = 0
+
+
 
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")

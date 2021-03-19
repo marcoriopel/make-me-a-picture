@@ -30,8 +30,6 @@ class GameInfoFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(GameInfoViewModel::class.java)
-        // TODO: Use the ViewModel
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,13 +38,20 @@ class GameInfoFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(GameInfoViewModel::class.java)
         binding = FragmentGameInfoBinding.bind(view)
 
+        val team1 = viewModel.getTeam1()
+        binding.player1.text = team1[0].username
+        binding.player2.text = team1[1].username
+        val team2 = viewModel.getTeam2()
+        binding.player3.text = team2[0].username
+        binding.player4.text = team2[1].username
+
         viewModel.timer.observe(viewLifecycleOwner, Observer {
             binding.time.text = it.timer.toString()
         })
 
         viewModel.teamScore.observe(viewLifecycleOwner, Observer {
-            binding.scoreTeam1.text = it.score[0].toString()
-            binding.scoreTeam2.text = it.score[1].toString()
+            binding.scoreTeam1.text = it.score[1].toString()
+            binding.scoreTeam2.text = it.score[0].toString()
         })
     }
 
