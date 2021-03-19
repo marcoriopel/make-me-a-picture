@@ -49,7 +49,7 @@ export class SocketConnectionService {
                     drawingEvent = JSON.parse(drawingEvent)
                 }
                 try {
-                    const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     this.gameManagerService.dispatchDrawingEvent(user, drawingEvent);
                 } catch (err) {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
@@ -109,9 +109,9 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 try {
-                    this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess);
+                    this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess)
                 } catch (err) {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }

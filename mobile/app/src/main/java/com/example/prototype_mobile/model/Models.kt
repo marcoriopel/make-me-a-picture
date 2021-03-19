@@ -20,6 +20,7 @@ data class LoggedInUser(val token: String, val username: String)
 data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies
+data class LobbyId(val lobbyId: String)
 data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
@@ -27,19 +28,22 @@ data class GameListResult(val success: MutableList<Game>? = null, val error: Int
 data class GameName(val name:String): GameCreationMergeData()
 data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 
-//Game creation
+// Game creation
 data class CreateGame(val gameType: GameType?, val gameName: String?, val gameDifficulty: GameDifficulty?)
 
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)
-
 sealed class GameCreationMergeData
+
+// Data class for the Game
+data class Score(val score: IntArray)
+
 // Data class for the drawing
-data class Coord(val x: Float, val y: Float)
-data class Stroke(val path: MutableList<Coord>, val nineWidth: Float, val lineColor: String)
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event()
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()
+data class GuessEvent(val gameId: String, val guess: String)
+data class GuessesLeft(val guessesLeft: Array<Int>)

@@ -1,5 +1,9 @@
 <mat-toolbar>
-    <span>Fais moi un dessin</span>
+    <div id="logo-container" routerLink="/home">
+      <img src="./assets/img/LogoLight.png">
+      <span>Fais moi un dessin</span>      
+    </div>
+
     <span class="example-spacer"></span>
     <button mat-button (click)="logout()">
       <span>Déconnexion</span>
