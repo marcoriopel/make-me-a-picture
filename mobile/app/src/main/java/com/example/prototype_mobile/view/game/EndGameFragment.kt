@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
@@ -58,6 +59,7 @@ class EndGameFragment : Fragment() {
         binding.goToMenu.setOnClickListener {
             goToMenu()
         }
+
 
 
     }

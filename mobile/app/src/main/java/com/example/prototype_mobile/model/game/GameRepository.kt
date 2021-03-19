@@ -57,8 +57,6 @@ class GameRepository {
     private var onEndGameEvent = Emitter.Listener {
         println("game ended score")
         _isGameEnded.value = true
-        score = JSONObject(it[0].toString()).getString("drawingName") as IntArray
-
 
     }
 

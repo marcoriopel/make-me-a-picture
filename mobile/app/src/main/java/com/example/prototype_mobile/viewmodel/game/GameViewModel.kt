@@ -15,6 +15,9 @@ class GameViewModel():ViewModel() {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    private val _isGameEnded = MutableLiveData<Boolean>()
+    val isGameEnded:LiveData<Boolean> = _isGameEnded
+
     val gameRepository = GameRepository.getInstance()!!
     init {
         _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
@@ -30,5 +33,10 @@ class GameViewModel():ViewModel() {
 
             _teamScore.value = intArrayOf(0,0)
         }
+        gameRepository.isGameEnded.observeForever{
+            _isGameEnded.value = it
+        }
+
+
     }
 }
