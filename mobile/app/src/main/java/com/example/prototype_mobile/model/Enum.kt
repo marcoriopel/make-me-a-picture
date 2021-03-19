@@ -29,5 +29,5 @@ enum class Tool(number: Int){
 }
 
 enum class DrawingEventType(type: Int) {
-    TOUCHDOWN(0), TOUCHMOVE(1), TOUCHUP(2), UNDO(3), REDO(4)
+    TOUCHDOWN(0), TOUCHMOVE(1), TOUCHUP(2), UNDO(3), REDO(4), CLEAR(5)
 }
