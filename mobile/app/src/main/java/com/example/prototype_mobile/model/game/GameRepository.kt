@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
 import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.GuessesLeft
+import com.example.prototype_mobile.Timer
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
@@ -18,6 +19,7 @@ const val SCORE_EVENT = "score"
 const val GUESS_DRAWING_EVENT = "guessDrawing"
 const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
+const val TIMER_EVENT = "timer"
 
 class GameRepository {
     companion object {
@@ -45,11 +47,13 @@ class GameRepository {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
-    private val _teamScore = MutableLiveData<IntArray>()
-    var teamScore: LiveData<IntArray> = _teamScore
+    private val _teamScore = MutableLiveData<Score>()
+    var teamScore: LiveData<Score> = _teamScore
+
+    private val _timer = MutableLiveData<Timer>()
+    var timer: LiveData<Timer> = _timer
 
     var drawingName: String? = null
-    var score: IntArray = intArrayOf(0,0)
 
     // Listener
     var team = 0
@@ -59,12 +63,15 @@ class GameRepository {
     }
 
     private  var onScoreEvent = Emitter.Listener {
-        val test2 = gson.fromJson(it[0].toString(), Score::class.java)
-        Log.e("test", "Test")
+        _teamScore.postValue(gson.fromJson(it[0].toString(), Score::class.java))
+    }
+
+    private  var onTimerEvent = Emitter.Listener {
+        _timer.postValue(gson.fromJson(it[0].toString(), Timer::class.java))
     }
 
     private var onNewRound = Emitter.Listener {
-        var playerDrawing = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+        val playerDrawing = JSONObject(it[0].toString()).getString("newDrawingPlayer")
         _isPlayerDrawing.postValue(playerDrawing.equals(LoginRepository.getInstance()!!.user!!.username))
         CanvasRepository.getInstance()!!.resetCanvas()
     }
@@ -92,6 +99,7 @@ class GameRepository {
         _isPlayerGuessing.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(TIMER_EVENT, onTimerEvent)
         socket.on(SCORE_EVENT, onScoreEvent)
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
