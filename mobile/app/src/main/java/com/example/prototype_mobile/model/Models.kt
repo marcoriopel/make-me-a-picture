@@ -37,6 +37,7 @@ data class Players(val username: String, val avatar: Int, val team: Int)
 sealed class GameCreationMergeData
 
 // Data class for the Game
+data class Score(val score: IntArray)
 
 // Data class for the drawing
 data class PaintedPath(val path: Path, val paint: Paint)

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
+import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
@@ -53,9 +54,8 @@ class GameRepository {
     }
 
     private  var onScoreEvent = Emitter.Listener {
-        val test = JSONObject(it[0].toString()).getString("score")
+        val test2 = gson.fromJson(it[0].toString(), Score::class.java)
         Log.e("test", "Test")
-
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
@@ -78,5 +78,6 @@ class GameRepository {
         _isPlayerGuessing.value = true
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(SCORE_EVENT, onScoreEvent)
     }
 }
