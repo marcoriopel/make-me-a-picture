@@ -3,7 +3,9 @@ package com.example.prototype_mobile.model.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.GuessEvent
+import com.example.prototype_mobile.GuessesLeft
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
@@ -11,6 +13,8 @@ import org.json.JSONObject
 const val DRAWING_NAME_EVENT = "drawingName"
 const val SCORE_EVENT = "score"
 const val GUESS_DRAWING_EVENT = "guessDrawing"
+const val NEW_ROUND_EVENT = "newRound"
+const val GUESSES_LEFT_EVENT = "guessesLeft"
 
 class GameRepository {
     companion object {
@@ -42,6 +46,8 @@ class GameRepository {
     var score: IntArray = intArrayOf(0,0)
 
     // Listener
+    var team = 0
+
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
     }
@@ -51,13 +57,22 @@ class GameRepository {
 
     }
 
+    private var onNewRound = Emitter.Listener {
+        var playerDrawing = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+        _isPlayerDrawing.postValue(playerDrawing.equals(LoginRepository.getInstance()!!.user!!.username))
+        CanvasRepository.getInstance()!!.resetCanvas()
+    }
+
+    private var onGuessesLeft = Emitter.Listener {
+        val gson: Gson = Gson()
+        val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
+        _isPlayerGuessing.postValue(guessesLeft.guessesLeft[team] > 0)
+    }
+
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
     }
 
-    fun setIsPlayerGuessing(isGuessing: Boolean) {
-        _isPlayerGuessing.value = isGuessing
-    }
 
     fun guessDrawing(guess: String) {
         val guessEvent = GuessEvent(this.gameId!!, guess)
@@ -65,9 +80,12 @@ class GameRepository {
     }
 
     init {
-        _isPlayerDrawing.value = true
+        _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
+        socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
+        socket.on(NEW_ROUND_EVENT, onNewRound)
+
     }
 }

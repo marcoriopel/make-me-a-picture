@@ -69,8 +69,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .replace(R.id.containerColor, ColorFragment())
                     .commitNow()
                 colorFragment =  (findColorFragment() as ColorFragment?)!!
+
             } else {
-                // TODO: Add fragments to guess
+                for (fragment in supportFragmentManager.fragments) {
+                    if(checkIfDrawingFragment(fragment)) {
+                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                    }
+                }
             }
         })
 
@@ -80,12 +85,19 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
             } else {
-                // TODO: Add fragments to guess
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is GuessFragment) {
+                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                    }
+                }
             }
         })
 
 
 
+    }
+    fun checkIfDrawingFragment(fragment: Fragment): Boolean {
+        return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
     }
 
     //override must be in activity

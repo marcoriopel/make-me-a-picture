@@ -1,9 +1,11 @@
 package com.example.prototype_mobile.model
 
-import android.util.Log
-import com.google.gson.Gson
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import io.socket.client.IO
 import io.socket.emitter.Emitter
+import io.socket.engineio.client.Transport
+import java.util.*
+
 
 class SocketOwner() {
     companion object {
@@ -34,6 +36,5 @@ class SocketOwner() {
         }
         socket.connect()
     }
-
 
 }
