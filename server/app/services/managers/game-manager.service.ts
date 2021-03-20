@@ -19,7 +19,7 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 export class GameManagerService {
 
     static games: Map<string, Game> = new Map<string, Game>();
-    
+
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.DrawingsService) private drawingService: DrawingsService,) {
@@ -79,12 +79,12 @@ export class GameManagerService {
         next();
     }
 
-    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent) {
         if (this.gameExist(event.gameId)) {
-            const game: Game =  GameManagerService.games.get(event.gameId);
+            const game: Game = GameManagerService.games.get(event.gameId);
             (game as ClassicGame).dispatchDrawingEvent(user, event);
         }
-        else{
+        else {
             throw new Error("This game does not exist");
         }
     }
@@ -99,5 +99,13 @@ export class GameManagerService {
         }
         let game = GameManagerService.games.get(gameId);
         game.guessDrawing(username, guess);
+    }
+
+    requestHint(gameId: string, user: BasicUser) {
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            throw new Error("Game was not found");
+        }
+        let game = GameManagerService.games.get(gameId);
+        game.requestHint(user);
     }
 }
