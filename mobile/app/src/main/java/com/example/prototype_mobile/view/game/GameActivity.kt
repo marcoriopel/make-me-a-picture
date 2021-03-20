@@ -131,5 +131,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     }
 
+    //maybe we will need to
+    override fun onRestart() {
+        super.onRestart()
+        println("Restart")
+
+    }
+
 
 }

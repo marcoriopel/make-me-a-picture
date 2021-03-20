@@ -1,21 +1,20 @@
 package com.example.prototype_mobile.view.game
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.Nullable
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.viewmodel.game.GameViewModel
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
-import org.jetbrains.anko.editText
+import com.example.prototype_mobile.viewmodel.game.GameViewModel
 
 
 private const val ARG_PARAM1 = "param1"
@@ -54,9 +53,11 @@ class EndGameFragment : Fragment() {
         setTextLabel(teamScore!![0], teamScore[1])
         setScore(teamScore)
         binding.goToMenu.setOnClickListener {
-            val openMainActivity =  Intent(activity, MainMenuActivity::class.java)
-            openMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(openMainActivity);
+            val intent =  Intent(activity, MainMenuActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(intent)
+            (context as Activity).finish()
+
         }
 
 

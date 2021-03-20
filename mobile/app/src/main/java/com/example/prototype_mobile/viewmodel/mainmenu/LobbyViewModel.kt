@@ -77,4 +77,8 @@ class LobbyViewModel:  ViewModel() {
             }
         }
     }
+    fun resetData() {
+        lobbyRepository.resetData()
+
+    }
 }
