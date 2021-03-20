@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.model.game.GameRepository
+import java.lang.Exception
 
 class GameViewModel():ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
@@ -11,6 +12,9 @@ class GameViewModel():ViewModel() {
 
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
+
+    private val _transitionMessage = MutableLiveData<String>()
+    val transitionMessage: LiveData<String> = _transitionMessage
 
     val gameRepository = GameRepository.getInstance()!!
     init {
@@ -25,5 +29,20 @@ class GameViewModel():ViewModel() {
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
         }
+
+        gameRepository.transition.observeForever {
+            if (true) {
+                val msg = when (it.state) {
+                    0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
+                    1 -> "Droit de réplique!"
+                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!";
+                    else -> throw Exception("Transition state error")
+                }
+                _transitionMessage.postValue(msg)
+            }
+        }
     }
 }
+
+
+

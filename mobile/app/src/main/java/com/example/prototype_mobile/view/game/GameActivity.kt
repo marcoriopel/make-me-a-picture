@@ -2,6 +2,8 @@ package com.example.prototype_mobile.view.game
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -87,6 +89,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     }
                 }
             }
+        })
+
+        gameViewModel.transitionMessage.observe(this, Observer {
+            Toast.makeText(applicationContext, "test", Toast.LENGTH_LONG).show()
+            Log.e("toast", "toast")
         })
 
     }
