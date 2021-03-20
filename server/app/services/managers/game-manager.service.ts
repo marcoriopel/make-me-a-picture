@@ -14,6 +14,7 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { CoopGame } from '@app/classes/game/coop-game';
 import { CoopLobby } from '@app/classes/lobby/coop-lobby';
 import { SoloLobby } from '@app/classes/lobby/solo-lobby';
+import { SoloGame } from '@app/classes/game/solo-game';
 
 
 

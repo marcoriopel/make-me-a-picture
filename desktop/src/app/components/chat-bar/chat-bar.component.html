@@ -8,6 +8,8 @@
                 <p>{{conversation.name}}</p>
             </div>
         </div>
+        <button (click)="this.joinChat('room1')">join chat 1</button>
+        <button (click)="this.leaveChat('room1')">leave chat 1</button>
     </div>
 
     <app-chat class="chat"></app-chat>

@@ -82,4 +82,12 @@ export class ChatService {
       this.chatList[this.index]["messages"].push(msg);
     });
   }
+
+  joinChat(chatId: string): void {
+    this.socketService.emit('joinChatRoom', { "chatId": chatId })
+  }
+
+  leaveChat(chatId: string): void {
+    this.socketService.emit('leaveChatRoom', { "chatId": chatId })
+  }
 }

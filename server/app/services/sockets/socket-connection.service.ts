@@ -12,6 +12,7 @@ import { TokenService } from '../token.service';
 import { SocketService } from './socket.service';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { GameManagerService } from '../managers/game-manager.service';
+import { AuthService } from '../auth.service';
 
 @injectable()
 export class SocketConnectionService {
@@ -20,6 +21,7 @@ export class SocketConnectionService {
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
+        @inject(TYPES.AuthService) private authService: AuthService,
         @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
@@ -121,7 +123,7 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.headers.authorization);
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 try {
                     this.gameManagerService.requestHint(request.gameId, user);
                 } catch (err) {
@@ -133,14 +135,20 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.join(request.chatId);
+                this.authService.addUserToChat(user.username, request.chatId)
+                console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
 
             socket.on('leaveChatRoom', (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.leave(request.chatId);
+                this.authService.removeUserFromChat(user.username, request.chatId)
+                console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
         });
     }
