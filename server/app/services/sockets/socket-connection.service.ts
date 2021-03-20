@@ -128,6 +128,20 @@ export class SocketConnectionService {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
+
+            socket.on('joinChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                socket.join(request.chatId);
+            });
+
+            socket.on('leaveChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                socket.leave(request.chatId);
+            });
         });
     }
 
