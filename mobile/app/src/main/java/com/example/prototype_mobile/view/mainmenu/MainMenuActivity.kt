@@ -60,6 +60,7 @@ class MainMenuActivity : AppCompatActivity() {
         super.onRestart()
         println("On restart")
         removeLobbyFromStack()
+        //Todo reset specific gameData here or in the intent of EndGameFragment
     }
     fun removeLobbyFromStack() {
 
