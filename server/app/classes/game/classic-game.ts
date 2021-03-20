@@ -101,7 +101,6 @@ export class ClassicGame extends Game {
     }
 
     guessDrawing(username: string, guess: string): void {
-        console.log("Guessed " + guess)
         if (this.drawingPlayer[this.drawingTeam].username == username)
             throw Error("Drawing player can not guess his own word")
         if (this.teams[this.drawingTeam].get(username)) {
@@ -125,9 +124,9 @@ export class ClassicGame extends Game {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             const drawingEvent: DrawingEvent = {
                 eventType: drawingEventType.MOUSEUP,
-                event: {x:0, y:0},
+                event: { x: 0, y: 0 },
                 gameId: this.id,
-            } 
+            }
             this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             if (this.drawingPlayer[this.drawingTeam].isVirtual) {
@@ -163,9 +162,9 @@ export class ClassicGame extends Game {
         }
         const drawingEvent: DrawingEvent = {
             eventType: drawingEventType.MOUSEUP,
-            event: {x:0, y:0},
+            event: { x: 0, y: 0 },
             gameId: this.id,
-        } 
+        }
         this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.setupNextRound();
@@ -324,5 +323,22 @@ export class ClassicGame extends Game {
                 --this.timerCount;
             }
         }, 1000);
+    }
+
+    requestHint(user: BasicUser): void {
+        if (this.drawingPlayer[this.drawingTeam].username == user.username)
+            throw Error("Drawing player can not guess his own word");
+        if (this.teams[this.drawingTeam].get(user.username)) {
+            if (!this.guessesLeft[this.drawingTeam]) {
+                throw Error("It's not your turn to guess");
+            }
+            this.vPlayers[this.drawingTeam].sendNextHint();
+        }
+        else if (this.teams[this.getOpposingTeam()].get(user.username)) {
+            throw Error("Users from opposing team cannot ask for hints");
+        }
+        else {
+            throw Error("User is not part of the game");
+        }
     }
 }
