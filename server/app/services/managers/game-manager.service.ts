@@ -13,6 +13,7 @@ import { DrawingsService } from '@app/services/drawings.service'
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { CoopGame } from '@app/classes/game/coop-game';
 import { CoopLobby } from '@app/classes/lobby/coop-lobby';
+import { SoloLobby } from '@app/classes/lobby/solo-lobby';
 
 
 
@@ -47,6 +48,10 @@ export class GameManagerService {
             case GameType.SOLO:
                 if (players.length != 1)
                     res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (1 player required)");
+                const soloGame = new SoloGame(<SoloLobby>lobby, this.socketService, this.drawingService);
+                GameManagerService.games.set(req.body.lobbyId, soloGame);
+                LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                soloGame.startGame();
                 break;
             case GameType.COOP:
                 if (players.length < 2 || players.length > 4)
