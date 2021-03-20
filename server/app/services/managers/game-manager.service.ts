@@ -11,6 +11,8 @@ import { ClassicGame } from '@app/classes/game/classic-game';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
 import { DrawingsService } from '@app/services/drawings.service'
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { CoopGame } from '@app/classes/game/coop-game';
+import { CoopLobby } from '@app/classes/lobby/coop-lobby';
 
 
 
@@ -37,10 +39,10 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
-                GameManagerService.games.set(req.body.lobbyId, game);
+                const classicGame = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
+                GameManagerService.games.set(req.body.lobbyId, classicGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
-                game.startGame();
+                classicGame.startGame();
                 break;
             case GameType.SOLO:
                 if (players.length != 1)
@@ -49,6 +51,10 @@ export class GameManagerService {
             case GameType.COOP:
                 if (players.length < 2 || players.length > 4)
                     res.status(StatusCodes.NOT_ACCEPTABLE).send("Number of players in lobby invalid to start game (2-4 players required)");
+                const coopGame = new CoopGame(<CoopLobby>lobby, this.socketService, this.drawingService);
+                GameManagerService.games.set(req.body.lobbyId, coopGame);
+                LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                coopGame.startGame();
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Invalid game type");
