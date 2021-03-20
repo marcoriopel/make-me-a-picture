@@ -138,7 +138,8 @@ export class SocketConnectionService {
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.join(request.chatId);
                 this.authService.addUserToChat(user.username, request.chatId)
-                console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                this.chatManagerService.addUserToChat(user.username, request.chatId)
+                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
 
             socket.on('leaveChatRoom', (request: any) => {
@@ -148,8 +149,15 @@ export class SocketConnectionService {
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.leave(request.chatId);
                 this.authService.removeUserFromChat(user.username, request.chatId)
-                console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
+
+            socket.on('disconnect', () => {
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                this.authService.addUserToLogCollection(user.username, false);
+                console.log('disconnection of ' + user.username);
+              });
         });
     }
 

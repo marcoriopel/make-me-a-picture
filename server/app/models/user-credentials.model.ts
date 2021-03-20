@@ -27,6 +27,7 @@ export class UserCredentialsModel {
 
     async addUserToChat(username: string, chatId: string) {
         try {
+            await this.databaseModel.client.db("database").collection("user-credentials").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
             await this.databaseModel.client.db("database").collection("user-credentials").updateOne({ 'username': username }, { $push: {'rooms': chatId} });
         } catch (e) {
             console.error(e);
