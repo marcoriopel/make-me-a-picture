@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty } from '@app/ressources/variables/game-variables';
+import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
@@ -25,14 +25,12 @@ export class CoopGame extends Game {
         super(<Lobby>lobby, socketService);
         this.players = lobby.getPlayers();
         this.vPlayer = lobby.getVPlayer();
-        console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
+        console.log("Started coop game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
     async startGame(): Promise<void> {
         this.setGuesses();
-        if (this.vPlayer != undefined) {
-            this.vPlayer.setServices(this.drawingsService, this.socketService)
-        }
+        this.vPlayer.setServices(this.drawingsService, this.socketService)
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
@@ -118,11 +116,11 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 60;
+        this.gameTimerCount = 180;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "gameTimer": this.gameTimerCount });
             if (!this.gameTimerCount) {
-                this.endGame;
+                this.endGame();
             }
             else {
                 --this.gameTimerCount;
@@ -131,7 +129,17 @@ export class CoopGame extends Game {
     }
 
     startDrawingTimer() {
-        this.drawingTimerCount = 30;
+        switch (this.difficulty) {
+            case Difficulty.EASY:
+                this.drawingTimerCount = GuessTime.EASY;
+                break;
+            case Difficulty.MEDIUM:
+                this.drawingTimerCount = GuessTime.MEDIUM;
+                break;
+            case Difficulty.HARD:
+                this.drawingTimerCount = GuessTime.HARD;
+                break;
+        }
         this.drawingTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('drawingTimer', { "drawingTimer": this.drawingTimerCount });
             if (!this.drawingTimerCount) {
