@@ -67,6 +67,7 @@ export class CoopGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
 
