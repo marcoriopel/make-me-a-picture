@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { DrawingEvent, drawingEventType, MouseDown, Vec2 } from '@app/classes/game';
 import { PencilService } from '@app/services/tools/pencil.service';
@@ -7,13 +7,14 @@ import { DrawingService } from '@app/services/drawing/drawing.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
+import { OnDestroy } from "@angular/core";
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
@@ -25,6 +26,14 @@ export class GameComponent implements OnInit {
     this.socketService.bind('drawingEvent', (data: any) => {
       this.handleDrawingEvent(data.drawingEvent);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId})
+    this.gameService.drawingPlayer = this.gameService.username as string;
+    this.gameService.isInGame = false;
+    this.gameService.isGuessing = false;
+    this.gameService.isUserTeamGuessing = false;
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
@@ -78,5 +87,7 @@ export class GameComponent implements OnInit {
     this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
+
+  
 
 }

@@ -29,3 +29,9 @@ export enum drawingEventType {
     UNDO = 3,
     REDO = 4,
 }
+
+export enum transitionType {
+    GAMESTART = 0,
+    OPPOSITION = 1,
+    NEWROUND = 2,
+}

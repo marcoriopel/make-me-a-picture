@@ -106,4 +106,12 @@ export class GameManagerService {
         let game = GameManagerService.games.get(gameId);
         game.guessDrawing(username, guess);
     }
+
+    requestHint(gameId: string, user: BasicUser) {
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            throw new Error("Game was not found");
+        }
+        let game = GameManagerService.games.get(gameId);
+        game.requestHint(user);
+    }
 }
