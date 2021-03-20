@@ -138,5 +138,35 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("OnResume")
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerCanvas, CanvasFragment())
+                .commitNow()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerChat, ChatFragment())
+                .commitNow()
+
+            if (gameViewModel.isPlayerDrawing.value!!) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerTools, ToolsFragment())
+                    .commitNow()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGuess, ToolsAdjustmentFragment())
+                    .commitNow()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerColor, ColorFragment())
+                    .commitNow()
+                colorFragment =  (findColorFragment() as ColorFragment?)!!
+            }
+
+            if (gameViewModel.isPlayerGuessing.value!!) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGuess, GuessFragment())
+                    .commitNow()
+            }
+    }
+
 
 }

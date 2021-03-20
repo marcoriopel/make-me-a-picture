@@ -133,7 +133,8 @@ class LobbyRepository() {
         }
     }
     fun resetData() {
-  
-
+        _lobbyPlayers.value = null
+        _lobbyJoined.value = null
+        _isPlayerDrawing.value = null
     }
 }
