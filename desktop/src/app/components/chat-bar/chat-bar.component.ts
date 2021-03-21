@@ -47,4 +47,16 @@ export class ChatBarComponent implements OnInit {
       }
     })
   }
+
+  createChat(chatId: string): void {
+    this.chatService.createChat(chatId)
+  }
+  
+  joinChat(chatId: string): void {
+    this.chatService.joinChat(chatId)
+  }
+
+  leaveChat(chatId: string): void {
+    this.chatService.leaveChat(chatId)
+  }
 }

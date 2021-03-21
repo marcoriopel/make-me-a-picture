@@ -109,4 +109,16 @@ export class ChatManagerService {
 
     }
 
+    async addUserToChat(username: string, chatId: string) {
+        await this.chatModel.addUserToChat(username, chatId);
+    }
+
+    async removeUserFromChat(username: string, chatId: string) {
+        await this.chatModel.removeUserFromChat(username, chatId);
+        const response = await this.chatModel.getUsersInChat(chatId);
+        if(response.users.length == 0){
+            this.chatModel.deleteChat(chatId);
+        }
+    }
+
 }

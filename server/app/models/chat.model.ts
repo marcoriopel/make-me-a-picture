@@ -48,6 +48,17 @@ export class ChatModel {
     async createChat(chatRoomId) {
         try {
             await this.databaseModel.client.db("chats").createCollection(chatRoomId);
+            await this.databaseModel.client.db("chats").collection("chats").insertOne({ "chatId": chatRoomId, "users": [] });
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async deleteChat(chatRoomId) {
+        try {
+            await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
+            await this.databaseModel.client.db("chats").collection("chats").deleteOne({ "chatId": chatRoomId });
+            await this.databaseModel.client.db("database").collection("chat-names").deleteOne({ "chatId": chatRoomId });
         } catch (e) {
             throw e;
         }
@@ -56,6 +67,31 @@ export class ChatModel {
     async linkChatNameToId(chatRoomId, chatName) {
         try {
             return await this.databaseModel.client.db("database").collection("chat-names").insertOne({ "chatId": chatRoomId, "chatName": chatName });
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getUsersInChat(chatRoomId) {
+        try {
+            return await this.databaseModel.client.db("chats").collection("chats").findOne({ "chatId": chatRoomId }, { projection: { "users": 1, "_id": 0}});
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async addUserToChat(username, chatRoomId) {
+        try {
+            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
+            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $push: {'users': username} });
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async removeUserFromChat(username, chatRoomId) {
+        try {
+            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
         } catch (e) {
             throw e;
         }

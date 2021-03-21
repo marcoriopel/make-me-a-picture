@@ -36,6 +36,14 @@ export class AuthService {
         await this.userLogsModel.logUser(username, date.getTime(), isLogin);
     }
 
+    async addUserToChat(username: string, chatId: string) {
+        await this.userCredentialsModel.addUserToChat(username, chatId);
+    }
+
+    async removeUserFromChat(username: string, chatId: string) {
+        await this.userCredentialsModel.removeUserFromChat(username, chatId);
+    }
+
     async registerUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const userInfo: DetailedUser = {

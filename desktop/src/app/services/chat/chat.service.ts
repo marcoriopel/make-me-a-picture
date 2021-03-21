@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 export class ChatService {
   private baseUrl = environment.api_url;
   private getJoinedChatUrl = this.baseUrl + '/api/chat/joined';
+  private createChatUrl = this.baseUrl + '/api/chat/create';
   public isChatInExternalWindow: boolean = false;
   private chatList: Chat[] = [{
     name: 'Général',
@@ -81,5 +82,24 @@ export class ChatService {
       }
       this.chatList[this.index]["messages"].push(msg);
     });
+  }
+
+  createChat(chatName: string){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    const options = { headers: headers};
+    this.http.post<any>(this.createChatUrl, {"chatName": chatName}, options)
+    .subscribe((data: any) => {
+      console.log(data);
+    });
+  }
+
+  joinChat(chatId: string): void {
+    this.socketService.emit('joinChatRoom', { "chatId": chatId })
+  }
+
+  leaveChat(chatId: string): void {
+    this.socketService.emit('leaveChatRoom', { "chatId": chatId })
   }
 }
