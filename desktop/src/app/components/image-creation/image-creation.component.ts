@@ -1,7 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ViewingComponent } from '../viewing/viewing.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Drawing } from '@app/classes/drawing';
@@ -31,16 +31,16 @@ export class ImageCreationComponent implements OnInit {
 
   ngOnInit(): void {
     this.imageCreationForm = this.fb.group({
-      drawingName:['', [
+      drawingName: ['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
         Validators.pattern(/^\S*$/),
       ]],
-      difficulty:['', Validators.required],
+      difficulty: ['', Validators.required],
     })
     this.hintForm = this.fb.group({
-      hint:['', [
+      hint: ['', [
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
@@ -66,7 +66,7 @@ export class ImageCreationComponent implements OnInit {
   }
 
   addHint(): void {
-    if(this.hints.includes(this.hintForm.value.hint)) {
+    if (this.hints.includes(this.hintForm.value.hint)) {
       alert('Vous avez déjà ajouté cet indice');
       return;
     }
@@ -87,7 +87,7 @@ export class ImageCreationComponent implements OnInit {
       strokes: this.drawingService.strokeStack,
       hints: this.hints,
     }
-    
+
     let dialogRef = this.dialog.open(ViewingComponent, {
       height: '800px',
       width: '1200px',
@@ -98,7 +98,7 @@ export class ImageCreationComponent implements OnInit {
   }
 
   convertDifficulty(difficulty: string): number {
-    switch(difficulty) {
+    switch (difficulty) {
       case 'Facile': return Difficulty.EASY;
       case 'Normale': return Difficulty.MEDIUM;
       case 'Difficile': return Difficulty.HARD;
@@ -109,8 +109,9 @@ export class ImageCreationComponent implements OnInit {
   sendDrawing(drawing: Drawing) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'authorization': localStorage.getItem('token')!});
-    const options = { headers: headers, responseType: 'text' as 'json'};
+      'authorization': localStorage.getItem('token')!
+    });
+    const options = { headers: headers, responseType: 'text' as 'json' };
     return this.http.post<any>(this.imageFormUrl, drawing, options);
   }
 }

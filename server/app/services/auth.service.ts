@@ -19,8 +19,13 @@ export class AuthService {
             const authInfo: AuthInfo = { 'username': req.body.username, 'password': req.body.password };
             const userInfo: DetailedUser = await this.userCredentialsModel.getCredentials(authInfo.username);
             if (userInfo && userInfo.password == authInfo.password) {
-                await this.addUserToLogCollection(authInfo.username, true);
-                next(userInfo);
+                if (await this.checkIfUserAlreadyLoggedIn(req.body.username)) {
+                    return res.status(StatusCodes.BAD_REQUEST).send("Already logged in");
+                }
+                else {
+                    await this.addUserToLogCollection(authInfo.username, true);
+                    next(userInfo);
+                }
             }
             else {
                 return res.sendStatus(StatusCodes.NOT_FOUND);
@@ -34,6 +39,18 @@ export class AuthService {
     async addUserToLogCollection(username: string, isLogin: boolean) {
         const date: Date = new Date();
         await this.userLogsModel.logUser(username, date.getTime(), isLogin);
+    }
+
+    async checkIfUserAlreadyLoggedIn(username: string) {
+        let lastLogin = await this.getLastLogin(username);
+        let lastLogout = await this.getLastLogout(username);
+        if (!lastLogin) {
+            return false;
+        }
+        if (lastLogout && lastLogout > lastLogin) {
+            return false
+        }
+        return true;
     }
 
     async addUserToChat(username: string, chatId: string) {
@@ -74,24 +91,57 @@ export class AuthService {
     }
 
 
-    async getLastLogout(username: string, res: Response, next: NextFunction): Promise<any> {
+
+    async returnLastLogout(username: string, res: Response, next: NextFunction): Promise<any> {
+        let lastLogout = await this.getLastLogout(username);
+        if (!lastLogout) {
+            return res.sendStatus(StatusCodes.NOT_FOUND);
+        }
+        else {
+            next(lastLogout);
+        }
+    }
+
+    async getLastLogout(username: string) {
         let logouts;
         try {
             logouts = await this.userLogsModel.getLogouts(username);
         }
         catch (e) {
             console.log(e);
-            return res.sendStatus(StatusCodes.NOT_FOUND);
+            return null;
         }
         if (!logouts.length)
-            return res.sendStatus(StatusCodes.NOT_FOUND);
+            return null;
         else {
             let lastLogout = 0;
             for (let logout of logouts) {
                 if (logout.timeStamp > lastLogout)
                     lastLogout = logout.timeStamp
             }
-            next(lastLogout);
+            return lastLogout;
+        }
+    }
+
+
+    async getLastLogin(username: string) {
+        let logins;
+        try {
+            logins = await this.userLogsModel.getLogins(username);
+        }
+        catch (e) {
+            console.log(e);
+            return null;
+        }
+        if (!logins.length)
+            return null;
+        else {
+            let lastLogin = 0;
+            for (let login of logins) {
+                if (login.timeStamp > lastLogin)
+                    lastLogin = login.timeStamp
+            }
+            return lastLogin;
         }
     }
 

@@ -23,4 +23,13 @@ export class UserLogsModel {
             console.error(e);
         }
     }
+
+    async getLogins(username) {
+        try {
+            return await this.databaseModel.client.db("database").collection("user-logs").find({ 'username': username, "isLogin": true }).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+
+    }
 }
