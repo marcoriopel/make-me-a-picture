@@ -74,6 +74,10 @@ export class AuthService {
                 console.log(userInfo)
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
+            if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Kevin" || userInfo.username == "Émilio") {
+                return res.sendStatus(StatusCodes.CONFLICT);
+
+            }
             const userDB: DetailedUser = await this.userCredentialsModel.getCredentials(userInfo.username);
             if (!userDB) {
                 await this.userCredentialsModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);

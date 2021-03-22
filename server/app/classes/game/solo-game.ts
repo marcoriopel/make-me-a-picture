@@ -14,6 +14,7 @@ export class SoloGame extends Game {
     private vPlayer: VirtualPlayer;
     private score: number = 0;
     private guessesLeft: number = 0;
+    private pastVirtualDrawings: string[] = [];
     private gameTimerCount: number = 0;
     private gameTimerInterval: NodeJS.Timeout;
     private drawingTimerCount: number = 0;
@@ -32,7 +33,8 @@ export class SoloGame extends Game {
         this.vPlayer.setServices(this.drawingsService, this.socketService)
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTimer();
         this.startDrawingTimer();
         this.vPlayer.startDrawing();
@@ -65,7 +67,8 @@ export class SoloGame extends Game {
     private async setupNextDrawing() {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();

@@ -52,12 +52,19 @@ export class DrawingsService {
         return wordSuggestions;
     }
 
-    async getRandomDrawing(difficulty): Promise<Drawing> {
+    async getRandomDrawing(difficulty, excludedDrawings): Promise<Drawing> {
         let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
-        console.log(words);
         if (words.length < 1) {
-            throw new Error('Database is empty')
+            throw new Error('Database is empty');
         }
+        for (let drawing of excludedDrawings) {
+            words = words.filter(f => f.drawingName !== drawing);
+        }
+
+        if (words.length < 1) {
+            throw new Error('No more unique drawings for virtual player to draw');
+        }
+
         let random = Math.floor(Math.random() * words.length);
         return await this.drawingsModel.getDrawing(words[random]._id)
     }

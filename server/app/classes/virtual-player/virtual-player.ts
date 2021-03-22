@@ -53,9 +53,9 @@ export class VirtualPlayer {
         this.socketService = socketService;
     }
 
-    async getNewDrawing(difficulty: number): Promise<string> {
+    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<string> {
         try {
-            this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty);
+            this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty, pastDrawingNames);
             this.drawingSpeed = this.calculateDrawingSpeed();
             return this.currentDrawing.drawingName;
         }
