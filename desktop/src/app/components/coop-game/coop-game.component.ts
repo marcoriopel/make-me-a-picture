@@ -10,11 +10,11 @@ import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  selector: 'app-coop-game',
+  templateUrl: './coop-game.component.html',
+  styleUrls: ['./coop-game.component.scss']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class CoopGameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
@@ -87,7 +87,5 @@ export class GameComponent implements OnInit, OnDestroy {
     this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
-
-  
 
 }

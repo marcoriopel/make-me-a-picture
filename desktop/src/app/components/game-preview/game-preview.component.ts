@@ -85,6 +85,7 @@ export class GamePreviewComponent{
         this.gameService.gameId = this.game.id;
         this.router.navigate(['/lobby']);
         this.socketService.emit('joinLobby', {lobbyId:this.game.id});
+        this.gameService.initialize(game.gameType);
       },
       err => {
         console.log(err);

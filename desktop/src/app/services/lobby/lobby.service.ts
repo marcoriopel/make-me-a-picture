@@ -30,9 +30,7 @@ export class LobbyService {
   private startGameUrl = this.baseUrl + "/api/games/start";
   private leaveUrl = this.baseUrl + "/api/games/leave";
 
-  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) {
-    this.gameService.initialize();
-  }
+  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) { }
 
   addVirtualPlayer(teamNumber: number): void {
     const headers = new HttpHeaders({
@@ -66,6 +64,7 @@ export class LobbyService {
     const body = {
       lobbyId: this.game.id,
     }
+    console.log(body)
     this.http.post<any>(this.startGameUrl, body, options).subscribe();
     this.gameService.gameId = this.game.id;
   }

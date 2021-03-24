@@ -75,6 +75,7 @@ export class GameCreationComponent implements OnInit {
       res => {
         this.join(res.lobbyId, game);
         this.gameService.gameId = res.lobbyId;
+        this.gameService.initialize(this.type);
       },
       err => { 
         console.log(err);

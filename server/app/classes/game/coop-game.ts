@@ -31,6 +31,7 @@ export class CoopGame extends Game {
     async startGame(): Promise<void> {
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
+        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
@@ -40,9 +41,9 @@ export class CoopGame extends Game {
     }
 
     guessDrawing(username: string, guess: string): void {
-        if (!this.players.has(username)) {
-            throw Error("User is not part of the game")
-        }
+        // if (!this.players.has(username)) {
+        //     throw Error("User is not part of the game")
+        // }
         if (this.currentDrawingName == guess) {
             this.addBonusGameTime();
             ++this.score;

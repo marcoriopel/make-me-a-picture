@@ -47,9 +47,11 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { LobbyService } from './services/lobby/lobby.service';
 import { GameCreationComponent } from './components/game-creation/game-creation.component'
 import { SocketService } from './services/socket/socket.service';
-import { GameComponent } from './components/game/game.component';
 import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
+import { ClassicGameComponent } from './components/classic-game/classic-game.component';
+import { CoopGameComponent } from './components/coop-game/coop-game.component';
+import { SoloGameComponent } from './components/solo-game/solo-game.component';
 
 @NgModule({
     declarations: [
@@ -73,9 +75,11 @@ import { RoundTransitionComponent } from './components/round-transition/round-tr
         GamePreviewComponent,
         LobbyComponent,
         GameCreationComponent,
-        GameComponent,
         ToolsComponent,
-        RoundTransitionComponent
+        RoundTransitionComponent,
+        ClassicGameComponent,
+        CoopGameComponent,
+        SoloGameComponent
     ],
     imports: [
         BrowserModule,

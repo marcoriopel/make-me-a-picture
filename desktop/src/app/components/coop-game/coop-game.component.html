@@ -1,0 +1,35 @@
+
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="editor-column">
+            <div id="game-data">
+                <div id="timer-container">
+                    <h1>{{this.gameService.timer}} - {{this.gameService.gameTimer}}</h1>
+                </div>
+                <div id="score-container">
+                    <h3>{{this.gameService.score[0] }}</h3>
+                </div>
+                <div id="guesses-container">
+                    <h3>{{this.gameService.guessesLeft }}</h3>
+                </div>
+            </div>
+            <div id="editor">
+                <app-editor [isInGame]="true"></app-editor>
+                <div #guessBox id="guess-box">
+                    <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                        <input matInput id="guess-input" type="text" formControlName="guess"
+                            placeholder="Supposition...">
+                        <button #guessButton id="guess-button" type="submit"><span
+                                class="material-icons">check_circle</span></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>

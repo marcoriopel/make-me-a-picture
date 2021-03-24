@@ -8,7 +8,9 @@ import { AuthGuard } from '@app/auth.guard';
 import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { ImageCreationComponent } from './components/image-creation/image-creation.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
-import { GameComponent } from './components/game/game.component';
+import { ClassicGameComponent } from './components/classic-game/classic-game.component';
+import { CoopGameComponent } from './components/coop-game/coop-game.component';
+import { SoloGameComponent } from './components/solo-game/solo-game.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
@@ -16,7 +18,9 @@ const routes: Routes = [
     { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
     { path: 'editor', component: EditorComponent, canActivate: [AuthGuard] },
     { path: 'lobby', component: LobbyComponent, canActivate: [AuthGuard] },
-    { path: 'game', component : GameComponent, canActivate: [AuthGuard] },
+    { path: 'game/classic', component : ClassicGameComponent, canActivate: [AuthGuard] },
+    { path: 'game/coop', component : CoopGameComponent, canActivate: [AuthGuard] },
+    { path: 'game/solo', component : SoloGameComponent, canActivate: [AuthGuard] },
     { path: 'login' , component: LoginComponent },
     { path: 'register' , component: RegisterComponent },
     { path: 'image', component: ImageCreationComponent},
