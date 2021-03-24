@@ -3,7 +3,7 @@ import { DatabaseModel } from '@app/models/database.model'
 import { TYPES } from '@app/types';
 
 @injectable()
-export class UserCredentialsModel {
+export class UsersModel {
 
     constructor(@inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel) {
         this.databaseModel = DatabaseModel.getInstance();
@@ -11,7 +11,7 @@ export class UserCredentialsModel {
 
     async getCredentials(username) {
         try {
-            return await this.databaseModel.client.db("database").collection("user-credentials").findOne({ 'username': username });
+            return await this.databaseModel.client.db("database").collection("users").findOne({ 'username': username });
         } catch (e) {
             console.error(e);
         }
@@ -19,7 +19,7 @@ export class UserCredentialsModel {
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
-            await this.databaseModel.client.db("database").collection("user-credentials").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["General"] });
+            await this.databaseModel.client.db("database").collection("users").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["General"] });
         } catch (e) {
             console.error(e);
         }
@@ -27,8 +27,8 @@ export class UserCredentialsModel {
 
     async addUserToChat(username: string, chatId: string) {
         try {
-            await this.databaseModel.client.db("database").collection("user-credentials").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
-            await this.databaseModel.client.db("database").collection("user-credentials").updateOne({ 'username': username }, { $push: {'rooms': chatId} });
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': username }, { $push: {'rooms': chatId} });
         } catch (e) {
             console.error(e);
         }
@@ -36,7 +36,7 @@ export class UserCredentialsModel {
 
     async removeUserFromChat(username: string, chatId: string) {
         try {
-            await this.databaseModel.client.db("database").collection("user-credentials").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
         } catch (e) {
             console.error(e);
         }
