@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.viewmodel.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,18 +32,18 @@ class GameViewModel():ViewModel() {
         }
 
         gameRepository.transition.observeForever {
-            if (true) {
-                val msg = when (it.state) {
-                    0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
-                    1 -> "Droit de réplique!"
-                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!";
-                    else -> throw Exception("Transition state error")
-                }
-                _transitionMessage.postValue(msg)
+            val msg = when (it.state) {
+                0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner! ${it.timer}"
+                1 -> "Droit de réplique! ${it.timer}"
+                2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner! ${it.timer}";
+                else -> throw Exception("Transition state undefined")
             }
+            Log.e("GameViewModel -> transition occurred", msg)
+            _transitionMessage.postValue(msg)
         }
     }
 }
+
 
 
 

@@ -90,12 +90,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 }
             }
         })
-
-        gameViewModel.transitionMessage.observe(this, Observer {
-            Toast.makeText(applicationContext, "test", Toast.LENGTH_LONG).show()
-            Log.e("toast", "toast")
-        })
-
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment

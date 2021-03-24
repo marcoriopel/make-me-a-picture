@@ -65,8 +65,6 @@ class GameRepository {
     // Listener
     var team = 0
 
-
-
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
     }
