@@ -1,4 +1,4 @@
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UsersModel } from '@app/models/users.model';
 import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';

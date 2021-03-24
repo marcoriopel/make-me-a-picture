@@ -1,4 +1,4 @@
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UsersModel } from '@app/models/users.model';
 import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
@@ -7,15 +7,15 @@ import { inject, injectable } from 'inversify';
 export class UserService {
 
     constructor(
-        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
+        @inject(TYPES.UsersModel) private usersModel: UsersModel,
         @inject(TYPES.UserLogsModel) private userLogsModel: UserLogsModel) {
     }
 
     async addUserToChat(username: string, chatId: string) {
-        await this.userCredentialsModel.addUserToChat(username, chatId);
+        await this.usersModel.addUserToChat(username, chatId);
     }
 
     async removeUserFromChat(username: string, chatId: string) {
-        await this.userCredentialsModel.removeUserFromChat(username, chatId);
+        await this.usersModel.removeUserFromChat(username, chatId);
     }
 }

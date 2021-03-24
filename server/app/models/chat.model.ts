@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DatabaseModel } from '@app/models/database.model'
 import { TYPES } from '@app/types';
-import { UserCredentialsModel } from './user-credentials.model';
+import { UsersModel } from './users.model';
 
 @injectable()
 export class ChatModel {

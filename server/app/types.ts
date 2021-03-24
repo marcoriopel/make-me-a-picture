@@ -20,6 +20,6 @@ export const TYPES = {
     DatabaseModel: Symbol('DatabaseModel'),
     ChatModel: Symbol('ChatModel'),
     DrawingsModel: Symbol('DrawingsModel'),
-    UserCredentialsModel: Symbol('UserCredentialsModel'),
+    UsersModel: Symbol('UsersModel'),
     UserLogsModel: Symbol('UserLogsModel'),
 };

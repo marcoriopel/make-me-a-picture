@@ -2,7 +2,7 @@ import { IncomingMessage } from '@app/ressources/interfaces/incoming-message.int
 import * as socketio from "socket.io";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UsersModel } from '@app/models/users.model';
 import { ChatModel } from '@app/models/chat.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
@@ -16,7 +16,7 @@ export class ChatManagerService {
 
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
-        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
+        @inject(TYPES.UsersModel) private usersModel: UsersModel,
         @inject(TYPES.ChatModel) private chatModel: ChatModel,) {
         this.socketService = SocketService.getInstance();
     }
@@ -37,7 +37,7 @@ export class ChatManagerService {
     async getAllUserChats(username: string, res: Response, next: NextFunction) {
         var chatNames = [];
         try {
-            const userInfo = await this.userCredentialsModel.getCredentials(username);
+            const userInfo = await this.usersModel.getCredentials(username);
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
@@ -52,7 +52,7 @@ export class ChatManagerService {
     async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
         var chatsHistory = [];
         try {
-            const userInfo = await this.userCredentialsModel.getCredentials(username);
+            const userInfo = await this.usersModel.getCredentials(username);
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatHistory = await this.chatModel.getChatHistory(chatId);
