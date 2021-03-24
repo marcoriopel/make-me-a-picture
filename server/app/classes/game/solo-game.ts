@@ -75,6 +75,7 @@ export class SoloGame extends Game {
     private endGame(): void {
         clearInterval(this.gameTimerInterval);
         this.guessesLeft = 0;
+        this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
     }
