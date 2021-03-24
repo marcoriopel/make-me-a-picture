@@ -53,6 +53,7 @@ export class GameService {
 
   constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog) {
     this.username = localStorage.getItem('username');
+    console.log('CONSTRUCTION')
   }
 
   initialize(gameType: GameType): void {
@@ -110,7 +111,7 @@ export class GameService {
     })
 
     this.socketService.bind('score', (data: any) => {
-      this.score[0] = data.score;
+      this.score = data.score;
     })
 
     this.socketService.bind('drawingName', (data: any) => {
@@ -136,6 +137,7 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
+      console.log(data);
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
@@ -156,8 +158,10 @@ export class GameService {
     })
   
     this.socketService.bind('transitionTimer', (data: any) => {
+      console.log(data)
       this.state = data.state;
       if(data.timer == 5){
+        console.log('test');
         this.openDialog(this.state);
       }
       if(!data.timer){

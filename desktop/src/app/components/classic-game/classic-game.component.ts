@@ -20,7 +20,9 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { 
+    console.log("GAME CONSTRUCTION")
+  }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
@@ -34,6 +36,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    console.log("GAME DESTRUCTION")
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

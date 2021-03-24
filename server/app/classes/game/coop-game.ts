@@ -76,6 +76,7 @@ export class CoopGame extends Game {
 
     private endGame(): void {
         clearInterval(this.gameTimerInterval);
+        clearInterval(this.drawingTimerInterval);
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
