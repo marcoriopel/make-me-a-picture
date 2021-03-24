@@ -10,9 +10,10 @@ import { GameService } from '@app/services/game/game.service';
 export class RoundTransitionComponent implements OnInit {
 
   message: string = "";
+  state: number = 0;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService) {
-
+    this.state = data.state;
     switch (data.state) {
       case 0:
         this.message = "Bienvenue dans la partie! C'est " + this.gameService.drawingPlayer + " qui commence à dessiner!";
@@ -25,6 +26,10 @@ export class RoundTransitionComponent implements OnInit {
       case 2:
           this.message = "Prochain round!!! C'est à " + this.gameService.drawingPlayer + " de dessiner!";
           break;
+
+      case 3:
+        this.message = "Partie terminée! Vous avez eu un score de " + this.gameService.score[0];
+        break;
     }
   } 
 

@@ -205,7 +205,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      console.log(data)
+      this.openDialog(3);
     })
   }
   

@@ -118,7 +118,7 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 180;
+        this.gameTimerCount = 30;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "gameTimer": this.gameTimerCount });
             if (!this.gameTimerCount) {
