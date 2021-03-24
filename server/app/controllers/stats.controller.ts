@@ -27,7 +27,7 @@ export class StatsController {
     this.router.get('/private', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
         this.userService.getPrivateInfo(user.username, res, (privateInfo: any) => {
-          res.sendStatus(StatusCodes.OK).send({ privateInfo });
+          res.status(StatusCodes.OK).send({ privateInfo });
         });
       });
     });

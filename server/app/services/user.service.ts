@@ -31,7 +31,6 @@ export class UserService {
             let userLogs = await this.userLogsModel.getLogs(username);
 
             let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "logs": userLogs}
-
             next(privateInfo);
         }
         catch(e){
