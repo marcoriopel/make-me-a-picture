@@ -1,4 +1,4 @@
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UsersModel } from '@app/models/users.model';
 import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
@@ -10,14 +10,14 @@ import { StatusCodes } from 'http-status-codes';
 export class AuthService {
 
     constructor(
-        @inject(TYPES.UserCredentialsModel) private userCredentialsModel: UserCredentialsModel,
+        @inject(TYPES.UsersModel) private usersModel: UsersModel,
         @inject(TYPES.UserLogsModel) private userLogsModel: UserLogsModel) {
     }
 
     async loginUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const authInfo: AuthInfo = { 'username': req.body.username, 'password': req.body.password };
-            const userInfo: DetailedUser = await this.userCredentialsModel.getCredentials(authInfo.username);
+            const userInfo: DetailedUser = await this.usersModel.getCredentials(authInfo.username);
             if (userInfo && userInfo.password == authInfo.password) {
                 if (await this.checkIfUserAlreadyLoggedIn(req.body.username)) {
                     return res.status(StatusCodes.BAD_REQUEST).send("Already logged in");
@@ -80,7 +80,7 @@ export class AuthService {
             }
             const userDB: DetailedUser = await this.userCredentialsModel.getCredentials(userInfo.username);
             if (!userDB) {
-                await this.userCredentialsModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);
+                await this.usersModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);
                 await this.addUserToLogCollection(userInfo.username, true);
                 next(userInfo)
             }

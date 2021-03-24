@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { DatabaseModel } from '@app/models/database.model'
 import { TYPES } from '@app/types';
-import { UserCredentialsModel } from './user-credentials.model';
+import { UsersModel } from './users.model';
 
 @injectable()
 export class ChatModel {
@@ -45,10 +45,10 @@ export class ChatModel {
         }
     }
 
-    async createChat(chatRoomId) {
+    async createChat(chatRoomId, chatName) {
         try {
             await this.databaseModel.client.db("chats").createCollection(chatRoomId);
-            await this.databaseModel.client.db("chats").collection("chats").insertOne({ "chatId": chatRoomId, "users": [] });
+            await this.databaseModel.client.db("database").collection("chats").insertOne({ "chatId": chatRoomId, "chatName": chatName, "users": [] });
         } catch (e) {
             throw e;
         }
@@ -57,16 +57,7 @@ export class ChatModel {
     async deleteChat(chatRoomId) {
         try {
             await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
-            await this.databaseModel.client.db("chats").collection("chats").deleteOne({ "chatId": chatRoomId });
-            await this.databaseModel.client.db("database").collection("chat-names").deleteOne({ "chatId": chatRoomId });
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    async linkChatNameToId(chatRoomId, chatName) {
-        try {
-            return await this.databaseModel.client.db("database").collection("chat-names").insertOne({ "chatId": chatRoomId, "chatName": chatName });
+            await this.databaseModel.client.db("database").collection("chats").deleteOne({ "chatId": chatRoomId });
         } catch (e) {
             throw e;
         }
@@ -82,8 +73,8 @@ export class ChatModel {
 
     async addUserToChat(username, chatRoomId) {
         try {
-            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
-            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $push: {'users': username} });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $push: {'users': username} });
         } catch (e) {
             throw e;
         }
@@ -91,7 +82,7 @@ export class ChatModel {
 
     async removeUserFromChat(username, chatRoomId) {
         try {
-            await this.databaseModel.client.db("chats").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
         } catch (e) {
             throw e;
         }

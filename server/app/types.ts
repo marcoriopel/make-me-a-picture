@@ -11,6 +11,7 @@ export const TYPES = {
     SocketService: Symbol('SocketService'),
     SocketConnectionService: Symbol('SocketConnectionService'),
     AuthService: Symbol('AuthService'),
+    UserService: Symbol('UserService'),
     ChatManagerService: Symbol('ChatManagerService'),
     LobbyManagerService: Symbol('LobbyManagerService'),
     GameManagerService: Symbol('GameManagerService'),
@@ -19,6 +20,6 @@ export const TYPES = {
     DatabaseModel: Symbol('DatabaseModel'),
     ChatModel: Symbol('ChatModel'),
     DrawingsModel: Symbol('DrawingsModel'),
-    UserCredentialsModel: Symbol('UserCredentialsModel'),
+    UsersModel: Symbol('UsersModel'),
     UserLogsModel: Symbol('UserLogsModel'),
 };
