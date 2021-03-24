@@ -17,10 +17,12 @@ export const TYPES = {
     LobbyManagerService: Symbol('LobbyManagerService'),
     GameManagerService: Symbol('GameManagerService'),
     DrawingsService: Symbol('DrawingsService'),
+    StatsService: Symbol('StatsService'),
 
     DatabaseModel: Symbol('DatabaseModel'),
     ChatModel: Symbol('ChatModel'),
     DrawingsModel: Symbol('DrawingsModel'),
     UsersModel: Symbol('UsersModel'),
     UserLogsModel: Symbol('UserLogsModel'),
+    GamesModel: Symbol('GamesModel'),
 };

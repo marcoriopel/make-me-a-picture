@@ -21,6 +21,8 @@ import { DrawingsService } from './services/drawings.service';
 import { SocketConnectionService } from './services/sockets/socket-connection.service';
 import { UserService } from './services/user.service';
 import { StatsController } from './controllers/stats.controller';
+import { StatsService } from './services/stats.service';
+import { GamesModel } from './models/games.model';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
@@ -43,6 +45,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.LobbyManagerService).to(LobbyManagerService);
     container.bind(TYPES.GameManagerService).to(GameManagerService);
     container.bind(TYPES.DrawingsService).to(DrawingsService);
+    container.bind(TYPES.StatsService).to(StatsService);
 
 
     container.bind(TYPES.DatabaseModel).to(DatabaseModel);
@@ -50,6 +53,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.ChatModel).to(ChatModel);
     container.bind(TYPES.UsersModel).to(UsersModel);
     container.bind(TYPES.UserLogsModel).to(UserLogsModel);
+    container.bind(TYPES.GamesModel).to(GamesModel);
     return container;
 };
 const myContainer = new Container();

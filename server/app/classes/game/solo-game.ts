@@ -7,6 +7,7 @@ import { SoloLobby } from '../lobby/solo-lobby';
 import { Player } from '@app/ressources/interfaces/user.interface';
 import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
+import { StatsService } from '@app/services/stats.service';
 
 @injectable()
 export class SoloGame extends Game {
@@ -19,8 +20,10 @@ export class SoloGame extends Game {
     private drawingTimerCount: number = 0;
     private drawingTimerInterval: NodeJS.Timeout;
     private currentDrawingName: string;
+    private startDate: number;
+    private endDate: number;
 
-    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService) {
+    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         this.players = lobby.getPlayers();
         this.vPlayer = lobby.getVPlayer();
@@ -28,6 +31,7 @@ export class SoloGame extends Game {
     }
 
     async startGame(): Promise<void> {
+        this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
@@ -73,10 +77,12 @@ export class SoloGame extends Game {
     }
 
     private endGame(): void {
+        this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
         this.guessesLeft = 0;
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
+        this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
 
     getPlayers(): any {
