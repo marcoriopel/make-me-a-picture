@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { GameService } from '@app/services/game/game.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class RoundTransitionComponent implements OnInit {
   message: string = "";
   state: number = 0;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService, private router: Router) {
     this.state = data.state;
     switch (data.state) {
       case 0:
@@ -32,6 +33,10 @@ export class RoundTransitionComponent implements OnInit {
         break;
     }
   } 
+
+  endGame(): void {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit(): void {
   }

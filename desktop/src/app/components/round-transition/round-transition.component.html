@@ -1,4 +1,7 @@
 <div>
     <h1>{{message}}</h1>
     <h1 *ngIf="state != 3" id="timer">{{this.gameService.transitionTimer}}</h1>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close (click)="endGame()">Quitter</button>
+    </mat-dialog-actions>
 </div>
