@@ -15,6 +15,7 @@ import { CoopGame } from '@app/classes/game/coop-game';
 import { CoopLobby } from '@app/classes/lobby/coop-lobby';
 import { SoloLobby } from '@app/classes/lobby/solo-lobby';
 import { SoloGame } from '@app/classes/game/solo-game';
+import { StatsService } from '../stats.service';
 
 
 
@@ -26,7 +27,8 @@ export class GameManagerService {
 
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
-        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,) {
+        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,
+        @inject(TYPES.StatsService) private statsService: StatsService,) {
         this.socketService = SocketService.getInstance();
     }
 
@@ -41,7 +43,7 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const classicGame = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
+                const classicGame = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService, this.statsService);
                 GameManagerService.games.set(req.body.lobbyId, classicGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
                 classicGame.startGame();
@@ -49,7 +51,7 @@ export class GameManagerService {
             case GameType.SOLO:
                 if (players.length != 1)
                     res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (1 player required)");
-                const soloGame = new SoloGame(<SoloLobby>lobby, this.socketService, this.drawingService);
+                const soloGame = new SoloGame(<SoloLobby>lobby, this.socketService, this.drawingService, this.statsService);
                 GameManagerService.games.set(req.body.lobbyId, soloGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
                 soloGame.startGame();
@@ -57,7 +59,7 @@ export class GameManagerService {
             case GameType.COOP:
                 if (players.length < 2 || players.length > 4)
                     res.status(StatusCodes.NOT_ACCEPTABLE).send("Number of players in lobby invalid to start game (2-4 players required)");
-                const coopGame = new CoopGame(<CoopLobby>lobby, this.socketService, this.drawingService);
+                const coopGame = new CoopGame(<CoopLobby>lobby, this.socketService, this.drawingService, this.statsService);
                 GameManagerService.games.set(req.body.lobbyId, coopGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
                 coopGame.startGame();
