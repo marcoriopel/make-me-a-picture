@@ -13,6 +13,7 @@ import { SocketService } from './socket.service';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { GameManagerService } from '../managers/game-manager.service';
 import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 @injectable()
 export class SocketConnectionService {
@@ -22,6 +23,7 @@ export class SocketConnectionService {
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
         @inject(TYPES.AuthService) private authService: AuthService,
+        @inject(TYPES.UserService) private userService: UserService,
         @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
@@ -137,7 +139,7 @@ export class SocketConnectionService {
                 }
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.join(request.chatId);
-                this.authService.addUserToChat(user.username, request.chatId)
+                this.userService.addUserToChat(user.username, request.chatId)
                 this.chatManagerService.addUserToChat(user.username, request.chatId)
                 // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
@@ -148,7 +150,7 @@ export class SocketConnectionService {
                 }
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.leave(request.chatId);
-                this.authService.removeUserFromChat(user.username, request.chatId)
+                this.userService.removeUserFromChat(user.username, request.chatId)
                 this.chatManagerService.removeUserFromChat(user.username, request.chatId)
                 // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });

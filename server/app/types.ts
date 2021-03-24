@@ -11,6 +11,7 @@ export const TYPES = {
     SocketService: Symbol('SocketService'),
     SocketConnectionService: Symbol('SocketConnectionService'),
     AuthService: Symbol('AuthService'),
+    UserService: Symbol('UserService'),
     ChatManagerService: Symbol('ChatManagerService'),
     LobbyManagerService: Symbol('LobbyManagerService'),
     GameManagerService: Symbol('GameManagerService'),

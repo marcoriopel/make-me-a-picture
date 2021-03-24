@@ -35,6 +35,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.SocketService).to(SocketService);
     container.bind(TYPES.SocketConnectionService).to(SocketConnectionService);
     container.bind(TYPES.AuthService).to(AuthService);
+    container.bind(TYPES.UserService).to(UserService);
     container.bind(TYPES.ChatManagerService).to(ChatManagerService);
     container.bind(TYPES.LobbyManagerService).to(LobbyManagerService);
     container.bind(TYPES.GameManagerService).to(GameManagerService);

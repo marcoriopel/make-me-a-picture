@@ -99,8 +99,7 @@ export class ChatManagerService {
     async createChat(chatName: string, res: Response, next: NextFunction) {
         try {
             const chatId = uuid();
-            await this.chatModel.linkChatNameToId(chatId, chatName);
-            await this.chatModel.createChat(chatId);
+            await this.chatModel.createChat(chatId, chatName);
             next(chatId);
         }
         catch (e) {
