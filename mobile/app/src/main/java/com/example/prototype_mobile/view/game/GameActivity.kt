@@ -3,6 +3,7 @@ package com.example.prototype_mobile.view.game
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -90,6 +91,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 }
             }
         })
+
+        gameViewModel.transitionMessage.observe(this, Observer{
+            val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+            toast.show()
+        })
+
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
