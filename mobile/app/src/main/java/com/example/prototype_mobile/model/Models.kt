@@ -38,6 +38,7 @@ sealed class GameCreationMergeData
 
 // Data class for the Game
 data class Score(val score: IntArray)
+data class Timer(val timer: Int)
 
 // Data class for the drawing
 data class PaintedPath(val path: Path, val paint: Paint)

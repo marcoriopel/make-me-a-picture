@@ -35,6 +35,9 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerChat, ChatFragment())
                 .commitNow()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerGameInfo, GameInfoFragment())
+                .commit()
 
             if (gameViewModel.isPlayerDrawing.value!!) {
                 supportFragmentManager.beginTransaction()

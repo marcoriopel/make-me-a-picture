@@ -10,6 +10,7 @@ import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.GameRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import okhttp3.Response
@@ -58,6 +59,16 @@ class LobbyRepository() {
         val Jobject = JSONObject(it[0].toString())
         val Jarray = Jobject.getString("player")
         val player: String = Jarray.toString()
+        val gameRepo = GameRepository.getInstance()!!
+        _lobbyPlayers.value!!.players.forEach { player->
+            run {
+                when (player.team) {
+                    0 -> gameRepo.team1.add(player)
+                    1 -> gameRepo.team2.add(player)
+                    else -> throw Exception("Player has invalid team nunmber")
+                }
+            }
+        }
         _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
     }
 
