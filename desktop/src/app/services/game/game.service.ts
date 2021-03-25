@@ -210,6 +210,12 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(3);
+      this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('gameTimer');
+      this.socketService.unbind('newRound');
+      this.socketService.unbind('guessCallBack');
+      this.socketService.unbind('guessesLeft');
+      this.socketService.unbind('score');
     })
   }
   

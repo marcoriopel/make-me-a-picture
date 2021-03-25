@@ -36,7 +36,14 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
-    console.log("GAME DESTRUCTION")
+    this.socketService.unbind('transitionTimer');
+    this.socketService.unbind('drawingName');
+    this.socketService.unbind('timer');
+    this.socketService.unbind('newRound');
+    this.socketService.unbind('guessCallBack');
+    this.socketService.unbind('guessesLeft');
+    this.socketService.unbind('score');
+    this.socketService.unbind('gameStart');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
