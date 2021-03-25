@@ -90,7 +90,9 @@ class GameRepository {
     }
 
     private var onTransition = Emitter.Listener {
-        _transition.postValue(gson.fromJson(it[0].toString(), Transition::class.java))
+        val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
+        _transition.postValue(transitionTemp)
+        _timer.postValue(Timer(transitionTemp.timer))
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {

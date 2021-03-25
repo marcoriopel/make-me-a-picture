@@ -94,7 +94,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel.transitionMessage.observe(this, Observer{
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
             toast.show()
         })
 

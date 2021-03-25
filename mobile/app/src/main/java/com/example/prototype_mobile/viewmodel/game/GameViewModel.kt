@@ -33,14 +33,15 @@ class GameViewModel():ViewModel() {
         }
 
         gameRepository.transition.observeForever {
-            val msg = when (it.state) {
-                0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner! ${it.timer}"
-                1 -> "Droit de réplique! ${it.timer}"
-                2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner! ${it.timer}";
-                else -> throw Exception("Transition state undefined")
+            if (it.timer == 5) {
+                val msg = when (it.state) {
+                    0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
+                    1 -> "Droit de réplique!"
+                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!";
+                    else -> throw Exception("Transition state undefined")
+                }
+                _transitionMessage.postValue(msg)
             }
-            Log.e("GameViewModel -> transition occurred", msg)
-            _transitionMessage.postValue(msg)
         }
     }
 }
