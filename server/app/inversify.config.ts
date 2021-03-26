@@ -20,6 +20,7 @@ import { GameManagerService } from './services/managers/game-manager.service';
 import { DrawingsService } from './services/drawings.service';
 import { SocketConnectionService } from './services/sockets/socket-connection.service';
 import { UserService } from './services/user.service';
+import { StatsController } from './controllers/stats.controller';
 
 export const containerBootstrapper: () => Promise<Container> = async () => {
     const container: Container = new Container();
@@ -28,6 +29,7 @@ export const containerBootstrapper: () => Promise<Container> = async () => {
     container.bind(TYPES.Application).to(Application);
 
     container.bind(TYPES.AuthController).to(AuthController);
+    container.bind(TYPES.StatsController).to(StatsController);
     container.bind(TYPES.GamesController).to(GamesController);
     container.bind(TYPES.DrawingsController).to(DrawingsController);
     container.bind(TYPES.ChatController).to(ChatController);

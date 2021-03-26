@@ -37,7 +37,7 @@ export class ChatManagerService {
     async getAllUserChats(username: string, res: Response, next: NextFunction) {
         var chatNames = [];
         try {
-            const userInfo = await this.usersModel.getCredentials(username);
+            const userInfo = await this.usersModel.getUserInfo(username);
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
@@ -52,7 +52,7 @@ export class ChatManagerService {
     async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
         var chatsHistory = [];
         try {
-            const userInfo = await this.usersModel.getCredentials(username);
+            const userInfo = await this.usersModel.getUserInfo(username);
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatHistory = await this.chatModel.getChatHistory(chatId);
