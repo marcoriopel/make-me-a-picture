@@ -126,10 +126,10 @@
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="50dp"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/blue_to_lightblue"
-            android:drawableTop="@drawable/icon_solo"
+            app:backgroundTint="@color/poly_blue"
+            android:drawableTop="@drawable/icon_refresh_black_40dp"
             android:paddingTop="-30dip"
-            android:enabled="true" />
+            android:activated="true" />
 
     </LinearLayout>
     <Space

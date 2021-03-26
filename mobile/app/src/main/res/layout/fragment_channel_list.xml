@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop ="20dp"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical"
+    android:background="@drawable/button_rounded_channel"
+    android:backgroundTint = "@color/light_grey">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/channellist_name"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:enabled="true"
+            android:text="Général"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/channellist_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/join_game"
+            android:textStyle="bold"
+            android:background="@drawable/button_join_chat"
+            android:theme="@style/Widget.App.Button.Green"
+            android:textAllCaps="false"
+            android:gravity="center_horizontal|center_vertical"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+
+</LinearLayout>
