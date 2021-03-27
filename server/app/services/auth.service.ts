@@ -54,11 +54,11 @@ export class AuthService {
     }
 
     async addUserToChat(username: string, chatId: string) {
-        await this.userCredentialsModel.addUserToChat(username, chatId);
+        await this.usersModel.addUserToChat(username, chatId);
     }
 
     async removeUserFromChat(username: string, chatId: string) {
-        await this.userCredentialsModel.removeUserFromChat(username, chatId);
+        await this.usersModel.removeUserFromChat(username, chatId);
     }
 
     async registerUser(req: Request, res: Response, next: NextFunction): Promise<any> {

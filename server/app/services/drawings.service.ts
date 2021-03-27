@@ -58,7 +58,7 @@ export class DrawingsService {
             throw new Error('Database is empty');
         }
         for (let drawing of excludedDrawings) {
-            words = words.filter(f => f.drawingName !== drawing);
+            words = words.filter(word => word.drawingName !== drawing);
         }
 
         if (words.length < 1) {
