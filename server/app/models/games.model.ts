@@ -17,4 +17,12 @@ export class GamesModel {
             console.error(e);
         }
     }
+
+    async getGames(username: string) {
+        try {
+            return await this.databaseModel.client.db("database").collection("games").find({'players.username' : username}).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
 }
