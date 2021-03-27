@@ -21,7 +21,6 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   });
 
   constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { 
-    console.log("GAME CONSTRUCTION")
   }
 
   ngOnInit(): void {

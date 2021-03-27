@@ -6,6 +6,7 @@ import { SocketService } from '../socket/socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RoundTransitionComponent } from "@app/components/round-transition/round-transition.component";
 import { GameType } from '@app/classes/game';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Player {
   username: string;
@@ -51,9 +52,8 @@ export class GameService {
   gameTimer: number = 180;
 
 
-  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog) {
+  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar) {
     this.username = localStorage.getItem('username');
-    console.log('CONSTRUCTION')
   }
 
   initialize(gameType: GameType): void {
@@ -137,7 +137,6 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
-      console.log(data);
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
@@ -158,10 +157,8 @@ export class GameService {
     })
   
     this.socketService.bind('transitionTimer', (data: any) => {
-      console.log(data)
       this.state = data.state;
       if(data.timer == 5){
-        console.log('test');
         this.openDialog(this.state);
       }
       if(!data.timer){
@@ -187,8 +184,12 @@ export class GameService {
     })
 
     this.socketService.bind('guessCallback', (data: any) => {
-      console.log(data)
       // SNACKBAR ?
+      let message: string = "";
+      data.true ? message = "Mauvaise réponse" : message = "Bonne réponse";
+      this.snackBar.open(message, "", {
+        duration: 2000,
+      });
     })
 
     this.socketService.bind('newRound', (data: any) => {
