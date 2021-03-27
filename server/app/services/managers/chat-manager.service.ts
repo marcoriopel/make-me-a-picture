@@ -41,7 +41,7 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"] });
+                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
             }
             next(chatNames);
         }
@@ -115,7 +115,7 @@ export class ChatManagerService {
     async removeUserFromChat(username: string, chatId: string) {
         await this.chatModel.removeUserFromChat(username, chatId);
         const response = await this.chatModel.getUsersInChat(chatId);
-        if(response.users.length == 0){
+        if (response.users.length == 0) {
             this.chatModel.deleteChat(chatId);
         }
     }
