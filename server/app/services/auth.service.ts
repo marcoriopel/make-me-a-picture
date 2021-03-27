@@ -17,7 +17,7 @@ export class AuthService {
     async loginUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const authInfo: AuthInfo = { 'username': req.body.username, 'password': req.body.password };
-            const userInfo: DetailedUser = await this.usersModel.getCredentials(authInfo.username);
+            const userInfo: DetailedUser = await this.usersModel.getUserInfo(authInfo.username);
             if (userInfo && userInfo.password == authInfo.password) {
                 if (await this.checkIfUserAlreadyLoggedIn(req.body.username)) {
                     return res.status(StatusCodes.BAD_REQUEST).send("Already logged in");
@@ -76,9 +76,8 @@ export class AuthService {
             }
             if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Kevin" || userInfo.username == "Émilio") {
                 return res.sendStatus(StatusCodes.CONFLICT);
-
             }
-            const userDB: DetailedUser = await this.userCredentialsModel.getCredentials(userInfo.username);
+            const userDB: DetailedUser = await this.usersModel.getUserInfo(userInfo.username);
             if (!userDB) {
                 await this.usersModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);
                 await this.addUserToLogCollection(userInfo.username, true);

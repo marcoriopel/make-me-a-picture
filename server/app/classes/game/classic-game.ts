@@ -3,6 +3,7 @@ import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
+import { StatsService } from '@app/services/stats.service';
 import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -26,8 +27,10 @@ export class ClassicGame extends Game {
     private transitionTimerCount: number = 5;
     private drawingTeamGuessingTime = 0;
     private opposingTeamGuessingTime = 0;
+    private startDate: number;
+    private endDate: number;
 
-    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         this.vPlayers = lobby.getVPlayers();
@@ -35,6 +38,7 @@ export class ClassicGame extends Game {
     }
 
     async startGame(): Promise<void> {
+        this.startDate = new Date().getTime();
         this.drawingTeam = this.selectRandomBinary();
         this.setGuesses();
         this.round = 1;
@@ -253,10 +257,12 @@ export class ClassicGame extends Game {
     }
 
     private endGame(): void {
+        this.endDate = new Date().getTime();
         clearInterval(this.timerInterval);
         this.guessesLeft = [0, 0];
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
+        this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
 
     private getOpposingTeam(): number {

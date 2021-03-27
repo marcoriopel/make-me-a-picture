@@ -3,6 +3,7 @@ import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
+import { StatsService } from '@app/services/stats.service';
 import { injectable } from 'inversify';
 import { CoopLobby } from '../lobby/coop-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -21,8 +22,10 @@ export class CoopGame extends Game {
     private drawingTimerCount: number = 0;
     private drawingTimerInterval: NodeJS.Timeout;
     private currentDrawingName: string;
+    private startDate: number;
+    private endDate: number;
 
-    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService) {
+    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         this.players = lobby.getPlayers();
         this.vPlayer = lobby.getVPlayer();
@@ -30,8 +33,10 @@ export class CoopGame extends Game {
     }
 
     async startGame(): Promise<void> {
+        this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
+        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
@@ -77,10 +82,12 @@ export class CoopGame extends Game {
     }
 
     private endGame(): void {
+        this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
         this.guessesLeft = 0;
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
+        this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
 
     getPlayers(): any {
