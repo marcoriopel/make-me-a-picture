@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.emitter.Emitter
@@ -39,6 +40,7 @@ class GameRepository {
     var socket: io.socket.client.Socket
     val gson: Gson = Gson()
     var gameId: String? = null
+    var gameType: GameType = GameType.COOP
 
     var team1: MutableList<Players> = mutableListOf()
     var team2: MutableList<Players> = mutableListOf()
@@ -70,7 +72,12 @@ class GameRepository {
     }
 
     private  var onScoreEvent = Emitter.Listener {
-        _teamScore.postValue(gson.fromJson(it[0].toString(), Score::class.java))
+        if (gameType == GameType.CLASSIC) {
+            _teamScore.postValue(gson.fromJson(it[0].toString(), Score::class.java))
+        } else {
+            val score =  JSONObject(it[0].toString()).getString("score").toInt()
+            _teamScore.postValue(Score(intArrayOf(score)))
+        }
     }
 
     private  var onTimerEvent = Emitter.Listener {
@@ -84,9 +91,13 @@ class GameRepository {
     }
 
     private var onGuessesLeft = Emitter.Listener {
-        val gson: Gson = Gson()
-        val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
-        _isPlayerGuessing.postValue(guessesLeft.guessesLeft[team] > 0)
+        if (gameType == GameType.CLASSIC) {
+            val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
+            _isPlayerGuessing.postValue(guessesLeft.guessesLeft[team] > 0)
+        } else {
+            val guessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
+            _isPlayerGuessing.postValue(guessesLeft > 0)
+        }
     }
 
     private var onTransition = Emitter.Listener {
