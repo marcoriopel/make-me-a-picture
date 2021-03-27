@@ -51,3 +51,10 @@ export enum MouseButton {
     BACK = 3,
     FORWARD = 4,
 }
+
+export enum State {
+    GAMESTART = 0,
+    REPLY = 1,
+    NEWROUND = 2,
+    ENDGAME = 3,
+}

@@ -64,7 +64,6 @@ export class LobbyService {
     const body = {
       lobbyId: this.game.id,
     }
-    console.log(body)
     this.http.post<any>(this.startGameUrl, body, options).subscribe();
     this.gameService.gameId = this.game.id;
   }
@@ -150,8 +149,7 @@ export class LobbyService {
       this.isTeam2Full = (this.game.team2.length < 2) ? false: true;
       this.isLobbyFull = this.team1Full && this.isTeam2Full;
     } else if (this.game.type == GameType.SprintCoop) {
-      this.game.player.length == 2 ? this.isLobbyFull = true : this.isLobbyFull = false;
-      console.log(this.game.player)
+      this.game.player.length > 1 ? this.isLobbyFull = true : this.isLobbyFull = false;
     } else {
       this.game.player.length == 1 ? this.isLobbyFull = true : this.isLobbyFull = false;
     }

@@ -41,9 +41,9 @@ export class CoopGame extends Game {
     }
 
     guessDrawing(username: string, guess: string): void {
-        // if (!this.players.has(username)) {
-        //     throw Error("User is not part of the game")
-        // }
+        if (!this.players.has(username)) {
+            throw Error("User is not part of the game")
+        }
         if (this.currentDrawingName == guess) {
             this.addBonusGameTime();
             ++this.score;

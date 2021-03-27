@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
 import { Router } from '@angular/router';
-import { BLACK, INITIAL_LINE_WIDTH } from '@app/ressources/global-variables/global-variables';
+import { BLACK, INITIAL_LINE_WIDTH, State } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '../drawing/drawing.service';
 import { SocketService } from '../socket/socket.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,7 +34,7 @@ export class GameService {
   username: string | null;
   guessesLeft: number = 1;
   timer: number = 60;
-  state: number = 0;
+  state: State = State.GAMESTART;
   gameId: string;
 
   // Classic game
@@ -70,7 +70,7 @@ export class GameService {
     }
   }
 
-  openDialog(state: number) {
+  openDialog(state: State) {
     this.dialogRef = this.dialog.open(RoundTransitionComponent, {
       data: {
         state: state,
@@ -131,7 +131,6 @@ export class GameService {
     })
 
     this.socketService.bind('guessCallback', (data: any) => {
-      //TODO handle guessCallback, data contains { "isCorrectGuess": boolean, "guessingPlayer": string }
       this.guessingPlayer = data.guessingPlayer;
       this.isCorrectGuess = data.isCorrectGuess;
     })
@@ -149,7 +148,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      //TODO handle endGame, data contains { "finalScore": number[] }
+      this.openDialog(State.ENDGAME);
     })
 
     this.socketService.bind('timer', (data: any) => {
@@ -210,7 +209,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      this.openDialog(3);
+      this.openDialog(State.ENDGAME);
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
