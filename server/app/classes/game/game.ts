@@ -15,13 +15,13 @@ export abstract class Game {
         this.socketService = socketService;
         this.difficulty = lobby.getDifficulty();
         this.gameName = lobby.getGameName();
-        this.gameType = lobby.getGameType(); 
-        this.id = lobby.getId(); 
+        this.gameType = lobby.getGameType();
+        this.id = lobby.getId();
     }
 
     startGame(): void { }
 
-    guessDrawing(username: string, guess: string): void {}
+    guessDrawing(username: string, guess: string): void { }
 
     getGameName(): string {
         return this.gameName;
@@ -34,4 +34,6 @@ export abstract class Game {
     getDifficulty(): number {
         return this.difficulty;
     }
+
+    requestHint(user: BasicUser): void { }
 }

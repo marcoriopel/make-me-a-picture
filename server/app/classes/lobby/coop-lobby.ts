@@ -8,7 +8,7 @@ import { Lobby } from './lobby';
 export class CoopLobby extends Lobby {
     private team: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
-    
+
     constructor(difficulty: number, gameName: string, id: string) {
         super(difficulty, gameName, id);
         this.gameType = GameType.COOP;
@@ -16,18 +16,18 @@ export class CoopLobby extends Lobby {
         console.log("Created coop game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
-    startGame(): void{}
+    startGame(): void { }
 
-    deleteLobby(): void{}
+    deleteLobby(): void { }
 
-    addPlayer(user: BasicUser, socketId: string): void{
-        if(this.team.has(user.username)){
+    addPlayer(user: BasicUser, socketId: string): void {
+        if (this.team.has(user.username)) {
             throw new Error("You have already joined this lobby");
         }
-        if(this.team.size >= 4){
+        if (this.team.size >= 4) {
             throw new Error("Lobby is full");
         }
-        
+
         const player: Player = {
             "username": user.username,
             "avatar": user.avatar,
@@ -36,21 +36,25 @@ export class CoopLobby extends Lobby {
         }
 
         this.team.set(user.username, player);
-    }    
+    }
 
-    getPlayers(): any{
+    getPlayers(): any {
         let players = [];
-        this.team.forEach((player: Player) =>{
-            players.push({"username": player.username, "avatar": player.avatar, "team": 0, "isVirtual": player.isVirtual});
+        this.team.forEach((player: Player) => {
+            players.push({ "username": player.username, "avatar": player.avatar });
         })
         return players;
-    } 
+    }
 
     removePlayer(user: BasicUser): void {
-        if(this.team.has(user.username)){
+        if (this.team.has(user.username)) {
             this.team.delete(user.username);
             return
         }
         throw new Error("You are not part of this lobby")
+    }
+
+    getVPlayer(): VirtualPlayer {
+        return this.vPlayer;
     }
 }

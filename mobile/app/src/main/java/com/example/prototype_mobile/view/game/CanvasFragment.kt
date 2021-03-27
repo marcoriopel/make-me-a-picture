@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
+import com.example.prototype_mobile.viewmodel.game.GameViewModel
 
 
 class CanvasFragment : Fragment() {

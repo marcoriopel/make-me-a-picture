@@ -2,6 +2,9 @@ package com.example.prototype_mobile.view.game
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +13,7 @@ import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.game.*
 import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
@@ -73,8 +77,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             if(gameViewModel.isGameEnded.value!! && gameViewModel.isGameEnded.value != null)
                 endGameEvent()
         })
-
-
+        gameViewModel.transitionMessage.observe(this, Observer{
+            val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
+            toast.show()
+        })
 
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {

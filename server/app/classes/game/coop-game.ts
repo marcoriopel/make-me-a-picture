@@ -1,17 +1,17 @@
-import { SocketService } from '@app/services/sockets/socket.service';
-import { injectable } from 'inversify';
-import { Lobby } from '../lobby/lobby';
-import { Game } from './game';
-import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables'
-import { SoloLobby } from '../lobby/solo-lobby';
-import { Player } from '@app/ressources/interfaces/user.interface';
-import { DrawingsService } from '@app/services/drawings.service';
-import { VirtualPlayer } from '../virtual-player/virtual-player';
-import { StatsService } from '@app/services/stats.service';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
+import { DrawingsService } from '@app/services/drawings.service';
+import { SocketService } from '@app/services/sockets/socket.service';
+import { StatsService } from '@app/services/stats.service';
+import { injectable } from 'inversify';
+import { CoopLobby } from '../lobby/coop-lobby';
+import { Lobby } from '../lobby/lobby';
+import { VirtualPlayer } from '../virtual-player/virtual-player';
+import { Game } from './game';
 
 @injectable()
-export class SoloGame extends Game {
+export class CoopGame extends Game {
     private players: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
     private score: number = 0;
@@ -24,13 +24,13 @@ export class SoloGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         for (const player of lobby.getPlayers()) {
             this.players.set(player.username, player);
         }
         this.vPlayer = lobby.getVPlayer();
-        console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
+        console.log("Started coop game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
     async startGame(): Promise<void> {
@@ -77,11 +77,13 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
+
     }
 
     private endGame(): void {
         this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
+        clearInterval(this.drawingTimerInterval);
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });

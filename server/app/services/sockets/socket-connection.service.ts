@@ -1,4 +1,4 @@
-import { UserCredentialsModel } from '@app/models/user-credentials.model';
+import { UsersModel } from '@app/models/users.model';
 import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
@@ -12,6 +12,8 @@ import { TokenService } from '../token.service';
 import { SocketService } from './socket.service';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { GameManagerService } from '../managers/game-manager.service';
+import { AuthService } from '../auth.service';
+import { UserService } from '../user.service';
 
 @injectable()
 export class SocketConnectionService {
@@ -20,6 +22,8 @@ export class SocketConnectionService {
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
         @inject(TYPES.TokenService) private tokenService: TokenService,
+        @inject(TYPES.AuthService) private authService: AuthService,
+        @inject(TYPES.UserService) private userService: UserService,
         @inject(TYPES.GameManagerService) private gameManagerService: GameManagerService,
         @inject(TYPES.ChatManagerService) private chatManagerService: ChatManagerService,
         @inject(TYPES.LobbyManagerService) private lobbyManagerService: LobbyManagerService,
@@ -61,9 +65,9 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 try {
-                    socket.leave("tmp"+request.oldLobbyId);
+                    socket.leave("tmp" + request.oldLobbyId);
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
-                        socket.join('tmp'+request.lobbyId);
+                        socket.join('tmp' + request.lobbyId);
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
@@ -79,8 +83,9 @@ export class SocketConnectionService {
                 }
                 try {
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
-                        socket.leave("tmp"+request.lobbyId);
+                        socket.leave("tmp" + request.lobbyId);
                         socket.join(request.lobbyId);
+                        console.log("JOIN")
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
@@ -92,6 +97,7 @@ export class SocketConnectionService {
 
             socket.on('leaveLobby', (request: any) => {
                 if (!(request instanceof Object)) {
+                    console.log("LEAVE")
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.lobbyId);
@@ -99,6 +105,7 @@ export class SocketConnectionService {
             });
 
             socket.on('leaveGame', (request: any) => {
+                console.log("test");
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
@@ -109,7 +116,6 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                console.log("Entered socket call");
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 try {
                     this.gameManagerService.guessDrawing(request.gameId, user.username, request.guess)
@@ -117,12 +123,56 @@ export class SocketConnectionService {
                     this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
                 }
             });
+
+            socket.on('hintRequest', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    this.gameManagerService.requestHint(request.gameId, user);
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
+            });
+
+            socket.on('joinChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                socket.join(request.chatId);
+                this.userService.addUserToChat(user.username, request.chatId)
+                this.chatManagerService.addUserToChat(user.username, request.chatId)
+                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+            });
+
+            socket.on('leaveChatRoom', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                socket.leave(request.chatId);
+                this.userService.removeUserFromChat(user.username, request.chatId)
+                this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+            });
+
+            socket.on('disconnect', () => {
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                this.authService.addUserToLogCollection(user.username, false);
+                console.log('disconnection of ' + user.username);
+              });
         });
     }
 
-    leaveRoom(socket: socketio.Socket, roomId: string){
+    leaveRoom(socket: socketio.Socket, roomId: string) {
         try {
+            var s = socket.rooms[roomId]
+            console.log(s);
             socket.leave(roomId);
+            var s = socket.rooms[roomId]
+            console.log(s);
         } catch (err) {
             this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
         }

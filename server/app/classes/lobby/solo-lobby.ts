@@ -48,4 +48,8 @@ export class SoloLobby extends Lobby {
         }
         throw new Error("You are not part of this lobby")
     }
+
+    getVPlayer(): VirtualPlayer {
+        return this.vPlayer;
+    }
 }

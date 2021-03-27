@@ -20,8 +20,7 @@
         <activity
             android:name=".view.mainmenu.MainMenuActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.connection.sign_up.SignUpActivity"
             android:screenOrientation="landscape" />

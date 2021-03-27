@@ -11,6 +11,11 @@ import { ClassicGame } from '@app/classes/game/classic-game';
 import { ClassicLobby } from '@app/classes/lobby/classic-lobby';
 import { DrawingsService } from '@app/services/drawings.service'
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { CoopGame } from '@app/classes/game/coop-game';
+import { CoopLobby } from '@app/classes/lobby/coop-lobby';
+import { SoloLobby } from '@app/classes/lobby/solo-lobby';
+import { SoloGame } from '@app/classes/game/solo-game';
+import { StatsService } from '../stats.service';
 
 
 
@@ -19,10 +24,11 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 export class GameManagerService {
 
     static games: Map<string, Game> = new Map<string, Game>();
-    
+
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
-        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,) {
+        @inject(TYPES.DrawingsService) private drawingService: DrawingsService,
+        @inject(TYPES.StatsService) private statsService: StatsService,) {
         this.socketService = SocketService.getInstance();
     }
 
@@ -37,18 +43,26 @@ export class GameManagerService {
             case GameType.CLASSIC:
                 if (players.length != 4)
                     return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (4 players required)");
-                const game = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService);
-                GameManagerService.games.set(req.body.lobbyId, game);
+                const classicGame = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingService, this.statsService);
+                GameManagerService.games.set(req.body.lobbyId, classicGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
-                game.startGame();
+                classicGame.startGame();
                 break;
             case GameType.SOLO:
                 if (players.length != 1)
-                    res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (1 player required)");
+                    return res.status(StatusCodes.NOT_ACCEPTABLE).send("Not enough players to start game (1 player required)");
+                const soloGame = new SoloGame(<SoloLobby>lobby, this.socketService, this.drawingService, this.statsService);
+                GameManagerService.games.set(req.body.lobbyId, soloGame);
+                LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                soloGame.startGame();
                 break;
             case GameType.COOP:
                 if (players.length < 2 || players.length > 4)
-                    res.status(StatusCodes.NOT_ACCEPTABLE).send("Number of players in lobby invalid to start game (2-4 players required)");
+                    return res.status(StatusCodes.NOT_ACCEPTABLE).send("Number of players in lobby invalid to start game (2-4 players required)");
+                const coopGame = new CoopGame(<CoopLobby>lobby, this.socketService, this.drawingService, this.statsService);
+                GameManagerService.games.set(req.body.lobbyId, coopGame);
+                LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                coopGame.startGame();
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Invalid game type");
@@ -79,12 +93,12 @@ export class GameManagerService {
         next();
     }
 
-    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent){
+    dispatchDrawingEvent(user: BasicUser, event: DrawingEvent) {
         if (this.gameExist(event.gameId)) {
-            const game: Game =  GameManagerService.games.get(event.gameId);
+            const game: Game = GameManagerService.games.get(event.gameId);
             (game as ClassicGame).dispatchDrawingEvent(user, event);
         }
-        else{
+        else {
             throw new Error("This game does not exist");
         }
     }
@@ -99,5 +113,13 @@ export class GameManagerService {
         }
         let game = GameManagerService.games.get(gameId);
         game.guessDrawing(username, guess);
+    }
+
+    requestHint(gameId: string, user: BasicUser) {
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            throw new Error("Game was not found");
+        }
+        let game = GameManagerService.games.get(gameId);
+        game.requestHint(user);
     }
 }
