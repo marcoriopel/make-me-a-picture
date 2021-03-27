@@ -10,8 +10,14 @@ export class ChatService {
   private baseUrl = environment.api_url;
   private getJoinedChatUrl = this.baseUrl + '/api/chat/joined';
   private createChatUrl = this.baseUrl + '/api/chat/create';
+  private getChatListUrl = this.baseUrl + '/api/chat/list';
   public isChatInExternalWindow: boolean = false;
-  private chatList: Chat[] = [{
+  joinedChatList: Chat[] = [{
+    name: 'Général',
+    messages: [],
+    chatId: 'General',
+  }];
+  notJoinedChatList: Chat[] = [{
     name: 'Général',
     messages: [],
     chatId: 'General',
@@ -25,39 +31,90 @@ export class ChatService {
   }
 
   async initializeChats() {
+    this.joinedChatList = [];
+    this.notJoinedChatList = [];
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
-        this.chatList.pop(); // Temporary fix to async construction problem
         data.chats.forEach((element: any) => {
           const chat: Chat = {
             name: element.chatName,
             chatId: element.chatId,
             messages: [],
           }
-          this.chatList.push(chat);
+          this.joinedChatList.push(chat);
+        });
+        this.http.get<any>(this.getChatListUrl, options)
+        .subscribe((data: any) => {
+          data.chats.forEach((element: any) => {
+            const chat: Chat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+            }
+            let isChatAlreadyJoined = false;
+            this.joinedChatList.forEach((el: Chat) => {
+              if(el.chatId == chat.chatId){
+                isChatAlreadyJoined = true;
+              }
+            })
+            if(!isChatAlreadyJoined) this.notJoinedChatList.push(chat);
+          });
         });
       });
   }
 
   setCurrentChat(chatId: string): void {
     this.currentChatId = chatId;
-    for(let i = 0; i < this.chatList.length; i++){
-      if(this.chatList[i].chatId == chatId){
+    for(let i = 0; i < this.joinedChatList.length; i++){
+      if(this.joinedChatList[i].chatId == chatId){
         this.index = i;
       }
     }
   }
 
   getChatMessages(): Message[] {
-    return this.chatList[this.index]["messages"];
+    return this.joinedChatList[this.index]["messages"];
   }
 
-  getChatList(): Chat[] {
-    return this.chatList;
+  refreshChatList(): void {
+    this.joinedChatList = [];
+    this.notJoinedChatList = [];
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    const options = { headers: headers};
+    this.http.get<any>(this.getJoinedChatUrl, options)
+      .subscribe((data: any) => {
+        data.chats.forEach((element: any) => {
+          const chat: Chat = {
+            name: element.chatName,
+            chatId: element.chatId,
+            messages: [],
+          }
+          this.joinedChatList.push(chat);
+        });
+        this.http.get<any>(this.getChatListUrl, options)
+        .subscribe((data: any) => {
+          data.chats.forEach((element: any) => {
+            const chat: Chat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+            }
+            let isChatAlreadyJoined = false;
+            this.joinedChatList.forEach((el: Chat) => {
+              if(el.chatId == chat.chatId){
+                isChatAlreadyJoined = true;
+              }
+            })
+            if(!isChatAlreadyJoined) this.notJoinedChatList.push(chat);
+          });
+        });
+      });
   }
 
   getCurrentChat(): string {
@@ -80,7 +137,7 @@ export class ChatService {
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
-      this.chatList[this.index]["messages"].push(msg);
+      this.joinedChatList[this.index]["messages"].push(msg);
     });
   }
 

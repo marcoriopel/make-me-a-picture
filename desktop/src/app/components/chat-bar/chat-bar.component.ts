@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-bar',
@@ -9,11 +10,12 @@ import { ChatService } from '@app/services/chat/chat.service'
 })
 
 export class ChatBarComponent implements OnInit {
-
   isWindowButtonAvailable: boolean = true;
 
-  constructor(public chatService: ChatService, private electronService: ElectronService) {}
-
+  constructor(public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder) {}
+  createChatForm = this.formBuilder.group({
+    chatName: '',
+  });
   changeChat(name: string): void {
     this.chatService.setCurrentChat(name)
   }
@@ -48,8 +50,11 @@ export class ChatBarComponent implements OnInit {
     })
   }
 
-  createChat(chatId: string): void {
-    this.chatService.createChat(chatId)
+  createChat(): void {
+    if(this.createChatForm.value.chatName == "" || !this.createChatForm.value.chatName) return;
+    this.chatService.createChat(this.createChatForm.value.chatName);
+    this.createChatForm.reset();
+
   }
   
   joinChat(chatId: string): void {
@@ -58,5 +63,9 @@ export class ChatBarComponent implements OnInit {
 
   leaveChat(chatId: string): void {
     this.chatService.leaveChat(chatId)
+  }
+
+  refreshChatList(): void {
+    this.chatService.refreshChatList();
   }
 }
