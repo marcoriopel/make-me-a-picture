@@ -33,7 +33,16 @@ export class UserService {
             let userLogs = await this.userLogsModel.getLogs(username);
             let userGames = await this.gamesModel.getGames(username);
 
-            let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "logs": userLogs, "games" : userGames}
+            let userStats = {
+                'gamesPlayed': userInfo.gamesPlayed, 
+                'timePlayed': userInfo.timePlayed,
+                'bestSoloScore': userInfo.bestSoloScore,
+                'bestCoopScore': userInfo.bestCoopScore,
+                'classicWinRatio': userInfo.classicWinRatio,
+                'meanGameTime': userInfo.meanGameTime,
+            }
+
+            let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "stats": userStats, "logs": userLogs, "games" : userGames}
             next(privateInfo);
         }
         catch(e){
