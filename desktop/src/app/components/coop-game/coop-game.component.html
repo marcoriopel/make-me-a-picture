@@ -4,17 +4,20 @@
     <div class="column-container">
         <div id="editor-column">
             <div id="game-data">
-                <div id="timer-container">
-                    <h1>{{this.gameService.timer}} - {{this.gameService.gameTimer}}</h1>
+                <div id="round-time">
+                    <h1>Round - {{this.gameService.timer}}</h1>
                 </div>
                 <div id="score-container">
-                    <h3>{{this.gameService.score[0] }}</h3>
+                    <h3>Score - {{this.gameService.score[0] }} </h3>
                 </div>
                 <div id="guesses-container">
-                    <h3>{{this.gameService.guessesLeft }}</h3>
+                    <h3>{{this.gameService.guessesLeft }} essais restant</h3>
                 </div>
             </div>
             <div id="editor">
+                <div id="game-time">
+                    <h1>{{this.gameService.gameTimer}}</h1>
+                </div>
                 <app-editor [isInGame]="true"></app-editor>
                 <div #guessBox id="guess-box">
                     <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">

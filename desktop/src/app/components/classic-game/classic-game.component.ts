@@ -44,6 +44,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('guessesLeft');
     this.socketService.unbind('score');
     this.socketService.unbind('gameStart');
+    this.socketService.unbind('endGame');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

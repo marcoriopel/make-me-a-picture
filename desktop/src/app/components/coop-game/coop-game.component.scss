@@ -102,15 +102,54 @@
     top: 10px;
 }
 
-#timer-container {
+#game-time {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 
     h1 {
         color: white;
         font-size: 50px;
         font-weight: 600;
+    }
+}
+
+#round-time {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    h1 {
+        color: white;
+        font-size: 30px;
+        font-weight: 500;
+    }
+}
+
+#score-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    h3 {
+        color: white;
+        font-size: 30px;
+        font-weight: 500;
+    }
+}
+
+#guesses-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    h3 {
+        color: white;
+        font-size: 20px;
+        font-weight: 400;
     }
 }

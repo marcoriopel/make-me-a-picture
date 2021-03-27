@@ -34,6 +34,15 @@ export class CoopGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('transitionTimer');
+    this.socketService.unbind('drawingName');
+    this.socketService.unbind('timer');
+    this.socketService.unbind('newRound');
+    this.socketService.unbind('guessCallBack');
+    this.socketService.unbind('guessesLeft');
+    this.socketService.unbind('score');
+    this.socketService.unbind('gameStart');
+    this.socketService.unbind('endGame');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
