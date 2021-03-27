@@ -25,7 +25,9 @@ export class SoloGame extends Game {
 
     constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
-        this.players = lobby.getPlayers();
+        for (const player of lobby.getPlayers()) {
+            this.players.set(player.username, player);
+        }
         this.vPlayer = lobby.getVPlayer();
         console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -80,6 +82,7 @@ export class SoloGame extends Game {
         this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
         this.guessesLeft = 0;
+        this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
         this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);

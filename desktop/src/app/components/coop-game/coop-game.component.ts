@@ -10,11 +10,11 @@ import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  selector: 'app-coop-game',
+  templateUrl: './coop-game.component.html',
+  styleUrls: ['./coop-game.component.scss']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class CoopGameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
@@ -34,6 +34,15 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('transitionTimer');
+    this.socketService.unbind('drawingName');
+    this.socketService.unbind('timer');
+    this.socketService.unbind('newRound');
+    this.socketService.unbind('guessCallBack');
+    this.socketService.unbind('guessesLeft');
+    this.socketService.unbind('score');
+    this.socketService.unbind('gameStart');
+    this.socketService.unbind('endGame');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
@@ -87,7 +96,5 @@ export class GameComponent implements OnInit, OnDestroy {
     this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
-
-  
 
 }

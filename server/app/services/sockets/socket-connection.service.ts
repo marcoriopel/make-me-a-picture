@@ -85,6 +85,7 @@ export class SocketConnectionService {
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
                         socket.leave("tmp" + request.lobbyId);
                         socket.join(request.lobbyId);
+                        console.log("JOIN")
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
@@ -96,6 +97,7 @@ export class SocketConnectionService {
 
             socket.on('leaveLobby', (request: any) => {
                 if (!(request instanceof Object)) {
+                    console.log("LEAVE")
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.lobbyId);
@@ -103,6 +105,7 @@ export class SocketConnectionService {
             });
 
             socket.on('leaveGame', (request: any) => {
+                console.log("test");
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
@@ -165,7 +168,11 @@ export class SocketConnectionService {
 
     leaveRoom(socket: socketio.Socket, roomId: string) {
         try {
+            var s = socket.rooms[roomId]
+            console.log(s);
             socket.leave(roomId);
+            var s = socket.rooms[roomId]
+            console.log(s);
         } catch (err) {
             this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
         }

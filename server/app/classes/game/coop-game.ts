@@ -26,7 +26,9 @@ export class CoopGame extends Game {
 
     constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
-        this.players = lobby.getPlayers();
+        for (const player of lobby.getPlayers()) {
+            this.players.set(player.username, player);
+        }
         this.vPlayer = lobby.getVPlayer();
         console.log("Started coop game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -81,7 +83,9 @@ export class CoopGame extends Game {
     private endGame(): void {
         this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
+        clearInterval(this.drawingTimerInterval);
         this.guessesLeft = 0;
+        this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
         this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
@@ -124,7 +128,7 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 180;
+        this.gameTimerCount = 30;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "gameTimer": this.gameTimerCount });
             if (!this.gameTimerCount) {

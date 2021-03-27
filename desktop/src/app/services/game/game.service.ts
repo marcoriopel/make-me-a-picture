@@ -1,10 +1,12 @@
 import { Injectable} from '@angular/core';
 import { Router } from '@angular/router';
-import { BLACK, INITIAL_LINE_WIDTH } from '@app/ressources/global-variables/global-variables';
+import { BLACK, INITIAL_LINE_WIDTH, State } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '../drawing/drawing.service';
 import { SocketService } from '../socket/socket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RoundTransitionComponent } from "@app/components/round-transition/round-transition.component";
+import { GameType } from '@app/classes/game';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Player {
   username: string;
@@ -22,30 +24,53 @@ interface Teams {
   providedIn: 'root'
 })
 export class GameService {
-  isInGame: boolean = false;
-  score: number[] = [0, 0];
-  drawingPlayer: string;
-  gameId: string;
-  username: string | null;
-  drawingName: string = "";
-  teams: Teams;
-  isGuessing: boolean = false;
-  isUserTeamGuessing: boolean = false;
-  currentUserTeam: number;
-  timer: number = 60;
-  transitionTimer: number = 5;
   dialogRef: any;
 
-  isPlayerDrawing: boolean = false;
-  isCorrectGuess: boolean = false;
-  guessingPlayer: string = "";
-  state: number = 0;
 
-  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog) {
+  // Shared between different game types
+  isCorrectGuess: boolean = false;
+  isInGame: boolean = false;
+  score: number[] = [0, 0];
+  username: string | null;
+  guessesLeft: number = 1;
+  timer: number = 60;
+  state: State = State.GAMESTART;
+  gameId: string;
+
+  // Classic game
+  isUserTeamGuessing: boolean = false;
+  isPlayerDrawing: boolean = false;
+  transitionTimer: number = 5;
+  guessingPlayer: string = "";
+  isGuessing: boolean = false;
+  drawingName: string = "";
+  currentUserTeam: number;
+  drawingPlayer: string;
+  teams: Teams;
+
+  // Sprint coop and solo
+  gameTimer: number = 180;
+
+
+  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar) {
     this.username = localStorage.getItem('username');
   }
 
-  openDialog(state: number) {
+  initialize(gameType: GameType): void {
+    switch (gameType) {
+      case GameType.Classic:
+        this.initializeClassic();
+        break
+      case GameType.SprintCoop:
+        this.initializeCoop();
+        break
+      case GameType.SprintSolo:
+        this.initializeSolo();
+        break
+    }
+  }
+
+  openDialog(state: State) {
     this.dialogRef = this.dialog.open(RoundTransitionComponent, {
       data: {
         state: state,
@@ -62,7 +87,7 @@ export class GameService {
   }
 
 
-  initialize(): void {
+  initializeClassic(): void {
     this.socketService.bind('gameStart', (data: any) => {
       this.isInGame = true;
       this.drawingPlayer = data.player;
@@ -82,7 +107,7 @@ export class GameService {
           this.currentUserTeam = player.team;
         }
       });
-      this.router.navigate(['/game']);
+      this.router.navigate(['/game/classic']);
     })
 
     this.socketService.bind('score', (data: any) => {
@@ -106,7 +131,6 @@ export class GameService {
     })
 
     this.socketService.bind('guessCallback', (data: any) => {
-      //TODO handle guessCallback, data contains { "isCorrectGuess": boolean, "guessingPlayer": string }
       this.guessingPlayer = data.guessingPlayer;
       this.isCorrectGuess = data.isCorrectGuess;
     })
@@ -124,7 +148,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      //TODO handle endGame, data contains { "finalScore": number[] }
+      this.openDialog(State.ENDGAME);
     })
 
     this.socketService.bind('timer', (data: any) => {
@@ -141,6 +165,61 @@ export class GameService {
       }
       this.transitionTimer = data.timer;
     })
+  }
+
+  initializeCoop(): void {
+    this.socketService.bind('gameStart', (data: any) => {
+      this.isInGame = true;
+      this.drawingPlayer = data.player;
+      this.router.navigate(['/game/coop']);
+    });
+
+    this.socketService.bind('score', (data: any) => {
+      this.score[0] = data.score;
+    })
+
+    this.socketService.bind('guessesLeft', (data: any) => {
+      this.guessesLeft = data.guessesLeft;
+    })
+
+    this.socketService.bind('guessCallback', (data: any) => {
+      let message: string = "";
+      data.isCorrectGuess ? message = "Bonne réponse" : message = "Mauvaise réponse";
+      this.snackBar.open(message, "", {
+        duration: 2000,
+      });
+    })
+
+    this.socketService.bind('newRound', (data: any) => {
+      this.drawingService.clearCanvas(this.drawingService.baseCtx);
+      this.drawingService.clearCanvas(this.drawingService.previewCtx);
+      this.drawingService.strokeStack = [];
+      this.drawingService.redoStack = [];
+      this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
+      this.drawingService.color = BLACK;
+    })
+
+    this.socketService.bind('gameTimer', (data: any) => {
+      this.gameTimer = data.gameTimer;
+    })
+
+    this.socketService.bind('drawingTimer', (data: any) => {
+      this.timer = data.drawingTimer;
+    })
+
+    this.socketService.bind('endGame', (data: any) => {
+      this.openDialog(State.ENDGAME);
+      this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('gameTimer');
+      this.socketService.unbind('newRound');
+      this.socketService.unbind('guessCallBack');
+      this.socketService.unbind('guessesLeft');
+      this.socketService.unbind('score');
+    })
+  }
+  
+  initializeSolo(): void {
+
   }
 
   updateGuessingStatus() : void {
