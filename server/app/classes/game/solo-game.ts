@@ -72,6 +72,7 @@ export class SoloGame extends Game {
         this.vPlayer.stopDrawing();
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();

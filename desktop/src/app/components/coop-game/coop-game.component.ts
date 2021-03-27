@@ -29,7 +29,9 @@ export class SprintGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId})
+    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
+    this.drawingService.strokeStack = [];
+    this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
