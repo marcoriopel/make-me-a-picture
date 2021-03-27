@@ -91,6 +91,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
+    if(this.guessForm.value.guess == "") return;
     const body = {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,
