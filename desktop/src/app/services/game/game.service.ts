@@ -62,10 +62,10 @@ export class GameService {
         this.initializeClassic();
         break
       case GameType.SprintCoop:
-        this.initializeCoop();
+        this.initializeSprint();
         break
       case GameType.SprintSolo:
-        this.initializeSolo();
+        this.initializeSprint();
         break
     }
   }
@@ -167,11 +167,11 @@ export class GameService {
     })
   }
 
-  initializeCoop(): void {
+  initializeSprint(): void {
     this.socketService.bind('gameStart', (data: any) => {
       this.isInGame = true;
       this.drawingPlayer = data.player;
-      this.router.navigate(['/game/coop']);
+      this.router.navigate(['/game/sprint']);
     });
 
     this.socketService.bind('score', (data: any) => {
@@ -216,10 +216,6 @@ export class GameService {
       this.socketService.unbind('guessesLeft');
       this.socketService.unbind('score');
     })
-  }
-  
-  initializeSolo(): void {
-
   }
 
   updateGuessingStatus() : void {

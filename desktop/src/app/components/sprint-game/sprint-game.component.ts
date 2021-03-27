@@ -11,10 +11,10 @@ import { OnDestroy } from "@angular/core";
 
 @Component({
   selector: 'app-coop-game',
-  templateUrl: './coop-game.component.html',
-  styleUrls: ['./coop-game.component.scss']
+  templateUrl: './sprint-game.component.html',
+  styleUrls: ['./sprint-game.component.scss']
 })
-export class CoopGameComponent implements OnInit, OnDestroy {
+export class SprintGameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
@@ -29,7 +29,9 @@ export class CoopGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId})
+    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
+    this.drawingService.strokeStack = [];
+    this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
@@ -89,6 +91,7 @@ export class CoopGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
+    if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
     const body = {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,

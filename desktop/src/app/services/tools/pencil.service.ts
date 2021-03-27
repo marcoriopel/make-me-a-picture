@@ -49,7 +49,7 @@ export class PencilService extends Tool {
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
             this.drawingService.setIsToolInUse(true);
         }
-        if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+        if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
             const mouseDown: MouseDown = {
                 coords: this.mouseDownCoord,
                 lineColor: this.drawingService.color,
@@ -73,7 +73,7 @@ export class PencilService extends Tool {
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawingService.setIsToolInUse(false);
-            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
                     eventType: drawingEventType.MOUSEUP,
                     event: mousePosition,
@@ -93,7 +93,7 @@ export class PencilService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
-            if(this.gameService.drawingPlayer == localStorage.getItem('username')){
+            if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
                     eventType: drawingEventType.MOUSEMOVE,
                     event: mousePosition,

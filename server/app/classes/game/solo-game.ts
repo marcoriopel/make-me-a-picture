@@ -2,12 +2,13 @@ import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
 import { Lobby } from '../lobby/lobby';
 import { Game } from './game';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables'
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables'
 import { SoloLobby } from '../lobby/solo-lobby';
 import { Player } from '@app/ressources/interfaces/user.interface';
 import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 
 @injectable()
 export class SoloGame extends Game {
@@ -36,6 +37,7 @@ export class SoloGame extends Game {
         this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
+        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
@@ -53,14 +55,12 @@ export class SoloGame extends Game {
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
-            this.vPlayer.stopDrawing();
             this.setupNextDrawing();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft;
             if (!this.guessesLeft) {
-                this.vPlayer.stopDrawing();
                 this.setupNextDrawing();
             }
         }
@@ -69,13 +69,14 @@ export class SoloGame extends Game {
 
 
     private async setupNextDrawing() {
+        this.vPlayer.stopDrawing();
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
-
     }
 
     private endGame(): void {

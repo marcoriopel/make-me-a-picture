@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
@@ -55,14 +55,12 @@ export class CoopGame extends Game {
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
-            this.vPlayer.stopDrawing();
             this.setupNextDrawing();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft;
             if (!this.guessesLeft) {
-                this.vPlayer.stopDrawing();
                 this.setupNextDrawing();
             }
         }
@@ -71,8 +69,10 @@ export class CoopGame extends Game {
 
 
     private async setupNextDrawing() {
+        this.vPlayer.stopDrawing();
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
@@ -128,7 +128,7 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 30;
+        this.gameTimerCount = 180;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "gameTimer": this.gameTimerCount });
             if (!this.gameTimerCount) {

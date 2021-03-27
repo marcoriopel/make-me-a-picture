@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CoopGameComponent } from './coop-game.component';
+import { CoopGameComponent } from './sprint-game.component';
 
 describe('CoopGameComponent', () => {
   let component: CoopGameComponent;

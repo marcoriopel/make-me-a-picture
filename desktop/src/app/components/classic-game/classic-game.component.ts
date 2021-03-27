@@ -30,7 +30,9 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId})
+    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
+    this.drawingService.strokeStack = [];
+    this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
@@ -90,6 +92,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
+    if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
     const body = {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,
