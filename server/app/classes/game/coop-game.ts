@@ -1,16 +1,17 @@
-import { SocketService } from '@app/services/sockets/socket.service';
-import { injectable } from 'inversify';
-import { Lobby } from '../lobby/lobby';
-import { Game } from './game';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables'
-import { SoloLobby } from '../lobby/solo-lobby';
-import { Player } from '@app/ressources/interfaces/user.interface';
+import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
+import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
-import { VirtualPlayer } from '../virtual-player/virtual-player';
+import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { injectable } from 'inversify';
+import { CoopLobby } from '../lobby/coop-lobby';
+import { Lobby } from '../lobby/lobby';
+import { VirtualPlayer } from '../virtual-player/virtual-player';
+import { Game } from './game';
 
 @injectable()
-export class SoloGame extends Game {
+export class CoopGame extends Game {
     private players: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
     private score: number = 0;
@@ -23,11 +24,11 @@ export class SoloGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         this.players = lobby.getPlayers();
         this.vPlayer = lobby.getVPlayer();
-        console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
+        console.log("Started coop game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
     async startGame(): Promise<void> {

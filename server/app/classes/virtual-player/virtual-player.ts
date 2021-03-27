@@ -18,15 +18,17 @@ export class VirtualPlayer {
     private gameId: string;
     private isVPlayerTurn: boolean = false;
     private drawingSpeed: number;
-    
-    constructor(gameId: string) { 
+    private nextHintIndex = 0;
+
+
+    constructor(gameId: string) {
         this.gameId = gameId;
         this.personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
         this.setBasicUserInfo();
     }
 
-    private setBasicUserInfo(){
-        switch(this.personnality){
+    private setBasicUserInfo() {
+        switch (this.personnality) {
             case Personnality.NICE:
                 this.username = "Bernard";
                 this.avatar = 6;
@@ -46,18 +48,18 @@ export class VirtualPlayer {
         }
     }
 
-    setServices(drawingsService: DrawingsService, socketService: SocketService): void{
+    setServices(drawingsService: DrawingsService, socketService: SocketService): void {
         this.drawingsService = drawingsService;
         this.socketService = socketService;
     }
 
-    async getNewDrawing(difficulty: number): Promise<string>{
+    async getNewDrawing(difficulty: number): Promise<string> {
         try {
             this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty);
             this.drawingSpeed = this.calculateDrawingSpeed();
             return this.currentDrawing.drawingName;
         }
-        catch(err){
+        catch (err) {
             console.error(err)
         }
     }
@@ -67,9 +69,10 @@ export class VirtualPlayer {
     }
 
     async startDrawing() {
+        this.nextHintIndex = 0;
         this.isVPlayerTurn = true;
         await this.wait(500)
-        for(let stroke of this.currentDrawing.strokes){
+        for (let stroke of this.currentDrawing.strokes) {
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
                 lineColor: stroke.lineColor,
@@ -80,20 +83,20 @@ export class VirtualPlayer {
                 event: mouseDown,
                 gameId: this.gameId,
             }
-            if(this.isVPlayerTurn){
+            if (this.isVPlayerTurn) {
                 this.socketService.getSocket().to(this.gameId).emit('drawingEvent', { "drawingEvent": drawingEvent });
                 await this.drawStroke(stroke.path);
             }
             else {
                 return
-            } 
+            }
         }
     }
 
     async drawStroke(path: Vec2[]) {
-        for(let point of path){
+        for (let point of path) {
             let isLastPoint: boolean = point == path[path.length - 1] ? true : false;
-            if(this.isVPlayerTurn){
+            if (this.isVPlayerTurn) {
                 await this.drawPoint(point, isLastPoint);
             }
             else {
@@ -102,13 +105,13 @@ export class VirtualPlayer {
         }
     }
 
-    async drawPoint(point: Vec2, isLastPoint: boolean){
+    async drawPoint(point: Vec2, isLastPoint: boolean) {
         let eventType: number = isLastPoint ? drawingEventType.MOUSEUP : drawingEventType.MOUSEMOVE;
         const drawingEvent: DrawingEvent = {
             eventType: eventType,
             event: point,
             gameId: this.gameId,
-        } 
+        }
         this.socketService.getSocket().to(this.gameId).emit('drawingEvent', { "drawingEvent": drawingEvent });
         await this.delay();
     }
@@ -119,7 +122,7 @@ export class VirtualPlayer {
     private calculateDrawingSpeed(): number {
         let drawingSpeed = 0;
         let pointsNumber: number = this.calculatePointsInDrawing();
-        switch(this.currentDrawing.difficulty){
+        switch (this.currentDrawing.difficulty) {
             case Difficulty.EASY:
                 drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
                 break;
@@ -131,19 +134,29 @@ export class VirtualPlayer {
                 break;
         }
         return drawingSpeed;
-    }  
+    }
 
     private calculatePointsInDrawing(): number {
         let pointsNumber = 0;
-        for(let stroke of this.currentDrawing.strokes){
-            for(let {} of stroke.path){
+        for (let stroke of this.currentDrawing.strokes) {
+            for (let { } of stroke.path) {
                 ++pointsNumber;
             }
         }
         return pointsNumber;
-    }        
+    }
 
-    getBasicUser(): BasicUser{
-        return {"username": this.username, "avatar": this.avatar}
+    getBasicUser(): BasicUser {
+        return { "username": this.username, "avatar": this.avatar }
+    }
+
+    sendNextHint() {
+        if (this.nextHintIndex >= this.currentDrawing.hints.length) {
+            this.socketService.getSocket().to(this.gameId).emit('hintError', { "message": "No more hints left" });
+        }
+        else {
+            this.socketService.getSocket().to(this.gameId).emit('hintCallback', { "hint": this.currentDrawing.hints[this.nextHintIndex] });
+            this.nextHintIndex++;
+        }
     }
 }

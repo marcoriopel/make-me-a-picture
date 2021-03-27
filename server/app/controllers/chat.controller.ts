@@ -21,10 +21,18 @@ export class ChatController {
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.get('/history', (req: Request, res: Response) => {
+        this.router.get('/all/history', (req: Request, res: Response) => {
             this.tokenService.authenticateToken(req, res, (user: any) => {
                 this.chatManagerService.getAllUserChatsHistory(user.username, res, (chatsHistory: any) => {
                     res.status(StatusCodes.OK).send({ chatsHistory });
+                });
+            });
+        });
+
+        this.router.get('/history', (req: Request, res: Response) => {
+            this.tokenService.authenticateToken(req, res, () => {
+                this.chatManagerService.getChatHistory(req.body.chatId, res, (chatHistory: any) => {
+                    res.status(StatusCodes.OK).send({ chatHistory });
                 });
             });
         });
@@ -33,6 +41,22 @@ export class ChatController {
             this.tokenService.authenticateToken(req, res, (user: any) => {
                 this.chatManagerService.getAllUserChats(user.username, res, (chats: any) => {
                     res.status(StatusCodes.OK).send({ chats });
+                });
+            });
+        });
+
+        this.router.get('/list', (req: Request, res: Response) => {
+            this.tokenService.authenticateToken(req, res, () => {
+                this.chatManagerService.getAllChats(res, (chats: any) => {
+                    res.status(StatusCodes.OK).send({ chats });
+                });
+            });
+        });
+
+        this.router.post('/create', (req: Request, res: Response) => {
+            this.tokenService.authenticateToken(req, res, () => {
+                this.chatManagerService.createChat(req.body.chatName, res, (chatId: any) => {
+                    res.status(StatusCodes.OK).send({ chatId });
                 });
             });
         });
