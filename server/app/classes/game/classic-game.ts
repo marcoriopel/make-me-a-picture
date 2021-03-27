@@ -92,6 +92,9 @@ export class ClassicGame extends Game {
         }
     }
 
+    async validateDrawingPlayer(username: string) {
+        return this.drawingPlayer[this.drawingTeam].username == username ? true : false;
+    }
     async getDrawingSuggestions(): Promise<void> {
         let drawingNames;
         try {
@@ -297,7 +300,6 @@ export class ClassicGame extends Game {
         } catch (e) {
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
         }
-
         this.currentDrawingName = drawingName;
         this.startTimer(true);
     }
