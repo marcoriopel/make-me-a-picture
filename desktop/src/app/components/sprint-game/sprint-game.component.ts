@@ -11,8 +11,8 @@ import { OnDestroy } from "@angular/core";
 
 @Component({
   selector: 'app-coop-game',
-  templateUrl: './coop-game.component.html',
-  styleUrls: ['./coop-game.component.scss']
+  templateUrl: './sprint-game.component.html',
+  styleUrls: ['./sprint-game.component.scss']
 })
 export class SprintGameComponent implements OnInit, OnDestroy {
 

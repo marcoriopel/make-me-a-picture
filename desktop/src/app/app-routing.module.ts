@@ -9,7 +9,7 @@ import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
 import { ImageCreationComponent } from './components/image-creation/image-creation.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
-import { SprintGameComponent } from './components/coop-game/coop-game.component';
+import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
