@@ -61,5 +61,9 @@ export class DrawingsService {
         return await this.drawingsModel.getDrawing(words[random]._id)
     }
 
+    async getGameVirtualPlayerImages(): Promise<any> {
+        console.log(await this.drawingsModel.getImage("download.jpeg"));
+    }
+
 }
 

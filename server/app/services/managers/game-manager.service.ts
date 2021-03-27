@@ -115,6 +115,22 @@ export class GameManagerService {
         game.guessDrawing(username, guess);
     }
 
+    getGameImages(req: Request, res: Response, next: NextFunction) {
+        if (!req.body.gameId || !GameManagerService.games.has(req.body.gameId)) {
+            return res.status(StatusCodes.BAD_REQUEST).send("Could not find game with provided id");
+        }
+        const gameId = req.body.gameId;
+        const game = GameManagerService.games.get(gameId);
+        if (!(game instanceof ClassicGame))
+            return res.status(StatusCodes.BAD_REQUEST).send("Game type not valid for current request");
+        try {
+            game.getVirtualPlayerImages();
+        } catch (e) {
+            return res.status(StatusCodes.UNAUTHORIZED).send(e.message);
+        }
+        next();
+    }
+
     requestHint(gameId: string, user: BasicUser) {
         if (!gameId || !GameManagerService.games.has(gameId)) {
             throw new Error("Game was not found");

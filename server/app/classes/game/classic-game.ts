@@ -54,7 +54,7 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
         this.gameTransition(transitionType.GAMESTART);
-        
+
     }
 
     gameTransition(type: number) {
@@ -181,7 +181,7 @@ export class ClassicGame extends Game {
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.vPlayers[this.drawingTeam].stopDrawing();
         }
-        this.gameTransition(transitionType.OPPOSITION);    
+        this.gameTransition(transitionType.OPPOSITION);
     }
 
     private opposingTeamTurnStart() {
@@ -230,7 +230,7 @@ export class ClassicGame extends Game {
             this.setGuesses();
             this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
-            this.gameTransition(transitionType.NEWROUND);    
+            this.gameTransition(transitionType.NEWROUND);
         }
         else {
             this.endGame();
@@ -346,5 +346,9 @@ export class ClassicGame extends Game {
         else {
             throw Error("User is not part of the game");
         }
+    }
+
+    getVirtualPlayerImages(): void {
+        this.drawingsService.getGameVirtualPlayerImages();
     }
 }

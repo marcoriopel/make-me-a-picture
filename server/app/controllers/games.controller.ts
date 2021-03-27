@@ -90,5 +90,13 @@ export class GamesController {
       });
     });
 
+    this.router.post('/virtual/images', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.gameManagerService.getGameImages(req, res, () => {
+          res.sendStatus(StatusCodes.OK);
+        });
+      });
+    });
+
   }
 }
