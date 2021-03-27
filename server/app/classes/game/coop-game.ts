@@ -69,12 +69,6 @@ export class CoopGame extends Game {
 
 
     private async setupNextDrawing() {
-        const drawingEvent: DrawingEvent = {
-            eventType: drawingEventType.MOUSEUP,
-            event: { x: 0, y: 0 },
-            gameId: this.id,
-        }
-        this.socketService.getSocket().to(this.id).emit('drawingEvent', { "drawingEvent": drawingEvent });
         this.vPlayer.stopDrawing();
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();

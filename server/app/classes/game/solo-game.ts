@@ -55,14 +55,12 @@ export class SoloGame extends Game {
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
-            this.vPlayer.stopDrawing();
             this.setupNextDrawing();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft;
             if (!this.guessesLeft) {
-                this.vPlayer.stopDrawing();
                 this.setupNextDrawing();
             }
         }
@@ -78,7 +76,6 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
-
     }
 
     private endGame(): void {
