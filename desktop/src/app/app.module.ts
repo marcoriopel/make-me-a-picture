@@ -50,8 +50,7 @@ import { SocketService } from './services/socket/socket.service';
 import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
-import { CoopGameComponent } from './components/coop-game/coop-game.component';
-import { SoloGameComponent } from './components/solo-game/solo-game.component';
+import { SprintGameComponent } from './components/coop-game/coop-game.component';
 
 @NgModule({
     declarations: [
@@ -78,8 +77,7 @@ import { SoloGameComponent } from './components/solo-game/solo-game.component';
         ToolsComponent,
         RoundTransitionComponent,
         ClassicGameComponent,
-        CoopGameComponent,
-        SoloGameComponent
+        SprintGameComponent,
     ],
     imports: [
         BrowserModule,

@@ -14,7 +14,7 @@ import { OnDestroy } from "@angular/core";
   templateUrl: './coop-game.component.html',
   styleUrls: ['./coop-game.component.scss']
 })
-export class CoopGameComponent implements OnInit, OnDestroy {
+export class SprintGameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
