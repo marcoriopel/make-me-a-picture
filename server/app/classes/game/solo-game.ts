@@ -22,7 +22,9 @@ export class SoloGame extends Game {
 
     constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService) {
         super(<Lobby>lobby, socketService);
-        this.players = lobby.getPlayers();
+        for (const player of lobby.getPlayers()) {
+            this.players.set(player.username, player);
+        }
         this.vPlayer = lobby.getVPlayer();
         console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }

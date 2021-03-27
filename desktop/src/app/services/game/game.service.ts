@@ -185,7 +185,7 @@ export class GameService {
     this.socketService.bind('guessCallback', (data: any) => {
       // SNACKBAR ?
       let message: string = "";
-      data.true ? message = "Mauvaise réponse" : message = "Bonne réponse";
+      data.isCorrectGuess ? message = "Bonne réponse" : message = "Mauvaise réponse";
       this.snackBar.open(message, "", {
         duration: 2000,
       });
