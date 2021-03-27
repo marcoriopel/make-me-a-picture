@@ -74,7 +74,7 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([ 
             {$sort: {"classicWinRatio": -1}},
-            {$project: {"name": 0, "_id": 0, "password":0, "surname": 0, "rooms": 0}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
         } catch (e) {
@@ -86,7 +86,7 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([
             {$sort: {"bestCoopScore": -1}}, 
-            {$project: {"name": 0, "_id": 0, "password":0, "surname": 0, "rooms": 0}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
         } catch (e) {
@@ -98,7 +98,7 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([ 
             {$sort: {"bestSoloScore": -1}},
-            {$project: {"name": 0, "_id": 0, "password":0, "surname": 0, "rooms": 0}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
         } catch (e) {
@@ -110,7 +110,7 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([ 
             {$sort: {"timePlayed": -1}}, 
-            {$project: {"name": 0, "_id": 0, "password":0, "surname": 0, "rooms": 0}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
         } catch (e) {
@@ -122,7 +122,7 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([ 
             {$sort: {"gamesPlayed": -1}}, 
-            {$project: {"name": 0, "_id": 0, "password":0, "surname": 0, "rooms": 0}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
         } catch (e) {
