@@ -35,6 +35,7 @@ export class CoopGame extends Game {
         this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
+        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);

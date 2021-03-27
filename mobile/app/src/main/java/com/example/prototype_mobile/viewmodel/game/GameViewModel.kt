@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.game.GameRepository
 import java.lang.Exception
 
@@ -49,6 +50,11 @@ class GameViewModel():ViewModel() {
             }
         }
     }
+
+    fun getGameType(): GameType {
+        return GameRepository.getInstance()!!.gameType
+    }
+
 }
 
 

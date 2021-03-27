@@ -60,6 +60,7 @@ class LobbyRepository() {
         val Jarray = Jobject.getString("player")
         val player: String = Jarray.toString()
         val gameRepo = GameRepository.getInstance()!!
+        gameRepo.gameType = _lobbyJoined.value!!.gameType
         _lobbyPlayers.value!!.players.forEach { player->
             run {
                 when (player.team) {
