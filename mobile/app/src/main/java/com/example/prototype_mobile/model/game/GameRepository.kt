@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.model.game
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -17,6 +18,7 @@ const val GUESS_DRAWING_EVENT = "guessDrawing"
 const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
+const val TRANSITION_EVENT = "transitionTimer"
 
 class GameRepository {
     companion object {
@@ -53,12 +55,15 @@ class GameRepository {
     private val _timer = MutableLiveData<Timer>()
     var timer: LiveData<Timer> = _timer
 
+    private val _transition = MutableLiveData<Transition>()
+    var transition: LiveData<Transition> = _transition
+
     var drawingName: String? = null
+    var drawingPlayer: String? = null
+    var guessingPlayer: String? = null
 
     // Listener
     var team = 0
-
-
 
     private var onDrawingNameEvent = Emitter.Listener {
        drawingName = JSONObject(it[0].toString()).getString("drawingName")
@@ -73,8 +78,8 @@ class GameRepository {
     }
 
     private var onNewRound = Emitter.Listener {
-        val playerDrawing = JSONObject(it[0].toString()).getString("newDrawingPlayer")
-        _isPlayerDrawing.postValue(playerDrawing.equals(LoginRepository.getInstance()!!.user!!.username))
+        drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+        _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
         CanvasRepository.getInstance()!!.resetCanvas()
     }
 
@@ -82,6 +87,12 @@ class GameRepository {
         val gson: Gson = Gson()
         val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
         _isPlayerGuessing.postValue(guessesLeft.guessesLeft[team] > 0)
+    }
+
+    private var onTransition = Emitter.Listener {
+        val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
+        _transition.postValue(transitionTemp)
+        _timer.postValue(Timer(transitionTemp.timer))
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
@@ -105,5 +116,6 @@ class GameRepository {
         socket.on(SCORE_EVENT, onScoreEvent)
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
+        socket.on(TRANSITION_EVENT, onTransition)
     }
 }
