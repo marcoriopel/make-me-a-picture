@@ -13,8 +13,11 @@ class GameInfoViewModel : ViewModel() {
     private val _teamScore = MutableLiveData<Score>()
     var teamScore: LiveData<Score> = _teamScore
 
-    private val _timer = MutableLiveData<Timer>()
-    var timer: LiveData<Timer> = _timer
+    private val _gameTimer = MutableLiveData<Timer>()
+    var gameTimer: LiveData<Timer> = _gameTimer
+
+    private val _roundTimer = MutableLiveData<Timer>() 
+    var roundTimer: LiveData<Timer> = _roundTimer
 
     val gameRepo = GameRepository.getInstance()!!
 
@@ -22,8 +25,11 @@ class GameInfoViewModel : ViewModel() {
         gameRepo.teamScore.observeForever {
             _teamScore.value = it
         }
-        gameRepo.timer.observeForever {
-            _timer.value = it
+        gameRepo.roundTimer.observeForever {
+            _roundTimer.value = it
+        }
+        gameRepo.gameTimer.observeForever {
+            _gameTimer.value = it
         }
     }
 

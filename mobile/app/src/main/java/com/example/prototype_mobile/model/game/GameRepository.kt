@@ -20,6 +20,8 @@ const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
+const val DRAWING_TIMER_EVENT = "drawingTimer"
+const val GAME_TIMER_EVENT = "gameTimer"
 
 class GameRepository {
     companion object {
@@ -54,8 +56,11 @@ class GameRepository {
     private val _teamScore = MutableLiveData<Score>()
     var teamScore: LiveData<Score> = _teamScore
 
-    private val _timer = MutableLiveData<Timer>()
-    var timer: LiveData<Timer> = _timer
+    private val _roundTimer = MutableLiveData<Timer>()
+    var roundTimer: LiveData<Timer> = _roundTimer
+
+    private val _gameTimer = MutableLiveData<Timer>()
+    var gameTimer: LiveData<Timer> = _gameTimer
 
     private val _transition = MutableLiveData<Transition>()
     var transition: LiveData<Transition> = _transition
@@ -80,8 +85,12 @@ class GameRepository {
         }
     }
 
-    private  var onTimerEvent = Emitter.Listener {
-        _timer.postValue(gson.fromJson(it[0].toString(), Timer::class.java))
+    private var onTimerEvent = Emitter.Listener {
+        _roundTimer.postValue(gson.fromJson(it[0].toString(), Timer::class.java))
+    }
+
+    private var onGameTimerEvent = Emitter.Listener {
+        _gameTimer.postValue(gson.fromJson(it[0].toString(), Timer::class.java))
     }
 
     private var onNewRound = Emitter.Listener {
@@ -103,7 +112,7 @@ class GameRepository {
     private var onTransition = Emitter.Listener {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
         _transition.postValue(transitionTemp)
-        _timer.postValue(Timer(transitionTemp.timer))
+        _roundTimer.postValue(Timer(transitionTemp.timer))
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
@@ -128,5 +137,7 @@ class GameRepository {
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
         socket.on(TRANSITION_EVENT, onTransition)
+        socket.on(DRAWING_TIMER_EVENT, onTimerEvent)
+        socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
     }
 }
