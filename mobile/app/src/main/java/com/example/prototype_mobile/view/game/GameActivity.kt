@@ -13,6 +13,7 @@ import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.game.*
 import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
@@ -38,9 +39,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerChat, ChatFragment())
                 .commitNow()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.containerGameInfo, GameInfoFragment())
-                .commit()
+
+            if (gameViewModel.getGameType() == GameType.CLASSIC) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.containerGameInfo, GameInfoFragment())
+                        .commit()
+            }
 
             if (gameViewModel.isPlayerDrawing.value!!) {
                 supportFragmentManager.beginTransaction()
