@@ -45,6 +45,7 @@ class EndGameFragment : Fragment() {
 
         return inflater.inflate(R.layout.fragment_end_game, container, false)
     }
+    //End game fragment
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
