@@ -128,8 +128,7 @@
             android:background="@drawable/button_round"
             app:backgroundTint="@color/poly_blue"
             android:drawableTop="@drawable/icon_refresh_black_40dp"
-            android:paddingTop="-30dip"
-            android:activated="true" />
+            android:paddingTop="-30dip" />
 
     </LinearLayout>
     <Space
