@@ -96,7 +96,6 @@ export class SprintGameComponent implements OnInit, OnDestroy {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,
     }
-    console.log(body.guess)
     this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
