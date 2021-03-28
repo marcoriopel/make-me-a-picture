@@ -19,7 +19,20 @@ export class UsersModel {
 
     async registerUser(username: string, password: string, name: string, surname: string, avatar: number) {
         try {
-            await this.databaseModel.client.db("database").collection("users").insertOne({ 'username': username, 'password': password, 'name': name, 'surname': surname, 'avatar': avatar, 'rooms': ["General"] });
+            await this.databaseModel.client.db("database").collection("users").insertOne({ 
+                'username': username, 
+                'password': password, 
+                'name': name, 
+                'surname': surname, 
+                'avatar': avatar, 
+                'gamesPlayed': 0, 
+                'timePlayed': 0, 
+                'bestSoloScore': 0, 
+                'bestCoopScore': 0,  
+                'classicWinRatio': 0,
+                'meanGameTime': 0,
+                'rooms': ["General"] 
+            });
         } catch (e) {
             console.error(e);
         }
@@ -37,6 +50,21 @@ export class UsersModel {
     async removeUserFromChat(username: string, chatId: string) {
         try {
             await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': username }, { $pull: {'rooms': chatId} });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async updateUserStats(userInfo: any){
+        try {
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': userInfo.username }, { 
+                'gamesPlayed': userInfo.gamesPlayed, 
+                'timePlayed': userInfo.timePlayed,
+                'bestSoloScore': userInfo.bestSoloScore,
+                'bestCoopScore': userInfo.bestCoopScore,
+                'classicWinRatio': userInfo.classicWinRatio,
+                'meanGameTime': userInfo.meanGameTime,
+            });
         } catch (e) {
             console.error(e);
         }

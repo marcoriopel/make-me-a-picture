@@ -1,6 +1,6 @@
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
-import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables';
+import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
@@ -27,7 +27,9 @@ export class CoopGame extends Game {
 
     constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
-        this.players = lobby.getPlayers();
+        for (const player of lobby.getPlayers()) {
+            this.players.set(player.username, player);
+        }
         this.vPlayer = lobby.getVPlayer();
         console.log("Started coop game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -55,14 +57,12 @@ export class CoopGame extends Game {
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
-            this.vPlayer.stopDrawing();
             this.setupNextDrawing();
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
             --this.guessesLeft;
             if (!this.guessesLeft) {
-                this.vPlayer.stopDrawing();
                 this.setupNextDrawing();
             }
         }
@@ -71,8 +71,10 @@ export class CoopGame extends Game {
 
 
     private async setupNextDrawing() {
+        this.vPlayer.stopDrawing();
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
+        this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
@@ -84,10 +86,12 @@ export class CoopGame extends Game {
     private endGame(): void {
         this.endDate = new Date().getTime();
         clearInterval(this.gameTimerInterval);
+        clearInterval(this.drawingTimerInterval);
         this.guessesLeft = 0;
+        this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
-        this.statsService.saveGame(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
+        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
 
     getPlayers(): any {

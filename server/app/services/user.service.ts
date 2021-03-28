@@ -2,7 +2,6 @@ import { UsersModel } from '@app/models/users.model';
 import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
-import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { GamesModel } from '@app/models/games.model';
@@ -33,7 +32,16 @@ export class UserService {
             let userLogs = await this.userLogsModel.getLogs(username);
             let userGames = await this.gamesModel.getGames(username);
 
-            let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "logs": userLogs, "games" : userGames}
+            let userStats = {
+                'gamesPlayed': userInfo.gamesPlayed, 
+                'timePlayed': userInfo.timePlayed,
+                'bestSoloScore': userInfo.bestSoloScore,
+                'bestCoopScore': userInfo.bestCoopScore,
+                'classicWinRatio': userInfo.classicWinRatio,
+                'meanGameTime': userInfo.meanGameTime,
+            }
+
+            let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "stats": userStats, "logs": userLogs, "games" : userGames}
             next(privateInfo);
         }
         catch(e){
