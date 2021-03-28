@@ -106,7 +106,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     fun endGameEvent() {
 
         for(fragment in supportFragmentManager.fragments)
-            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment) {
+            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
                 supportFragmentManager.beginTransaction().replace(R.id.containerCanvas, EndGameFragment()).commitNow()
             }
@@ -139,6 +139,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 .replace(R.id.containerColor, ColorFragment())
                 .commitNow()
             colorFragment =  (findColorFragment() as ColorFragment?)!!
+        }
+        if (gameViewModel.getGameType() == GameType.CLASSIC) {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGameInfo, GameInfoFragment())
+                    .commit()
         }
 
         if (gameViewModel.isPlayerGuessing.value!!) {

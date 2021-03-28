@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
+import com.example.prototype_mobile.viewmodel.game.GameInfoViewModel
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
 
 
@@ -27,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class EndGameFragment : Fragment() {
 
-    private val sharedViewModel: GameViewModel by activityViewModels()
+    private lateinit var gameInfoViewModel: GameInfoViewModel
     private lateinit var binding : FragmentEndGameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
