@@ -117,4 +117,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
+    fun showHistory() {
+
+    }
+
 }

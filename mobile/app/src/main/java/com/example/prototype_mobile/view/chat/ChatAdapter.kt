@@ -9,13 +9,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Message
+import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
 
 // This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
 
-class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){
+class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>,val viewModel: ChatViewModel) : RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){
 
     val CHAT_MINE = 0
     val CHAT_PARTNER = 1
+    val CHAT_HISTORY = 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view : View? = null
@@ -31,6 +33,11 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
                 view = LayoutInflater.from(context).inflate(R.layout.row_chat_partner,parent,false)
                 Log.d("partner inflating","viewType : ${viewType}")
             }
+
+            2 ->
+            {
+                view = LayoutInflater.from(context).inflate(R.layout.row_channel_history,parent,false)
+            }
         }
 
         return ViewHolder(view!!)
@@ -38,11 +45,6 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
 
     override fun getItemCount(): Int {
         return chatList.size
-    }
-
-    fun addMessage(message: Message) {
-        chatList.add(message)
-        notifyItemInserted(chatList.size - 1)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -64,12 +66,16 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
                 holder.userName.setText(userName)
                 holder.message.setText(content)
             }
+            CHAT_HISTORY ->{
+                holder.history.setOnClickListener { viewModel.showHistory() }
+            }
         }
 
     }
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
         val userName = itemView.findViewById<TextView>(R.id.username)
         val message = itemView.findViewById<TextView>(R.id.message)
+        val history =itemView.findViewById<TextView>(R.id.channel_history)
     }
 
 }

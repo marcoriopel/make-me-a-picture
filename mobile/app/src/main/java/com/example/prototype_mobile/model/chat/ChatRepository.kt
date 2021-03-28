@@ -56,7 +56,9 @@ class ChatRepository() {
         socket = SocketOwner.getInstance()!!.socket
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
-        channelMap.putIfAbsent("General", mutableListOf())
+        val generalChatMessage: MutableList<Message> = mutableListOf()
+        generalChatMessage.add(Message("","", "", 2))
+        channelMap.putIfAbsent("General", generalChatMessage)
         channelJoinedSet.add("General")
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
     }
@@ -111,7 +113,9 @@ class ChatRepository() {
             for (channel in result.data.chats) {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
-                    channelMap.putIfAbsent(channel.chatId, mutableListOf())
+                    val newMessageList: MutableList<Message> = mutableListOf()
+                    newMessageList.add(Message("","", "", 2))
+                    channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
                         channelList.removeIf { c -> c.chatId == channel.chatId}
@@ -201,5 +205,24 @@ class ChatRepository() {
             return Result.Error(response.code())
         }
     }
+
+    suspend fun getHistory(): Result<LoggedInUser> {
+        // handle login
+        val mapHistory = HashMap<String, String>()
+        mapHistory["chatId"] = channelShown
+        val response = HttpRequestDrawGuess.httpRequestGet("/api/chat/history/", mapHistory)
+
+
+        val result = analyseLoginAnswer(response, username)
+
+        if (result is Result.Success) {
+            setLoggedInUser((result).data)
+            Log.d("token", result.data.token)
+        }
+
+        return result;
+
+    }
+
 }
 

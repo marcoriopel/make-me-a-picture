@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/channel_background"
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_marginTop ="10dp"
     android:gravity="center_horizontal|center_vertical"
     android:orientation="vertical"
-    android:background="@drawable/button_rounded_channel">
+    >
 
     <LinearLayout
+        android:id="@+id/channel_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/button_rounded_channel">
         <TextView
             android:id="@+id/channel_list_name"
             android:layout_width="wrap_content"
@@ -68,5 +69,14 @@
             android:textAllCaps="false"
             android:theme="@style/Widget.App.Button.Red" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/channel_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Afficher l'historique"
+        android:textColor="@color/poly_blue"
+        android:textSize="18sp"
+        android:visibility="gone"/>
 
 </LinearLayout>

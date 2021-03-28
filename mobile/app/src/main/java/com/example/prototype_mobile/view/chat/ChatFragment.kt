@@ -59,7 +59,7 @@ class ChatFragment : Fragment() {
         if (chatViewModel.chatRepository.channelMap.containsKey("General")) {
             chatList = chatViewModel.chatRepository.channelMap["General"]!!
         }
-        chatRoomAdapter = ChatRoomAdapter(view.context, chatList);
+        chatRoomAdapter = ChatRoomAdapter(view.context, chatList, chatViewModel);
         recyclerView.adapter = chatRoomAdapter
         binding = FragmentChatBinding.bind(view)
         binding.send.setOnClickListener { sendMessage() }
