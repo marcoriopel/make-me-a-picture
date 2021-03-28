@@ -131,7 +131,8 @@ export class VirtualPlayer {
             this.socketService.getSocket().to(this.gameId).emit('hintError', { "message": "No more hints left" });
         }
         else {
-            this.socketService.getSocket().to(this.gameId).emit('hintCallback', { "hint": this.currentDrawing.hints[this.nextHintIndex] });
+            const message = "Drawing hint: " + this.currentDrawing.hints[this.nextHintIndex];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.gameId });
             this.nextHintIndex++;
         }
     }
