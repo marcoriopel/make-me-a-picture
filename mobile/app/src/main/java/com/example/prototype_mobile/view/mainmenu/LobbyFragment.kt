@@ -35,6 +35,7 @@ class LobbyFragment : Fragment() {
     private lateinit var usernameList: Array<TextView>
     var team1HasVirtualPlayer = false
     var team2HasVirtualPlayer = false
+    var firstTime = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +48,11 @@ class LobbyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        lobbyViewModel.resetData()
+        if(!firstTime){
+            lobbyViewModel.resetData()
+        }
+        firstTime = true
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

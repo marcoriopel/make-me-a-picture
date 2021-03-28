@@ -145,6 +145,7 @@ class LobbyRepository() {
         }
     }
     fun resetData() {
+        println("reset data called")
         _lobbyPlayers.value = null
         _lobbyJoined.value = null
         _isPlayerDrawing.value = null
