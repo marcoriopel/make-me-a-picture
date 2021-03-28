@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
@@ -50,10 +51,14 @@ class EndGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
+        gameInfoViewModel = ViewModelProvider(this).get(GameInfoViewModel::class.java)
         binding= FragmentEndGameBinding.bind(view)
-        val teamScore = sharedViewModel.teamScore.value
-        setTextLabel(teamScore!![0], teamScore[1])
-        setScore(teamScore)
+        val teamScore = gameInfoViewModel.teamScore.value
+        if (teamScore != null) {
+            setTextLabel(teamScore.score[0], teamScore.score[1])
+            setScore(teamScore.score)
+
+        }
         binding.goToMenu.setOnClickListener {
             val intent =  Intent(activity, MainMenuActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -61,10 +66,6 @@ class EndGameFragment : Fragment() {
             (context as Activity).finish()
 
         }
-
-
-
-
     }
     @SuppressLint("SetTextI18n")
     fun setTextLabel(team1Score: Int, team2Score:Int){
