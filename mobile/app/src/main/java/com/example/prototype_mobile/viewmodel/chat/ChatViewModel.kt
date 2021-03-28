@@ -31,7 +31,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         chatRepository.messageReceived.observeForever(Observer {
             _messageReceived.value = it ?: return@Observer
         } )
-        getChannels()
+
+        chatRepository.notificationReceived.observeForever(Observer {
+            getChannels()
+        } )
+
+        getChannels(true)
         channelList = chatRepository.channelList
     }
 
@@ -65,11 +70,11 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
-    fun getChannels() {
+    fun getChannels(isInit: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO)
         {
             val result: Result<Boolean> = try {
-                chatRepository.getChannels()
+                chatRepository.getChannels(isInit)
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
             }
@@ -89,7 +94,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
     fun joinChannel(chatId: String) {
         chatRepository.joinChannel(chatId)
-        switchChannel(chatId)
+        getChannels()
     }
 
     fun switchChannel(chatId: String) {
@@ -100,6 +105,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
         viewModelScope.launch(Dispatchers.IO){
             channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
+            channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN
             chatRepository.channelShown = chatId
             getChannels()
         }

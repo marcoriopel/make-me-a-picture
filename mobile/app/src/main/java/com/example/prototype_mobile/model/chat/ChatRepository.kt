@@ -47,7 +47,7 @@ class ChatRepository() {
         if (messageReceive.chatId == channelShown) {
             _messageReceived.postValue(message)
         } else {
-            channelList.firstOrNull { c -> c.chatId == messageReceive.chatId }?.channelState == ChannelState.NOTIFIED
+            channelList.firstOrNull { c -> c.chatId == messageReceive.chatId }?.channelState = ChannelState.NOTIFIED
             notificationReceived.postValue(true)
         }
     }
@@ -56,6 +56,9 @@ class ChatRepository() {
         socket = SocketOwner.getInstance()!!.socket
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
+        channelMap.putIfAbsent("General", mutableListOf())
+        channelJoinedSet.add("General")
+        channelList.add(Channel("General", "Général", ChannelState.SHOWN))
     }
 
 
@@ -95,7 +98,7 @@ class ChatRepository() {
         }
     }
 
-    suspend fun getChannels(): Result<Boolean> {
+    suspend fun getChannels(isInit: Boolean = false): Result<Boolean> {
         var result = getChannelsList("/api/chat/joined")
         if (result is Result.Error) {
             return result
@@ -109,13 +112,14 @@ class ChatRepository() {
                     if(channelNotJoinedSet.contains(channel.chatId)) {
                         channelList.removeIf { c -> c.chatId == channel.chatId}
                     }
-
                     if (channel.chatId == channelShown) {
                         channelList.add(Channel(channel.chatId, channel.chatName, ChannelState.SHOWN))
                     } else {
                         channelList.add(Channel(channel.chatId, channel.chatName, ChannelState.JOINED))
                     }
-
+                    if (isInit) {
+                        joinChannel(channel.chatId)
+                    }
                 }
             }
 

@@ -24,7 +24,6 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 class ChatFragment : Fragment() {
 
     var chatList: MutableList<Message> = mutableListOf()
-    var channelList: MutableList<Channel> = mutableListOf()
     lateinit var chatRoomAdapter: ChatRoomAdapter
     lateinit var channelAdapter: ChannelAdapter
     private lateinit var binding: FragmentChatBinding
@@ -57,6 +56,9 @@ class ChatFragment : Fragment() {
         recyclerViewChannel.layoutManager = layoutManagerChannel
 
         // define an adapter for chatroom
+        if (chatViewModel.chatRepository.channelMap.containsKey("General")) {
+            chatList = chatViewModel.chatRepository.channelMap["General"]!!
+        }
         chatRoomAdapter = ChatRoomAdapter(view.context, chatList);
         recyclerView.adapter = chatRoomAdapter
         binding = FragmentChatBinding.bind(view)
@@ -111,7 +113,6 @@ class ChatFragment : Fragment() {
         // Since this function is inside of the listener,
         // You need to do it on UIThread!
         runOnUiThread {
-            chatList.add(message)
             chatRoomAdapter.notifyItemInserted(chatList.size - 1)
             binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
         }
@@ -119,7 +120,7 @@ class ChatFragment : Fragment() {
 
     private fun switchMessageList(messageList: MutableList<Message>) {
         runOnUiThread {
-            chatList = messageList
+            chatRoomAdapter.chatList = messageList
             chatRoomAdapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
         }
