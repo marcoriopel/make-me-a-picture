@@ -12,17 +12,19 @@
             </div>
             <button id="refresh-button" type="submit" (click)="refreshChatList()"><span class="material-icons">cached</span></button>
         </div>
-        <div *ngFor="let conversation of this.chatService.joinedChatList; let i = index">
-            <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [style.background-color]="getColorClass(i)">
-                <p>{{conversation.name}}</p>
-                <button *ngIf="conversation.chatId != 'General'" (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
-                <div *ngIf="conversation.isNotificationOn" [ngClass]="{'notification-general' : conversation.chatId == 'General', 'notification' : conversation.chatId != 'General'}" id="notification"></div>
+        <div class="scroller">
+            <div *ngFor="let conversation of this.chatService.joinedChatList; let i = index">
+                <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [style.background-color]="getColorClass(i)">
+                    <p>{{conversation.name}}</p>
+                    <button *ngIf="conversation.chatId != 'General'" (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
+                    <div *ngIf="conversation.isNotificationOn" [ngClass]="{'notification-general' : conversation.chatId == 'General', 'notification' : conversation.chatId != 'General'}" id="notification"></div>
+                </div>
             </div>
-        </div>
-        <div *ngFor="let conversation of this.chatService.notJoinedChatList">
-            <div class="chat-button not-joined" (click)="this.changeChat(conversation.chatId)">
-                <p>{{conversation.name}}</p>
-                <button (click)="joinChat(conversation.chatId)">Rejoindre</button>
+            <div *ngFor="let conversation of this.chatService.notJoinedChatList">
+                <div class="chat-button not-joined" (click)="this.changeChat(conversation.chatId)">
+                    <p>{{conversation.name}}</p>
+                    <button (click)="joinChat(conversation.chatId)">Rejoindre</button>
+                </div>
             </div>
         </div>
     </div>
