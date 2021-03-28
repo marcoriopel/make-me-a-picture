@@ -4,6 +4,13 @@ export interface Chat {
     chatId: string;
 }
 
+export interface JoinedChat {
+    name: string;
+    messages: Message[];
+    chatId: string;
+    isNotificationOn: boolean;
+}
+
 export interface Message {
     username: string;
     avatar: number;

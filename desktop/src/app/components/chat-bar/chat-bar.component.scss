@@ -154,9 +154,20 @@ hr {
   }
 }
 
-#notification {
+.notification {
   position: relative;
-  float: right;
+  bottom: 28px;
+  right: 10px;
+  background-color: #BA2034;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+}
+
+.notification-general {
+  position: relative;
+  bottom: 28px;
+  right: -34px;
   background-color: #BA2034;
   border-radius: 50%;
   width: 15px;

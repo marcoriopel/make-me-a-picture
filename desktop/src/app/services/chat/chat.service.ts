@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chat, Message } from '@app/classes/chat';
+import { Chat, JoinedChat, Message } from '@app/classes/chat';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SocketService } from '@app/services/socket/socket.service';
 import { environment } from 'src/environments/environment';
@@ -12,10 +12,11 @@ export class ChatService {
   private createChatUrl = this.baseUrl + '/api/chat/create';
   private getChatListUrl = this.baseUrl + '/api/chat/list';
   public isChatInExternalWindow: boolean = false;
-  joinedChatList: Chat[] = [{
+  joinedChatList: JoinedChat[] = [{
     name: 'Général',
     messages: [],
     chatId: 'General',
+    isNotificationOn: false,
   }];
   notJoinedChatList: Chat[] = [{
     name: 'Général',
@@ -77,6 +78,7 @@ export class ChatService {
         this.index = i;
       }
     }
+    this.joinedChatList[this.index].isNotificationOn = false;
   }
 
   getChatMessages(): Message[] {
@@ -144,6 +146,15 @@ export class ChatService {
   initializeMessageListener(): void {
     this.socketService.bind('message', (message: any) => {
       const username = localStorage.getItem('username');
+      if(message.chatId != this.currentChatId){
+        for(let i = 0; i < this.joinedChatList.length; i++){
+          if(message.chatId == this.joinedChatList[i].chatId){
+            this.joinedChatList[i].isNotificationOn = true;
+          }
+        }        
+      }
+
+
       const msg: Message = {
         "username": message.user.username,
         "avatar": message.user.avatar,
@@ -156,9 +167,6 @@ export class ChatService {
         if(this.joinedChatList[i].chatId == message.chatId){
           this.joinedChatList[i].messages.push(msg);
         }
-      }
-      if(message.chatId != this.currentChatId){
-        alert('notif!')
       }
     });
   }
