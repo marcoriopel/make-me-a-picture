@@ -31,3 +31,7 @@ enum class Tool(number: Int){
 enum class DrawingEventType(type: Int) {
     TOUCHDOWN(0), TOUCHMOVE(1), TOUCHUP(2), UNDO(3), REDO(4), CLEAR(5)
 }
+
+enum class ChannelState(state: Int) {
+    NOTIFIED(0), SHOWN(1), JOINED(2), NOTJOINED(3)
+}

@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.view.chat
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.prototype_mobile.Channel
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChatBinding
@@ -22,7 +24,7 @@ import org.jetbrains.anko.support.v4.runOnUiThread
 class ChatFragment : Fragment() {
 
     var chatList: MutableList<Message> = mutableListOf()
-    var channelList: MutableList<Message> = mutableListOf()
+    var channelList: MutableList<Channel> = mutableListOf()
     lateinit var chatRoomAdapter: ChatRoomAdapter
     lateinit var channelAdapter: ChannelAdapter
     private lateinit var binding: FragmentChatBinding
@@ -32,6 +34,7 @@ class ChatFragment : Fragment() {
         super.onCreate(savedInstanceState)
         //Set Chatroom RecyclerView adapter
         chatViewModel = ViewModelProvider(this, ChatViewModelFactory()).get(ChatViewModel::class.java)
+
     }
 
     override fun onCreateView(
@@ -64,21 +67,33 @@ class ChatFragment : Fragment() {
             addItemToRecyclerView(messageToDisplay)
         })
 
+        chatViewModel.messageList.observe(viewLifecycleOwner, Observer {
+            val messageList = it ?: return@Observer
+            switchMessageList(messageList)
+        })
+
         // define an adapter for chat channels
-        channelAdapter = ChannelAdapter(channelList);
+        channelAdapter = ChannelAdapter(chatViewModel.channelList, chatViewModel);
         recyclerViewChannel.adapter = channelAdapter
         binding.addButton.setOnClickListener { addChannel() }
-
-        chatViewModel.messageReceived.observe(viewLifecycleOwner, Observer {
-            val messageToDisplay = it ?: return@Observer
-            addItemToRecyclerView(messageToDisplay)
-        })
+        binding.refreshButton.setOnClickListener { chatViewModel.getChannels() }
 
         chatViewModel.createChannelResult.observe(viewLifecycleOwner, Observer {
             val error = it ?: return@Observer
             val toast = Toast.makeText(view.context, getString(error), Toast.LENGTH_LONG)
             toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
             toast.show()
+        })
+
+        chatViewModel.getChannelResult.observe(viewLifecycleOwner, Observer {
+            val error = it ?: return@Observer
+            if (error != -1) {
+                val toast = Toast.makeText(view.context, getString(error), Toast.LENGTH_LONG)
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+                toast.show()
+            } else {
+                refreshChannels()
+            }
         })
     }
 
@@ -102,6 +117,14 @@ class ChatFragment : Fragment() {
         }
     }
 
+    private fun switchMessageList(messageList: MutableList<Message>) {
+        runOnUiThread {
+            chatList = messageList
+            chatRoomAdapter.notifyDataSetChanged()
+            binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message
+        }
+    }
+
     private fun addChannel() {
         val channelName = binding.channelNameAdd.text.toString()
 
@@ -110,6 +133,13 @@ class ChatFragment : Fragment() {
         }
 
         binding.channelNameAdd.setText("")
+    }
+
+    private fun refreshChannels() {
+        Log.d("refreshing", "refreshed")
+        runOnUiThread {
+            channelAdapter.notifyDataSetChanged()
+        }
     }
 
     companion object {

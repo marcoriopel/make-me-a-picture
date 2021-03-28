@@ -5,8 +5,10 @@ import com.example.prototype_mobile.*
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.chat.ChatRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.view.chat.ChatRoomAdapter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -15,13 +17,22 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     private val _messageReceived = MutableLiveData<Message>()
     val messageReceived: LiveData<Message> = _messageReceived
 
+    private val _messageList = MutableLiveData<MutableList<Message>>()
+    val messageList: LiveData<MutableList<Message>> = _messageList
+
     private val _createChannelResult = MutableLiveData<Int>()
     val createChannelResult: LiveData<Int> = _createChannelResult
+
+    private val _getChannelResult = MutableLiveData<Int>()
+    val getChannelResult: LiveData<Int> = _getChannelResult
+    var channelList: MutableList<Channel>
 
     init {
         chatRepository.messageReceived.observeForever(Observer {
             _messageReceived.value = it ?: return@Observer
         } )
+        getChannels()
+        channelList = chatRepository.channelList
     }
 
     fun onDestroy(token:String) {
@@ -43,7 +54,6 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             }
 
             if (result is Result.Success) {
-               // Refresh list ?
             }
 
             if(result is Result.Error){
@@ -52,6 +62,46 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                     ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
                 }
             }
+        }
+    }
+
+    fun getChannels() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val result: Result<Boolean> = try {
+                chatRepository.getChannels()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+
+            if (result is Result.Success) {
+                _getChannelResult.postValue(-1)
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+                }
+            }
+        }
+    }
+
+    fun joinChannel(chatId: String) {
+        chatRepository.joinChannel(chatId)
+        switchChannel(chatId)
+    }
+
+    fun switchChannel(chatId: String) {
+        if (chatRepository.channelMap.containsKey(chatId)) {
+            _messageList.value = chatRepository.channelMap[chatId]!!
+        } else {
+            _messageList.value = mutableListOf()
+        }
+        viewModelScope.launch(Dispatchers.IO){
+            channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
+            chatRepository.channelShown = chatId
+            getChannels()
         }
     }
 

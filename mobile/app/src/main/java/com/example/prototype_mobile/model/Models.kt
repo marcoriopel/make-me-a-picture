@@ -2,6 +2,7 @@ package com.example.prototype_mobile
 
 import android.graphics.Paint
 import android.graphics.Path
+import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 
@@ -10,8 +11,11 @@ data class Message (val username : String, val text : String, val timeStamp : St
 data class MessageReceive (val id : String, val user : User, val text : String, val timeStamp : String, val textColor : String, val chatId: String)
 data class User (val username: String, val Avatar: Int);
 data class InitialData (val token : String)
-data class SendMessage(val text: String, val token: String, val avatar: Int)
-
+data class SendMessage(val text: String, val token: String, val chatId: String)
+data class ChannelReceived(val chatId: String, val chatName: String)
+data class ChannelList(val chats: Array<ChannelReceived>)
+data class Channel(val chatId: String, val chatName: String, var channelState: ChannelState)
+data class JoinChannel(val chatId: String)
 // Data class for the sign up
 data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String, val avatar: Int)
 
