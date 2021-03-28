@@ -18,6 +18,7 @@ export class ChatService {
     messages: [],
     chatId: 'General',
     isNotificationOn: false,
+    isChatHistoryDisplayed: false,
   }];
   notJoinedChatList: Chat[] = [{
     name: 'Général',
@@ -47,6 +48,7 @@ export class ChatService {
             chatId: element.chatId,
             messages: [],
             isNotificationOn: false,
+            isChatHistoryDisplayed: false,
           }
           this.joinedChatList.push(chat);
           if(element.chatId != 'General'){
@@ -81,6 +83,10 @@ export class ChatService {
       }
     }
     this.joinedChatList[this.index].isNotificationOn = false;
+    let el = document.getElementById('history-button-container');
+    if(el){
+      el.style.display = 'flex';
+    }
   }
 
   getChatMessages(): Message[] {
@@ -109,6 +115,7 @@ export class ChatService {
               chatId: element.chatId,
               messages: [],
               isNotificationOn: false,
+              isChatHistoryDisplayed: false,
             }
             this.joinedChatList.push(chat);            
           }
@@ -193,8 +200,13 @@ export class ChatService {
           "textColor": "#000000",
         }
         this.joinedChatList[this.index].messages.push(msg);  
+        this.joinedChatList[this.index].isChatHistoryDisplayed = true;
       });
-    })
+    });
+    let el = document.getElementById('history-button-container');
+    if(el){
+      el.style.display = 'none';
+    }
   }
 
   createChat(chatName: string){

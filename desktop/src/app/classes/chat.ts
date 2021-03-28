@@ -9,6 +9,7 @@ export interface JoinedChat {
     messages: Message[];
     chatId: string;
     isNotificationOn: boolean;
+    isChatHistoryDisplayed: boolean;
 }
 
 export interface Message {
