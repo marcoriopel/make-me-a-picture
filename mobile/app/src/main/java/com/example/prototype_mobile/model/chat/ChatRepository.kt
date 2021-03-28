@@ -115,6 +115,7 @@ class ChatRepository() {
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
                         channelList.removeIf { c -> c.chatId == channel.chatId}
+                        channelNotJoinedSet.remove(channel)
                     }
                     if (channel.chatId == channelShown) {
                         channelList.add(Channel(channel.chatId, channel.chatName, ChannelState.SHOWN))
@@ -144,6 +145,7 @@ class ChatRepository() {
             for (channel in channelToRemove) {
                 channelMap.remove(channel)
                 channelJoinedSet.remove(channel)
+                channelNotJoinedSet.remove(channel)
                 channelList.removeIf { c -> c.chatId == channel}
             }
         }
