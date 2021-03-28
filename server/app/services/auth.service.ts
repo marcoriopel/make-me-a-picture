@@ -17,7 +17,7 @@ export class AuthService {
     async loginUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         try {
             const authInfo: AuthInfo = { 'username': req.body.username, 'password': req.body.password };
-            const userInfo: DetailedUser = await this.usersModel.getCredentials(authInfo.username);
+            const userInfo: DetailedUser = await this.usersModel.getUserInfo(authInfo.username);
             if (userInfo && userInfo.password == authInfo.password) {
                 await this.addUserToLogCollection(authInfo.username, true);
                 next(userInfo);
@@ -49,7 +49,7 @@ export class AuthService {
                 console.log(userInfo)
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
-            const userDB: DetailedUser = await this.usersModel.getCredentials(userInfo.username);
+            const userDB: DetailedUser = await this.usersModel.getUserInfo(userInfo.username);
             if (!userDB) {
                 await this.usersModel.registerUser(userInfo.username, userInfo.password, userInfo.name, userInfo.surname, userInfo.avatar);
                 await this.addUserToLogCollection(userInfo.username, true);

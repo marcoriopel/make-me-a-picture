@@ -30,9 +30,7 @@ export class LobbyService {
   private startGameUrl = this.baseUrl + "/api/games/start";
   private leaveUrl = this.baseUrl + "/api/games/leave";
 
-  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) {
-    this.gameService.initialize();
-  }
+  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) { }
 
   addVirtualPlayer(teamNumber: number): void {
     const headers = new HttpHeaders({
@@ -115,18 +113,24 @@ export class LobbyService {
       this.oldLobbyId = this.game.id;
       this.socketService.bind('dispatchTeams', (res: any) => {
         this.clearPlayers();
-        res.players.forEach((user: { username: string; avatar: number; team: number}) => {
-          this.game.player.push(user.username);
-          if (user.team == 0) {
-            this.game.team1.push(user.username);
-            if (user.avatar > 5)
-              this.virtalPlayer0 = user.username;
-          } else { 
-            this.game.team2.push(user.username);
-            if (user.avatar > 5)
-              this.virtalPlayer1 = user.username;
-          }
-        });
+        if(this.game.type == GameType.Classic){
+          res.players.forEach((user: { username: string; avatar: number; team: number}) => {
+            this.game.player.push(user.username);
+            if (user.team == 0) {
+              this.game.team1.push(user.username);
+              if (user.avatar > 5)
+                this.virtalPlayer0 = user.username;
+            } else { 
+              this.game.team2.push(user.username);
+              if (user.avatar > 5)
+                this.virtalPlayer1 = user.username;
+            }
+          });          
+        } else {
+          res.players.forEach((user: { username: string; avatar: number}) => {
+            this.game.player.push(user.username);
+          });
+        }
       this.isFull();
     });
   }
@@ -144,9 +148,10 @@ export class LobbyService {
       this.team1Full = (this.game.team1.length < 2) ? false: true;
       this.isTeam2Full = (this.game.team2.length < 2) ? false: true;
       this.isLobbyFull = this.team1Full && this.isTeam2Full;
+    } else if (this.game.type == GameType.SprintCoop) {
+      this.game.player.length > 1 ? this.isLobbyFull = true : this.isLobbyFull = false;
     } else {
-      this.team1Full = (this.game.team1.length < 4) ? false: true;
-      this.isLobbyFull = this.team1Full;
+      this.game.player.length == 1 ? this.isLobbyFull = true : this.isLobbyFull = false;
     }
   }
 }
