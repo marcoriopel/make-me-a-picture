@@ -23,7 +23,7 @@ export class ChatService {
     chatId: 'General',
   }];
   private index: number = 0;
-  private currentChatId: string = "General";
+  currentChatId: string = "General";
 
   constructor(private http: HttpClient, private socketService: SocketService) {
     this.initializeChats();
@@ -77,7 +77,11 @@ export class ChatService {
   }
 
   getChatMessages(): Message[] {
-    return this.joinedChatList[this.index]["messages"];
+    try {
+      return this.joinedChatList[this.index]["messages"];
+    } catch {
+      return [] // Not initialized yet
+    }
   }
 
   refreshChatList(): void {
@@ -137,7 +141,13 @@ export class ChatService {
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
-      this.joinedChatList[this.index]["messages"].push(msg);
+      this.joinedChatList.forEach((conversation: any) => {
+        if(conversation.chatId = message.chatId){
+          console.log('added to '+ message.chatId)
+          conversation["messages"].push(msg);
+        }
+      })
+      // this.joinedChatList[this.index]["messages"].push(msg);
     });
   }
 

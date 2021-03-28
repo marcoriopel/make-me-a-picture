@@ -17,7 +17,8 @@ export class ChatBarComponent implements OnInit {
     chatName: '',
   });
   changeChat(name: string): void {
-    this.chatService.setCurrentChat(name)
+    this.chatService.setCurrentChat(name);
+    this.refreshChatList();
   }
 
   ngOnInit(): void {
@@ -72,7 +73,13 @@ export class ChatBarComponent implements OnInit {
   }
 
   refreshChatList(): void {
-    console.log('test');
     this.chatService.refreshChatList();
+  }
+
+  getColorClass(chatId: string): string {
+    if(chatId == this.chatService.currentChatId){
+      return "#4AA7DD"
+    }
+    return "#A1A1A1"
   }
 }
