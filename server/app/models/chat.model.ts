@@ -65,7 +65,7 @@ export class ChatModel {
 
     async getUsersInChat(chatRoomId) {
         try {
-            return await this.databaseModel.client.db("chats").collection("chats").findOne({ "chatId": chatRoomId }, { projection: { "users": 1, "_id": 0 } });
+            return await this.databaseModel.client.db("database").collection("chats").findOne({ "chatId": chatRoomId }, { projection: { "users": 1, "_id": 0 } });
         } catch (e) {
             throw e;
         }
