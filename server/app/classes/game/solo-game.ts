@@ -126,7 +126,7 @@ export class SoloGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 20;
+        this.gameTimerCount = 180;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "gameTimer": this.gameTimerCount });
             if (!this.gameTimerCount) {
