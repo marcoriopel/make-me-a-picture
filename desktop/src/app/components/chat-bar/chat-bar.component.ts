@@ -58,14 +58,21 @@ export class ChatBarComponent implements OnInit {
   }
   
   joinChat(chatId: string): void {
-    this.chatService.joinChat(chatId)
+    this.chatService.joinChat(chatId);
+    setTimeout(() => {
+      this.chatService.refreshChatList();
+    }, 100);
   }
 
   leaveChat(chatId: string): void {
-    this.chatService.leaveChat(chatId)
+    this.chatService.leaveChat(chatId);
+    setTimeout(() => {
+      this.chatService.refreshChatList();
+    }, 100);
   }
 
   refreshChatList(): void {
+    console.log('test');
     this.chatService.refreshChatList();
   }
 }

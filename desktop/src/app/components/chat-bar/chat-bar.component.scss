@@ -31,6 +31,8 @@
 }
 
 .chat-button {
+  display: flex;
+  align-items: center;
   width: 90%;
   height: 60px;
   margin: 0 auto;
@@ -48,10 +50,34 @@
   font-size: 24px;
   line-height: 58px;
   color: #000000;
+
+  p {
+    width: 80%;
+    margin: 0;
+  }
+
+  button {
+    height: 50%;
+    margin-right: 10px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+  }
 }
 
-.joined{
-  background: #AAAAAA;
+.joined {
+  button {
+    background-color: #BA2034;
+  }
+}
+
+.not-joined{
+  button {
+    background-color: #99C355;
+  }
 }
 
 .chat {
