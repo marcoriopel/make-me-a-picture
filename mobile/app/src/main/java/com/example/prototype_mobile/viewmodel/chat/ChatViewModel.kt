@@ -68,6 +68,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 }
             }
         }
+        getChannels()
     }
 
     fun getChannels(isInit: Boolean = false) {
@@ -94,6 +95,11 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
     fun joinChannel(chatId: String) {
         chatRepository.joinChannel(chatId)
+        getChannels()
+    }
+
+    fun leaveChannel(chatId: String) {
+        chatRepository.leaveChannel(chatId)
         getChannels()
     }
 

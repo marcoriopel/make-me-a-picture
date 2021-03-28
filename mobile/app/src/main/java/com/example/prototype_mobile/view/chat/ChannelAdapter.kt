@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.prototype_mobile.Channel
@@ -35,10 +36,19 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setOnClickListener {
                     viewModel.switchChannel(channel.chatId)
                 }
+                if (channel.chatId != "General") {
+                    holder.leaveButton.visibility = View.VISIBLE
+                    holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
+                }
             }
             ChannelState.NOTIFIED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)
                 holder.joinButton.visibility = View.GONE
+
+                if (channel.chatId != "General") {
+                    holder.leaveButton.visibility = View.VISIBLE
+                    holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
+                }
                 holder.background.setOnClickListener {
                     viewModel.switchChannel(channel.chatId)
                 }
@@ -46,11 +56,13 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
             ChannelState.NOTJOINED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel)
                 holder.joinButton.visibility = View.VISIBLE
+                holder.leaveButton.visibility = View.GONE
                 holder.joinButton.setOnClickListener { viewModel.joinChannel(channel.chatId) }
             }
             ChannelState.SHOWN -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_shown)
                 holder.joinButton.visibility = View.GONE
+                holder.leaveButton.visibility = View.GONE
             }
         }
     }
@@ -60,6 +72,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val channelName: TextView = view.findViewById(R.id.channel_list_name)
         val joinButton: Button = view.findViewById(R.id.channel_list_join)
+        val leaveButton: ImageView = view.findViewById(R.id.channel_list_leave)
         val background: LinearLayout = view.findViewById(R.id.channel_background)
     }
 }

@@ -76,6 +76,10 @@ class ChatRepository() {
         socket.emit("joinChatRoom", gson.toJson(JoinChannel(chatId)))
     }
 
+    fun leaveChannel(chatId: String){
+        socket.emit("leaveChatRoom", gson.toJson(JoinChannel(chatId)))
+    }
+
     suspend fun createChannel(channelName: String): Result<Boolean> {
         val mapChannel = HashMap<String, String>()
         mapChannel["chatName"] = channelName
