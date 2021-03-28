@@ -22,7 +22,7 @@ export class ChatService {
     messages: [],
     chatId: 'General',
   }];
-  private index: number = 0;
+  index: number = 0;
   currentChatId: string = "General";
 
   constructor(private http: HttpClient, private socketService: SocketService) {
@@ -46,6 +46,9 @@ export class ChatService {
             messages: [],
           }
           this.joinedChatList.push(chat);
+          if(element.chatId != 'General'){
+            this.joinChat(element.chatId);
+          }
         });
         this.http.get<any>(this.getChatListUrl, options)
         .subscribe((data: any) => {
@@ -68,6 +71,7 @@ export class ChatService {
   }
 
   setCurrentChat(chatId: string): void {
+    console.log('Changing to ' + chatId)
     this.currentChatId = chatId;
     for(let i = 0; i < this.joinedChatList.length; i++){
       if(this.joinedChatList[i].chatId == chatId){
@@ -78,7 +82,7 @@ export class ChatService {
 
   getChatMessages(): Message[] {
     try {
-      return this.joinedChatList[this.index]["messages"];
+      return this.joinedChatList[this.index].messages;
     } catch {
       return [] // Not initialized yet
     }
@@ -141,13 +145,11 @@ export class ChatService {
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
-      this.joinedChatList.forEach((conversation: any) => {
-        if(conversation.chatId = message.chatId){
-          console.log('added to '+ message.chatId)
-          conversation["messages"].push(msg);
+      for(let i = 0; i < this.joinedChatList.length; i++) {
+        if(this.joinedChatList[i].chatId == message.chatId){
+          this.joinedChatList[i].messages.push(msg);
         }
-      })
-      // this.joinedChatList[this.index]["messages"].push(msg);
+      }
     });
   }
 

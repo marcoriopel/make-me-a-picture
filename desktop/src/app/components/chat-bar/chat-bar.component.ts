@@ -18,7 +18,9 @@ export class ChatBarComponent implements OnInit {
   });
   changeChat(name: string): void {
     this.chatService.setCurrentChat(name);
-    this.refreshChatList();
+    setTimeout(() => {
+      this.refreshChatList();
+    }, 300);
   }
 
   ngOnInit(): void {
@@ -62,22 +64,22 @@ export class ChatBarComponent implements OnInit {
     this.chatService.joinChat(chatId);
     setTimeout(() => {
       this.chatService.refreshChatList();
-    }, 100);
+    }, 300);
   }
 
   leaveChat(chatId: string): void {
     this.chatService.leaveChat(chatId);
     setTimeout(() => {
       this.chatService.refreshChatList();
-    }, 100);
+    }, 300);
   }
 
   refreshChatList(): void {
     this.chatService.refreshChatList();
   }
 
-  getColorClass(chatId: string): string {
-    if(chatId == this.chatService.currentChatId){
+  getColorClass(index: number): string {
+    if(index == this.chatService.index){
       return "#4AA7DD"
     }
     return "#A1A1A1"

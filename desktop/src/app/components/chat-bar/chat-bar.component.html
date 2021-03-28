@@ -12,10 +12,10 @@
             </div>
             <button id="refresh-button" type="submit" (click)="refreshChatList()"><span class="material-icons">cached</span></button>
         </div>
-        <div *ngFor="let conversation of this.chatService.joinedChatList">
-            <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [style.background-color]="getColorClass(conversation.chatId)">
+        <div *ngFor="let conversation of this.chatService.joinedChatList; let i = index">
+            <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [style.background-color]="getColorClass(i)">
                 <p>{{conversation.name}}</p>
-                <button (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
+                <button *ngIf="conversation.chatId != 'General'" (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
             </div>
         </div>
         <div *ngFor="let conversation of this.chatService.notJoinedChatList">
