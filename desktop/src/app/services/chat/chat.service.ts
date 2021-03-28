@@ -71,14 +71,12 @@ export class ChatService {
   }
 
   setCurrentChat(chatId: string): void {
-    console.log('Changing to ' + chatId)
     this.currentChatId = chatId;
     for(let i = 0; i < this.joinedChatList.length; i++){
       if(this.joinedChatList[i].chatId == chatId){
         this.index = i;
       }
     }
-    console.log(this.joinedChatList[this.index].messages)
   }
 
   getChatMessages(): Message[] {
@@ -158,6 +156,9 @@ export class ChatService {
         if(this.joinedChatList[i].chatId == message.chatId){
           this.joinedChatList[i].messages.push(msg);
         }
+      }
+      if(message.chatId != this.currentChatId){
+        alert('notif!')
       }
     });
   }
