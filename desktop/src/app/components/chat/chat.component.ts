@@ -9,7 +9,7 @@ import { ChatService } from "@app/services/chat/chat.service"
 })
 
 export class ChatComponent {
-
+  @ViewChild('historyButton', { static: false }) historyButtonRef: ElementRef<HTMLButtonElement>;
   @ViewChild("chatContainer") chatContainer: ElementRef;
   @ViewChild("input") input: ElementRef;
 
@@ -45,5 +45,6 @@ export class ChatComponent {
 
   loadChatHistory(): void {
     this.chatService.loadChatHistory();
+    this.historyButtonRef.nativeElement.style.display = 'none';
   }
 }
