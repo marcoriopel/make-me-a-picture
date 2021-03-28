@@ -57,14 +57,74 @@ export class UsersModel {
 
     async updateUserStats(userInfo: any){
         try {
-            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': userInfo.username }, { 
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': userInfo.username }, { $set:{
                 'gamesPlayed': userInfo.gamesPlayed, 
                 'timePlayed': userInfo.timePlayed,
                 'bestSoloScore': userInfo.bestSoloScore,
                 'bestCoopScore': userInfo.bestCoopScore,
                 'classicWinRatio': userInfo.classicWinRatio,
                 'meanGameTime': userInfo.meanGameTime,
-            });
+            }});
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10ClassicWinRatio(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"classicWinRatio": -1}},
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10BestCoopScore(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([
+            {$sort: {"bestCoopScore": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10BestCSoloScore(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"bestSoloScore": -1}},
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10MostTimePlayed(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"timePlayed": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10MostGamesPlayed(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"gamesPlayed": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
         } catch (e) {
             console.error(e);
         }
