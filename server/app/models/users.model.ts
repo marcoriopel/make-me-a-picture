@@ -57,14 +57,14 @@ export class UsersModel {
 
     async updateUserStats(userInfo: any){
         try {
-            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': userInfo.username }, { 
+            await this.databaseModel.client.db("database").collection("users").updateOne({ 'username': userInfo.username }, { $set:{
                 'gamesPlayed': userInfo.gamesPlayed, 
                 'timePlayed': userInfo.timePlayed,
                 'bestSoloScore': userInfo.bestSoloScore,
                 'bestCoopScore': userInfo.bestCoopScore,
                 'classicWinRatio': userInfo.classicWinRatio,
                 'meanGameTime': userInfo.meanGameTime,
-            });
+            }});
         } catch (e) {
             console.error(e);
         }
