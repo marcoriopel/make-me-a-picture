@@ -107,8 +107,9 @@ class GameRepository {
             val guessesLeftByTeam: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
             _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
         } else {
-            _guessesLeft.postValue(JSONObject(it[0].toString()).getString("guessesLeft").toInt())
-            _isPlayerGuessing.postValue(_guessesLeft.value!! > 0)
+            val numberGuessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
+            _guessesLeft.postValue(numberGuessesLeft)
+            _isPlayerGuessing.postValue(numberGuessesLeft > 0)
         }
     }
 
