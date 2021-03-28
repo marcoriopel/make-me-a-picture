@@ -78,6 +78,7 @@ export class ChatService {
         this.index = i;
       }
     }
+    console.log(this.joinedChatList[this.index].messages)
   }
 
   getChatMessages(): Message[] {
@@ -89,8 +90,6 @@ export class ChatService {
   }
 
   refreshChatList(): void {
-    this.joinedChatList = [];
-    this.notJoinedChatList = [];
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
@@ -98,12 +97,18 @@ export class ChatService {
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
         data.chats.forEach((element: any) => {
-          const chat: Chat = {
-            name: element.chatName,
-            chatId: element.chatId,
-            messages: [],
+          let isChatAlreadyLoaded = false;
+          this.joinedChatList.forEach((chat: any) => {
+            if(chat.chatId == element.chatId) isChatAlreadyLoaded = true;
+          })
+          if(!isChatAlreadyLoaded){
+            const chat: Chat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+            }
+            this.joinedChatList.push(chat);            
           }
-          this.joinedChatList.push(chat);
         });
         this.http.get<any>(this.getChatListUrl, options)
         .subscribe((data: any) => {
@@ -119,7 +124,11 @@ export class ChatService {
                 isChatAlreadyJoined = true;
               }
             })
-            if(!isChatAlreadyJoined) this.notJoinedChatList.push(chat);
+            let isChatAlreadyLoaded = false;
+            this.notJoinedChatList.forEach((chat: any) => {
+              if(chat.chatId == element.chatId) isChatAlreadyLoaded = true;
+            })
+            if(!isChatAlreadyJoined && !isChatAlreadyLoaded) this.notJoinedChatList.push(chat);
           });
         });
       });
@@ -165,10 +174,20 @@ export class ChatService {
   }
 
   joinChat(chatId: string): void {
+    for(let i = 0; i < this.notJoinedChatList.length; i++){
+      if(this.notJoinedChatList[i].chatId == chatId){
+        this.notJoinedChatList.splice(i, 1);
+      }
+    }
     this.socketService.emit('joinChatRoom', { "chatId": chatId })
   }
 
   leaveChat(chatId: string): void {
+    for(let i = 0; i < this.joinedChatList.length; i++){
+      if(this.joinedChatList[i].chatId == chatId){
+        this.joinedChatList.splice(i, 1);
+      }
+    }
     this.socketService.emit('leaveChatRoom', { "chatId": chatId })
   }
 }
