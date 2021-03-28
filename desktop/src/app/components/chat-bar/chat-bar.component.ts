@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
 import { FormBuilder } from '@angular/forms';
+import { SocketService } from '@app/services/socket/socket.service';
 
 @Component({
   selector: 'app-chat-bar',
@@ -12,15 +13,13 @@ import { FormBuilder } from '@angular/forms';
 export class ChatBarComponent implements OnInit {
   isWindowButtonAvailable: boolean = true;
 
-  constructor(public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder) {}
+  constructor(public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService) {}
   createChatForm = this.formBuilder.group({
     chatName: '',
   });
+
   changeChat(name: string): void {
     this.chatService.setCurrentChat(name);
-    setTimeout(() => {
-      this.refreshChatList();
-    }, 300);
   }
 
   ngOnInit(): void {
@@ -61,27 +60,23 @@ export class ChatBarComponent implements OnInit {
   }
   
   joinChat(chatId: string): void {
-    this.chatService.joinChat(chatId);
-    setTimeout(() => {
+    this.socketService.bind('joinChatRoomCallback', () => {
       this.chatService.refreshChatList();
-    }, 300);
+      this.socketService.unbind('joinChatRoomCallback')
+    });
+    this.chatService.joinChat(chatId);
   }
 
   leaveChat(chatId: string): void {
-    this.chatService.leaveChat(chatId);
-    setTimeout(() => {
+    this.socketService.bind('leaveChatRoomCallback', () => {
       this.chatService.refreshChatList();
-    }, 300);
+      this.socketService.unbind('leaveChatRoomCallback');
+      this.chatService.setCurrentChat('General');
+    });
+    this.chatService.leaveChat(chatId);
   }
 
   refreshChatList(): void {
     this.chatService.refreshChatList();
-  }
-
-  getColorClass(index: number): string {
-    if(index == this.chatService.index){
-      return "#4AA7DD"
-    }
-    return "#A1A1A1"
   }
 }

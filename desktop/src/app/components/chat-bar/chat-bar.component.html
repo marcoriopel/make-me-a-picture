@@ -14,7 +14,7 @@
         </div>
         <div class="scroller">
             <div *ngFor="let conversation of this.chatService.joinedChatList; let i = index">
-                <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [style.background-color]="getColorClass(i)">
+                <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [ngClass]="(conversation.chatId == chatService.currentChatId)?'selected':''">
                     <p>{{conversation.name}}</p>
                     <button *ngIf="conversation.chatId != 'General'" (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
                     <div *ngIf="conversation.isNotificationOn" [ngClass]="{'notification-general' : conversation.chatId == 'General', 'notification' : conversation.chatId != 'General'}" id="notification"></div>

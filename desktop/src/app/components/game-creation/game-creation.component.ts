@@ -77,7 +77,6 @@ export class GameCreationComponent implements OnInit {
         this.join(res.lobbyId, game);
         this.gameService.gameId = res.lobbyId;
         this.gameService.initialize(this.type);
-        this.chatService.joinChat(res.lobbyId);
       },
       err => { 
         console.log(err);
@@ -90,6 +89,11 @@ export class GameCreationComponent implements OnInit {
       res => {
         this.router.navigate(['/lobby']);
         this.socketService.emit('joinLobby', {lobbyId: id});
+        this.socketService.bind('joinChatRoomCallback', async () => {
+          await this.chatService.refreshChatList();
+          this.chatService.setCurrentChat(this.gameService.gameId);
+          this.socketService.unbind('joinChatRoomCallback')
+        });
         this.chatService.joinChat(this.gameService.gameId);
       },
       err => {

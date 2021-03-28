@@ -83,10 +83,6 @@ export class ChatService {
       }
     }
     this.joinedChatList[this.index].isNotificationOn = false;
-    let el = document.getElementById('history-button-container');
-    if(el){
-      el.style.display = 'flex';
-    }
   }
 
   getChatMessages(): Message[] {
@@ -97,7 +93,7 @@ export class ChatService {
     }
   }
 
-  refreshChatList(): void {
+  async refreshChatList() {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
@@ -140,6 +136,7 @@ export class ChatService {
             })
             if(!isChatAlreadyJoined && !isChatAlreadyLoaded) this.notJoinedChatList.push(chat);
           });
+          this.setCurrentChat(this.currentChatId);
         });
       });
   }
@@ -203,10 +200,6 @@ export class ChatService {
         this.joinedChatList[this.index].isChatHistoryDisplayed = true;
       });
     });
-    let el = document.getElementById('history-button-container');
-    if(el){
-      el.style.display = 'none';
-    }
   }
 
   createChat(chatName: string){
