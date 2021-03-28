@@ -46,6 +46,10 @@ class SprintInfoFragment : Fragment() {
         viewModel.teamScore.observe(viewLifecycleOwner, Observer {
             binding.score.text = it.score[0].toString()
         })
+
+        viewModel.guessesLeft.observe(viewLifecycleOwner, Observer {
+            binding.guessesLeft.text = it.toString()
+        })
     }
 
 

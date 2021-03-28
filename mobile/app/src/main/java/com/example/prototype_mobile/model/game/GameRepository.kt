@@ -53,6 +53,9 @@ class GameRepository {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    private val _guessesLeft = MutableLiveData<Int>()
+    val guessesLeft: LiveData<Int> = _guessesLeft
+
     private val _teamScore = MutableLiveData<Score>()
     var teamScore: LiveData<Score> = _teamScore
 
@@ -101,11 +104,11 @@ class GameRepository {
 
     private var onGuessesLeft = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
-            val guessesLeft: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
-            _isPlayerGuessing.postValue(guessesLeft.guessesLeft[team] > 0)
+            val guessesLeftByTeam: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
+            _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
         } else {
-            val guessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
-            _isPlayerGuessing.postValue(guessesLeft > 0)
+            _guessesLeft.postValue(JSONObject(it[0].toString()).getString("guessesLeft").toInt())
+            _isPlayerGuessing.postValue(_guessesLeft.value!! > 0)
         }
     }
 

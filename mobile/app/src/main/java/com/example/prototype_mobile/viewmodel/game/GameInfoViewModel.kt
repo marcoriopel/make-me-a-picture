@@ -19,6 +19,9 @@ class GameInfoViewModel : ViewModel() {
     private val _roundTimer = MutableLiveData<Timer>() 
     var roundTimer: LiveData<Timer> = _roundTimer
 
+    private val _guessesLeft = MutableLiveData<Int>()
+    val guessesLeft: LiveData<Int> = _guessesLeft
+
     val gameRepo = GameRepository.getInstance()!!
 
     init {
@@ -30,6 +33,9 @@ class GameInfoViewModel : ViewModel() {
         }
         gameRepo.gameTimer.observeForever {
             _gameTimer.value = it
+        }
+        gameRepo.guessesLeft.observeForever {
+            _guessesLeft.value = it
         }
     }
 
