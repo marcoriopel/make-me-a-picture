@@ -43,4 +43,7 @@ export class ChatComponent {
     this.messageForm.reset();
   }
 
+  loadChatHistory(): void {
+    this.chatService.loadChatHistory();
+  }
 }

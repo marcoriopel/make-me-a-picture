@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Chat, JoinedChat, Message } from '@app/classes/chat';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { SocketService } from '@app/services/socket/socket.service';
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -11,6 +11,7 @@ export class ChatService {
   private getJoinedChatUrl = this.baseUrl + '/api/chat/joined';
   private createChatUrl = this.baseUrl + '/api/chat/create';
   private getChatListUrl = this.baseUrl + '/api/chat/list';
+  private getChatHistoryUrl = this.baseUrl + '/api/chat/history';
   public isChatInExternalWindow: boolean = false;
   joinedChatList: JoinedChat[] = [{
     name: 'Général',
@@ -41,10 +42,11 @@ export class ChatService {
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
         data.chats.forEach((element: any) => {
-          const chat: Chat = {
+          const chat: JoinedChat = {
             name: element.chatName,
             chatId: element.chatId,
             messages: [],
+            isNotificationOn: false,
           }
           this.joinedChatList.push(chat);
           if(element.chatId != 'General'){
@@ -102,10 +104,11 @@ export class ChatService {
             if(chat.chatId == element.chatId) isChatAlreadyLoaded = true;
           })
           if(!isChatAlreadyLoaded){
-            const chat: Chat = {
+            const chat: JoinedChat = {
               name: element.chatName,
               chatId: element.chatId,
               messages: [],
+              isNotificationOn: false,
             }
             this.joinedChatList.push(chat);            
           }
@@ -169,6 +172,29 @@ export class ChatService {
         }
       }
     });
+  }
+
+  loadChatHistory(): void {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    let params = new HttpParams();
+    params = params.append('chatId', this.currentChatId);    
+    const options = { params: params, headers: headers};
+    this.http.get<any>(this.getChatHistoryUrl, options).subscribe((data: any) => {
+      const username = localStorage.getItem('username');
+      data.chatHistory.forEach((message: any) => {
+        const msg: Message = {
+          "username": message.username,
+          "avatar": message.avatar,
+          "text": message.message,
+          "timeStamp": message.timestamp,
+          "isUsersMessage": message.username === username ? true : false,
+          "textColor": "#000000",
+        }
+        this.joinedChatList[this.index].messages.push(msg);  
+      });
+    })
   }
 
   createChat(chatName: string){
