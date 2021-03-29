@@ -22,6 +22,7 @@ const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
 const val DRAWING_TIMER_EVENT = "drawingTimer"
 const val GAME_TIMER_EVENT = "gameTimer"
+const val GUESS_CALL_BACK_EVENT = "guessCallback"
 
 class GameRepository {
     companion object {
@@ -113,6 +114,10 @@ class GameRepository {
         }
     }
 
+    private var guessCallBack = Emitter.Listener {
+        Log.e("Guess call back", it[0].toString())
+    }
+
     private var onTransition = Emitter.Listener {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
         _transition.postValue(transitionTemp)
@@ -143,5 +148,6 @@ class GameRepository {
         socket.on(TRANSITION_EVENT, onTransition)
         socket.on(DRAWING_TIMER_EVENT, onTimerEvent)
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
+        socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
     }
 }
