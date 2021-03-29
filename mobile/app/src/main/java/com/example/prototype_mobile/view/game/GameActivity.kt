@@ -150,6 +150,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerGuess, GuessFragment())
                 .commitNow()
+            supportFragmentManager.beginTransaction().replace(R.id.containerTools, HintFragment()).commitNow()
         }
     }
     override fun onResume() {
