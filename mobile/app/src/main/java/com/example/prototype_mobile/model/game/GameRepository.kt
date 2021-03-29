@@ -16,6 +16,7 @@ import org.json.JSONObject
 const val DRAWING_NAME_EVENT = "drawingName"
 const val SCORE_EVENT = "score"
 const val GUESS_DRAWING_EVENT = "guessDrawing"
+const val END_GAME_EVENT = "endGame"
 const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
@@ -64,11 +65,14 @@ class GameRepository {
     var drawingPlayer: String? = null
     var guessingPlayer: String? = null
 
+    private val _isGameEnded=  MutableLiveData<Boolean>()
+    val isGameEnded: LiveData<Boolean> = _isGameEnded
+
     // Listener
     var team = 0
 
     private var onDrawingNameEvent = Emitter.Listener {
-       drawingName = JSONObject(it[0].toString()).getString("drawingName")
+        drawingName = JSONObject(it[0].toString()).getString("drawingName")
     }
 
     private  var onScoreEvent = Emitter.Listener {
@@ -88,6 +92,11 @@ class GameRepository {
         drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
         _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
         CanvasRepository.getInstance()!!.resetCanvas()
+    }
+    private var onEndGameEvent = Emitter.Listener {
+        println("game ended")
+        _isGameEnded.postValue(true)
+
     }
 
     private var onGuessesLeft = Emitter.Listener {
@@ -127,6 +136,8 @@ class GameRepository {
         socket.on(SCORE_EVENT, onScoreEvent)
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
+        socket.on(END_GAME_EVENT, onEndGameEvent)
+        _isGameEnded.value = false
         socket.on(TRANSITION_EVENT, onTransition)
     }
 }
