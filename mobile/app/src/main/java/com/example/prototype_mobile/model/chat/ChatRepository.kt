@@ -14,8 +14,6 @@ import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import okhttp3.Response
-import org.json.JSONObject
-import java.security.Timestamp
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -44,7 +42,7 @@ class ChatRepository() {
         if (myUsername == messageReceive.user.username) {
             messageType = 0
         }
-        val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType)
+        val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType, messageReceive.timestamp)
         channelMap[messageReceive.chatId]?.add(message)
 
         if (messageReceive.chatId == channelShown) {
@@ -60,7 +58,7 @@ class ChatRepository() {
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
         val generalChatMessage: MutableList<Message> = mutableListOf()
-        generalChatMessage.add(Message("","", "", 2))
+        generalChatMessage.add(Message("","", "", 2, 0))
         channelMap.putIfAbsent("General", generalChatMessage)
         channelJoinedSet.add("General")
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
@@ -117,7 +115,7 @@ class ChatRepository() {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
-                    newMessageList.add(Message("","", "", 2))
+                    newMessageList.add(Message("","", "", 2, 0))
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
@@ -222,18 +220,26 @@ class ChatRepository() {
         if (result is Result.Success) {
             val historyMessage = mutableListOf<Message>()
             for (message in result.data.chatHistory) {
-                var timeStamp = treatTimestamp(message.timestamp)
+                var timestamp = treatTimestamp(message.timestamp)
 
                 var messageType = 1;
                 if (myUsername == message.username) {
                     messageType = 0
                 }
                 val username = if(message.username == null) "Unavailable" else message.username
-                historyMessage.add(Message(username, message.message, timeStamp, messageType))
+                historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp))
             }
             if (channelMap.containsKey(channelShown)) {
-                channelMap[channelShown]!!.asReversed().addAll(historyMessage.asReversed())
-                channelMap[channelShown]!!.removeAt(historyMessage.size)
+                channelMap[channelShown]!!.removeAt(0)
+
+                val firstMessageTimestamp = if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
+                for (message in historyMessage.asReversed()) {
+                    if (message.timestamp < firstMessageTimestamp) {
+                        channelMap[channelShown]!!.asReversed().add(message)
+                    } else {
+                        break
+                    }
+                }
             }
         }
        return Result.Success(true)

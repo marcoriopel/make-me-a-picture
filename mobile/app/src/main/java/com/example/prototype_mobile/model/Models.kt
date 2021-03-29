@@ -7,7 +7,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficult
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 
 // Data class for the chat
-data class Message (val username : String, val text : String, val timeStamp : String, val messageType: Int)
+data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long)
 data class MessageReceive (val id : String, val user : User, val text : String, val timestamp : Long, val textColor : String, val chatId: String)
 data class User (val username: String, val Avatar: Int);
 data class InitialData (val token : String)

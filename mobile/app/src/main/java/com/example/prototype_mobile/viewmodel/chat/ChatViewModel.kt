@@ -7,6 +7,7 @@ import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.chat.ChatRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.view.chat.ChatRoomAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +39,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
         getChannels(true)
         channelList = chatRepository.channelList
+
+        LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
+            joinLobbyChannel(it.gameID)
+        }
     }
 
     fun onDestroy(token:String) {
@@ -69,6 +74,30 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             }
         }
         getChannels()
+    }
+
+    fun joinLobbyChannel(chatId: String) {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            chatRepository.joinChannel(chatId)
+            val result: Result<Boolean> = try {
+                chatRepository.getChannels()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+
+            if (result is Result.Success) {
+                _getChannelResult.postValue(-1)
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+                }
+            }
+            switchChannel(chatId)
+        }
     }
 
     fun getChannels(isInit: Boolean = false) {
@@ -105,9 +134,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
     fun switchChannel(chatId: String) {
         if (chatRepository.channelMap.containsKey(chatId)) {
-            _messageList.value = chatRepository.channelMap[chatId]!!
+            _messageList.postValue(chatRepository.channelMap[chatId]!!)
         } else {
-            _messageList.value = mutableListOf()
+            _messageList.postValue(mutableListOf())
         }
         viewModelScope.launch(Dispatchers.IO){
             channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
@@ -121,11 +150,11 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO)
         {
             val result: Result<Boolean> = chatRepository.getHistory()
-                /*try {
-                chatRepository.getHistory()
-            } catch (e: Exception) {
-                Result.Error(ResponseCode.BAD_REQUEST.code)
-            }*/
+//                try {
+//                chatRepository.getHistory()
+//            } catch (e: Exception) {
+//                Result.Error(ResponseCode.BAD_REQUEST.code)
+//            }
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
