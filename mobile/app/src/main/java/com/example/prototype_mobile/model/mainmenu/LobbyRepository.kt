@@ -58,10 +58,7 @@ class LobbyRepository() {
 
     var onStart = Emitter.Listener {
         val gameRepo = GameRepository.getInstance()!!
-        if (_lobbyJoined.value!!.gameType == GameType.SOLO) {
-            gameRepo.gameType = _lobbyJoined.value!!.gameType
-            _isPlayerDrawing.postValue(false)
-        } else {
+        if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {
             val Jobject = JSONObject(it[0].toString())
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
@@ -76,7 +73,11 @@ class LobbyRepository() {
                 }
             }
             _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
+        } else {
+            gameRepo.gameType = _lobbyJoined.value!!.gameType
+            _isPlayerDrawing.postValue(false)
         }
+
     }
 
     init {
