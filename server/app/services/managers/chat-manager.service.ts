@@ -22,15 +22,10 @@ export class ChatManagerService {
     }
 
     dispatchMessage(user: BasicUser, message: IncomingMessage, date: Date) {
-        let tmpHour: number = date.getHours() + (date.getTimezoneOffset() / 60) - 5;
-        if (tmpHour < 0) { tmpHour += 24 }
-        let hours: string = tmpHour.toString().length == 1 ? "0" + tmpHour.toString() : tmpHour.toString();
-        let minutes: string = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
-        let seconds: string = date.getSeconds().toString().length == 1 ? "0" + date.getSeconds().toString() : date.getSeconds().toString();
-        let timeStamp: string = hours + ":" + minutes + ":" + seconds;
-        this.socketService.getSocket().to(message.chatId).emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
+        let timestamp: number = date.getTime();
+        this.socketService.getSocket().to(message.chatId).emit('message', { "user": user, "text": message.text, "timestamp": timestamp, "textColor": "#000000", chatId: message.chatId });
         if (message.chatId == 'General') {
-            this.socketService.getSocket().emit('message', { "user": user, "text": message.text, "timeStamp": timeStamp, "textColor": "#000000", chatId: message.chatId });
+            this.socketService.getSocket().emit('message', { "user": user, "text": message.text, "timestamp": timestamp, "textColor": "#000000", chatId: message.chatId });
         }
     }
 
