@@ -44,8 +44,6 @@ class GameViewModel():ViewModel() {
             _isGameEnded.value = it
         }
 
-
-
         gameRepository.transition.observeForever {
             if (it.timer == 5) {
                 val msg = when (it.state) {

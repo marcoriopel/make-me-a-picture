@@ -20,7 +20,7 @@
         <FrameLayout
             android:id="@+id/containerTools"
             android:layout_width="150dp"
-            android:layout_height="match_parent" />
+            android:layout_height="502dp" />
     </LinearLayout>
 
 
