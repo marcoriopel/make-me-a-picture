@@ -18,9 +18,9 @@ export class StatsService {
     updateStats(gameName: string, gameType: number, players: any, score: any, startDate: number, endDate: number){
         this.saveGame(gameName, gameType, players, score, startDate, endDate)
         if(gameType == GameType.CLASSIC){
-            for(let player of players){
-                if(player.isVirtual){
-                    players.pop(player);
+            for(let i = 0; i < players.length; ++i){
+                if(players[i].isVirtual){
+                    players.splice(i, 1);
                 }
             }
         }

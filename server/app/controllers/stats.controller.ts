@@ -32,5 +32,13 @@ export class StatsController {
       });
     });
 
+    this.router.get('/leaderboard', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.userService.getTop10(req, res, (top10: any) => {
+          res.status(StatusCodes.OK).send({ top10 });
+        });
+      });
+    });
+
   }
 }
