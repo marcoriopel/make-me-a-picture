@@ -7,8 +7,10 @@ import { AuthService } from '@app/services/auth/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-
-  constructor(private authService: AuthService) { }
+  username: string | null;
+  constructor(private authService: AuthService) { 
+    this.username = localStorage.getItem('username');
+  }
 
   logout(): void {
     this.authService.logoutUser();

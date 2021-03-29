@@ -5,6 +5,13 @@
     </div>
 
     <span class="example-spacer"></span>
+    <button mat-button>
+      <span class="material-icons">leaderboard</span>
+      <a routerLink="/leaderboard">Classement</a>
+    </button>
+    <button mat-button routerLink="/profile">
+      <a routerLink="/profile">{{username}}</a>
+    </button>
     <button mat-button (click)="logout()">
       <span>Déconnexion</span>
     </button>
