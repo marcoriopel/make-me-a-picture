@@ -13,6 +13,7 @@ import * as lobbyInterface from '@app/ressources/interfaces/lobby.interface';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { TYPES } from '@app/types';
 import { SocketService } from '../sockets/socket.service';
+import { ChatModel } from '@app/models/chat.model';
 
 @injectable()
 export class LobbyManagerService {
@@ -20,7 +21,8 @@ export class LobbyManagerService {
     static lobbies: Map<string, Lobby> = new Map<string, Lobby>();
 
     constructor(
-        @inject(TYPES.SocketService) private socketService: SocketService,) {
+        @inject(TYPES.SocketService) private socketService: SocketService,
+        @inject(TYPES.ChatModel) private chatModel: ChatModel,) {
         this.socketService = SocketService.getInstance();
     }
 
@@ -35,12 +37,15 @@ export class LobbyManagerService {
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.SOLO:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.COOP:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");

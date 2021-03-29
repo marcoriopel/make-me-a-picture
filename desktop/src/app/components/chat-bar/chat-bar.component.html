@@ -3,15 +3,31 @@
         <i class="far fa-window-restore"></i>
     </button>
     <div #chatContainer class="chat-container">
-        <div *ngFor="let conversation of this.chatService.getChatList()">
-            <div class="chat-button" (click)="this.changeChat(conversation.chatId)">
-                <p>{{conversation.name}}</p>
+        <div class="new-chat">
+            <div class="chat-input">
+                <form [formGroup]="createChatForm" (ngSubmit)="createChat()">
+                    <button id="add-button"><span class="material-icons">add</span></button>
+                    <input matInput type="text" formControlName="chatName" placeholder="Nouvelle conversation">
+                </form>
+            </div>
+            <button id="refresh-button" type="submit" (click)="refreshChatList()"><span class="material-icons">cached</span></button>
+        </div>
+        <div class="scroller">
+            <div *ngFor="let conversation of this.chatService.joinedChatList; let i = index">
+                <div class="chat-button joined" (click)="this.changeChat(conversation.chatId)" [ngClass]="(conversation.chatId == chatService.currentChatId)?'selected':''">
+                    <p>{{conversation.name}}</p>
+                    <button *ngIf="conversation.chatId != 'General'" (click)="leaveChat(conversation.chatId)"><span class="material-icons leave-button">exit_to_app</span></button>
+                    <div *ngIf="conversation.isNotificationOn" [ngClass]="{'notification-general' : conversation.chatId == 'General', 'notification' : conversation.chatId != 'General'}" id="notification"></div>
+                </div>
+            </div>
+            <div *ngFor="let conversation of this.chatService.notJoinedChatList">
+                <div class="chat-button not-joined" (click)="this.changeChat(conversation.chatId)">
+                    <p>{{conversation.name}}</p>
+                    <button (click)="joinChat(conversation.chatId)">Rejoindre</button>
+                </div>
             </div>
         </div>
-        <button (click)="this.createChat('room1')">create chat 1</button>
-        <button (click)="this.joinChat('1c58d61f-fe24-4e09-b7ed-ba62a02fce64')">join chat 1</button>
-        <button (click)="this.leaveChat('1c58d61f-fe24-4e09-b7ed-ba62a02fce64')">leave chat 1</button>
     </div>
-
+    
     <app-chat class="chat"></app-chat>
 </div>

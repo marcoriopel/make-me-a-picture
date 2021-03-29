@@ -92,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainMenuActivity::class.java);
       // val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         Toast.makeText(
                 applicationContext,
                 "Bienvenue $username",

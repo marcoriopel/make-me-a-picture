@@ -2,16 +2,15 @@ import { Drawing, Vec2 } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent, MouseDown } from '@app/ressources/interfaces/game-events';
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
-import { Personnality, NB_PERSONNALITIES } from '@app/ressources/variables/virtual-player-variables'
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
 
 @injectable()
 export class VirtualPlayer {
-    private personnality: number;
-    private username: string;
-    private avatar: number;
+    protected personnality: number;
+    protected username: string;
+    protected avatar: number;
     private drawingsService: DrawingsService;
     private socketService: SocketService;
     private currentDrawing: Drawing;
@@ -23,29 +22,6 @@ export class VirtualPlayer {
 
     constructor(gameId: string) {
         this.gameId = gameId;
-        this.personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
-        this.setBasicUserInfo();
-    }
-
-    private setBasicUserInfo() {
-        switch (this.personnality) {
-            case Personnality.NICE:
-                this.username = "Bernard";
-                this.avatar = 6;
-                break;
-            case Personnality.ANXIOUS:
-                this.username = "Ginette";
-                this.avatar = 7;
-                break;
-            case Personnality.PASSIVE_AGRESSIVE:
-                this.username = "Kevin";
-                this.avatar = 8;
-                break;
-            case Personnality.COMPETETIVE:
-                this.username = "Émilio";
-                this.avatar = 9;
-                break;
-        }
     }
 
     setServices(drawingsService: DrawingsService, socketService: SocketService): void {
@@ -155,7 +131,8 @@ export class VirtualPlayer {
             this.socketService.getSocket().to(this.gameId).emit('hintError', { "message": "No more hints left" });
         }
         else {
-            this.socketService.getSocket().to(this.gameId).emit('hintCallback', { "hint": this.currentDrawing.hints[this.nextHintIndex] });
+            const message = "Drawing hint: " + this.currentDrawing.hints[this.nextHintIndex];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": "timestamp", "textColor": "#2065d4", chatId: this.gameId });
             this.nextHintIndex++;
         }
     }

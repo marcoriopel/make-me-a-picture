@@ -21,7 +21,7 @@ export class ChatModel {
 
     async getChatInfo(chatRoomId) {
         try {
-            return await this.databaseModel.client.db("database").collection("chat-names").findOne({ "chatId": chatRoomId });
+            return await this.databaseModel.client.db("database").collection("chats").findOne({ "chatId": chatRoomId });
         } catch (e) {
             console.error(e);
             throw e;
@@ -30,7 +30,7 @@ export class ChatModel {
 
     async getChatsList() {
         try {
-            return await this.databaseModel.client.db("database").collection("chat-names").find({}, { projection: { _id: 0 } }).toArray();
+            return await this.databaseModel.client.db("database").collection("chats").find({}, { projection: { _id: 0 } }).toArray();
         } catch (e) {
             console.error(e);
             throw e;
@@ -65,7 +65,7 @@ export class ChatModel {
 
     async getUsersInChat(chatRoomId) {
         try {
-            return await this.databaseModel.client.db("chats").collection("chats").findOne({ "chatId": chatRoomId }, { projection: { "users": 1, "_id": 0}});
+            return await this.databaseModel.client.db("database").collection("chats").findOne({ "chatId": chatRoomId }, { projection: { "users": 1, "_id": 0 } });
         } catch (e) {
             throw e;
         }
@@ -73,8 +73,8 @@ export class ChatModel {
 
     async addUserToChat(username, chatRoomId) {
         try {
-            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
-            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $push: {'users': username} });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: { 'users': username } });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $push: { 'users': username } });
         } catch (e) {
             throw e;
         }
@@ -82,7 +82,7 @@ export class ChatModel {
 
     async removeUserFromChat(username, chatRoomId) {
         try {
-            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: {'users': username} });
+            await this.databaseModel.client.db("database").collection("chats").updateOne({ "chatId": chatRoomId }, { $pull: { 'users': username } });
         } catch (e) {
             throw e;
         }
