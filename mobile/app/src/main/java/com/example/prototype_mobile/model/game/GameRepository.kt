@@ -98,8 +98,10 @@ class GameRepository {
     }
 
     private var onNewRound = Emitter.Listener {
-        drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
-        _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
+        if (gameType == GameType.CLASSIC) {
+            drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+            _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
+        }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
 
