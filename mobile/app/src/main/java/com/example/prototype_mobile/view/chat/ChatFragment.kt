@@ -138,7 +138,6 @@ class ChatFragment : Fragment() {
     }
 
     private fun refreshChannels() {
-        Log.d("refreshing", "refreshed")
         runOnUiThread {
             channelAdapter.notifyDataSetChanged()
         }

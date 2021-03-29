@@ -153,12 +153,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     fun showHistory() {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<Boolean> = chatRepository.getHistory()
-//                try {
-//                chatRepository.getHistory()
-//            } catch (e: Exception) {
-//                Result.Error(ResponseCode.BAD_REQUEST.code)
-//            }
+            val result: Result<Boolean> =
+                try {
+                chatRepository.getHistory()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
