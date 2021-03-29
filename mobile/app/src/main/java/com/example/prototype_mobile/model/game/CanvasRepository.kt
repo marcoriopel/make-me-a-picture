@@ -54,7 +54,7 @@ class CanvasRepository {
         if(!gameRepo.isPlayerDrawing.value!!) {
             val objectString = JSONObject(it[0].toString()).getString("drawingEvent")
             val objectJson = JSONObject(objectString)
-            try {
+           // try {
                 val drawingEventReceive = when(objectJson.getString("eventType").toInt()) {
                     EVENT_TOUCH_DOWN -> {
                         val Jevent = JSONObject(objectJson.getString("event"))
@@ -74,14 +74,14 @@ class CanvasRepository {
                     }
                 }
                 _drawingEvent.postValue(drawingEventReceive)
-            } catch (e: Exception) {
+           /* } catch (e: Exception) {
                 Log.e("Error in Drawing event", e.toString())
                 Log.e("Receive", it[0].toString())
-                throw Exception()
+                throw Exception()*/
             }
 
         }
-    }
+    //}
 
     init {
         socket = SocketOwner.getInstance()!!.socket

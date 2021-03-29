@@ -32,7 +32,7 @@ class ChatRepository() {
     init {
         socket = SocketOwner.getInstance()!!.socket
         //Register all the listener and callbacks here.yoo
-        socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
+    //    socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
     }
 
 
