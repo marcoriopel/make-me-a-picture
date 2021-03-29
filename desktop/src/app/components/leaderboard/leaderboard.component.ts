@@ -55,6 +55,7 @@ export class LeaderboardComponent implements OnInit {
     const options = { params: params, headers: headers};
     this.http.get<any>(this.getLeadboardStatsUrl, options).subscribe((data: any) => {
       this.leaderboard = data.top10;
+      console.log(this.leaderboard)
     })
   }
 

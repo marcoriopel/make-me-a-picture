@@ -40,7 +40,7 @@
 }
 
 #leaderboard-container {
-    width: 80%;
+    width: 90%;
     height: 80%;
     padding-right: 1px;
     background-color: white;
@@ -62,6 +62,14 @@ h1 {
 }
 
 #leaderboard {
+    margin-top: 50px;
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+table {
+    width: 100%;
 }

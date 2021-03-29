@@ -25,9 +25,26 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
                 <div id="leaderboard">
-                    <div *ngFor="let user of leaderboard">
-                        <h2>{{user.username}}</h2>
-                    </div>
+                    <table>
+                        <tr>
+                            <th>Position</th>
+                            <th>Joueur</th>
+                            <th>Parties jouées</th>
+                            <th>Temps jouées</th>
+                            <th>Meilleur score Solo</th>
+                            <th>Meilleur score Coop</th>
+                            <th>Ratio V/D Classic</th>
+                        </tr>
+                        <tr *ngFor="let user of leaderboard, let index = index">
+                            <th>{{index + 1}}</th>
+                            <th>{{user.username}}</th>
+                            <th>{{user.gamesPlayed}}</th>
+                            <th>{{user.timePlayed}}</th>
+                            <th>{{user.bestSoloScore}}</th>
+                            <th>{{user.bestCoopScore}}</th>
+                            <th>{{user.classicWinRatio}}</th>
+                        </tr>
+                    </table>
                 </div>                
             </div>
         </div>
