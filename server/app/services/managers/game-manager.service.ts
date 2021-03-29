@@ -116,19 +116,18 @@ export class GameManagerService {
     }
 
     getGameImages(req: Request, res: Response, next: NextFunction) {
-        if (!req.body.gameId || !GameManagerService.games.has(req.body.gameId)) {
+        if (!req.query.gameId || !GameManagerService.games.has(req.query.gameId)) {
             return res.status(StatusCodes.BAD_REQUEST).send("Could not find game with provided id");
         }
-        const gameId = req.body.gameId;
+        const gameId = req.query.gameId;
         const game = GameManagerService.games.get(gameId);
         if (!(game instanceof ClassicGame))
             return res.status(StatusCodes.BAD_REQUEST).send("Game type not valid for current request");
         try {
-            game.getVirtualPlayerImages();
+            next(game.getVirtualPlayerImages());
         } catch (e) {
             return res.status(StatusCodes.UNAUTHORIZED).send(e.message);
         }
-        next();
     }
 
     requestHint(gameId: string, user: BasicUser) {

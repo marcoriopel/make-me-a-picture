@@ -26,14 +26,16 @@ export class DrawingsModel {
         }
     }
 
-    async uploadImage(body: any, imageId: string) {
-        var uploadParams = { Bucket: "drawingimages", Key: imageId, Body: body };
+    async uploadImage(imageId: string, image: any,) {
+        var uploadParams = { Bucket: "drawingimages", Key: imageId, Body: image };
         this.s3.upload(uploadParams, (err, data) => {
             if (err) {
                 console.log("Error", err);
+                return err;
             }
             if (data) {
                 console.log("Upload Success");
+                return data;
             }
         });
     }
@@ -46,7 +48,6 @@ export class DrawingsModel {
             }
             if (data) {
                 console.log("Success in retrieval");
-                console.log(data);
                 return data.Body;
             }
 

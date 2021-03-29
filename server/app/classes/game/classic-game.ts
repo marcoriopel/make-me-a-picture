@@ -348,7 +348,7 @@ export class ClassicGame extends Game {
         }
     }
 
-    getVirtualPlayerImages(): void {
-        this.drawingsService.getGameVirtualPlayerImages();
+    async getVirtualPlayerImages(): Promise<void> {
+        return await this.drawingsService.getGameVirtualPlayerImage("dfsf");
     }
 }

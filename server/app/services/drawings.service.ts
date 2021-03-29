@@ -29,6 +29,7 @@ export class DrawingsService {
                 throw Error("Drawing is invalid");
 
             await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.uploadImage(drawing.drawingId, req.body.image);
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {
@@ -61,8 +62,11 @@ export class DrawingsService {
         return await this.drawingsModel.getDrawing(words[random]._id)
     }
 
-    async getGameVirtualPlayerImages(): Promise<any> {
-        console.log(await this.drawingsModel.getImage("download.jpeg"));
+    async getGameVirtualPlayerImage(id: string): Promise<any> {
+        return await this.drawingsModel.getImage(id);
+    }
+    async uploadImage(id: string, image: any): Promise<any> {
+        return await this.drawingsModel.uploadImage(id, image);
     }
 
 }
