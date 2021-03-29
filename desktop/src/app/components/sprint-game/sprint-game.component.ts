@@ -8,6 +8,7 @@ import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-coop-game',
@@ -20,7 +21,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) { }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
@@ -45,6 +46,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('score');
     this.socketService.unbind('gameStart');
     this.socketService.unbind('endGame');
+    this.chatService.leaveChat(this.gameService.gameId);
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

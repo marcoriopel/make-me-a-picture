@@ -136,25 +136,27 @@ export class SocketConnectionService {
                 }
             });
 
-            socket.on('joinChatRoom', (request: any) => {
+            socket.on('joinChatRoom', async (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.join(request.chatId);
-                this.userService.addUserToChat(user.username, request.chatId)
-                this.chatManagerService.addUserToChat(user.username, request.chatId)
+                await this.userService.addUserToChat(user.username, request.chatId)
+                await this.chatManagerService.addUserToChat(user.username, request.chatId)
+                this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
                 // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
 
-            socket.on('leaveChatRoom', (request: any) => {
+            socket.on('leaveChatRoom', async (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 socket.leave(request.chatId);
-                this.userService.removeUserFromChat(user.username, request.chatId)
-                this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                await this.userService.removeUserFromChat(user.username, request.chatId)
+                await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');
                 // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
             });
 
