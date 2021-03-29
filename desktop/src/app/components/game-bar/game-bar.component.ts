@@ -58,9 +58,4 @@ export class GameBarComponent {
     this.renderer.removeClass(this.coopButtonRef.nativeElement, "button-expanded");
     this.renderer.removeClass(this.classicButtonRef.nativeElement, "button-expanded");
   }
-
-  createWordImage():void {
-    console.log('Create Word Image selected');
-  }
-
 }

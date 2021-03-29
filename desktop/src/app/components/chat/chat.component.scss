@@ -99,4 +99,15 @@
   background-color: white;
   background: url(../../../assets/img/profileIcon.svg) no-repeat top left;
 }
+
+#history-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+#history-button {
+  margin-top: 5px;
+  color: #4AA7DD;
+  cursor: pointer;
+}
   
