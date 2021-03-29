@@ -128,8 +128,7 @@ class GameRepository {
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
-    }
-
+    } 
 
     fun guessDrawing(guess: String) {
         val opts = IO.Options()
