@@ -5,7 +5,31 @@
             <app-game-bar></app-game-bar>
         </div>
         <div id="leaderboard-column">
-            <h1>test</h1>
+            <h1>Classement</h1>
+            <div id="leaderboard-container">
+                <mat-button-toggle-group id="toggle-group" [formControl]="category">
+                    <mat-button-toggle value="0" (click)="updateLeaderboard()">
+                        Parties jouées
+                    </mat-button-toggle>
+                    <mat-button-toggle value="1" (click)="updateLeaderboard()">
+                        Temps joués
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2" (click)="updateLeaderboard()">
+                        Solo
+                    </mat-button-toggle>
+                    <mat-button-toggle value="3" (click)="updateLeaderboard()">
+                        Coop
+                    </mat-button-toggle>
+                    <mat-button-toggle value="4" (click)="updateLeaderboard()">
+                        Classic
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div id="leaderboard">
+                    <div *ngFor="let user of leaderboard">
+                        <h2>{{user.username}}</h2>
+                    </div>
+                </div>                
+            </div>
         </div>
         <div id="chat-column">
             <div id="chat-bar">
