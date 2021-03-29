@@ -118,7 +118,30 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun showHistory() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val result: Result<Boolean> = chatRepository.getHistory()
+                /*try {
+                chatRepository.getHistory()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }*/
 
+            if (result is Result.Success) {
+                if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
+                    _messageList.postValue(chatRepository.channelMap[chatRepository.channelShown]!!)
+                } else {
+                    _messageList.postValue(mutableListOf())
+                }
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+                }
+            }
+        }
     }
 
 }

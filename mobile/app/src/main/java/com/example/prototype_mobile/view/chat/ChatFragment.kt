@@ -120,6 +120,7 @@ class ChatFragment : Fragment() {
 
     private fun switchMessageList(messageList: MutableList<Message>) {
         runOnUiThread {
+            chatList = messageList
             chatRoomAdapter.chatList = messageList
             chatRoomAdapter.notifyDataSetChanged()
             binding.recyclerView.scrollToPosition(chatList.size - 1) //move focus on last message

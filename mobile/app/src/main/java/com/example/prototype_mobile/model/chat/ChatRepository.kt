@@ -15,6 +15,9 @@ import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import okhttp3.Response
 import org.json.JSONObject
+import java.security.Timestamp
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class ChatRepository() {
@@ -41,7 +44,7 @@ class ChatRepository() {
         if (myUsername == messageReceive.user.username) {
             messageType = 0
         }
-        val message = Message(messageReceive.user.username, messageReceive.text, messageReceive.timeStamp, messageType)
+        val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType)
         channelMap[messageReceive.chatId]?.add(message)
 
         if (messageReceive.chatId == channelShown) {
@@ -193,7 +196,7 @@ class ChatRepository() {
     }
 
     suspend fun getChannelsList(urlPath: String): Result<ChannelList> {
-        val response = HttpRequestDrawGuess.httpRequestGet(urlPath)
+        val response = HttpRequestDrawGuess.httpRequestGet(urlPath, HashMap<String, String>())
         return analysegetChannelsAnswer(response)
     }
     fun analysegetChannelsAnswer(response: Response): Result<ChannelList> {
@@ -206,22 +209,57 @@ class ChatRepository() {
         }
     }
 
-    suspend fun getHistory(): Result<LoggedInUser> {
+   suspend fun getHistory(): Result<Boolean> {
         // handle login
         val mapHistory = HashMap<String, String>()
         mapHistory["chatId"] = channelShown
-        val response = HttpRequestDrawGuess.httpRequestGet("/api/chat/history/", mapHistory)
-
-
-        val result = analyseLoginAnswer(response, username)
+        val response = HttpRequestDrawGuess.httpRequestGet("/api/chat/history", mapHistory)
+        val result = analyseGetHistoryAnswer(response)
+       if (result is Result.Error) {
+           return result
+       }
 
         if (result is Result.Success) {
-            setLoggedInUser((result).data)
-            Log.d("token", result.data.token)
+            val historyMessage = mutableListOf<Message>()
+            for (message in result.data.chatHistory) {
+                var timeStamp = treatTimestamp(message.timestamp)
+
+                var messageType = 1;
+                if (myUsername == message.username) {
+                    messageType = 0
+                }
+                val username = if(message.username == null) "Unavailable" else message.username
+                historyMessage.add(Message(username, message.message, timeStamp, messageType))
+            }
+            if (channelMap.containsKey(channelShown)) {
+                channelMap[channelShown]!!.asReversed().addAll(historyMessage.asReversed())
+                channelMap[channelShown]!!.removeAt(historyMessage.size)
+            }
         }
+       return Result.Success(true)
+    }
 
-        return result;
+    fun analyseGetHistoryAnswer(response: Response): Result<ChatHistory> {
+        val jsonData: String = response.body()!!.string()
+        val chatHistory = gson.fromJson(jsonData, ChatHistory::class.java)
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success(chatHistory)
+        } else {
+            return Result.Error(response.code())
+        }
+    }
 
+    fun treatTimestamp(timestamp: Long): String {
+        val date = Date(timestamp)
+        val cal = Calendar.getInstance()
+        cal.time = date
+
+        var tmpHour: Int = cal.get(Calendar.HOUR_OF_DAY)
+        if (tmpHour < 0) { tmpHour += 24 }
+        var hours = if (tmpHour.toString().length == 1) "0" + tmpHour.toString() else tmpHour.toString()
+        var minutes = if(cal.get(Calendar.MINUTE).toString().length == 1) "0" + cal.get(Calendar.MINUTE).toString() else cal.get(Calendar.MINUTE).toString()
+        var seconds = if(cal.get(Calendar.SECOND).toString().length == 1) "0" + cal.get(Calendar.SECOND).toString() else cal.get(Calendar.SECOND).toString()
+        return hours + ":" + minutes + ":" + seconds;
     }
 
 }

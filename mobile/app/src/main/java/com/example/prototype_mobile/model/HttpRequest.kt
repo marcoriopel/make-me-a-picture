@@ -32,7 +32,7 @@ class HttpRequestDrawGuess {
             }
         }
 
-        suspend fun httpRequestGet(urlPath: String, parameters: HashMap<String, String>?): Response {
+        suspend fun httpRequestGet(urlPath: String, parameters: HashMap<String, String> = HashMap()): Response {
             return withContext(Dispatchers.IO) {
                 val client = OkHttpClient()
                 val token = LoginRepository.getInstance()!!.user!!.token
