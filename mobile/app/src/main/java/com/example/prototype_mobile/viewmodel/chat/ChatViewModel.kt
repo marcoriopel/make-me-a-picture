@@ -7,6 +7,7 @@ import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.chat.ChatRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.GameRepository
 import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.example.prototype_mobile.view.chat.ChatRoomAdapter
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
             joinLobbyChannel(it.gameID)
+        }
+        GameRepository.getInstance()!!.isGameEnded.observeForever{
+            leaveChannel(it)
         }
     }
 

@@ -41,7 +41,7 @@ class GameViewModel():ViewModel() {
             _teamScore.value = intArrayOf(0,0)
         }
         gameRepository.isGameEnded.observeForever{
-            _isGameEnded.value = it
+            _isGameEnded.value = true
         }
 
 
