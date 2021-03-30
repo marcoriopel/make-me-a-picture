@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
@@ -44,7 +45,6 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         if (word != null) {
             canvas.drawText("Le mot à dessiner est: $word", 10F, 30F, canvasViewModel.getTextPaint())
         }
-
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

@@ -45,7 +45,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 joinLobbyChannel(it.gameID)
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
-            leaveChannel(it)
+            if(it != null)
+                leaveChannel(it)
         }
     }
 
