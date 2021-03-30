@@ -88,13 +88,7 @@ class ChatRepository() {
         mapChannel["chatName"] = channelName
         val response = HttpRequestDrawGuess.httpRequestPost("/api/chat/create", mapChannel, true)
 
-        val result = analyseCreateChannelAnswer(response)
-
-        if (result is Result.Success) {
-            Log.d("Channel Created: ", channelName)
-        }
-
-        return result;
+        return analyseCreateChannelAnswer(response)
     }
 
     fun analyseCreateChannelAnswer(response: Response): Result<Boolean> {
@@ -189,7 +183,6 @@ class ChatRepository() {
 
         }
         channelList.sortBy { c -> c.channelState.ordinal }
-        Log.d("Channels received: ", "received")
         return Result.Success(true);
     }
 

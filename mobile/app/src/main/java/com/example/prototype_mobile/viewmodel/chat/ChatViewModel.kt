@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 
 class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
-    /*val chatRepository : ChatRepository = ChatRepository.getInstance()!! */
     private val _messageReceived = MutableLiveData<Message>()
     val messageReceived: LiveData<Message> = _messageReceived
 
