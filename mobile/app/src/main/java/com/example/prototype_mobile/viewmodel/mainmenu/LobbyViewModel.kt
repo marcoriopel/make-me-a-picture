@@ -19,7 +19,7 @@ class LobbyViewModel:  ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
-    val lobbyRepository: LobbyRepository = LobbyRepository.getInstance()!!
+    var lobbyRepository: LobbyRepository = LobbyRepository.getInstance()!!
     val gameRepository = GameRepository.getInstance()!!
 
     init {
@@ -76,5 +76,9 @@ class LobbyViewModel:  ViewModel() {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
             }
         }
+    }
+    fun resetData() {
+        lobbyRepository.resetData()
+
     }
 }

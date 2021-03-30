@@ -17,14 +17,16 @@ export class StatsService {
 
     updateStats(gameName: string, gameType: number, players: any, score: any, startDate: number, endDate: number){
         this.saveGame(gameName, gameType, players, score, startDate, endDate)
+        let nonVirtualPlayers = players;
         if(gameType == GameType.CLASSIC){
-            for(let i = 0; i < players.length; ++i){
-                if(players[i].isVirtual){
-                    players.splice(i, 1);
+            nonVirtualPlayers = players.copy();
+            for(let i = 0; i < nonVirtualPlayers.length; ++i){
+                if(nonVirtualPlayers[i].isVirtual){
+                    nonVirtualPlayers.splice(i, 1);
                 }
             }
         }
-        for(let player of players){
+        for(let player of nonVirtualPlayers){
             this.updateUserStats(gameName, gameType, player, score, startDate, endDate)
         }
     }
