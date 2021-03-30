@@ -34,17 +34,18 @@ export class LobbyManagerService {
         }
         lobbyInfo.gameType = Number(lobbyInfo.gameType);
         lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
+        lobbyInfo.isPrivate = false;
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.SOLO:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.COOP:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             default:
@@ -56,7 +57,9 @@ export class LobbyManagerService {
     getLobbies(req: Request, res: Response, next: NextFunction): void {
         let response: lobbyInterface.Lobby[] = [];
         LobbyManagerService.lobbies.forEach((lobby: Lobby, key: string, map: Map<string, Lobby>) => {
-            response.push({ id: key, gameName: lobby.getGameName(), difficulty: lobby.getDifficulty(), gameType: lobby.getGameType() });
+            if (!lobby.getPrivacy) {
+                response.push({ id: key, gameName: lobby.getGameName(), difficulty: lobby.getDifficulty(), gameType: lobby.getGameType(), isPrivate: lobby.getPrivacy() });
+            }
         })
         next(response);
     }
@@ -84,12 +87,12 @@ export class LobbyManagerService {
                 lobby.removePlayer(user);
                 this.dispatchTeams(req.query.lobbyId);
                 let hasRealPlayers: boolean = false;
-                for(const player of lobby.getPlayers()){
-                    if (!player.isVirtual){
+                for (const player of lobby.getPlayers()) {
+                    if (!player.isVirtual) {
                         hasRealPlayers = true
                     }
                 }
-                if(!hasRealPlayers){
+                if (!hasRealPlayers) {
                     LobbyManagerService.lobbies.delete(req.query.lobbyId);
                 }
             }
@@ -122,7 +125,7 @@ export class LobbyManagerService {
     }
 
     removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
-        if (req.query.username == undefined || req.query.teamNumber == undefined){
+        if (req.query.username == undefined || req.query.teamNumber == undefined) {
             return res.status(StatusCodes.BAD_REQUEST).send("Username or teamNumber undefined");
         }
         req.query.teamNumber = <number>req.query.teamNumber;
@@ -151,6 +154,6 @@ export class LobbyManagerService {
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
         this.socketService.getSocket().to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
-        this.socketService.getSocket().to("tmp"+lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
+        this.socketService.getSocket().to("tmp" + lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
     }
 }
