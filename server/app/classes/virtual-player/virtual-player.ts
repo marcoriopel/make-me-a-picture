@@ -12,9 +12,9 @@ export class VirtualPlayer {
     protected username: string;
     protected avatar: number;
     private drawingsService: DrawingsService;
-    private socketService: SocketService;
+    protected socketService: SocketService;
     private currentDrawing: Drawing;
-    private gameId: string;
+    protected gameId: string;
     private isVPlayerTurn: boolean = false;
     private drawingSpeed: number;
     private nextHintIndex = 0;
@@ -136,4 +136,6 @@ export class VirtualPlayer {
             this.nextHintIndex++;
         }
     }
+
+    sayHello(){}
 }

@@ -45,7 +45,8 @@ export class ClassicGame extends Game {
         this.assignRandomDrawingPlayer(1);
         for (let vPlayer of this.vPlayers) {
             if (vPlayer != undefined) {
-                vPlayer.setServices(this.drawingsService, this.socketService)
+                vPlayer.setServices(this.drawingsService, this.socketService);
+                vPlayer.sayHello();
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
