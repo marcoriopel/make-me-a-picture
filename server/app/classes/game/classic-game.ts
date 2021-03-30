@@ -32,7 +32,6 @@ export class ClassicGame extends Game {
     constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
-        console.log(this.teams)
         this.vPlayers = lobby.getVPlayers();
         console.log("Started classic game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -99,9 +98,7 @@ export class ClassicGame extends Game {
         try {
             drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
             this.currentDrawingName = drawingNames[0];
-            console.log(this.drawingPlayer[this.drawingTeam])
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingName", { "drawingName": drawingNames[0] });
-            console.log("send to id: " + this.drawingPlayer[this.drawingTeam].socketId)
         } catch (e) {
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
         }
@@ -216,10 +213,10 @@ export class ClassicGame extends Game {
         }
         else {
             if (players[0].isVirtual) {
-                this.drawingPlayer[teamNumber] = players[1];
+                this.drawingPlayer[teamNumber] = players[0];
             }
             else {
-                this.drawingPlayer[teamNumber] = players[0];
+                this.drawingPlayer[teamNumber] = players[1];
             }
         }
     }
