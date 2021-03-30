@@ -28,6 +28,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     val getChannelResult: LiveData<Int> = _getChannelResult
     var channelList: MutableList<Channel>
 
+    var gameId: String? = null
+
     init {
         chatRepository.messageReceived.observeForever(Observer {
             _messageReceived.value = it ?: return@Observer
@@ -41,8 +43,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
-            if(it != null)
+            if(it != null) {
+                gameId = it.gameID
                 joinLobbyChannel(it.gameID)
+            }
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
             if(it != null)
@@ -138,11 +142,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun switchChannel(chatId: String) {
-        if (chatRepository.channelMap.containsKey(chatId)) {
-            _messageList.postValue(chatRepository.channelMap[chatId]!!)
-        } else {
-            _messageList.postValue(mutableListOf())
-        }
+
+        _messageList.postValue(chatRepository.channelMap[chatId]!!)
+
         viewModelScope.launch(Dispatchers.IO){
             channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
             channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN

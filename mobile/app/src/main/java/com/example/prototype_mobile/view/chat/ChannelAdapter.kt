@@ -36,7 +36,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setOnClickListener {
                     viewModel.switchChannel(channel.chatId)
                 }
-                if (channel.chatId != "General") {
+                if (channel.chatId != "General" && channel.chatId != viewModel.gameId) {
                     holder.leaveButton.visibility = View.VISIBLE
                     holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
                 } else {
