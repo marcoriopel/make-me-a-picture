@@ -129,11 +129,11 @@ class GameRepository {
         val guessEvent = GuessEvent(this.gameId!!, guess)
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
-    private var onRequestHint =  Emitter.Listener {
-        println("Request hint receive")
-        val hintValue = gson.fromJson(it[0].toString(), HintRequest::class.java)
-        _hint.postValue(hintValue)
-    }
+//    private var onRequestHint =  Emitter.Listener {
+//        println("Request hint receive")
+//        val hintValue = gson.fromJson(it[0].toString(), HintRequest::class.java)
+//        _hint.postValue(hintValue)
+//    }
     fun sendHintRequest(user: BasicUser) {
         val hintRequest = HintRequest(this.gameId!!, user)
         socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
@@ -142,7 +142,6 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-        _isGameEnded.value = false
 
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
@@ -152,6 +151,6 @@ class GameRepository {
         socket.on(NEW_ROUND_EVENT, onNewRound)
         socket.on(END_GAME_EVENT, onEndGameEvent)
         socket.on(TRANSITION_EVENT, onTransition)
-        socket.on(REQUEST_HINT, onRequestHint)
+       // socket.on(REQUEST_HINT, onRequestHint)
     }
 }

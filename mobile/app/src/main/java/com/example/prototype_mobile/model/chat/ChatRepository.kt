@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.model.chat
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -114,6 +115,7 @@ class ChatRepository() {
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
                         channelList.removeIf { c -> c.chatId == channel.chatId}
+
                         channelNotJoinedSet.remove(channel)
                     }
                     if (channel.chatId == channelShown) {

@@ -48,9 +48,7 @@ class HintFragment : Fragment() {
         binding.hintButton.setOnClickListener {
             gameViewModel.hintRequest()
         }
-        gameViewModel.hint.observe(viewLifecycleOwner, Observer {
-            binding.hint.text = it
-        })
+
     }
 
 
