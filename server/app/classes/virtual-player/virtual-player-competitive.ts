@@ -14,7 +14,21 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
     }
 
     sayHello(){
-        let message = vPlayerText.competitive.meet;
+        let str = vPlayerText.competitive.meet.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayRightGuess(){
+        let message = vPlayerText.competitive.rightGuess;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWrongGuess(){
+        let str = vPlayerText.competitive.wrongGuess.split("##");
+        let message = str[0] + this.teammate + str[1];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }

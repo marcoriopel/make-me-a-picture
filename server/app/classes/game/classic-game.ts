@@ -46,6 +46,7 @@ export class ClassicGame extends Game {
         for (let vPlayer of this.vPlayers) {
             if (vPlayer != undefined) {
                 vPlayer.setServices(this.drawingsService, this.socketService);
+                vPlayer.setTeammate(this.getPlayers());
                 vPlayer.sayHello();
             }
         }
@@ -127,6 +128,9 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
+            if(this.vPlayers[this.drawingTeam]){
+                this.vPlayers[this.drawingTeam].sayRightGuess();
+            }
             const drawingEvent: DrawingEvent = {
                 eventType: drawingEventType.MOUSEUP,
                 event: { x: 0, y: 0 },
@@ -142,6 +146,9 @@ export class ClassicGame extends Game {
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
+            if(this.vPlayers[this.drawingTeam]){
+                this.vPlayers[this.drawingTeam].sayWrongGuess();
+            }
             --this.guessesLeft[this.drawingTeam];
             if (!this.guessesLeft[this.drawingTeam]) {
                 this.switchGuessingTeam();
@@ -160,10 +167,16 @@ export class ClassicGame extends Game {
             console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
+            if(this.vPlayers[this.getOpposingTeam()]){
+                this.vPlayers[this.getOpposingTeam()].sayRightGuess();
+            }
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
+            if(this.vPlayers[this.getOpposingTeam()]){
+                this.vPlayers[this.getOpposingTeam()].sayWrongGuess();
+            }
         }
         const drawingEvent: DrawingEvent = {
             eventType: drawingEventType.MOUSEUP,

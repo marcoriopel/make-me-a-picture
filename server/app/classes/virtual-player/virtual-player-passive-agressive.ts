@@ -14,7 +14,20 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
     }
 
     sayHello(){
-        let message = vPlayerText.passiveAgressive.meet;
+        let str = vPlayerText.passiveAgressive.meet.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayRightGuess(){
+        let message = vPlayerText.passiveAgressive.rightGuess;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWrongGuess(){
+        let message = vPlayerText.passiveAgressive.wrongGuess;
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }

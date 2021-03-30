@@ -14,7 +14,20 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     }
 
     sayHello(){
-        let message = vPlayerText.anxious.meet;
+        let str = vPlayerText.anxious.meet.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayRightGuess(){
+        let message = vPlayerText.anxious.rightGuess;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWrongGuess(){
+        let message = vPlayerText.anxious.wrongGuess;
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }

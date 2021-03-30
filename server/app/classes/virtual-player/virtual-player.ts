@@ -1,6 +1,6 @@
 import { Drawing, Vec2 } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent, MouseDown } from '@app/ressources/interfaces/game-events';
-import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
@@ -11,6 +11,7 @@ export class VirtualPlayer {
     protected personnality: number;
     protected username: string;
     protected avatar: number;
+    protected teammate: string = undefined;
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
     private currentDrawing: Drawing;
@@ -137,5 +138,23 @@ export class VirtualPlayer {
         }
     }
 
+    setTeammate(players: any){
+        let team;
+        for(const player of players){
+            if(player.username == this.username){
+                team = player.team;
+            }
+        }
+        for(const player of players){
+            if(player.team == team && !player.isVirtual){
+                this.teammate = player.username;
+            }
+        }
+    }
+
     sayHello(){}
+
+    sayRightGuess(){}
+
+    sayWrongGuess(){}
 }
