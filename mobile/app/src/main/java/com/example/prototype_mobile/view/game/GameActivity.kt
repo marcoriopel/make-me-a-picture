@@ -145,6 +145,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGameInfo, GameInfoFragment())
                     .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGameInfo, SprintInfoFragment())
+                    .commit()
         }
 
         if (gameViewModel.isPlayerGuessing.value!!) {
