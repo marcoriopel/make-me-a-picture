@@ -27,7 +27,27 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
     }
 
     sayWrongGuess(){
-        let message = vPlayerText.passiveAgressive.wrongGuess;
+        let str = vPlayerText.passiveAgressive.wrongGuess.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWeWon(){
+        let str = vPlayerText.passiveAgressive.weWon.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWeLost(){
+        let message = vPlayerText.passiveAgressive.weLost;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWeTied(){
+        let message = vPlayerText.passiveAgressive.weTied;
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }

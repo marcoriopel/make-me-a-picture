@@ -31,4 +31,23 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
+
+    sayWeWon(){
+        let str = vPlayerText.anxious.weWon.split("##");
+        let message = str[0] + this.teammate + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWeLost(){
+        let message = vPlayerText.anxious.weLost;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayWeTied(){
+        let message = vPlayerText.anxious.weTied;
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
 }

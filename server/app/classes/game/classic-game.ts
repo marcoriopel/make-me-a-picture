@@ -271,6 +271,7 @@ export class ClassicGame extends Game {
         this.endDate = new Date().getTime();
         clearInterval(this.timerInterval);
         this.guessesLeft = [0, 0];
+        this.sendVPlayerEndGameMessage();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timeStamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
@@ -359,6 +360,26 @@ export class ClassicGame extends Game {
         }
         else {
             throw Error("User is not part of the game");
+        }
+    }
+
+    sendVPlayerEndGameMessage(){
+        const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
+        const minScoreIndex = this.score.indexOf(Math.min(...this.score));
+        if(maxScoreIndex == minScoreIndex){
+            if(this.vPlayers[maxScoreIndex]){
+                this.vPlayers[maxScoreIndex].sayWeTied();
+            }
+            if(this.vPlayers[minScoreIndex]){
+                this.vPlayers[minScoreIndex].sayWeTied();
+            }
+        }else{
+            if(this.vPlayers[maxScoreIndex]){
+                this.vPlayers[maxScoreIndex].sayWeWon();
+            }
+            if(this.vPlayers[minScoreIndex]){
+                this.vPlayers[minScoreIndex].sayWeLost();
+            }
         }
     }
 }

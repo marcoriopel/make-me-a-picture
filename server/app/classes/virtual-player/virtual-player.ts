@@ -157,4 +157,10 @@ export class VirtualPlayer {
     sayRightGuess(){}
 
     sayWrongGuess(){}
+
+    sayWeWon(){}
+
+    sayWeLost(){}
+
+    sayWeTied(){}
 }
