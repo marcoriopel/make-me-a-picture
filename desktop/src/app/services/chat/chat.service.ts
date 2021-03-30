@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Chat, Message } from '@app/classes/chat';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Chat, JoinedChat, Message } from '@app/classes/chat';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { SocketService } from '@app/services/socket/socket.service';
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -10,14 +10,23 @@ export class ChatService {
   private baseUrl = environment.api_url;
   private getJoinedChatUrl = this.baseUrl + '/api/chat/joined';
   private createChatUrl = this.baseUrl + '/api/chat/create';
+  private getChatListUrl = this.baseUrl + '/api/chat/list';
+  private getChatHistoryUrl = this.baseUrl + '/api/chat/history';
   public isChatInExternalWindow: boolean = false;
-  private chatList: Chat[] = [{
+  joinedChatList: JoinedChat[] = [{
+    name: 'Général',
+    messages: [],
+    chatId: 'General',
+    isNotificationOn: false,
+    isChatHistoryDisplayed: false,
+  }];
+  notJoinedChatList: Chat[] = [{
     name: 'Général',
     messages: [],
     chatId: 'General',
   }];
-  private index: number = 0;
-  private currentChatId: string = "General";
+  index: number = 0;
+  currentChatId: string = "General";
 
   constructor(private http: HttpClient, private socketService: SocketService) {
     this.initializeChats();
@@ -25,39 +34,111 @@ export class ChatService {
   }
 
   async initializeChats() {
+    this.joinedChatList = [];
+    this.notJoinedChatList = [];
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
-        this.chatList.pop(); // Temporary fix to async construction problem
         data.chats.forEach((element: any) => {
-          const chat: Chat = {
+          const chat: JoinedChat = {
             name: element.chatName,
             chatId: element.chatId,
             messages: [],
+            isNotificationOn: false,
+            isChatHistoryDisplayed: false,
           }
-          this.chatList.push(chat);
+          this.joinedChatList.push(chat);
+          if(element.chatId != 'General'){
+            this.joinChat(element.chatId);
+          }
+        });
+        this.http.get<any>(this.getChatListUrl, options)
+        .subscribe((data: any) => {
+          data.chats.forEach((element: any) => {
+            const chat: Chat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+            }
+            let isChatAlreadyJoined = false;
+            this.joinedChatList.forEach((el: Chat) => {
+              if(el.chatId == chat.chatId){
+                isChatAlreadyJoined = true;
+              }
+            })
+            if(!isChatAlreadyJoined) this.notJoinedChatList.push(chat);
+          });
         });
       });
   }
 
   setCurrentChat(chatId: string): void {
     this.currentChatId = chatId;
-    for(let i = 0; i < this.chatList.length; i++){
-      if(this.chatList[i].chatId == chatId){
+    for(let i = 0; i < this.joinedChatList.length; i++){
+      if(this.joinedChatList[i].chatId == chatId){
         this.index = i;
       }
     }
+    this.joinedChatList[this.index].isNotificationOn = false;
   }
 
   getChatMessages(): Message[] {
-    return this.chatList[this.index]["messages"];
+    try {
+      return this.joinedChatList[this.index].messages;
+    } catch {
+      return [] // Not initialized yet
+    }
   }
 
-  getChatList(): Chat[] {
-    return this.chatList;
+  async refreshChatList() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    const options = { headers: headers};
+    this.http.get<any>(this.getJoinedChatUrl, options)
+      .subscribe((data: any) => {
+        data.chats.forEach((element: any) => {
+          let isChatAlreadyLoaded = false;
+          this.joinedChatList.forEach((chat: any) => {
+            if(chat.chatId == element.chatId) isChatAlreadyLoaded = true;
+          })
+          if(!isChatAlreadyLoaded){
+            const chat: JoinedChat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+              isNotificationOn: false,
+              isChatHistoryDisplayed: false,
+            }
+            this.joinedChatList.push(chat);            
+          }
+        });
+        this.http.get<any>(this.getChatListUrl, options)
+        .subscribe((data: any) => {
+          data.chats.forEach((element: any) => {
+            const chat: Chat = {
+              name: element.chatName,
+              chatId: element.chatId,
+              messages: [],
+            }
+            let isChatAlreadyJoined = false;
+            this.joinedChatList.forEach((el: Chat) => {
+              if(el.chatId == chat.chatId){
+                isChatAlreadyJoined = true;
+              }
+            })
+            let isChatAlreadyLoaded = false;
+            this.notJoinedChatList.forEach((chat: any) => {
+              if(chat.chatId == element.chatId) isChatAlreadyLoaded = true;
+            })
+            if(!isChatAlreadyJoined && !isChatAlreadyLoaded) this.notJoinedChatList.push(chat);
+          });
+          this.setCurrentChat(this.currentChatId);
+        });
+      });
   }
 
   getCurrentChat(): string {
@@ -72,15 +153,52 @@ export class ChatService {
   initializeMessageListener(): void {
     this.socketService.bind('message', (message: any) => {
       const username = localStorage.getItem('username');
+      if(message.chatId != this.currentChatId){
+        for(let i = 0; i < this.joinedChatList.length; i++){
+          if(message.chatId == this.joinedChatList[i].chatId){
+            this.joinedChatList[i].isNotificationOn = true;
+          }
+        }        
+      }
+
+
       const msg: Message = {
         "username": message.user.username,
         "avatar": message.user.avatar,
         "text": message.text,
-        "timeStamp": message.timeStamp,
+        "timestamp": message.timestamp,
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
-      this.chatList[this.index]["messages"].push(msg);
+      for(let i = 0; i < this.joinedChatList.length; i++) {
+        if(this.joinedChatList[i].chatId == message.chatId){
+          this.joinedChatList[i].messages.push(msg);
+        }
+      }
+    });
+  }
+
+  loadChatHistory(): void {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    let params = new HttpParams();
+    params = params.append('chatId', this.currentChatId);    
+    const options = { params: params, headers: headers};
+    this.http.get<any>(this.getChatHistoryUrl, options).subscribe((data: any) => {
+      const username = localStorage.getItem('username');
+      data.chatHistory.forEach((message: any) => {
+        const msg: Message = {
+          "username": message.username,
+          "avatar": message.avatar,
+          "text": message.message,
+          "timestamp": message.timestamp,
+          "isUsersMessage": message.username === username ? true : false,
+          "textColor": "#000000",
+        }
+        this.joinedChatList[this.index].messages.push(msg);  
+        this.joinedChatList[this.index].isChatHistoryDisplayed = true;
+      });
     });
   }
 
@@ -96,10 +214,20 @@ export class ChatService {
   }
 
   joinChat(chatId: string): void {
+    for(let i = 0; i < this.notJoinedChatList.length; i++){
+      if(this.notJoinedChatList[i].chatId == chatId){
+        this.notJoinedChatList.splice(i, 1);
+      }
+    }
     this.socketService.emit('joinChatRoom', { "chatId": chatId })
   }
 
   leaveChat(chatId: string): void {
+    for(let i = 0; i < this.joinedChatList.length; i++){
+      if(this.joinedChatList[i].chatId == chatId){
+        this.joinedChatList.splice(i, 1);
+      }
+    }
     this.socketService.emit('leaveChatRoom', { "chatId": chatId })
   }
 }

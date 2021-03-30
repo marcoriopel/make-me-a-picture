@@ -4,11 +4,19 @@ export interface Chat {
     chatId: string;
 }
 
+export interface JoinedChat {
+    name: string;
+    messages: Message[];
+    chatId: string;
+    isNotificationOn: boolean;
+    isChatHistoryDisplayed: boolean;
+}
+
 export interface Message {
     username: string;
     avatar: number;
     text: string;
-    timeStamp: string;
+    timestamp: string;
     isUsersMessage: boolean;
     textColor: string;
 }
