@@ -37,8 +37,7 @@ export class SoloGame extends Game {
         this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
-        console.log(this.vPlayer.getBasicUser().username)
-        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
+        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
@@ -86,7 +85,7 @@ export class SoloGame extends Game {
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": "timestamp", "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
 

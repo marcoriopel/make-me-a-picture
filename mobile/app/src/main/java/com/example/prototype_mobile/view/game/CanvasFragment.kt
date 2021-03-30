@@ -33,5 +33,8 @@ class CanvasFragment : Fragment() {
         canvasViewModel.newCurPath.observe(viewLifecycleOwner, Observer {
             view.invalidate()
         })
+        canvasViewModel.drawingName.observe(viewLifecycleOwner, Observer {
+            view.invalidate()
+        })
     }
 }
