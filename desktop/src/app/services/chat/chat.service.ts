@@ -166,7 +166,7 @@ export class ChatService {
         "username": message.user.username,
         "avatar": message.user.avatar,
         "text": message.text,
-        "timeStamp": message.timeStamp,
+        "timestamp": message.timestamp,
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
@@ -192,7 +192,7 @@ export class ChatService {
           "username": message.username,
           "avatar": message.avatar,
           "text": message.message,
-          "timeStamp": message.timestamp,
+          "timestamp": message.timestamp,
           "isUsersMessage": message.username === username ? true : false,
           "textColor": "#000000",
         }

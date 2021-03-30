@@ -80,8 +80,8 @@ export class AuthService {
         else {
             let lastLogout = 0;
             for (let logout of logouts) {
-                if (logout.timeStamp > lastLogout)
-                    lastLogout = logout.timeStamp
+                if (logout.timestamp > lastLogout)
+                    lastLogout = logout.timestamp
             }
             next(lastLogout);
         }

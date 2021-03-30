@@ -16,7 +16,7 @@ export interface Message {
     username: string;
     avatar: number;
     text: string;
-    timeStamp: string;
+    timestamp: string;
     isUsersMessage: boolean;
     textColor: string;
 }
