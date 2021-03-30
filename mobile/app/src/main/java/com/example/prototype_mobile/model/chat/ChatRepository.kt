@@ -19,22 +19,23 @@ import kotlin.collections.HashMap
 
 
 class ChatRepository() {
-    var socket: io.socket.client.Socket
-    val myUsername = LoginRepository.getInstance()!!.user!!.username
-    val token = LoginRepository.getInstance()!!.user!!.token
-    val gson: Gson = Gson()
 
-    private val _messageReceived = MutableLiveData<Message>()
-    val messageReceived: LiveData<Message> = _messageReceived
+    var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
+    val channelList = mutableListOf<Channel>()
+    var channelShown = "General"
+    var channelMap = mutableMapOf<String, MutableList<Message>>()
 
     private val _notificationReceived = MutableLiveData<Boolean>()
     val notificationReceived = _notificationReceived
 
-    var channelShown = "General"
-    var channelMap = mutableMapOf<String, MutableList<Message>>()
-    val channelList = mutableListOf<Channel>()
-    val channelJoinedSet = mutableSetOf<String>()
-    val channelNotJoinedSet = mutableSetOf<String>()
+    private val _messageReceived = MutableLiveData<Message>()
+    val messageReceived: LiveData<Message> = _messageReceived
+
+    private val myUsername = LoginRepository.getInstance()!!.user!!.username
+    private val token = LoginRepository.getInstance()!!.user!!.token
+    private val gson: Gson = Gson()
+    private val channelJoinedSet = mutableSetOf<String>()
+    private val channelNotJoinedSet = mutableSetOf<String>()
 
     var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
@@ -54,7 +55,6 @@ class ChatRepository() {
     }
 
     init {
-        socket = SocketOwner.getInstance()!!.socket
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
         val generalChatMessage: MutableList<Message> = mutableListOf()
@@ -68,11 +68,11 @@ class ChatRepository() {
     fun sendMessage(msg:String){
         socket.emit("message", gson.toJson(SendMessage(msg, token, channelShown)))
     }
+
     fun onDestroy(token: InitialData){
         val jsonData = gson.toJson(token)
         socket.emit("unsubscribe", jsonData)
         socket.disconnect()
-
     }
 
     fun joinChannel(chatId: String){
@@ -91,11 +91,11 @@ class ChatRepository() {
         return analyseCreateChannelAnswer(response)
     }
 
-    fun analyseCreateChannelAnswer(response: Response): Result<Boolean> {
-        if(response.code() == ResponseCode.OK.code) {
-            return Result.Success(true)
+    private fun analyseCreateChannelAnswer(response: Response): Result<Boolean> {
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success(true)
         } else {
-            return Result.Error(response.code())
+            Result.Error(response.code())
         }
     }
 
@@ -186,11 +186,12 @@ class ChatRepository() {
         return Result.Success(true);
     }
 
-    suspend fun getChannelsList(urlPath: String): Result<ChannelList> {
+    private suspend fun getChannelsList(urlPath: String): Result<ChannelList> {
         val response = HttpRequestDrawGuess.httpRequestGet(urlPath, HashMap<String, String>())
-        return analysegetChannelsAnswer(response)
+        return analyseGetChannelsAnswer(response)
     }
-    fun analysegetChannelsAnswer(response: Response): Result<ChannelList> {
+
+    private fun analyseGetChannelsAnswer(response: Response): Result<ChannelList> {
         val jsonData: String = response.body()!!.string()
         val channelList = gson.fromJson(jsonData, ChannelList::class.java)
         if(response.code() == ResponseCode.OK.code) {
@@ -213,13 +214,12 @@ class ChatRepository() {
         if (result is Result.Success) {
             val historyMessage = mutableListOf<Message>()
             for (message in result.data.chatHistory) {
-                var timestamp = treatTimestamp(message.timestamp)
-
+                val timestamp = treatTimestamp(message.timestamp)
                 var messageType = 1;
                 if (myUsername == message.username) {
                     messageType = 0
                 }
-                val username = if(message.username == null) "Unavailable" else message.username
+                val username = message.username ?: "Unavailable"
                 historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp))
             }
             if (channelMap.containsKey(channelShown)) {
@@ -238,7 +238,7 @@ class ChatRepository() {
        return Result.Success(true)
     }
 
-    fun analyseGetHistoryAnswer(response: Response): Result<ChatHistory> {
+    private fun analyseGetHistoryAnswer(response: Response): Result<ChatHistory> {
         val jsonData: String = response.body()!!.string()
         val chatHistory = gson.fromJson(jsonData, ChatHistory::class.java)
         if(response.code() == ResponseCode.OK.code) {
@@ -248,16 +248,16 @@ class ChatRepository() {
         }
     }
 
-    fun treatTimestamp(timestamp: Long): String {
+    private fun treatTimestamp(timestamp: Long): String {
         val date = Date(timestamp)
         val cal = Calendar.getInstance()
         cal.time = date
 
         var tmpHour: Int = cal.get(Calendar.HOUR_OF_DAY)
         if (tmpHour < 0) { tmpHour += 24 }
-        var hours = if (tmpHour.toString().length == 1) "0" + tmpHour.toString() else tmpHour.toString()
-        var minutes = if(cal.get(Calendar.MINUTE).toString().length == 1) "0" + cal.get(Calendar.MINUTE).toString() else cal.get(Calendar.MINUTE).toString()
-        var seconds = if(cal.get(Calendar.SECOND).toString().length == 1) "0" + cal.get(Calendar.SECOND).toString() else cal.get(Calendar.SECOND).toString()
+        val hours = if (tmpHour.toString().length == 1) "0" + tmpHour.toString() else tmpHour.toString()
+        val minutes = if(cal.get(Calendar.MINUTE).toString().length == 1) "0" + cal.get(Calendar.MINUTE).toString() else cal.get(Calendar.MINUTE).toString()
+        val seconds = if(cal.get(Calendar.SECOND).toString().length == 1) "0" + cal.get(Calendar.SECOND).toString() else cal.get(Calendar.SECOND).toString()
         return hours + ":" + minutes + ":" + seconds;
     }
 
