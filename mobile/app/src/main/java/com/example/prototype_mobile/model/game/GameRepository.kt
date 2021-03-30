@@ -76,8 +76,8 @@ class GameRepository {
     var drawingPlayer: String? = null
     lateinit var guessesLeftByTeam: GuessesLeft
 
-    private val _isGameEnded=  MutableLiveData<Boolean>()
-    val isGameEnded: LiveData<Boolean> = _isGameEnded
+    private val _isGameEnded=  MutableLiveData<String>()
+    val isGameEnded: LiveData<String> = _isGameEnded
 
     // Listener
     var team = 0
@@ -111,10 +111,8 @@ class GameRepository {
         CanvasRepository.getInstance()!!.resetCanvas()
     }
     private var onEndGameEvent = Emitter.Listener {
-        println("game ended")
-        _isGameEnded.postValue(true)
         _isPlayerGuessing.postValue(false)
-
+        _isGameEnded.postValue(gameId)
     }
 
     private var onGuessesLeft = Emitter.Listener {
@@ -164,7 +162,7 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-        _isGameEnded.value = false
+        _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)

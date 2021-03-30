@@ -103,6 +103,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 return fragment
         return null
     }
+    
     fun endGameEvent() {
 
         for(fragment in supportFragmentManager.fragments)
