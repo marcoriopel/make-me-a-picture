@@ -25,6 +25,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private val _newCurPath = MutableLiveData<Path>()
     val newCurPath: LiveData<Path> = _newCurPath
 
+    private val _drawingName = MutableLiveData<String?>()
+    var drawingName: LiveData<String?> = _drawingName
+
     // Undo-Redo
     val pathStack = Stack<PaintedPath>()
     private var redoStack = Stack<PaintedPath>()
@@ -59,7 +62,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Get the current paint
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun getDrawingWord(): String? {
-        return gameRepo!!.drawingName
+        return _drawingName.value
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -251,6 +254,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
         canvasRepository.drawingEvent.observeForever {
             onDrawingEvent(it)
+        }
+        gameRepo!!.drawingName.observeForever {
+            _drawingName.postValue(it)
         }
     }
 

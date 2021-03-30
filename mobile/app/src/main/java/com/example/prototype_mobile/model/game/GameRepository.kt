@@ -70,7 +70,9 @@ class GameRepository {
     private val _transition = MutableLiveData<Transition>()
     var transition: LiveData<Transition> = _transition
 
-    var drawingName: String? = null
+    private val _drawingName = MutableLiveData<String?>()
+    var drawingName: LiveData<String?> = _drawingName
+
     var drawingPlayer: String? = null
     var guessingPlayer: String? = null
 
@@ -81,7 +83,7 @@ class GameRepository {
     var team = 0
 
     private var onDrawingNameEvent = Emitter.Listener {
-        drawingName = JSONObject(it[0].toString()).getString("drawingName")
+        _drawingName.postValue(JSONObject(it[0].toString()).getString("drawingName"))
     }
 
     private  var onScoreEvent = Emitter.Listener {
@@ -104,6 +106,7 @@ class GameRepository {
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+            _drawingName.postValue(null)
             _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
         }
         CanvasRepository.getInstance()!!.resetCanvas()
