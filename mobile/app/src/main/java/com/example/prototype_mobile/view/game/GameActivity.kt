@@ -36,7 +36,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             setUpGameInit()
         }
 
-
         gameViewModel.isPlayerDrawing.observe(this, Observer {
             if (it) {
                 supportFragmentManager.beginTransaction()
@@ -64,9 +63,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerTools, HintFragment())
+                    .commitNow()
             } else {
                 for (fragment in supportFragmentManager.fragments) {
-                    if(fragment is GuessFragment) {
+                    if(fragment is GuessFragment || fragment is HintFragment) {
                         supportFragmentManager.beginTransaction().remove(fragment).commit();
                     }
                 }
@@ -158,6 +160,5 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         println("OnResume")
         setUpGameInit()
     }
-
 
 }

@@ -21,6 +21,7 @@ const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
+const val REQUEST_HINT = "hintRequest"
 
 class GameRepository {
     companion object {
@@ -60,6 +61,9 @@ class GameRepository {
 
     private val _transition = MutableLiveData<Transition>()
     var transition: LiveData<Transition> = _transition
+
+    private val _hint = MutableLiveData<HintRequest>()
+    var hint: LiveData<HintRequest> = _hint
 
     var drawingName: String? = null
     var drawingPlayer: String? = null
@@ -126,10 +130,21 @@ class GameRepository {
         val guessEvent = GuessEvent(this.gameId!!, guess)
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
+    private var onRequestHint =  Emitter.Listener {
+        println("Request hint receive")
+        val hintValue = gson.fromJson(it[0].toString(), HintRequest::class.java)
+        _hint.postValue(hintValue)
+    }
+    fun sendHintRequest(user: BasicUser) {
+        val hintRequest = HintRequest(this.gameId!!, user)
+        socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
+    }
 
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
+        _isGameEnded.value = false
+
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)
@@ -137,7 +152,7 @@ class GameRepository {
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
         socket.on(END_GAME_EVENT, onEndGameEvent)
-        _isGameEnded.value = false
         socket.on(TRANSITION_EVENT, onTransition)
+        socket.on(REQUEST_HINT, onRequestHint)
     }
 }

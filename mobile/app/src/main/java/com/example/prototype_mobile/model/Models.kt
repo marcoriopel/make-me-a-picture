@@ -49,3 +49,7 @@ data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
+
+data class BasicUser(val username: String, val avatar: Int)
+
+data class HintRequest(val gameId: String, val user: BasicUser)

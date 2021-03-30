@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.prototype_mobile.BasicUser
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.game.GameRepository
 import java.lang.Exception
@@ -24,6 +26,9 @@ class GameViewModel():ViewModel() {
 
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
+
+    private val _hint = MutableLiveData<String>()
+    val hint: LiveData<String> = _transitionMessage
 
     val gameRepository = GameRepository.getInstance()!!
     init {
@@ -55,6 +60,11 @@ class GameViewModel():ViewModel() {
                 _transitionMessage.postValue(msg)
             }
         }
+    }
+
+    fun hintRequest() {
+        val username = LoginRepository.getInstance()!!.user!!.username
+        gameRepository.sendHintRequest(BasicUser(username, 0))
     }
 
     fun getGameType(): GameType {

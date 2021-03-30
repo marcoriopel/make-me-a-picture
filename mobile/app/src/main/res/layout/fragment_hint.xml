@@ -24,7 +24,7 @@
         android:layout_width="80dp"
         android:layout_height="71dp"
         android:layout_marginTop="172dp"
-        android:background="@drawable/button_round"
+        android:background="@drawable/circle_button"
         android:scaleType="fitCenter"
         android:src="@drawable/hint"
         app:layout_constraintEnd_toEndOf="parent"

@@ -70,6 +70,5 @@ class MainMenuActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
                 supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNow()
             }
-
     }
 }
