@@ -58,8 +58,8 @@
                                 <th>{{game.end}}</th>
                                 <th>{{game.gameName}}</th>
                                 <th>{{game.gameType}}</th>
-                                <th>{{game.players[0].username}}</th>
-                                <th>{{game.players[1].username}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} - {{game.team1[1]}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} - {{game.team2[1]}}</th>
                             </tr>
                         </table>
                     </div>

@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
+import { formatDateString } from '@app/classes/date';
 
 @Component({
   selector: 'app-profile',
@@ -27,6 +29,31 @@ export class ProfileComponent implements OnInit {
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
     this.http.get<any>(this.getUserInfoUrl, options).subscribe((data: any) => {
+      data.privateInfo.games.forEach((game: any) => {
+
+        game.team1 = [];
+        game.team2 = [];
+
+        game.players.forEach((player: any) => {
+          player.team == 0 ? game.team1.push(player.username) : game.team2.push(player.username);
+        });
+
+        game.end = formatDateString(game.end);
+        
+        switch(game.gameType) {
+          case GameType.Classic:
+            game.gameType = 'Classic';
+            break;
+          case GameType.SprintCoop:
+            game.players[1] = '';
+            game.gameType = 'Coop';
+            break;
+          case GameType.SprintSolo:
+            game.players[1] = '';
+            game.GameType = 'Solo';
+            break;
+        }
+      });
       this.userInfo = data.privateInfo;
       console.log(this.userInfo);
     })
