@@ -63,9 +63,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerTools, HintFragment())
-                    .commitNow()
+                if( gameViewModel.transitionState.value!!.state != 1) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.containerTools, HintFragment())
+                        .commitNow()
+                }
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is GuessFragment || fragment is HintFragment) {

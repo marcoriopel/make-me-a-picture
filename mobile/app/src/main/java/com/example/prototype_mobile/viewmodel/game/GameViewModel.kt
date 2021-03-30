@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.BasicUser
+import com.example.prototype_mobile.Transition
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.game.GameRepository
@@ -26,6 +27,9 @@ class GameViewModel():ViewModel() {
 
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
+
+    private val _transitionState = MutableLiveData<Transition>()
+    var transitionState: LiveData<Transition> = _transitionState
 
     private val _hint = MutableLiveData<String>()
     val hint: LiveData<String> = _transitionMessage
@@ -51,6 +55,7 @@ class GameViewModel():ViewModel() {
 
         gameRepository.transition.observeForever {
             if (it.timer == 5) {
+                _transitionState.postValue(it)
                 val msg = when (it.state) {
                     0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
                     1 -> "Droit de réplique!"
@@ -58,6 +63,8 @@ class GameViewModel():ViewModel() {
                     else -> throw Exception("Transition state undefined")
                 }
                 _transitionMessage.postValue(msg)
+            } else {
+                _transitionState.postValue(it)
             }
         }
     }
