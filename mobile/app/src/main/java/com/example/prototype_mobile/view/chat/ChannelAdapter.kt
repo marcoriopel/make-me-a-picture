@@ -42,6 +42,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 } else {
                     holder.leaveButton.visibility = View.GONE
                 }
+
             }
             ChannelState.NOTIFIED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)
@@ -63,6 +64,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.joinButton.visibility = View.VISIBLE
                 holder.leaveButton.visibility = View.GONE
                 holder.joinButton.setOnClickListener { viewModel.joinChannel(channel.chatId) }
+                holder.background.setOnClickListener(null)
             }
             ChannelState.SHOWN -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_shown)
