@@ -107,7 +107,6 @@ class GameRepository {
         if (gameType == GameType.CLASSIC) {
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
             _drawingName.postValue(null)
-            _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
         }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
@@ -120,6 +119,9 @@ class GameRepository {
     private var onGuessesLeft = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
             guessesLeftByTeam = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
+            if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
+                _isPlayerDrawing.postValue(true)
+            }
         } else {
             val numberGuessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
             _guessesLeft.postValue(numberGuessesLeft)
@@ -136,8 +138,15 @@ class GameRepository {
         _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
         if(Timer(transitionTemp.timer).timer == 0) {
-            _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
-            _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
+            Log.e("Guesses left", (guessesLeftByTeam.guessesLeft[team]).toString())
+            if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
+                _isPlayerDrawing.postValue(true)
+            } else {
+                _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
+            }
+        } else {
+            _isPlayerDrawing.postValue(false)
+            _isPlayerGuessing.postValue(false)
         }
     }
 
@@ -155,6 +164,7 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
+        _isGameEnded.value = false
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)
@@ -162,7 +172,6 @@ class GameRepository {
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
         socket.on(END_GAME_EVENT, onEndGameEvent)
-        _isGameEnded.value = false
         socket.on(TRANSITION_EVENT, onTransition)
         socket.on(DRAWING_TIMER_EVENT, onTimerEvent)
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
