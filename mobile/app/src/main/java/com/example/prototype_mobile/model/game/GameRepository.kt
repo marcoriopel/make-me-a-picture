@@ -113,6 +113,7 @@ class GameRepository {
     private var onEndGameEvent = Emitter.Listener {
         println("game ended")
         _isGameEnded.postValue(true)
+        _isPlayerGuessing.postValue(false)
 
     }
 
