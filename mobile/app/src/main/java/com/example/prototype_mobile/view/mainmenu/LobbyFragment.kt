@@ -2,16 +2,15 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.Nullable
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.LobbyPlayers
 import com.example.prototype_mobile.Players
 import com.example.prototype_mobile.R
@@ -21,7 +20,6 @@ import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.game.GameActivity
 import com.example.prototype_mobile.viewmodel.mainmenu.LobbyViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.LobbyViewModelFactory
-import org.jetbrains.anko.image
 
 // the fragment initialization parameters
 private const val GAME_NAME = "param1"
@@ -37,6 +35,7 @@ class LobbyFragment : Fragment() {
     private lateinit var usernameList: Array<TextView>
     var team1HasVirtualPlayer = false
     var team2HasVirtualPlayer = false
+    var firstTime = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +44,15 @@ class LobbyFragment : Fragment() {
             game_type = GameType.values()[(it.getInt(GAME_TYPE))]
         }
         lobbyViewModel = ViewModelProvider(this, LobbyViewModelFactory()).get(LobbyViewModel::class.java)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!firstTime){
+            lobbyViewModel.resetData()
+        }
+        firstTime = true
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -229,7 +237,11 @@ class LobbyFragment : Fragment() {
 
     fun startGame(view: View) {
         val intent = Intent(view.context, GameActivity::class.java)
+      intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
         startActivity(intent)
+    }
+    fun getViewModel() : LobbyViewModel{
+        return lobbyViewModel
     }
 
     companion object {

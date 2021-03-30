@@ -64,6 +64,8 @@ export class LobbyManagerService {
     join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (this.lobbyExist(req.body.lobbyId)) {
             try {
+                console.log(user)
+                console.log(req.body.socketId)
                 const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
                 lobby.addPlayer(user, req.body.socketId);
                 this.dispatchTeams(req.body.lobbyId);
