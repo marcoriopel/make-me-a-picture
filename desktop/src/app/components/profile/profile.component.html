@@ -5,7 +5,78 @@
             <app-game-bar></app-game-bar>
         </div>
         <div id="profile-column">
-            <h1>test</h1>
+            <div id="profile-container">
+                <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
+                <h1>{{username}}</h1>
+                <mat-button-toggle-group id="toggle-group" [formControl]="category">
+                    <mat-button-toggle value="0" (click)="updateData()">
+                        Profil
+                    </mat-button-toggle>
+                    <mat-button-toggle value="1" (click)="updateData()">
+                        Statistiques
+                    </mat-button-toggle>                    
+                    <mat-button-toggle value="2" (click)="updateData()">
+                        Historique des parties
+                    </mat-button-toggle>
+                    <mat-button-toggle value="3" (click)="updateData()">
+                        Historique de connexion
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div id="information">
+                    <div *ngIf="category.value == 0">
+                        <p>Prénom: {{userInfo.surname}}</p>
+                        <p>Nom: {{userInfo.name}}</p>
+                    </div>
+                    <div *ngIf="category.value == 1">
+                        <table>
+                            <tr>
+                                <th>Parties jouées</th>
+                                <th>Temps jouées</th>
+                                <th>Meilleur score Solo</th>
+                                <th>Meilleur score Coop</th>
+                                <th>Ratio V/D Classic</th>
+                            </tr>
+                            <tr>
+                                <th>{{userInfo.stats.gamesPlayed}}</th>
+                                <th>{{userInfo.stats.timePlayed}}</th>
+                                <th>{{userInfo.stats.bestSoloScore}}</th>
+                                <th>{{userInfo.stats.bestCoopScore}}</th>
+                                <th>{{userInfo.stats.classicWinRatio}}</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="category.value == 2">
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Nom</th>
+                                <th>Mode</th>
+                                <th>Équipe 1</th>
+                                <th>Équipe 2</th>
+                            </tr>
+                            <tr *ngFor="let game of userInfo.games">
+                                <th>{{game.end}}</th>
+                                <th>{{game.gameName}}</th>
+                                <th>{{game.gameType}}</th>
+                                <th>{{game.players[0].username}}</th>
+                                <th>{{game.players[1].username}}</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div *ngIf="category.value == 3">
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr *ngFor="let log of userInfo.logs">
+                                <th>{{log.timeStamp}}</th>
+                                <th>{{log.isLogin}}</th>
+                            </tr>
+                        </table>
+                    </div>                       
+                </div>
+            </div>
         </div>
         <div id="chat-column">
             <div id="chat-bar">

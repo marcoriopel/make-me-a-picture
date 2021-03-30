@@ -33,6 +33,19 @@
 
 #profile-column {
     flex: 1;
+    flex-flow: column nowrap;
     display: flex;
-    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#profile-container {
+    width: 90%;
+    height: 80%;
+    padding-right: 1px;
+    background-color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
 }
