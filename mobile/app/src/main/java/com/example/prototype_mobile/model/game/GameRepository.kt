@@ -74,7 +74,7 @@ class GameRepository {
     var drawingName: LiveData<String?> = _drawingName
 
     var drawingPlayer: String? = null
-    var guessingPlayer: String? = null
+    lateinit var guessesLeftByTeam: GuessesLeft
 
     private val _isGameEnded=  MutableLiveData<Boolean>()
     val isGameEnded: LiveData<Boolean> = _isGameEnded
@@ -119,8 +119,7 @@ class GameRepository {
 
     private var onGuessesLeft = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
-            val guessesLeftByTeam: GuessesLeft = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
-            _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
+            guessesLeftByTeam = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
         } else {
             val numberGuessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
             _guessesLeft.postValue(numberGuessesLeft)
@@ -136,6 +135,10 @@ class GameRepository {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
         _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
+        if(Timer(transitionTemp.timer).timer == 0) {
+            _isPlayerDrawing.postValue(drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username))
+            _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
+        }
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
