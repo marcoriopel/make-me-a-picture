@@ -67,8 +67,8 @@ class MainMenuActivity : AppCompatActivity() {
         for(fragment in supportFragmentManager.fragments)
             if(fragment is LobbyFragment) {
                 (fragment as LobbyFragment).getViewModel().resetData()
-                supportFragmentManager.beginTransaction().remove(fragment).commit()
-                supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNow()
+                supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+                supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNowAllowingStateLoss()
             }
 
     }
