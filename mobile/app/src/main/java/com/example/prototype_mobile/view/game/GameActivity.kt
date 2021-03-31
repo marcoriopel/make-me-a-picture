@@ -20,7 +20,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
-
+    private lateinit var canvasViewModel: CanvasViewModel
     private lateinit var binding: ActivityGameBinding
 
 
@@ -31,6 +31,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
+        canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
+                .get(CanvasViewModel::class.java)
 
         if (savedInstanceState == null) {
             setUpGameInit()
@@ -123,7 +125,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     fun setUpGameInit() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.containerCanvas, CanvasFragment())
+            .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
             .commitNow()
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerChat, ChatFragment())
