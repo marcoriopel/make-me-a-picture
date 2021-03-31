@@ -137,8 +137,6 @@ class GameRepository {
         _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
         if(Timer(transitionTemp.timer).timer == 0) {
-            Log.e("Guesses Left", (guessesLeftByTeam.guessesLeft[team]).toString())
-            Log.e("Is drawing player", (drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)).toString())
             if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
                 _isPlayerDrawing.postValue(true)
             } else if (!drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
@@ -151,7 +149,8 @@ class GameRepository {
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
-        _isPlayerDrawing.value = isDrawing
+        if (isDrawing)
+            drawingPlayer = LoginRepository.getInstance()!!.user!!.username
     } 
 
     fun guessDrawing(guess: String) {
