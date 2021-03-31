@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.*
+import org.json.JSONObject
 import java.util.*
 import kotlin.math.abs
 
@@ -16,6 +17,7 @@ const val GRID_WIDTH = 2f // has to be float
 const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
+    private var lastCoordsReceive: Vec2 = Vec2(0,0)
     // Path
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
@@ -239,6 +241,35 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         _newCurPath.value = null
     }
 
+   fun onReceivingEvent() {
+       while (!canvasRepository.drawingEventList.isEmpty()) {
+           val json = canvasRepository.drawingEventList.poll()
+           if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
+               val objectString = JSONObject(json).getString("drawingEvent")
+               val objectJson = JSONObject(objectString)
+               // try {
+               val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
+                   EVENT_TOUCH_DOWN -> {
+                       val Jevent = JSONObject(objectJson.getString("event"))
+                       val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                       val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                       DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
+                   }
+                   EVENT_TOUCH_MOVE -> {
+                       lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+                       DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
+                   }
+                   EVENT_TOUCH_UP -> {
+                       DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
+                   }
+                   else -> {
+                       DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+                   }
+               }
+               onDrawingEvent(drawingEventReceive)
+           }
+       }
+   }
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Bind observer
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -254,6 +285,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
         canvasRepository.drawingEvent.observeForever {
             onDrawingEvent(it)
+        }
+        canvasRepository.drawingEventServer.observeForever {
+            onReceivingEvent()
         }
         gameRepo!!.drawingName.observeForever {
             _drawingName.postValue(it)
