@@ -38,4 +38,6 @@ export abstract class Game {
     getPlayers(): any {}
 
     requestHint(user: BasicUser): void { }
+
+    disconnectGame(username: string){}
 }

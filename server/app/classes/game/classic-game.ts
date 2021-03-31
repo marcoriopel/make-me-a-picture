@@ -347,4 +347,15 @@ export class ClassicGame extends Game {
             throw Error("User is not part of the game");
         }
     }
+
+    disconnectGame(username: string){
+        if(this.teams[0].has(username)){
+            this.score[0] = 0;
+        }
+        else if(this.teams[1].has(username)){
+            this.score[1] = 0;
+        }
+        this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
+        this.endGame();
+    }
 }

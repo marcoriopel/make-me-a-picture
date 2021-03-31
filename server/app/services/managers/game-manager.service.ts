@@ -135,4 +135,8 @@ export class GameManagerService {
         })
         return id;
     }
+
+    disconnectGame(gameId: string, username: string){
+        GameManagerService.games.get(gameId).disconnectGame(username);
+    }
 }

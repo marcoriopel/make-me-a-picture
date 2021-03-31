@@ -160,4 +160,8 @@ export class SoloGame extends Game {
             }
         }, 1000);
     }
+
+    disconnectGame(username: string){
+        this.endGame();
+    }
 }
