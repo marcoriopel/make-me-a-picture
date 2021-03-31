@@ -24,10 +24,10 @@
                 </mat-button-toggle-group>
                 <div id="information">
                     <div *ngIf="category.value == 0">
-                        <p>Prénom: {{userInfo.surname}}</p>
-                        <p>Nom: {{userInfo.name}}</p>
+                        <h1>Prénom: {{userInfo.surname}}</h1>
+                        <h1>Nom: {{userInfo.name}}</h1>
                     </div>
-                    <div *ngIf="category.value == 1">
+                    <div id="table-container" *ngIf="category.value == 1">
                         <table>
                             <tr>
                                 <th>Parties jouées</th>
@@ -45,7 +45,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div *ngIf="category.value == 2">
+                    <div id="table-container" *ngIf="category.value == 2">
                         <table>
                             <tr>
                                 <th>Date</th>
@@ -58,12 +58,14 @@
                                 <th>{{game.end}}</th>
                                 <th>{{game.gameName}}</th>
                                 <th>{{game.gameType}}</th>
-                                <th *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} - {{game.team1[1]}}</th>
-                                <th *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} - {{game.team2[1]}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} et {{game.team1[1]}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} et {{game.team2[1]}}</th>
+                                <th *ngIf="game.gameType == 'Solo'">{{game.team1[0]}}</th>
+                                <th *ngIf="game.gameType == 'Coop'">{{game.team1[0]}} et {{game.team1[1]}}</th>
                             </tr>
                         </table>
                     </div>
-                    <div *ngIf="category.value == 3">
+                    <div id="table-container" *ngIf="category.value == 3">
                         <table>
                             <tr>
                                 <th>Date</th>

@@ -42,10 +42,35 @@
 #profile-container {
     width: 90%;
     height: 80%;
+    padding-top: 30px;
     padding-right: 1px;
     background-color: white;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
     align-items: center;
+
+    h1 {
+        margin-top: 20px;
+    }
+}
+
+#information {
+    overflow-y: scroll;
+    width: 90%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+#table-container {
+    width: 100%;
+    height: 100%;
+    table {
+        margin-top: 30px;
+        width: 100%;
+
+        th {
+            margin-top: 3px;
+        }
+    }
 }

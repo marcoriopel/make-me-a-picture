@@ -13,3 +13,10 @@ export function formatDateString(timestamp: number): string {
 
     return formattedDate;
 }
+
+export function formatTimePlayed(timestamp: number): string {
+    timestamp = Math.floor(timestamp / 1000);
+    let hours = Math.floor(timestamp / 3600);
+    let minutes = Math.floor((timestamp / 60) % 60);
+    return `${hours}H${minutes}M`;
+}

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
-import { formatDateString } from '@app/classes/date';
+import { formatDateString, formatTimePlayed } from '@app/classes/date';
 
 @Component({
   selector: 'app-profile',
@@ -39,7 +39,7 @@ export class ProfileComponent implements OnInit {
         });
 
         game.end = formatDateString(game.end);
-        
+
         switch(game.gameType) {
           case GameType.Classic:
             game.gameType = 'Classic';
@@ -54,6 +54,8 @@ export class ProfileComponent implements OnInit {
             break;
         }
       });
+      data.privateInfo.stats.timePlayed = formatTimePlayed(data.privateInfo.stats.timePlayed);
+      data.privateInfo.stats.meanGameTime = formatTimePlayed(data.privateInfo.stats.meanGameTime);
       this.userInfo = data.privateInfo;
       console.log(this.userInfo);
     })
