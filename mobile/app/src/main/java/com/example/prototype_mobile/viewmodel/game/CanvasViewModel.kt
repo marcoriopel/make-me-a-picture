@@ -242,8 +242,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     }
 
    fun onReceivingEvent() {
-       while (!canvasRepository.drawingEventDeque.isEmpty()) {
-           val json = canvasRepository.drawingEventDeque.removeFirst()
+       while (!canvasRepository.drawingEventList.isEmpty()) {
+           val json = canvasRepository.drawingEventList.poll()
            if (!gameRepo!!.isPlayerDrawing.value!!) {
                val objectString = JSONObject(json).getString("drawingEvent")
                val objectJson = JSONObject(objectString)

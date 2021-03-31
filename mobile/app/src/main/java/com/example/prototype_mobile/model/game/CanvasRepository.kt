@@ -9,6 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventT
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.util.*
 
 const val DRAWING_EVENT = "drawingEvent"
 const val EVENT_TOUCH_DOWN = 0
@@ -52,10 +53,10 @@ class CanvasRepository {
     private val _drawingEventServer = MutableLiveData<Boolean>()
     var drawingEventServer: LiveData<Boolean> = _drawingEventServer
 
-    val drawingEventDeque = ArrayDeque<String>()
+    val drawingEventList = LinkedList<String>()
 
     var onDrawingEvent = Emitter.Listener {
-        drawingEventDeque.addLast(it[0].toString())
+        drawingEventList.add(it[0].toString())
         _drawingEventServer.postValue(true)
     }
 
