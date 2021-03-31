@@ -152,7 +152,6 @@ export class GameService {
     })
 
     this.socketService.bind('timer', (data: any) => {
-      console.log(data.timer);
       this.timer = data.timer;
     })
   
