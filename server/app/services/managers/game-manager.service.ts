@@ -122,4 +122,17 @@ export class GameManagerService {
         let game = GameManagerService.games.get(gameId);
         game.requestHint(user);
     }
+
+    isUserInGame(username: string){
+        let id = null;
+        GameManagerService.games.forEach((game: Game, gameId: string) => {
+            const players = game.getPlayers();
+            for(let player of players){
+                if(player.username == username){
+                    id = gameId;
+                }
+            }
+        })
+        return id;
+    }
 }

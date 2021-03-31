@@ -164,6 +164,7 @@ export class SocketConnectionService {
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 this.authService.addUserToLogCollection(user.username, false);
                 console.log('disconnection of ' + user.username);
+                console.log(this.gameManagerService.isUserInGame(user.username));
               });
         });
     }
