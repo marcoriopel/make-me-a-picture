@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { LeaderboardCategory } from '@app/ressources/global-variables/global-variables';
-import { FormControl } from '@angular/forms';
+import { formatTimePlayed } from '@app/classes/date';
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -10,28 +10,21 @@ import { FormControl } from '@angular/forms';
 })
 export class LeaderboardComponent implements OnInit {
   private getLeadboardStatsUrl = environment.api_url + '/api/stats/leaderboard';
-  category = new FormControl();
+  selectedVal = 0;
   leaderboard: any = [];
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'authorization': localStorage.getItem('token')!});
-    let params = new HttpParams();
-    params = params.append('category', LeaderboardCategory.BEST_SOLO_SCORE.toString());    
-    const options = { params: params, headers: headers};
-    this.http.get<any>(this.getLeadboardStatsUrl, options).subscribe((data: any) => {
-    })
+    this.updateLeaderboard("0");
   }
 
-  updateLeaderboard(): void {
+  updateLeaderboard(value: string): void {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
     let params = new HttpParams();
-    switch(this.category.value){
+    switch(value){
       case LeaderboardCategory.MOST_GAMES_PLAYED.toString():
         params = params.append('category', LeaderboardCategory.MOST_GAMES_PLAYED.toString());
         break;
@@ -54,6 +47,10 @@ export class LeaderboardComponent implements OnInit {
     }
     const options = { params: params, headers: headers};
     this.http.get<any>(this.getLeadboardStatsUrl, options).subscribe((data: any) => {
+      data.top10.forEach((element: any) => {
+        element.classicWinRatio = element.classicWinRatio.toFixed(2);
+        element.timePlayed = formatTimePlayed(element.timePlayed);
+      });
       this.leaderboard = data.top10;
       console.log(this.leaderboard)
     })

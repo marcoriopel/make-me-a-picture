@@ -7,20 +7,20 @@
         <div id="leaderboard-column">
             <h1>Classement</h1>
             <div id="leaderboard-container">
-                <mat-button-toggle-group id="toggle-group" [formControl]="category">
-                    <mat-button-toggle value="0" (click)="updateLeaderboard()">
+                <mat-button-toggle-group id="toggle-group" #group="matButtonToggleGroup" (change)="updateLeaderboard(group.value)" [value]="selectedVal">
+                    <mat-button-toggle value="0">
                         Parties jouées
                     </mat-button-toggle>
-                    <mat-button-toggle value="1" (click)="updateLeaderboard()">
+                    <mat-button-toggle value="1">
                         Temps joués
                     </mat-button-toggle>
-                    <mat-button-toggle value="2" (click)="updateLeaderboard()">
+                    <mat-button-toggle value="2">
                         Solo
                     </mat-button-toggle>
-                    <mat-button-toggle value="3" (click)="updateLeaderboard()">
+                    <mat-button-toggle value="3">
                         Coop
                     </mat-button-toggle>
-                    <mat-button-toggle value="4" (click)="updateLeaderboard()">
+                    <mat-button-toggle value="4">
                         Classic
                     </mat-button-toggle>
                 </mat-button-toggle-group>

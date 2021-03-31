@@ -56,6 +56,13 @@ export class ProfileComponent implements OnInit {
       });
       data.privateInfo.stats.timePlayed = formatTimePlayed(data.privateInfo.stats.timePlayed);
       data.privateInfo.stats.meanGameTime = formatTimePlayed(data.privateInfo.stats.meanGameTime);
+      data.privateInfo.stats.classicWinRatio = data.privateInfo.stats.classicWinRatio.toFixed(2);
+
+      data.privateInfo.logs.forEach((element:any) => {
+        element.isLogin ? element.isLogin = "Connexion" : element.isLogin = "Déconnexion";
+        element.timeStamp = formatDateString(element.timeStamp);
+      });
+
       this.userInfo = data.privateInfo;
       console.log(this.userInfo);
     })

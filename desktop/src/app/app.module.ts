@@ -53,7 +53,7 @@ import { ClassicGameComponent } from './components/classic-game/classic-game.com
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
-// import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
     declarations: [
@@ -82,7 +82,6 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
         ClassicGameComponent,
         SprintGameComponent,
         ProfileComponent,
-        // MatMenuModule,
         LeaderboardComponent,
     ],
     imports: [
@@ -112,6 +111,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
         MatInputModule,
         MatToolbarModule,
         NgxElectronModule,
+        MatMenuModule,
         BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],

@@ -5,21 +5,12 @@
     </div>
 
     <span class="example-spacer"></span>
-    <button mat-button>
-      <span class="material-icons">leaderboard</span>
-      <a routerLink="/leaderboard">Classement</a>
-    </button>
-    <button mat-button routerLink="/profile">
-      <a routerLink="/profile">{{username}}</a>
-    </button>
-    <button mat-button (click)="logout()">
-      <span>Déconnexion</span>
-    </button>
 
-    <!-- <button mat-button [matMenuTriggerFor]="beforeMenu">{{username}}</button>
+    <button id="menu-button" mat-button [matMenuTriggerFor]="beforeMenu">{{username}}</button>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
-      <button mat-menu-item><span class="material-icons">leaderboard</span>Classement</button>
-      <button mat-menu-item>Profil</button>
-      <button mat-menu-item>Déconnexion</button>
-    </mat-menu> -->
+      <button mat-menu-item routerLink="/leaderboard">Classement</button>
+      <button mat-menu-item routerLink="/profile">Profil</button>
+      <button mat-menu-item (click)="logout()" >Déconnexion</button>
+    </mat-menu>      
+
 </mat-toolbar>
