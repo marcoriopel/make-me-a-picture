@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -165,5 +166,19 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         setUpGameInit()
     }
 
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                for(fragment in supportFragmentManager.fragments) {
+                    if (fragment is GuessFragment)
+                        fragment.onKeyEnter()
+                    if (fragment is ChatFragment)
+                        fragment.onKeyEnter()
+                }
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
 
 }

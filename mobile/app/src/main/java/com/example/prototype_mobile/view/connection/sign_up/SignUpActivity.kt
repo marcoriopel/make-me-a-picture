@@ -13,6 +13,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.SignUpInfo
 import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
+import com.example.prototype_mobile.view.connection.login.LoginActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModel
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModelFactory
@@ -84,6 +85,11 @@ class SignUpActivity : AppCompatActivity() {
             if (isFormFilled) {
                 signUpViewModel.signUp(formData)
             }
+        }
+        binding.signIn.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
