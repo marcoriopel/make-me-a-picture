@@ -97,6 +97,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
             if (result is Result.Success) {
                 _getChannelResult.postValue(-1)
+                switchChannel(chatId)
             }
 
             if(result is Result.Error){
@@ -105,7 +106,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                     ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
                 }
             }
-            switchChannel(chatId)
+
         }
     }
 
