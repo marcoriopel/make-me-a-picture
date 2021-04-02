@@ -30,6 +30,9 @@ export class SoloGame extends Game {
             this.players.set(player.username, player);
         }
         this.vPlayer = lobby.getVPlayer();
+        this.vPlayer.setServices(this.drawingsService, this.socketService);
+        this.vPlayer.setTeammates(this.getPlayers());
+        this.vPlayer.sayHello();
         console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
@@ -54,6 +57,7 @@ export class SoloGame extends Game {
             this.addBonusGameTime();
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
+            this.vPlayer.sayRightGuess();
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score })
             this.setupNextDrawing();
         }
@@ -62,6 +66,10 @@ export class SoloGame extends Game {
             --this.guessesLeft;
             if (!this.guessesLeft) {
                 this.setupNextDrawing();
+                this.vPlayer.sayWrongGuess();
+            }
+            else{
+                this.vPlayer.sayWrongTry();
             }
         }
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
@@ -85,6 +93,7 @@ export class SoloGame extends Game {
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.vPlayer.sayEndSprintGame();
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }

@@ -43,12 +43,9 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        for (let vPlayer of this.vPlayers) {
-            if (vPlayer != undefined) {
-                vPlayer.setServices(this.drawingsService, this.socketService);
-                vPlayer.setTeammate(this.getPlayers());
-                vPlayer.sayHello();
-            }
+        this.setupVPlayers();
+        for(const vPlayer of this.vPlayers){
+            vPlayer.sayHello();
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
@@ -379,6 +376,19 @@ export class ClassicGame extends Game {
             }
             if(this.vPlayers[minScoreIndex]){
                 this.vPlayers[minScoreIndex].sayWeLost();
+            }
+        }
+    }
+
+    setupVPlayers(){
+        for (let i = 0; i < this.vPlayers.length; ++i) {
+            if (this.vPlayers[i] != undefined) {
+                this.vPlayers[i].setServices(this.drawingsService, this.socketService);
+                this.teams[i].forEach((player: Player) =>{
+                    if(player.username != this.vPlayers[i].getBasicUser().username){
+                        this.vPlayers[i].setTeammates(player);
+                    }
+                })
             }
         }
     }

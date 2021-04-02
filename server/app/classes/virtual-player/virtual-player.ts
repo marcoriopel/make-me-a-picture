@@ -11,7 +11,7 @@ export class VirtualPlayer {
     protected personnality: number;
     protected username: string;
     protected avatar: number;
-    protected teammate: string = undefined;
+    protected teammates: string[] = undefined;
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
     private currentDrawing: Drawing;
@@ -138,29 +138,33 @@ export class VirtualPlayer {
         }
     }
 
-    setTeammate(players: any){
-        let team;
-        for(const player of players){
-            if(player.username == this.username){
-                team = player.team;
+    setTeammates(players: any){
+        if(Array.isArray(players)){
+            this.teammates = [];
+            for(let player of players){
+                this.teammates.push(player.username)
             }
         }
-        for(const player of players){
-            if(player.team == team && !player.isVirtual){
-                this.teammate = player.username;
-            }
+        else{
+            this.teammates = [players.username];
         }
     }
 
     sayHello(){}
 
+    sayHelloMany(){}
+
     sayRightGuess(){}
 
     sayWrongGuess(){}
+
+    sayWrongTry(){}
 
     sayWeWon(){}
 
     sayWeLost(){}
 
     sayWeTied(){}
+
+    sayEndSprintGame(){}
 }
