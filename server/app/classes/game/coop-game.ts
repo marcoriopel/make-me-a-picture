@@ -104,6 +104,7 @@ export class CoopGame extends Game {
         this.players.forEach((player: Player) => {
             players.push({ "username": player.username, "avatar": player.avatar });
         })
+        players.push(this.vPlayer.getBasicUser());
         return players;
     }
 
