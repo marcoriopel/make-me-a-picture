@@ -88,7 +88,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Dispatch socketEvent
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun onDrawingEvent(drawingEvent: DrawingEvent ) {
+    private fun onDrawingEvent(drawingEvent: DrawingEvent ) {
         when(drawingEvent.eventType) {
             EVENT_TOUCH_DOWN -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
@@ -199,7 +199,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Prepare a canvas with a grid to put one top of the
      * view if needed
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun prepareGrid(padding: Float) {
+    private fun prepareGrid(padding: Float) {
         val width = 1200
         val height = 820
         gridBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -241,7 +241,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         _newCurPath.value = null
     }
 
-   fun onReceivingEvent() {
+   private fun onReceivingEvent() {
        while (!canvasRepository.drawingEventList.isEmpty()) {
            val json = canvasRepository.drawingEventList.poll()
            if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
@@ -289,7 +289,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         canvasRepository.drawingEventServer.observeForever {
             onReceivingEvent()
         }
-        gameRepo!!.drawingName.observeForever {
+        GameRepository.getInstance()!!.drawingName.observeForever {
             _drawingName.postValue(it)
         }
     }
