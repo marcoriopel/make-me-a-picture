@@ -79,7 +79,6 @@ class LobbyRepository() {
             gameRepo.gameType = _lobbyJoined.value!!.gameType
             _isPlayerDrawing.postValue(false)
         }
-
     }
 
     init {
@@ -94,10 +93,6 @@ class LobbyRepository() {
         val gson: Gson = Gson()
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, lobbyID)))
         currentListenLobby = lobbyID
-    }
-
-    fun closePreview() {
-        socket.off("dispatchTeams")
     }
 
     suspend fun joinLobby(game: Game): Result<Game> {
