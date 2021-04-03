@@ -136,7 +136,7 @@ export class CoopGame extends Game {
             }
             else {
                 --this.gameTimerCount;
-            } 
+            }
         }, 1000);
     }
 
@@ -162,4 +162,9 @@ export class CoopGame extends Game {
             }
         }, 1000);
     }
+
+    requestHint(user: BasicUser): void {
+        this.vPlayer.sendNextHint();
+    }
+
 }
