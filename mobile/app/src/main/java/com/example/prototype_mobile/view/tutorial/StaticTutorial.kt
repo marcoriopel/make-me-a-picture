@@ -14,7 +14,7 @@ import com.example.prototype_mobile.databinding.ActivityStaticTutorialBinding
 
 class StaticTutorial : AppCompatActivity() {
 
-    var tutorialPageIndex = 0
+    var tutorialPageIndex = 1
     lateinit var binding: ActivityStaticTutorialBinding
     var contentMap = mutableMapOf<Int, StaticTutorialInfo>()
 
@@ -27,16 +27,16 @@ class StaticTutorial : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         //Creating the map content
-        contentMap.put(0, StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description"))
-        contentMap.put(1, StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description"))
-        contentMap.put(2, StaticTutorialInfo("title_game",R.drawable.guessing,"game_description"))
+        contentMap.put(1, StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description"))
+        contentMap.put(2, StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description"))
+        contentMap.put(3, StaticTutorialInfo("title_game",R.drawable.guessing,"game_description"))
 
 
 
 
        binding.back.setOnClickListener {
             println("back button click ")
-            if(tutorialPageIndex == 0){
+            if(tutorialPageIndex == 1) {
                 println("Can't decrement 0")
             } else {
                 tutorialPageIndex--

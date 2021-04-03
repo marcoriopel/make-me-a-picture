@@ -17,14 +17,13 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="518dp"
-            android:layout_height="219dp"
-            android:translationX="500dp"
-            android:translationY="75dp"
-            android:src="@drawable/avatar0"
+            android:layout_width="1000dp"
+            android:layout_height="1000dp"
+            android:adjustViewBounds="true"
             android:scaleType="center"
-            android:adjustViewBounds = "true"
-            />
+            android:src="@drawable/avatar0"
+            android:translationX="500dp"
+            android:translationY="225dp" />
 
         <Button
             android:id="@+id/back"
@@ -32,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="back"
             android:translationX="1000dp"
-            android:translationY="450dp" />
+            android:translationY="600dp" />
 
         <Button
             android:id="@+id/next"
@@ -40,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="Next"
             android:translationX="1100dp"
-            android:translationY="450dp" />
+            android:translationY="600dp" />
 
         <TextView
             android:id="@+id/title"
