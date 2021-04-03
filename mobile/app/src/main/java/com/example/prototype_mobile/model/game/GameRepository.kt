@@ -50,6 +50,9 @@ class GameRepository {
     var team1: MutableList<Players> = mutableListOf()
     var team2: MutableList<Players> = mutableListOf()
 
+    private val _gameTypeLiveData= MutableLiveData<GameType>()
+    val gameTypeLiveData: LiveData<GameType> = _gameTypeLiveData
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -170,9 +173,14 @@ class GameRepository {
         socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
     }
 
+    fun getTransition (): MutableLiveData<Transition>{
+        return _transition
+    }
+
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
+
         _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
@@ -185,5 +193,8 @@ class GameRepository {
         socket.on(DRAWING_TIMER_EVENT, onTimerEvent)
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
         socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
+    }
+    fun getGameTypeLiveData() : MutableLiveData<GameType> {
+        return _gameTypeLiveData
     }
 }

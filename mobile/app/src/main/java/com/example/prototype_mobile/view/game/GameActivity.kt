@@ -65,11 +65,24 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
-                if( gameViewModel.transitionState.value!!.state != 1) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerTools, HintFragment())
-                        .commitNow()
+                if(gameViewModel.gameRepository.gameType == GameType.CLASSIC) {
+                    //When connecting to the game transition state is null since it doesn't receive can't set a timer
+                    if (gameViewModel.transitionState.value != null) {
+                        //Right of reply. We don't want to display hint button
+                        if (gameViewModel.transitionState.value!!.state != 1) {
+                            hintFragment()
+                        }
+                    }
+                    //If guessing when starting the game
+                    else if(gameViewModel.isPlayerGuessing.value!!) {
+                        hintFragment()
+                    }
                 }
+                //Coop always have a hintFragment.
+                else {
+                    hintFragment()
+                }
+
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is GuessFragment || fragment is HintFragment) {
@@ -147,7 +160,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 .commitNow()
             colorFragment =  (findColorFragment() as ColorFragment?)!!
         }
-        if (gameViewModel.getGameType() == GameType.CLASSIC) {
+        if (gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGameInfo, GameInfoFragment())
                     .commit()
@@ -168,6 +181,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         super.onResume()
         println("OnResume")
         setUpGameInit()
+    }
+    fun hintFragment(){
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerTools, HintFragment())
+                .commitNow()
     }
 
 }

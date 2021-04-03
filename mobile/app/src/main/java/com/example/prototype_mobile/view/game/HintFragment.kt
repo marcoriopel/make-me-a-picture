@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentHintBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
 import com.example.prototype_mobile.viewmodel.game.GuessViewModel
 
@@ -46,7 +47,12 @@ class HintFragment : Fragment() {
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
         binding.hintButton.setOnClickListener {
-            gameViewModel.hintRequest()
+            println("Hint button clicked")
+            if(gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
+                gameViewModel.hintRequest()
+            } else {
+                println("Coop and sprint not implemented yet.")
+            }
         }
 
     }

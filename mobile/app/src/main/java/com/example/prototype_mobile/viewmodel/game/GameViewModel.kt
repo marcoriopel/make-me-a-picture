@@ -13,6 +13,8 @@ import com.example.prototype_mobile.model.game.GameRepository
 import java.lang.Exception
 
 class GameViewModel():ViewModel() {
+
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -35,6 +37,8 @@ class GameViewModel():ViewModel() {
     val hint: LiveData<String> = _transitionMessage
 
     val gameRepository = GameRepository.getInstance()!!
+
+    var gameTypeViewModel = GameType.CLASSIC
     init {
         _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
 
@@ -67,7 +71,12 @@ class GameViewModel():ViewModel() {
                 _transitionState.postValue(it)
             }
         }
+
+        gameRepository.gameTypeLiveData.observeForever{
+            gameTypeViewModel = it
+        }
     }
+
 
     fun hintRequest() {
         val username = LoginRepository.getInstance()!!.user!!.username
