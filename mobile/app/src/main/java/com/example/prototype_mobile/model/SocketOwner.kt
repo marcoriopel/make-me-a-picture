@@ -37,7 +37,6 @@ class SocketOwner() {
             opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
 //            socket = IO.socket("http://18.217.235.167:3000/", opts)
             socket = IO.socket("http://10.0.2.2:3000/", opts)
- 
 
         } catch (e: Exception) {
             e.printStackTrace()

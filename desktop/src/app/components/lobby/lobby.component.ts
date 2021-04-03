@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChatService } from '@app/services/chat/chat.service';
 import { LobbyService } from '@app/services/lobby/lobby.service';
 @Component({
   selector: 'app-lobby',
@@ -10,7 +11,7 @@ export class LobbyComponent implements OnInit {
   classicBlackImgRef: string = "./assets/img/classicLogoBlack.png"
   sprintImgRef: string = "./assets/img/sprintLogo.png";
 
-  constructor(public lobbyService: LobbyService) { }
+  constructor(public lobbyService: LobbyService, private chatService: ChatService) { }
 
   ngOnInit(): void {
     
@@ -18,5 +19,6 @@ export class LobbyComponent implements OnInit {
 
   leaveLobby(): void {
     this.lobbyService.quit();
+    this.chatService.setCurrentChat("General");
   }
 }

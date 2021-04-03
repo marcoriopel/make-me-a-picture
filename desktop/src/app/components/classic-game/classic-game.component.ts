@@ -8,19 +8,21 @@ import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
-  selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  selector: 'app-classic-game',
+  templateUrl: './classic-game.component.html',
+  styleUrls: ['./classic-game.component.scss']
 })
-export class GameComponent implements OnInit, OnDestroy {
+export class ClassicGameComponent implements OnInit, OnDestroy {
 
   guessForm = this.formBuilder.group({
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder) { }
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) { 
+  }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
@@ -29,11 +31,23 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId})
+    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
+    this.drawingService.strokeStack = [];
+    this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('transitionTimer');
+    this.socketService.unbind('drawingName');
+    this.socketService.unbind('timer');
+    this.socketService.unbind('newRound');
+    this.socketService.unbind('guessCallBack');
+    this.socketService.unbind('guessesLeft');
+    this.socketService.unbind('score');
+    this.socketService.unbind('gameStart');
+    this.socketService.unbind('endGame');
+    this.chatService.leaveChat(this.gameService.gameId);
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
@@ -80,6 +94,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
+    if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
     const body = {
       "gameId": this.gameService.gameId,
       "guess": this.guessForm.value.guess,

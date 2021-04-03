@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.view.game.*
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
@@ -55,6 +56,20 @@ class MainMenuActivity : AppCompatActivity() {
 
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        println("On restart")
+        removeLobbyFromStack()
+        //Todo reset specific gameData here or in the intent of EndGameFragment
+    }
+    fun removeLobbyFromStack() {
 
-    
+        for(fragment in supportFragmentManager.fragments)
+            if(fragment is LobbyFragment) {
+                (fragment).getViewModel().resetData()
+                supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+                supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNowAllowingStateLoss()
+            }
+
+    }
 }

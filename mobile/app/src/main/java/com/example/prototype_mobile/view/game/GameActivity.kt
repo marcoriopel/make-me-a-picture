@@ -20,7 +20,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
-
+    private lateinit var canvasViewModel: CanvasViewModel
     private lateinit var binding: ActivityGameBinding
 
 
@@ -31,39 +31,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
+        canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
+                .get(CanvasViewModel::class.java)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerCanvas, CanvasFragment())
-                    .commitNow()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.containerChat, ChatFragment())
-                .commitNow()
-
-            if (gameViewModel.getGameType() == GameType.CLASSIC) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerGameInfo, GameInfoFragment())
-                        .commit()
-            }
-
-            if (gameViewModel.isPlayerDrawing.value!!) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerTools, ToolsFragment())
-                        .commitNow()
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerGuess, ToolsAdjustmentFragment())
-                        .commitNow()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerColor, ColorFragment())
-                    .commitNow()
-                colorFragment =  (findColorFragment() as ColorFragment?)!!
-            }
-
-            if (gameViewModel.isPlayerGuessing.value!!) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerGuess, GuessFragment())
-                    .commitNow()
-            }
+            setUpGameInit()
         }
 
 
@@ -103,7 +75,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         })
 
-        gameViewModel.transitionMessage.observe(this, Observer {
+        gameViewModel.isGameEnded.observe(this, Observer {
+            if(gameViewModel.isGameEnded.value!! && gameViewModel.isGameEnded.value != null)
+                endGameEvent()
+        })
+        gameViewModel.transitionMessage.observe(this, Observer{
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
             toast.show()
         })
@@ -115,7 +91,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .commitNow()
             } else {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerCanvas, CanvasFragment())
+                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
                     .commitNow()
             }
         })
@@ -141,14 +117,64 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 return fragment
         return null
     }
+    
     fun endGameEvent() {
 
         for(fragment in supportFragmentManager.fragments)
-            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment) {
+            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
                 supportFragmentManager.beginTransaction().replace(R.id.containerCanvas, EndGameFragment()).commitNow()
             }
 
+    }
+
+    //maybe we will need to
+    override fun onRestart() {
+        super.onRestart()
+        println("Restart")
+
+    }
+
+    fun setUpGameInit() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
+            .commitNow()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.containerChat, ChatFragment())
+            .commitNow()
+
+        if (gameViewModel.isPlayerDrawing.value!!) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerTools, ToolsFragment())
+                .commitNow()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerGuess, ToolsAdjustmentFragment())
+                .commitNow()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerColor, ColorFragment())
+                .commitNow()
+            colorFragment =  (findColorFragment() as ColorFragment?)!!
+        }
+        if (gameViewModel.getGameType() == GameType.CLASSIC) {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGameInfo, GameInfoFragment())
+                    .commit()
+        } else {
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerGameInfo, SprintInfoFragment())
+                    .commit()
+        }
+
+        if (gameViewModel.isPlayerGuessing.value!!) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerGuess, GuessFragment())
+                .commitNow()
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        println("OnResume")
+        setUpGameInit()
     }
 
 

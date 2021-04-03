@@ -9,6 +9,7 @@ import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.GameRepository
 import com.google.gson.Gson
@@ -56,21 +57,27 @@ class LobbyRepository() {
     }
 
     var onStart = Emitter.Listener {
-        val Jobject = JSONObject(it[0].toString())
-        val Jarray = Jobject.getString("player")
-        val player: String = Jarray.toString()
         val gameRepo = GameRepository.getInstance()!!
-        gameRepo.gameType = _lobbyJoined.value!!.gameType
-        _lobbyPlayers.value!!.players.forEach { player->
-            run {
-                when (player.team) {
-                    0 -> gameRepo.team1.add(player)
-                    1 -> gameRepo.team2.add(player)
-                    else -> throw Exception("Player has invalid team nunmber")
+        if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {
+            val Jobject = JSONObject(it[0].toString())
+            val Jarray = Jobject.getString("player")
+            val player: String = Jarray.toString()
+            gameRepo.gameType = _lobbyJoined.value!!.gameType
+            _lobbyPlayers.value!!.players.forEach { player ->
+                run {
+                    when (player.team) {
+                        0 -> gameRepo.team1.add(player)
+                        1 -> gameRepo.team2.add(player)
+                        else -> throw Exception("Player has invalid team nunmber")
+                    }
                 }
             }
+            _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
+        } else {
+            gameRepo.gameType = _lobbyJoined.value!!.gameType
+            _isPlayerDrawing.postValue(false)
         }
-        _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
+
     }
 
     init {
@@ -88,6 +95,7 @@ class LobbyRepository() {
     suspend fun joinLobby(game: Game): Result<Game> {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
+        map["socketId"] = socket.id()
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
 
@@ -143,5 +151,11 @@ class LobbyRepository() {
         } else {
             return Result.Error(response.code())
         }
+    }
+    fun resetData() {
+        println("reset data called")
+        _lobbyPlayers.value = null
+        _lobbyJoined.value = null
+        _isPlayerDrawing.value = null
     }
 }

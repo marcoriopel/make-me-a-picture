@@ -25,6 +25,9 @@ class GameViewModel():ViewModel() {
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
 
+    private val _isGameEnded = MutableLiveData<Boolean>()
+    val isGameEnded:LiveData<Boolean> = _isGameEnded
+
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
 
@@ -42,6 +45,9 @@ class GameViewModel():ViewModel() {
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
             _teamScore.value = intArrayOf(0,0)
+        }
+        gameRepository.isGameEnded.observeForever{
+            _isGameEnded.value = true
         }
         gameRepository.transition.observeForever {
             if (it.timer == 5) {

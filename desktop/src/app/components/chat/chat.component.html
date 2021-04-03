@@ -1,18 +1,21 @@
 <div class="chat-bar">
     <div class="container">
         <div id="message-scroller" class="chat-container">
+            <div *ngIf="!chatService.joinedChatList[chatService.index].isChatHistoryDisplayed" id="history-button-container">
+                <p id="history-button" (click)="loadChatHistory()">Afficher l'historique</p>
+            </div>
             <div *ngFor="let message of chatService.getChatMessages()">
                 <div class="message reverse" *ngIf="message.isUsersMessage">
                     <app-avatar-icon [avatar]="message.avatar"></app-avatar-icon>
                     <div class="message-text-container">
-                        <p class="username">{{message.username}} - {{message.timeStamp}}</p>
+                        <p class="username">{{message.username}} - {{message.timestamp}}</p>
                         <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
                     </div>
                 </div>
                 <div class="message" *ngIf="message.isUsersMessage == false">
                     <app-avatar-icon [avatar]="message.avatar"></app-avatar-icon>
                     <div class="message-text-container">
-                        <p class="username">{{message.username}} - {{message.timeStamp}}</p>
+                        <p class="username">{{message.username}} - {{message.timestamp}}</p>
                         <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
                     </div>                  
                 </div>

@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { State } from '@app/ressources/global-variables/global-variables';
 import { GameService } from '@app/services/game/game.service';
 
 @Component({
@@ -10,23 +12,32 @@ import { GameService } from '@app/services/game/game.service';
 export class RoundTransitionComponent implements OnInit {
 
   message: string = "";
+  state: State = State.GAMESTART;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService) {
-
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, public gameService: GameService, private router: Router) {
+    this.state = data.state;
     switch (data.state) {
-      case 0:
+      case State.GAMESTART:
         this.message = "Bienvenue dans la partie! C'est " + this.gameService.drawingPlayer + " qui commence à dessiner!";
         break;
       
-      case 1:
+      case State.REPLY:
         this.message = this.gameService.guessingPlayer + " s'est trompé! Droit de réplique!";
         break;
 
-      case 2:
+      case State.NEWROUND:
           this.message = "Prochain round!!! C'est à " + this.gameService.drawingPlayer + " de dessiner!";
           break;
+
+      case State.ENDGAME:
+        this.message = "Partie terminée! Vous avez eu un score de " + this.gameService.score[0];
+        break;
     }
   } 
+
+  endGame(): void {
+    this.router.navigate(['/home']);
+  }
 
   ngOnInit(): void {
   }

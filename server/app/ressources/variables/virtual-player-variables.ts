@@ -4,5 +4,5 @@ export enum Personnality {
     NICE = 0,
     ANXIOUS = 1,
     PASSIVE_AGRESSIVE = 2,
-    COMPETETIVE = 3
+    COMPETITIVE = 3
 }
