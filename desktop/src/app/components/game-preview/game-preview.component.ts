@@ -5,6 +5,7 @@ import { LobbyService } from '@app/services/lobby/lobby.service';
 import { SocketService } from '@app/services/socket/socket.service';
 import { Router } from '@angular/router';
 import { GameService } from '@app/services/game/game.service';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-game-preview',
@@ -47,7 +48,7 @@ export class GamePreviewComponent{
 
   isPreview: boolean = false;
 
-  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router, private gameService: GameService) {}
+  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router, private gameService: GameService, private chatService: ChatService) {}
 
   preview() {
     if (this.isPreview) {
@@ -85,6 +86,15 @@ export class GamePreviewComponent{
         this.gameService.gameId = this.game.id;
         this.router.navigate(['/lobby']);
         this.socketService.emit('joinLobby', {lobbyId:this.game.id});
+        this.gameService.initialize(game.gameType);
+
+        this.socketService.bind('joinChatRoomCallback', async () => {
+          await this.chatService.refreshChatList();
+          this.chatService.setCurrentChat(this.game.id);
+          this.socketService.unbind('joinChatRoomCallback')
+        });
+        this.chatService.joinChat(this.game.id);
+
       },
       err => {
         console.log(err);
