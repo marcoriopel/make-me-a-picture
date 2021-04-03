@@ -38,7 +38,7 @@ export class CoopGame extends Game {
         this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService)
-        this.socketService.getSocket().to(this.id).emit('gameStart', {"player": this.vPlayer.getBasicUser().username});
+        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
@@ -75,12 +75,19 @@ export class CoopGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        try {
+            this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        } catch (err) {
+            if (err.message == "Max drawings") {
+                this.socketService.getSocket().to(this.id).emit('maxScore', {});
+                this.endGame();
+                return;
+            }
+        }
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
-
     }
 
     private endGame(): void {

@@ -60,7 +60,7 @@ export class VirtualPlayer {
             return this.currentDrawing.drawingName;
         }
         catch (err) {
-            console.error(err)
+            throw err;
         }
     }
 
