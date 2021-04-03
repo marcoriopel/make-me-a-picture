@@ -45,7 +45,7 @@ class GameInfoFragment : Fragment() {
         binding.player3.text = team2[0].username
         binding.player4.text = team2[1].username
 
-        viewModel.timer.observe(viewLifecycleOwner, Observer {
+        viewModel.roundTimer.observe(viewLifecycleOwner, Observer {
             binding.time.text = it.timer.toString()
         })
 

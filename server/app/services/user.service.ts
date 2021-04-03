@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from 'http-status-codes';
 import { GamesModel } from '@app/models/games.model';
+import { LeaderboardCategory } from '@app/ressources/variables/stats-variables';
 
 @injectable()
 export class UserService {
@@ -43,6 +44,36 @@ export class UserService {
 
             let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "stats": userStats, "logs": userLogs, "games" : userGames}
             next(privateInfo);
+        }
+        catch(e){
+            res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+    }
+
+    async getTop10(req: Request, res: Response, next: NextFunction) {
+        if (req.query.category == undefined){
+            res.status(StatusCodes.BAD_REQUEST).send("Leaderboard category is undefined");
+        }
+        try{
+            switch(Number(req.query.category)){
+                case LeaderboardCategory.BEST_CLASSIC_WIN_RATIO:
+                    next(await this.usersModel.getTop10ClassicWinRatio());
+                    break;
+                case LeaderboardCategory.BEST_COOP_SCORE:
+                    next(await this.usersModel.getTop10BestCoopScore());
+                    break;
+                case LeaderboardCategory.BEST_SOLO_SCORE:
+                    next(await this.usersModel.getTop10BestCSoloScore());
+                    break;
+                case LeaderboardCategory.MOST_TIME_PLAYED:
+                    next(await this.usersModel.getTop10MostTimePlayed());
+                    break;
+                case LeaderboardCategory.MOST_GAMES_PLAYED:
+                    next(await this.usersModel.getTop10MostGamesPlayed());
+                    break;
+                default:
+                    res.status(StatusCodes.BAD_REQUEST).send("Leaderboard category does not exist");
+            }
         }
         catch(e){
             res.status(StatusCodes.BAD_REQUEST).send(e.message);

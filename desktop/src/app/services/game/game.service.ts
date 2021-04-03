@@ -200,11 +200,11 @@ export class GameService {
     })
 
     this.socketService.bind('gameTimer', (data: any) => {
-      this.gameTimer = data.gameTimer;
+      this.gameTimer = data.timer;
     })
 
     this.socketService.bind('drawingTimer', (data: any) => {
-      this.timer = data.drawingTimer;
+      this.timer = data.timer;
     })
 
     this.socketService.bind('endGame', (data: any) => {

@@ -9,6 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventT
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.util.*
 
 const val DRAWING_EVENT = "drawingEvent"
 const val EVENT_TOUCH_DOWN = 0
@@ -48,39 +49,15 @@ class CanvasRepository {
 
     private val _drawingEvent = MutableLiveData<DrawingEvent>()
     var drawingEvent: LiveData<DrawingEvent> = _drawingEvent
-    private var lastCoordsReceive: Vec2 = Vec2(0,0)
+
+    private val _drawingEventServer = MutableLiveData<Boolean>()
+    var drawingEventServer: LiveData<Boolean> = _drawingEventServer
+
+    val drawingEventList = LinkedList<String>()
 
     var onDrawingEvent = Emitter.Listener {
-        if(!gameRepo.isPlayerDrawing.value!!) {
-            val objectString = JSONObject(it[0].toString()).getString("drawingEvent")
-            val objectJson = JSONObject(objectString)
-            try {
-                val drawingEventReceive = when(objectJson.getString("eventType").toInt()) {
-                    EVENT_TOUCH_DOWN -> {
-                        val Jevent = JSONObject(objectJson.getString("event"))
-                        val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                        val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
-                        DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
-                    }
-                    EVENT_TOUCH_MOVE -> {
-                        lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
-                        DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
-                    }
-                    EVENT_TOUCH_UP -> {
-                        DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
-                    }
-                    else -> {
-                        DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
-                    }
-                }
-                _drawingEvent.postValue(drawingEventReceive)
-            } catch (e: Exception) {
-                Log.e("Error in Drawing event", e.toString())
-                Log.e("Receive", it[0].toString())
-                throw Exception()
-            }
-
-        }
+        drawingEventList.add(it[0].toString())
+        _drawingEventServer.postValue(true)
     }
 
     init {

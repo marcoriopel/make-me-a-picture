@@ -8,9 +8,9 @@ export class UserLogsModel {
     constructor(@inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel) {
         this.databaseModel = DatabaseModel.getInstance();
     }
-    async logUser(username, timeStamp, isLogin) {
+    async logUser(username, timestamp, isLogin) {
         try {
-            await this.databaseModel.client.db("database").collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timeStamp': timeStamp });
+            await this.databaseModel.client.db("database").collection("user-logs").insertOne({ 'username': username, 'isLogin': isLogin, 'timestamp': timestamp });
         } catch (e) {
             console.error(e);
         }
