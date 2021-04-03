@@ -22,7 +22,9 @@
             android:translationX="500dp"
             android:translationY="75dp"
             android:src="@drawable/avatar0"
-            android:scaleType="center"/>
+            android:scaleType="center"
+            android:adjustViewBounds = "true"
+            />
 
         <Button
             android:id="@+id/back"
