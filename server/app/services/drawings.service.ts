@@ -55,14 +55,14 @@ export class DrawingsService {
     async getRandomDrawing(difficulty, excludedDrawings): Promise<Drawing> {
         let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
         if (words.length < 1) {
-            throw new Error('Database is empty');
+            throw new Error("Empty");
         }
         for (let drawing of excludedDrawings) {
             words = words.filter(word => word.drawingName !== drawing);
         }
 
         if (words.length < 1) {
-            throw new Error('No more unique drawings for virtual player to draw');
+            throw new Error("Max drawings");
         }
 
         let random = Math.floor(Math.random() * words.length);
