@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/titre"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".view.tutorial.StaticTutorial">
+
+    <FrameLayout
+        android:id="@+id/imageViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="518dp"
+            android:layout_height="219dp"
+            android:translationX="500dp"
+            android:translationY="75dp"
+            android:src="@drawable/avatar0"
+            android:scaleType="center"/>
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="back"
+            android:translationX="1000dp"
+            android:translationY="450dp" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button"
+            android:translationX="1100dp"
+            android:translationY="450dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="296dp"
+            android:layout_height="45dp"
+            android:text="Titre de la pagge"
+            android:textColor="#000000"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="743dp"
+            android:layout_height="142dp"
+            android:text="blablalbla"
+            android:translationX="400dp"
+            android:translationY="300dp" />
+
+    </FrameLayout>
+
+</LinearLayout>

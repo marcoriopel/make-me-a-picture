@@ -13,10 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Prototype_mobile"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.game.GameActivity"
+        <activity
+            android:name=".view.tutorial.StaticTutorial"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:label="@string/title_activity_static_tutorial"
+            android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
+        <activity
+            android:name=".view.game.GameActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".view.mainmenu.MainMenuActivity"
             android:screenOrientation="landscape"

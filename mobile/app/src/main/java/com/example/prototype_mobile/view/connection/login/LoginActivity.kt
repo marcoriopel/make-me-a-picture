@@ -17,6 +17,7 @@ import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.view.game.GameActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
+import com.example.prototype_mobile.view.tutorial.StaticTutorial
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
@@ -89,8 +90,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(username: String) {
-        val intent = Intent(this, MainMenuActivity::class.java);
-      // val intent = Intent(this, GameActivity::class.java)
+        //val intent = Intent(this, MainMenuActivity::class.java);
+       val intent = Intent(this, StaticTutorial::class.java)
         startActivity(intent)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         Toast.makeText(
