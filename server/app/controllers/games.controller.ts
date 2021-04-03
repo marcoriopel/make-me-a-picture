@@ -26,13 +26,22 @@ export class GamesController {
   private configureRouter(): void {
     this.router = Router();
 
-    this.router.post('/create', (req, res) => {
+    this.router.post('/create/public', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-        this.lobbyManagerService.create(req, res, (lobbyId: string) => {
+        this.lobbyManagerService.createPublic(req, res, (lobbyId: string) => {
           res.status(StatusCodes.OK).send({ lobbyId })
         });
       });
     });
+
+    this.router.post('/create/private', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.createPrivate(req, res, (lobbyId: string, lobbyInviteId: string) => {
+          res.status(StatusCodes.OK).send({ lobbyId, lobbyInviteId })
+        });
+      });
+    });
+
 
     this.router.get('/list', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
@@ -50,13 +59,22 @@ export class GamesController {
       });
     });
 
-    this.router.post('/join', (req, res) => {
+    this.router.post('/join/public', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-        this.lobbyManagerService.join(req, res, user, () => {
+        this.lobbyManagerService.joinPublic(req, res, user, () => {
           res.sendStatus(StatusCodes.OK)
         });
       });
     });
+
+    this.router.post('/join/private', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.lobbyManagerService.joinPrivate(req, res, user, (lobbyId: string) => {
+          res.status(StatusCodes.OK).send({ lobbyId });
+        });
+      });
+    });
+
 
     this.router.delete('/leave', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
