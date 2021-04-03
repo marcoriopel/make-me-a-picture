@@ -5,9 +5,11 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.emitter.Emitter
@@ -20,6 +22,7 @@ const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
+const val DRAWING_SUGGESTIONS_EVENT = "drawingSuggestions"
 
 class GameRepository {
     companion object {
@@ -59,6 +62,9 @@ class GameRepository {
 
     private val _transition = MutableLiveData<Transition>()
     var transition: LiveData<Transition> = _transition
+
+    private val _suggestions = MutableLiveData<Suggestions>()
+    var suggestions: LiveData<Suggestions> = _suggestions
 
     var drawingName: String? = null
     var drawingPlayer: String? = null
@@ -106,16 +112,35 @@ class GameRepository {
         _timer.postValue(Timer(transitionTemp.timer))
     }
 
+    private var onDrawingSuggestionsEvent = Emitter.Listener {
+        _suggestions.postValue(gson.fromJson(it[0].toString(), Suggestions::class.java))
+    }
+
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         _isPlayerDrawing.value = isDrawing
     }
-
 
     fun guessDrawing(guess: String) {
         val opts = IO.Options()
         opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
         val guessEvent = GuessEvent(this.gameId!!, guess)
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
+    }
+
+    suspend fun postWordChose(word: String) {
+        val body = HashMap<String, String>()
+        body["drawingName"] = word
+        body["gameId"] = gameId.toString()
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/word/selection", body)
+        if (response.code() == ResponseCode.OK.code)
+            _suggestions.postValue(null)
+    }
+
+    fun refreshSuggestions() {
+        val opts = IO.Options()
+        opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
+        val data = GameId(this.gameId!!)
+        socket.emit("drawingSuggestions", gson.toJson(data), opts)
     }
 
     init {
@@ -128,5 +153,6 @@ class GameRepository {
         socket.on(GUESSES_LEFT_EVENT, onGuessesLeft)
         socket.on(NEW_ROUND_EVENT, onNewRound)
         socket.on(TRANSITION_EVENT, onTransition)
+        socket.on(DRAWING_SUGGESTIONS_EVENT, onDrawingSuggestionsEvent)
     }
 }

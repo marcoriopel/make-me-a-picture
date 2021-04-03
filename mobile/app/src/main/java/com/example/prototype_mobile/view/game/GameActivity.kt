@@ -103,9 +103,21 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         })
 
-        gameViewModel.transitionMessage.observe(this, Observer{
+        gameViewModel.transitionMessage.observe(this, Observer {
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
             toast.show()
+        })
+
+        gameViewModel.suggestions.observe(this, Observer {
+            if (it != null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, ChooseWordFragment())
+                    .commitNow()
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, CanvasFragment())
+                    .commitNow()
+            }
         })
 
     }

@@ -30,7 +30,8 @@ data class Difficulty(val difficulty:GameDifficulty): GameCreationMergeData()
 
 // Game creation
 data class CreateGame(val gameType: GameType?, val gameName: String?, val gameDifficulty: GameDifficulty?)
-
+data class Suggestions(val drawingNames: Array<String>)
+data class GameId(val gameId: String)
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
 data class Players(val username: String, val avatar: Int, val team: Int)
