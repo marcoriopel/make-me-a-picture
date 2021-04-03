@@ -79,6 +79,10 @@ class GameViewModel():ViewModel() {
         }
     }
 
+    fun getSuggestion(): Suggestions {
+        return gameRepository.suggestion
+    }
+
     fun refreshSuggestions() {
         gameRepository.refreshSuggestions()
     }

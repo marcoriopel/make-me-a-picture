@@ -89,6 +89,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerCanvas, ChooseWordFragment())
                     .commitNow()
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is ChooseWordFragment) {
+                        fragment.bindButton()
+                    }
+                }
+
             } else {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))

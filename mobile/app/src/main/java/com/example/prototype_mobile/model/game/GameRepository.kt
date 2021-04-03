@@ -87,6 +87,7 @@ class GameRepository {
 
     // Listener
     var team = 0
+    var suggestion = Suggestions(arrayOf())
 
     private var onDrawingNameEvent = Emitter.Listener {
         _drawingName.postValue(JSONObject(it[0].toString()).getString("drawingName"))
@@ -155,7 +156,9 @@ class GameRepository {
     }
 
     private var onDrawingSuggestionsEvent = Emitter.Listener {
+        suggestion = gson.fromJson(it[0].toString(), Suggestions::class.java)
         _suggestions.postValue(gson.fromJson(it[0].toString(), Suggestions::class.java))
+
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {
@@ -174,7 +177,7 @@ class GameRepository {
         val body = HashMap<String, String>()
         body["drawingName"] = word
         body["gameId"] = gameId.toString()
-        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/word/selection", body)
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/word/selection", body, true)
         if (response.code() == ResponseCode.OK.code)
             _suggestions.postValue(null)
     }

@@ -56,7 +56,7 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
         this.gameTransition(transitionType.GAMESTART);
-        
+
     }
 
     gameTransition(type: number) {
@@ -84,8 +84,8 @@ export class ClassicGame extends Game {
     async startDrawing(): Promise<void> {
         clearInterval(this.transitionInterval);
         this.transitionTimerCount = 5;
-        this.startTimer(true);
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
+            this.startTimer(true);
             this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
@@ -94,13 +94,14 @@ export class ClassicGame extends Game {
         }
     }
 
+    async validateDrawingPlayer(username: string) {
+        return this.drawingPlayer[this.drawingTeam].username == username ? true : false;
+    }
     async getDrawingSuggestions(): Promise<void> {
-        console.log("Sent suggestion to: " + this.drawingPlayer[this.drawingTeam].username);
         let drawingNames;
         try {
             drawingNames = await this.drawingsService.getWordSuggestions(this.difficulty);
-            this.currentDrawingName = drawingNames[0];
-            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingName", { "drawingName": drawingNames[0] });
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingSuggestions", { "drawingNames": drawingNames });
         } catch (e) {
             this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
         }
@@ -195,7 +196,7 @@ export class ClassicGame extends Game {
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.vPlayers[this.drawingTeam].stopDrawing();
         }
-        this.gameTransition(transitionType.OPPOSITION);    
+        this.gameTransition(transitionType.OPPOSITION);
     }
 
     private opposingTeamTurnStart() {
@@ -227,10 +228,10 @@ export class ClassicGame extends Game {
         }
         else {
             if (players[0].isVirtual) {
-                this.drawingPlayer[teamNumber] = players[0];
+                this.drawingPlayer[teamNumber] = players[1];
             }
             else {
-                this.drawingPlayer[teamNumber] = players[1];
+                this.drawingPlayer[teamNumber] = players[0];
             }
         }
     }
@@ -244,7 +245,7 @@ export class ClassicGame extends Game {
             this.setGuesses();
             this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
             this.socketService.getSocket().to(this.id).emit('newRound', { "newDrawingPlayer": this.drawingPlayer[this.drawingTeam].username });
-            this.gameTransition(transitionType.NEWROUND);    
+            this.gameTransition(transitionType.NEWROUND);
         }
         else {
             this.endGame();
@@ -255,10 +256,10 @@ export class ClassicGame extends Game {
     async sendNextRoundInfo() {
         clearInterval(this.transitionInterval);
         this.transitionTimerCount = 5;
-        this.startTimer(true);
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
+            this.startTimer(true);
             this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
@@ -306,9 +307,16 @@ export class ClassicGame extends Game {
     }
 
     chooseDrawingName(username: string, drawingName: string): void {
-        if (this.drawingPlayer[this.drawingTeam].username != username)
+        if (this.drawingPlayer[this.drawingTeam].username != username) {
             throw new Error("User not authorized to select drawing name");
+        }
+        try {
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit("drawingName", { "drawingName": drawingName });
+        } catch (e) {
+            this.socketService.getSocket().to(this.drawingPlayer[this.drawingTeam].socketId).emit('error', { "error": e.message });
+        }
         this.currentDrawingName = drawingName;
+        this.startTimer(true);
     }
 
     dispatchDrawingEvent(user: BasicUser, event: DrawingEvent): void {

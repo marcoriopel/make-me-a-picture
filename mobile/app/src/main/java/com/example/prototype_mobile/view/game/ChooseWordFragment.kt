@@ -1,10 +1,12 @@
 package com.example.prototype_mobile.view.game
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChooseWordBinding
@@ -27,26 +29,28 @@ class ChooseWordFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_choose_word, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentChooseWordBinding.bind(view)
         binding.wordButton1.setOnClickListener { gameViewModel.chooseWord(binding.wordButton1.text.toString())}
         binding.wordButton2.setOnClickListener { gameViewModel.chooseWord(binding.wordButton2.text.toString())}
-        binding.wordButton2.setOnClickListener { gameViewModel.chooseWord(binding.wordButton2.text.toString())}
+        binding.wordButton3.setOnClickListener { gameViewModel.chooseWord(binding.wordButton3.text.toString())}
         binding.refreshButton.setOnClickListener { gameViewModel.refreshSuggestions() }
     }
 
-    private fun bindButton() {
-        if (gameViewModel.suggestions.value != null) {
-            binding.wordButton1.text = gameViewModel.suggestions.value!!.drawingNames[0]
-            binding.wordButton2.text = gameViewModel.suggestions.value!!.drawingNames[1]
-            binding.wordButton3.text = gameViewModel.suggestions.value!!.drawingNames[2]
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+        gameViewModel.gameRepository.suggestions.observe(this, Observer {
+            bindButton()
+        })
+    }
+
+    fun bindButton() {
+        val suggestions = gameViewModel.getSuggestion()
+        binding.wordButton1.text = suggestions.drawingNames[0]
+        binding.wordButton2.text = suggestions.drawingNames[1]
+        binding.wordButton3.text = suggestions.drawingNames[2]
     }
 }
