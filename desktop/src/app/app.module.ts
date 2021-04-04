@@ -54,6 +54,7 @@ import { SprintGameComponent } from './components/sprint-game/sprint-game.compon
 import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
 
 @NgModule({
     declarations: [
@@ -83,6 +84,7 @@ import { MatMenuModule } from '@angular/material/menu';
         SprintGameComponent,
         ProfileComponent,
         LeaderboardComponent,
+        DrawingSuggestionsComponent,
     ],
     imports: [
         BrowserModule,
