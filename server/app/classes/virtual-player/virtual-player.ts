@@ -143,6 +143,7 @@ export class VirtualPlayer {
 
     setTeammates(players: any){
         if(Array.isArray(players)){
+            players.pop();
             this.teammates = [];
             for(let player of players){
                 this.teammates.push(player.username)

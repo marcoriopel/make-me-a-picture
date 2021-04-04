@@ -3,7 +3,6 @@ import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import { GamesModel } from '@app/models/games.model';
-import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { GameTime, GameType } from '@app/ressources/variables/game-variables';
 
 @injectable()
@@ -24,6 +23,9 @@ export class StatsService {
                     nonVirtualPlayers.splice(i, 1);
                 }
             }
+        }
+        else{
+            nonVirtualPlayers.pop();
         }
         for(let player of nonVirtualPlayers){
             this.updateUserStats(gameName, gameType, player, score, startDate, endDate)

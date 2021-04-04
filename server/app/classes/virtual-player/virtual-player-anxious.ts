@@ -76,7 +76,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     sayWeTied(){
         let message = vPlayerText.anxious.weTied;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayEndSprintGame(){

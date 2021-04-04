@@ -45,7 +45,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
     sayRightGuess(){
         let message = vPlayerText.passiveAgressive.rightGuess;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timeStamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWrongGuess(){
