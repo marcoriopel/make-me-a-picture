@@ -4,7 +4,7 @@ import { Lobby } from '../lobby/lobby';
 import { Game } from './game';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables'
 import { SoloLobby } from '../lobby/solo-lobby';
-import { Player } from '@app/ressources/interfaces/user.interface';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
@@ -160,4 +160,9 @@ export class SoloGame extends Game {
             }
         }, 1000);
     }
+
+    requestHint(user: BasicUser): void {
+        this.vPlayer.sendNextHint();
+    }
+
 }
