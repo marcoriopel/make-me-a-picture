@@ -41,10 +41,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
-            joinLobbyChannel(it.gameID)
+            if(it != null)
+                joinLobbyChannel(it.gameID)
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
-            leaveChannel(it)
+            if(it != null)
+                leaveChannel(it)
         }
     }
 

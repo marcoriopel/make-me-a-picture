@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentEndGameBinding
+import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.GameInfoViewModel
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
@@ -31,6 +32,7 @@ class EndGameFragment : Fragment() {
 
     private lateinit var gameInfoViewModel: GameInfoViewModel
     private lateinit var binding : FragmentEndGameBinding
+    private lateinit var gameType: GameType
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +51,18 @@ class EndGameFragment : Fragment() {
     }
     //End game fragment
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
         gameInfoViewModel = ViewModelProvider(this).get(GameInfoViewModel::class.java)
+        gameType = gameInfoViewModel.gameRepo.gameType
         binding= FragmentEndGameBinding.bind(view)
         val teamScore = gameInfoViewModel.teamScore.value
         if (teamScore != null) {
-            setTextLabel(teamScore.score[0], teamScore.score[1])
+            if (gameType == GameType.CLASSIC)
+                setTextLabel(teamScore.score[0], teamScore.score[1])
+            else
+                binding.gameWinner.text = "Bien joué!"
             setScore(teamScore.score)
 
         }
@@ -80,7 +87,10 @@ class EndGameFragment : Fragment() {
     }
     @SuppressLint("SetTextI18n")
     fun setScore(teamScore: IntArray){
-        binding.score.text =  teamScore[0].toString() + "   -   " + teamScore[1].toString()
+        if (gameType == GameType.CLASSIC)
+            binding.score.text =  teamScore[0].toString() + "   -   " + teamScore[1].toString()
+        else
+            binding.score.text = teamScore[0].toString()
     }
 
 
