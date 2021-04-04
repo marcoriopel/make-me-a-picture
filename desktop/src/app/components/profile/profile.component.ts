@@ -39,18 +39,17 @@ export class ProfileComponent implements OnInit {
         });
 
         game.end = formatDateString(game.end);
-
         switch(game.gameType) {
           case GameType.Classic:
             game.gameType = 'Classic';
             break;
           case GameType.SprintCoop:
-            game.players[1] = '';
             game.gameType = 'Coop';
+            game.players[1] = '';
             break;
           case GameType.SprintSolo:
+            game.gameType = 'Solo';
             game.players[1] = '';
-            game.GameType = 'Solo';
             break;
         }
       });
@@ -60,11 +59,13 @@ export class ProfileComponent implements OnInit {
 
       data.privateInfo.logs.forEach((element:any) => {
         element.isLogin ? element.isLogin = "Connexion" : element.isLogin = "Déconnexion";
-        element.timeStamp = formatDateString(element.timeStamp);
+        element.timestamp = formatDateString(element.timestamp);
       });
 
       this.userInfo = data.privateInfo;
-      console.log(this.userInfo);
+      console.log(this.userInfo)
+      this.userInfo.games = this.userInfo.games.reverse();
+      this.userInfo.logs = this.userInfo.logs.reverse();
     })
   }
 
