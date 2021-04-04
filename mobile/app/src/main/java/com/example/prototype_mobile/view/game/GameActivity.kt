@@ -20,7 +20,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private lateinit var gameViewModel: GameViewModel
     private lateinit var colorFragment: ColorFragment
-
+    private lateinit var canvasViewModel: CanvasViewModel
     private lateinit var binding: ActivityGameBinding
 
 
@@ -31,6 +31,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
+        canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
+                .get(CanvasViewModel::class.java)
 
         if (savedInstanceState == null) {
             setUpGameInit()
@@ -82,6 +84,24 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             toast.show()
         })
 
+        gameViewModel.suggestions.observe(this, Observer {
+            if (it != null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, ChooseWordFragment())
+                    .commitNow()
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is ChooseWordFragment) {
+                        fragment.bindButton()
+                    }
+                }
+
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
+                    .commitNow()
+            }
+        })
+
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
@@ -123,7 +143,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     fun setUpGameInit() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.containerCanvas, CanvasFragment())
+            .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
             .commitNow()
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerChat, ChatFragment())
@@ -161,6 +181,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         super.onResume()
         println("OnResume")
         setUpGameInit()
+    }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
     }
 
 

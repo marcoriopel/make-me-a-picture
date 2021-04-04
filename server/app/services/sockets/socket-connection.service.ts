@@ -124,6 +124,18 @@ export class SocketConnectionService {
                 }
             });
 
+            socket.on('drawingSuggestions', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    this.gameManagerService.requestSuggestions(user.username, request.gameId)
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
+            });
+
             socket.on('hintRequest', (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
@@ -164,7 +176,11 @@ export class SocketConnectionService {
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 this.authService.addUserToLogCollection(user.username, false);
                 console.log('disconnection of ' + user.username);
-              });
+                const gameId= this.gameManagerService.isUserInGame(user.username);
+                if(gameId){
+                    this.gameManagerService.disconnectGame(gameId, user.username);
+                }
+            });
         });
     }
 
