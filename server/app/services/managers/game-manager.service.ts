@@ -93,6 +93,18 @@ export class GameManagerService {
         next();
     }
 
+    requestSuggestions(username: string, gameId: string) {
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            return;
+        }
+        const game = GameManagerService.games.get(gameId);
+        if (!(game instanceof ClassicGame))
+            return;
+        if (game.validateDrawingPlayer(username)) {
+            game.getDrawingSuggestions();
+        }
+    }
+
     dispatchDrawingEvent(user: BasicUser, event: DrawingEvent) {
         if (this.gameExist(event.gameId)) {
             const game: Game = GameManagerService.games.get(event.gameId);
