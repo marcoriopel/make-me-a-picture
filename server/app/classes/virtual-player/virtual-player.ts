@@ -4,6 +4,7 @@ import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 
 @injectable()
@@ -14,6 +15,7 @@ export class VirtualPlayer {
     protected teammates: string[] = undefined;
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
+    protected userService: UserService;
     private currentDrawing: Drawing;
     protected gameId: string;
     private isVPlayerTurn: boolean = false;
@@ -25,9 +27,10 @@ export class VirtualPlayer {
         this.gameId = gameId;
     }
 
-    setServices(drawingsService: DrawingsService, socketService: SocketService): void {
+    setServices(drawingsService: DrawingsService, socketService: SocketService, userService: UserService): void {
         this.drawingsService = drawingsService;
         this.socketService = socketService;
+        this.userService = userService;
     }
 
     async getNewDrawing(difficulty: number): Promise<string> {

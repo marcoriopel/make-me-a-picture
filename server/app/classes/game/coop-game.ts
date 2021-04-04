@@ -4,6 +4,7 @@ import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variabl
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 import { CoopLobby } from '../lobby/coop-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -24,7 +25,7 @@ export class CoopGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
         super(<Lobby>lobby, socketService);
         for (let player of lobby.getPlayers()) {
             this.players.set(player.username, player);
@@ -36,7 +37,7 @@ export class CoopGame extends Game {
     async startGame(): Promise<void> {
         this.startDate = new Date().getTime();
         this.setGuesses();
-        this.vPlayer.setServices(this.drawingsService, this.socketService)
+        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService)
         this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHello();
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });

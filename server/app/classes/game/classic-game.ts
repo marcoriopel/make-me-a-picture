@@ -4,6 +4,7 @@ import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/re
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -29,7 +30,7 @@ export class ClassicGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         this.vPlayers = lobby.getVPlayers();
@@ -383,7 +384,7 @@ export class ClassicGame extends Game {
     setupVPlayers(){
         for (let i = 0; i < this.vPlayers.length; ++i) {
             if (this.vPlayers[i] != undefined) {
-                this.vPlayers[i].setServices(this.drawingsService, this.socketService);
+                this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
                 this.teams[i].forEach((player: Player) =>{
                     if(player.username != this.vPlayers[i].getBasicUser().username){
                         this.vPlayers[i].setTeammates(player);

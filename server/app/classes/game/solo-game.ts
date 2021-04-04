@@ -9,6 +9,7 @@ import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
+import { UserService } from '@app/services/user.service';
 
 @injectable()
 export class SoloGame extends Game {
@@ -24,13 +25,13 @@ export class SoloGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
         super(<Lobby>lobby, socketService);
         for (const player of lobby.getPlayers()) {
             this.players.set(player.username, player);
         }
         this.vPlayer = lobby.getVPlayer();
-        this.vPlayer.setServices(this.drawingsService, this.socketService);
+        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService);
         this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHello();
         console.log("Started solo game with difficulty: " + this.difficulty + " and name: " + this.gameName);
@@ -39,7 +40,6 @@ export class SoloGame extends Game {
     async startGame(): Promise<void> {
         this.startDate = new Date().getTime();
         this.setGuesses();
-        this.vPlayer.setServices(this.drawingsService, this.socketService)
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
