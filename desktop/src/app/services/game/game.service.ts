@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RoundTransitionComponent } from "@app/components/round-transition/round-transition.component";
 import { GameType } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions/drawing-suggestions.component';
 
 interface Player {
   username: string;
@@ -24,8 +25,8 @@ interface Teams {
   providedIn: 'root'
 })
 export class GameService {
-  dialogRef: any;
-
+  transitionDialogRef: any;
+  suggestionDialogRef: any;
 
   // Shared between different game types
   isCorrectGuess: boolean = false;
@@ -39,7 +40,9 @@ export class GameService {
 
   // Classic game
   isUserTeamGuessing: boolean = false;
+  isSuggestionsModalOpen: boolean = false;
   isPlayerDrawing: boolean = false;
+  drawingSuggestions: string[];
   transitionTimer: number = 5;
   guessingPlayer: string = "";
   isGuessing: boolean = false;
@@ -71,7 +74,7 @@ export class GameService {
   }
 
   openDialog(state: State) {
-    this.dialogRef = this.dialog.open(RoundTransitionComponent, {
+    this.transitionDialogRef = this.dialog.open(RoundTransitionComponent, {
       data: {
         state: state,
       },
@@ -79,11 +82,6 @@ export class GameService {
       height: '400px',
       width: "600px"
     })
-
-
-    this.dialogRef.afterClosed().subscribe((result:any) => {
-      console.log(`Dialog result: ${result}`);
-    });
   }
 
 
@@ -161,9 +159,25 @@ export class GameService {
         this.openDialog(this.state);
       }
       if(!data.timer){
-        this.dialogRef.close();
+        this.transitionDialogRef.close();
       }
       this.transitionTimer = data.timer;
+    })
+
+    this.socketService.bind('drawingSuggestions', (data: any) => {
+      this.drawingSuggestions = data.drawingNames;
+      console.log(this.isSuggestionsModalOpen)
+      if(!this.isSuggestionsModalOpen){
+        this.suggestionDialogRef = this.dialog.open(DrawingSuggestionsComponent, {
+          disableClose: true,
+          height: '400px',
+          width: "600px"
+        })
+        this.isSuggestionsModalOpen = true;
+        this.suggestionDialogRef.afterClosed().subscribe((result:any) => {
+          this.isSuggestionsModalOpen = false;
+        });
+      }
     })
   }
 
