@@ -35,5 +35,9 @@ export abstract class Game {
         return this.difficulty;
     }
 
+    getPlayers(): any {}
+
     requestHint(user: BasicUser): void { }
+
+    disconnectGame(username: string){}
 }

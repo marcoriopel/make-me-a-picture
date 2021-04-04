@@ -182,6 +182,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         println("OnResume")
         setUpGameInit()
     }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
+    }
 
 
 }
