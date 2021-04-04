@@ -363,6 +363,17 @@ export class ClassicGame extends Game {
         }
     }
 
+    disconnectGame(username: string){
+        if(this.teams[0].has(username)){
+            this.score[0] = 0;
+        }
+        else if(this.teams[1].has(username)){
+            this.score[1] = 0;
+        }
+        this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
+        this.endGame();
+    }
+    
     sendVPlayerEndGameMessage(){
         const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
         const minScoreIndex = this.score.indexOf(Math.min(...this.score));
