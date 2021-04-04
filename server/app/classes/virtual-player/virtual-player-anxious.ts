@@ -14,15 +14,10 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     }
 
     sayHello(){
-        if(this.teammates.length > 1){
-            this.sayHelloMany();
-        }
-        else{
-            let str = vPlayerText.anxious.meet.split("##");
-            let message = str[0] + this.teammates + str[1];
-            const timestamp = new Date().getTime();
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
-        }
+        let str = vPlayerText.anxious.meet.split("##");
+        let message = str[0] + this.teammates + str[1];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayHelloMany(){

@@ -13,6 +13,7 @@ export class VirtualPlayer {
     protected username: string;
     protected avatar: number;
     protected teammates: string[] = undefined;
+    protected lastMutualGames: any = [];
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
     protected userService: UserService;
@@ -152,6 +153,15 @@ export class VirtualPlayer {
         else{
             this.teammates = [players.username];
         }
+        this.setLastMutualGames();
+    }
+
+    async setLastMutualGames(){
+        for(let teammate of this.teammates){
+            let lastMutualGame = await this.userService.getLastMutualGame(teammate, this.username);
+            this.lastMutualGames.push(lastMutualGame);
+        }
+        console.log(this.lastMutualGames);
     }
 
     sayHello(){}
