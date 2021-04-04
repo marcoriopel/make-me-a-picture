@@ -136,7 +136,7 @@ export class CoopGame extends Game {
             }
             else {
                 --this.gameTimerCount;
-            } 
+            }
         }, 1000);
     }
 
@@ -163,9 +163,16 @@ export class CoopGame extends Game {
         }, 1000);
     }
 
+
     disconnectGame(username: string){
         const message: string = username + " s'est déconnecté";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": message, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
 
     }
+
+    requestHint(user: BasicUser): void {
+        this.vPlayer.sendNextHint();
+    }
+
+
 }
