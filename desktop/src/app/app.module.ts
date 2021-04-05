@@ -55,6 +55,9 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @NgModule({
     declarations: [
@@ -85,6 +88,7 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
         ProfileComponent,
         LeaderboardComponent,
         DrawingSuggestionsComponent,
+        TutorialComponent,
     ],
     imports: [
         BrowserModule,
@@ -114,10 +118,15 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
         MatToolbarModule,
         NgxElectronModule,
         MatMenuModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatStepperModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService,
+    {
+        provide: STEPPER_GLOBAL_OPTIONS,
+        useValue: { displayDefaultIndicatorType: false }
+    }],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

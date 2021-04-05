@@ -12,20 +12,23 @@ import { ClassicGameComponent } from './components/classic-game/classic-game.com
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { TutorialGuard } from './tutorial.guard';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
-    { path: 'chat', component: ChatBarComponent, canActivate: [AuthGuard] },
-    { path: 'home', component: MainPageComponent, canActivate: [AuthGuard] },
-    { path: 'editor', component: EditorComponent, canActivate: [AuthGuard] },
-    { path: 'lobby', component: LobbyComponent, canActivate: [AuthGuard] },
-    { path: 'game/classic', component : ClassicGameComponent, canActivate: [AuthGuard] },
-    { path: 'game/sprint', component : SprintGameComponent, canActivate: [AuthGuard] },
+    { path: 'chat', component: ChatBarComponent, canActivate: [AuthGuard, TutorialGuard] },
+    { path: 'home', component: MainPageComponent, canActivate: [AuthGuard, TutorialGuard] },
+    { path: 'editor', component: EditorComponent, canActivate: [AuthGuard, TutorialGuard] },
+    { path: 'lobby', component: LobbyComponent, canActivate: [AuthGuard, TutorialGuard] },
+    { path: 'game/classic', component : ClassicGameComponent, canActivate: [AuthGuard, TutorialGuard] },
+    { path: 'game/sprint', component : SprintGameComponent, canActivate: [AuthGuard, TutorialGuard] },
     { path: 'login' , component: LoginComponent },
     { path: 'register' , component: RegisterComponent },
-    { path: 'image', component: ImageCreationComponent, canActivate: [AuthGuard]},
+    { path: 'image', component: ImageCreationComponent, canActivate: [AuthGuard, TutorialGuard]},
     { path: 'profile', component: ProfileComponent},
-    { path: 'leaderboard', component: LeaderboardComponent, canActivate: [AuthGuard]},
+    { path: 'leaderboard', component: LeaderboardComponent, canActivate: [AuthGuard, TutorialGuard]},
+    { path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard]},
     { path: '**', redirectTo: '/home' },
 ];
 

@@ -1,1 +1,57 @@
-<p>tutorial works!</p>
+<app-navbar></app-navbar>  
+<mat-horizontal-stepper linear #stepper>
+    <mat-step>
+        <ng-template matStepLabel>Classique</ng-template>
+        <img src="./assets/img/placeholder.png">
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+    </mat-step>
+
+    <mat-step>
+    <ng-template matStepLabel>Classique - Deviner</ng-template>
+    <img src="./assets/img/placeholder.png">
+    <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+    </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Classique - Dessiner</ng-template>
+      <img src="./assets/img/placeholder.png">
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button (click)="stepper.reset()">Reset</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Sprint Solo</ng-template>
+        <img src="./assets/img/placeholder.png">
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Sprint Coop</ng-template>
+        <img src="./assets/img/placeholder.png">
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Fin</ng-template>
+        <img src="./assets/img/placeholder.png">
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+          <button mat-button (click)="quit()">Quitter</button>
+        </div>
+    </mat-step>
+
+</mat-horizontal-stepper>
