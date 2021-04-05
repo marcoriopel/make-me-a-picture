@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -23,11 +24,20 @@ class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private var avatar = 0
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.loginmenu, menu)
+        getSupportActionBar()?.setLogo(R.mipmap.ic_launcher2)
+        getSupportActionBar()?.setDisplayUseLogoEnabled(true)
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        setSupportActionBar(findViewById(R.id.my_toolbar))
         setAvatar()
 
         signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory())
