@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:layout_marginTop ="10dp"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/channel_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/button_rounded_channel">
+        <TextView
+            android:id="@+id/channel_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:enabled="true"
+            android:text="Général"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="0dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/channel_list_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="2dp"
+            android:enabled="true"
+            android:text="@string/join_game"
+            android:textStyle="bold"
+            android:background="@drawable/button_join_chat"
+            android:theme="@style/Widget.App.Button.Green"
+            android:textAllCaps="false"
+            android:gravity="center_horizontal|center_vertical"
+            android:paddingLeft="14dp"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/channel_list_leave"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="22dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/button_round"
+            android:enabled="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:src="@drawable/ic_exit_to_app_24px"
+            android:scaleType="centerCrop"
+            android:textAllCaps="false"
+            android:theme="@style/Widget.App.Button.Red" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/channel_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Afficher l'historique"
+        android:textColor="@color/poly_blue"
+        android:textSize="18sp"
+        android:visibility="gone"/>
+
+</LinearLayout>

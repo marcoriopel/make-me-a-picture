@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.game.ChooseWordFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Choisissez un mot à dessiner"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Button
+            android:id="@+id/wordButton1"
+            android:layout_width="201dp"
+            android:layout_height="37dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Word 1"
+            android:theme="@style/Widget.App.Button.Blue" />
+
+        <Button
+            android:id="@+id/wordButton2"
+            android:layout_width="205dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Word 2"
+            android:theme="@style/Widget.App.Button.Blue" />
+
+        <Button
+            android:id="@+id/wordButton3"
+            android:layout_width="205dp"
+            android:layout_height="37dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Word 2"
+            android:theme="@style/Widget.App.Button.Blue" />
+
+        <Button
+            android:id="@+id/refreshButton"
+            style="@style/Widget.App.Button.Blue"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Rafraichir"
+            android:theme="@style/Widget.App.Button.Blue" />
+
+    </LinearLayout>
+
+</FrameLayout>

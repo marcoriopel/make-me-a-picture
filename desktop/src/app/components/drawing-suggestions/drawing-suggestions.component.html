@@ -1,0 +1,7 @@
+<div id="container">
+    <h1>Choisissez votre mot à dessiner</h1>
+    <button mat-button (click)="setWord(this.gameService.drawingSuggestions[0])">{{this.gameService.drawingSuggestions[0]}}</button>
+    <button mat-button (click)="setWord(this.gameService.drawingSuggestions[1])">{{this.gameService.drawingSuggestions[1]}}</button>
+    <button mat-button (click)="setWord(this.gameService.drawingSuggestions[2])">{{this.gameService.drawingSuggestions[2]}}</button>
+    <button mat-button (click)="refreshWords()"><span class="material-icons">refresh</span></button>
+</div>

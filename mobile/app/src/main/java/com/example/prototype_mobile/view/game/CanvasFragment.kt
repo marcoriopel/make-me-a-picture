@@ -14,14 +14,13 @@ import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
 
 
-class CanvasFragment : Fragment() {
+class CanvasFragment(val viewModel: CanvasViewModel) : Fragment() {
 
     private lateinit var canvasViewModel: CanvasViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
-            .get(CanvasViewModel::class.java)
+        canvasViewModel = viewModel
         if (container != null) {
             return MyCanvasView(container.context, canvasViewModel)
         };
@@ -31,6 +30,9 @@ class CanvasFragment : Fragment() {
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         canvasViewModel.newCurPath.observe(viewLifecycleOwner, Observer {
+            view.invalidate()
+        })
+        canvasViewModel.drawingName.observe(viewLifecycleOwner, Observer {
             view.invalidate()
         })
     }
