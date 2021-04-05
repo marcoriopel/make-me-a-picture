@@ -50,6 +50,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
             if(it != null)
+                switchChannel("General")
                 leaveChannel(it)
         }
     }

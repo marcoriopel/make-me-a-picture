@@ -48,7 +48,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)
                 holder.joinButton.visibility = View.GONE
 
-                if (channel.chatId != "General") {
+                if (channel.chatId != "General" && channel.chatId != viewModel.gameId) {
                     holder.leaveButton.visibility = View.VISIBLE
                     holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
                 } else {
