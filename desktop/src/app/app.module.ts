@@ -51,6 +51,9 @@ import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
 
 @NgModule({
@@ -79,6 +82,8 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
         RoundTransitionComponent,
         ClassicGameComponent,
         SprintGameComponent,
+        ProfileComponent,
+        LeaderboardComponent,
         DrawingSuggestionsComponent,
     ],
     imports: [
@@ -108,6 +113,7 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
         MatInputModule,
         MatToolbarModule,
         NgxElectronModule,
+        MatMenuModule,
         BrowserAnimationsModule
     ],
     entryComponents: [MainPageComponent],

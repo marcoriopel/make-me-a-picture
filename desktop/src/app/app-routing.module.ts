@@ -10,6 +10,8 @@ import { ImageCreationComponent } from './components/image-creation/image-creati
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full', canActivate: [AuthGuard] },
@@ -21,7 +23,9 @@ const routes: Routes = [
     { path: 'game/sprint', component : SprintGameComponent, canActivate: [AuthGuard] },
     { path: 'login' , component: LoginComponent },
     { path: 'register' , component: RegisterComponent },
-    { path: 'image', component: ImageCreationComponent},
+    { path: 'image', component: ImageCreationComponent, canActivate: [AuthGuard]},
+    { path: 'profile', component: ProfileComponent},
+    { path: 'leaderboard', component: LeaderboardComponent, canActivate: [AuthGuard]},
     { path: '**', redirectTo: '/home' },
 ];
 
