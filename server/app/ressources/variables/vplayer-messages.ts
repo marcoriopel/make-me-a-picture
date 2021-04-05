@@ -1,6 +1,11 @@
 export const vPlayerText = {
     anxious: {
         meet: "Bonjour ##, je ne suis pas très bonne à ce mode de jeu j'espère que ça ne te dérange pas trop.",
+        meetAgainSolo: "Je ne sais pas si tu te rappelles de moi ##, mais nous avons joué ensemble en mode solo le ##. Grâce à toi nous avions eu ## points.",
+        meetAgainCoop: "Allo ##, tu as surement oublié, mais nous avons joué avec ## en mode coop le ##. Je n'ai pas super bien joué, mais nous avions quand même eu ## points.",
+        meetAgainClassicWin: "Rebonjour ##, te rappelles-tu de la dernière fois où nous avons joué en mode classique ensemble? Moi je m'en rappelle parce que nous avions gagné.",
+        meetAgainClassicLose: "Allo ##, te rappelles-tu de la dernière fois où nous avons joué ensemble? À cause de moins nous avons perdu contre ## en mode classique.",
+        meetAgainClassicTie: "Bonjour ##, te rappelles-tu de la dernière fois où nous avons joué ensemble? Nous avions eu égalité en mode classique contre ##.",
         meetMany: "Bonjour ##, je ne suis pas très bonne à ce mode de jeu j'espère que ça ne vous dérange pas trop.",
         rightGuess: "Wow, j'ai été chanceuse d'avoir un mot aussi facile!",
         wrongGuess: "Je savais que je ni arriverais pas...",

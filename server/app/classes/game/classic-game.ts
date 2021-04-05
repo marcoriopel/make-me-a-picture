@@ -385,9 +385,9 @@ export class ClassicGame extends Game {
         for (let i = 0; i < this.vPlayers.length; ++i) {
             if (this.vPlayers[i] != undefined) {
                 this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
-                this.teams[i].forEach((player: Player) =>{
+                this.teams[i].forEach(async (player: Player) => {
                     if(player.username != this.vPlayers[i].getBasicUser().username){
-                        this.vPlayers[i].setTeammates(player);
+                        await this.vPlayers[i].setTeammates(player);
                     }
                 })
             }

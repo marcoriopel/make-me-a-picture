@@ -38,7 +38,7 @@ export class CoopGame extends Game {
         this.startDate = new Date().getTime();
         this.setGuesses();
         this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService)
-        this.vPlayer.setTeammates(this.getPlayers());
+        await this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHelloMany();
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });

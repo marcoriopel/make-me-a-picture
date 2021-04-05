@@ -142,7 +142,7 @@ export class VirtualPlayer {
         }
     }
 
-    setTeammates(players: any){
+    async setTeammates(players: any){
         if(Array.isArray(players)){
             players.pop();
             this.teammates = [];
@@ -153,7 +153,7 @@ export class VirtualPlayer {
         else{
             this.teammates = [players.username];
         }
-        this.setLastMutualGames();
+        await this.setLastMutualGames();
     }
 
     async setLastMutualGames(){
@@ -181,4 +181,35 @@ export class VirtualPlayer {
     sayWeTied(){}
 
     sayEndSprintGame(){}
+
+    protected arrayToString(array: Array<string>): string {
+        let str = '';
+        if (array.length == 1){
+            str = array.toString();
+        }
+        else{
+            for(let i=0; i < array.length; i++){
+                if(i == array.length - 1){
+                    str = str.slice(0, str.length - 2);
+                    str += " et " + array[i]
+                }
+                else{
+                    str += array[i] + ", "
+                }
+            }
+        }
+        return str;
+    }
+
+    protected getOpposingTeamNumber(teamNumber: number): number {
+        if(teamNumber == 0)
+            return 1;
+        else
+            return 0;
+    }
+
+    protected getDate(timestamp: number): string {
+        const date = new Date(timestamp);
+        return date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear();
+    }
 }
