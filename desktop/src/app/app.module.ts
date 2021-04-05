@@ -51,6 +51,7 @@ import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
+import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
 
 @NgModule({
     declarations: [
@@ -78,6 +79,7 @@ import { SprintGameComponent } from './components/sprint-game/sprint-game.compon
         RoundTransitionComponent,
         ClassicGameComponent,
         SprintGameComponent,
+        DrawingSuggestionsComponent,
     ],
     imports: [
         BrowserModule,
