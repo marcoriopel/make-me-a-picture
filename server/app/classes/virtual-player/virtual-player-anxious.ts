@@ -15,7 +15,6 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     }
 
     sayHello(){
-        console.log(this.lastMutualGames[0])
         if(this.lastMutualGames[0]){
             this.sayHelloAgain();
         }
@@ -99,11 +98,41 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     }
 
     sayHelloMany(){
+        for(let lastMutualGame of this.lastMutualGames){
+            if(lastMutualGame){
+                this.sayHelloAgainMany();
+                return;
+            }
+        }
         let str = vPlayerText.anxious.meetMany.split("##");
         let teamStr = this.arrayToString(this.teammates);
         let message = str[0] + teamStr + str[1];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayHelloAgainMany(){
+        let newPlayers: string[] = [];
+        let oldPlayers: string[] = [];
+        for(let i = 0; i < this.teammates.length; ++i){
+            if(this.lastMutualGames[i]){
+                oldPlayers.push(this.teammates[i]);
+            }
+            else{
+                newPlayers.push(this.teammates[i]);
+            }
+        }
+
+        const timestamp = new Date().getTime();
+        if(newPlayers.length == 0){
+            let message = vPlayerText.anxious.meetAgainAll;
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else{
+            let str = vPlayerText.anxious.meetAgainMany.split("##");
+            let message = str[0] + this.arrayToString(newPlayers) + str[1] + this.arrayToString(oldPlayers) + str[2];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
     }
 
     sayRightGuess(){

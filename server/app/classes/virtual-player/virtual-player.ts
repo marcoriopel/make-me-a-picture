@@ -161,7 +161,6 @@ export class VirtualPlayer {
             let lastMutualGame = await this.userService.getLastMutualGame(teammate, this.username);
             this.lastMutualGames.push(lastMutualGame);
         }
-        console.log(this.lastMutualGames);
     }
 
     sayHello(){}
