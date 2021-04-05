@@ -44,9 +44,11 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        this.setupVPlayers();
+        await this.setupVPlayers();
         for(const vPlayer of this.vPlayers){
-            vPlayer.sayHello();
+            if(vPlayer){
+               vPlayer.sayHello(); 
+            }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
@@ -364,6 +366,8 @@ export class ClassicGame extends Game {
     sendVPlayerEndGameMessage(){
         const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
         const minScoreIndex = this.score.indexOf(Math.min(...this.score));
+        console.log(maxScoreIndex);
+        console.log(minScoreIndex);
         if(maxScoreIndex == minScoreIndex){
             if(this.vPlayers[maxScoreIndex]){
                 this.vPlayers[maxScoreIndex].sayWeTied();
@@ -381,15 +385,15 @@ export class ClassicGame extends Game {
         }
     }
 
-    setupVPlayers(){
+    async setupVPlayers(){
         for (let i = 0; i < this.vPlayers.length; ++i) {
-            if (this.vPlayers[i] != undefined) {
+            if (this.vPlayers[i]) {
                 this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
-                this.teams[i].forEach(async (player: Player) => {
+                for(let player of this.teams[i].values()){
                     if(player.username != this.vPlayers[i].getBasicUser().username){
                         await this.vPlayers[i].setTeammates(player);
                     }
-                })
+                }
             }
         }
     }

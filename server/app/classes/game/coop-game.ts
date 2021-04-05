@@ -94,7 +94,7 @@ export class CoopGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
-        this.vPlayer.sayEndSprintGame();
+        this.vPlayer.sayEndCoopGame(this.score);
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
@@ -138,7 +138,7 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
-        this.gameTimerCount = 120;
+        this.gameTimerCount = 20;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "timer": this.gameTimerCount });
             if (!this.gameTimerCount) {

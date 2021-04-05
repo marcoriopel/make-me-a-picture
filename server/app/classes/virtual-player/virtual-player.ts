@@ -14,6 +14,7 @@ export class VirtualPlayer {
     protected avatar: number;
     protected teammates: string[] = undefined;
     protected lastMutualGames: any = [];
+    protected teammatesStats: any = [];
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
     protected userService: UserService;
@@ -154,12 +155,20 @@ export class VirtualPlayer {
             this.teammates = [players.username];
         }
         await this.setLastMutualGames();
+        await this.setTeamatesStats();
     }
 
     async setLastMutualGames(){
         for(let teammate of this.teammates){
             let lastMutualGame = await this.userService.getLastMutualGame(teammate, this.username);
             this.lastMutualGames.push(lastMutualGame);
+        }
+    }
+
+    async setTeamatesStats(){
+        for(let teammate of this.teammates){
+            let teammateStats = await this.userService.getUserStats(teammate);
+            this.teammatesStats.push(teammateStats);
         }
     }
 
@@ -179,7 +188,9 @@ export class VirtualPlayer {
 
     sayWeTied(){}
 
-    sayEndSprintGame(){}
+    sayEndSoloGame(finalScore: number){}
+
+    sayEndCoopGame(finalScore: number){}
 
     protected arrayToString(array: Array<string>): string {
         let str = '';

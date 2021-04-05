@@ -55,6 +55,18 @@ export class UserService {
         return mutualGames.pop();
     }
 
+    async getUserStats(username: string){
+        let userInfo = await this.usersModel.getUserInfo(username);
+        let userStats = {
+            'gamesPlayed': userInfo.gamesPlayed, 
+            'timePlayed': userInfo.timePlayed,
+            'bestSoloScore': userInfo.bestSoloScore,
+            'bestCoopScore': userInfo.bestCoopScore,
+            'classicWinRatio': userInfo.classicWinRatio,
+            'meanGameTime': userInfo.meanGameTime,
+        }
+        return userStats;
+    }
 
     async getTop10(req: Request, res: Response, next: NextFunction) {
         if (req.query.category == undefined){
