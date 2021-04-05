@@ -1,0 +1,57 @@
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="game-column">
+            <app-game-bar></app-game-bar>
+        </div>
+        <div id="leaderboard-column">
+            <h1>Classement</h1>
+            <div id="leaderboard-container">
+                <mat-button-toggle-group id="toggle-group" #group="matButtonToggleGroup" (change)="updateLeaderboard(group.value)" [value]="selectedVal">
+                    <mat-button-toggle value="0">
+                        Parties jouées
+                    </mat-button-toggle>
+                    <mat-button-toggle value="1">
+                        Temps joués
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2">
+                        Solo
+                    </mat-button-toggle>
+                    <mat-button-toggle value="3">
+                        Coop
+                    </mat-button-toggle>
+                    <mat-button-toggle value="4">
+                        Classic
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div id="leaderboard">
+                    <table>
+                        <tr>
+                            <th>Position</th>
+                            <th>Joueur</th>
+                            <th>Parties jouées</th>
+                            <th>Temps jouées</th>
+                            <th>Meilleur score Solo</th>
+                            <th>Meilleur score Coop</th>
+                            <th>Ratio V/D Classic</th>
+                        </tr>
+                        <tr *ngFor="let user of leaderboard, let index = index">
+                            <th>{{index + 1}}</th>
+                            <th>{{user.username}}</th>
+                            <th>{{user.gamesPlayed}}</th>
+                            <th>{{user.timePlayed}}</th>
+                            <th>{{user.bestSoloScore}}</th>
+                            <th>{{user.bestCoopScore}}</th>
+                            <th>{{user.classicWinRatio}}</th>
+                        </tr>
+                    </table>
+                </div>                
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>
