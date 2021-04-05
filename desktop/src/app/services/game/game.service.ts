@@ -234,10 +234,22 @@ export class GameService {
 
     this.socketService.bind('gameTimer', (data: any) => {
       this.gameTimer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('drawingTimer', (data: any) => {
       this.timer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('endGame', (data: any) => {
