@@ -66,13 +66,14 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     fun createChannel(channelName: String) {
         viewModelScope.launch()
         {
-            val result: Result<Boolean> = try {
+            val result: Result<String> = try {
                 chatRepository.createChannel(channelName)
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
             }
 
             if (result is Result.Success) {
+                joinChannel(result.data)
             }
 
             if(result is Result.Error){
@@ -85,7 +86,13 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         getChannels()
     }
 
+    var joinLimit = 4
+    var chatTryingToBeJoined = ""
     fun joinLobbyChannel(chatId: String) {
+        if (chatTryingToBeJoined != chatId) {
+            joinLimit = 4
+            chatTryingToBeJoined = chatId
+        }
         viewModelScope.launch(Dispatchers.IO)
         {
             chatRepository.joinChannel(chatId)
@@ -97,10 +104,16 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
             if (result is Result.Success) {
                 _getChannelResult.postValue(-1)
-                switchChannel(chatId)
+                if (chatRepository.channelMap.containsKey(chatId)) {
+                    switchChannel(chatId)
+                } else {
+                    if (joinLimit-- > 0) {
+                        joinLobbyChannel(chatId)
+                    }
+                }
             }
 
-            if(result is Result.Error){
+            if(result is Result.Error && joinLimit == 0){
                 when(result.exception) {
                     ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
                     ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
