@@ -3,6 +3,7 @@ import { DatabaseModel } from '@app/models/database.model'
 import { TYPES } from '@app/types';
 import { Drawing } from '@app/ressources/interfaces/drawings.interface';
 import * as AWS from 'aws-sdk';
+import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class DrawingsModel {
@@ -27,7 +28,9 @@ export class DrawingsModel {
     }
 
     async uploadImage(imageId: string, image: any,) {
-        var uploadParams = { Bucket: "drawingimages", Key: imageId, Body: image };
+        const base64Data = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const type = image.split(';')[0].split('/')[1];
+        var uploadParams = { Bucket: "drawingimages", Key: `${imageId}.${type}`, Body: base64Data, ContentType: `image/${type}`, ContentEncoding: 'base64', ACL: 'public-read', };
         this.s3.upload(uploadParams, (err, data) => {
             if (err) {
                 console.log("Error", err);
@@ -38,6 +41,25 @@ export class DrawingsModel {
                 return data;
             }
         });
+    }
+
+    async addImageToFeed(imageId: string, user: BasicUser, timestamp: any) {
+        try {
+            await this.databaseModel.client.db("database").collection("feed").insertOne({ 'username': user.username, 'avatar': user.avatar, 'timestamp': timestamp, 'id': imageId });
+        } catch (e) {
+            console.error(e);
+        }
+
+    }
+
+    async getFeedInfo() {
+        try {
+            return await this.databaseModel.client.db("database").collection("feed").find().toArray();
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+
     }
 
     async getImage(imageId: string) {

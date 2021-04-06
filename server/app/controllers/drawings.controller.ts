@@ -29,5 +29,17 @@ export class DrawingsController {
             });
         });
 
+        this.router.post('/upload', (req, res) => {
+            this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+                this.drawingsService.uploadImage(req, res, user);
+            });
+        });
+
+        this.router.post('/feed/info', (req, res) => {
+            this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+                this.drawingsService.getFeedInfo();
+            });
+        });
+
     }
 }

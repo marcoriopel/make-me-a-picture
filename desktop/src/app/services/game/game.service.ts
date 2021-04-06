@@ -1,4 +1,4 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BLACK, INITIAL_LINE_WIDTH, State } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '../drawing/drawing.service';
@@ -8,6 +8,9 @@ import { RoundTransitionComponent } from "@app/components/round-transition/round
 import { GameType } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions/drawing-suggestions.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { ACCESS } from '@app/classes/acces';
 
 interface Player {
   username: string;
@@ -55,7 +58,7 @@ export class GameService {
   gameTimer: number = 180;
 
 
-  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private http: HttpClient) {
     this.username = localStorage.getItem('username');
   }
 
@@ -90,7 +93,7 @@ export class GameService {
       this.isInGame = true;
       this.drawingPlayer = data.player;
 
-      if(this.drawingPlayer == this.username){
+      if (this.drawingPlayer == this.username) {
         this.isPlayerDrawing = true;
       }
 
@@ -134,6 +137,17 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
+      console.log(data);
+      if (this.isPlayerDrawing) {
+        let dataUrl = this.drawingService.canvas.toDataURL();
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem(ACCESS.TOKEN)!
+        });
+        const options = { headers: headers, responseType: 'text' as 'json' };
+        const body = { image: dataUrl }
+        this.http.post<any>(environment.socket_url + 'api/drawings/upload', body, options).subscribe();
+      }
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
@@ -152,13 +166,13 @@ export class GameService {
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
     })
-  
+
     this.socketService.bind('transitionTimer', (data: any) => {
       this.state = data.state;
-      if(data.timer == 5){
+      if (data.timer == 5) {
         this.openDialog(this.state);
       }
-      if(!data.timer){
+      if (!data.timer) {
         this.transitionDialogRef.close();
       }
       this.transitionTimer = data.timer;
@@ -167,14 +181,14 @@ export class GameService {
     this.socketService.bind('drawingSuggestions', (data: any) => {
       this.drawingSuggestions = data.drawingNames;
       console.log(this.isSuggestionsModalOpen)
-      if(!this.isSuggestionsModalOpen){
+      if (!this.isSuggestionsModalOpen) {
         this.suggestionDialogRef = this.dialog.open(DrawingSuggestionsComponent, {
           disableClose: true,
           height: '400px',
           width: "600px"
         })
         this.isSuggestionsModalOpen = true;
-        this.suggestionDialogRef.afterClosed().subscribe((result:any) => {
+        this.suggestionDialogRef.afterClosed().subscribe((result: any) => {
           this.isSuggestionsModalOpen = false;
         });
       }
@@ -232,11 +246,11 @@ export class GameService {
     })
   }
 
-  updateGuessingStatus() : void {
-      if(this.isUserTeamGuessing && !this.isPlayerDrawing){
-        this.isGuessing = true;
-      } else {
-        this.isGuessing = false;
-      }
+  updateGuessingStatus(): void {
+    if (this.isUserTeamGuessing && !this.isPlayerDrawing) {
+      this.isGuessing = true;
+    } else {
+      this.isGuessing = false;
+    }
   }
 }

@@ -28,8 +28,7 @@ export class DrawingsService {
             if (!drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
 
-            await this.drawingsModel.addDrawing(user.username, drawing);
-            await this.uploadImage(drawing.drawingId, req.body.image);
+            // await this.drawingsModel.addDrawing(user.username, drawing);
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {
@@ -73,8 +72,14 @@ export class DrawingsService {
     async getGameVirtualPlayerImage(id: string): Promise<any> {
         return await this.drawingsModel.getImage(id);
     }
-    async uploadImage(id: string, image: any): Promise<any> {
+
+    async uploadImage(user: BasicUser, image: any, timestamp: any): Promise<any> {
+        const id = uuid();
         return await this.drawingsModel.uploadImage(id, image);
+    }
+
+    async getFeedInfo(): Promise<any> {
+        return await this.drawingsModel.getFeedInfo();
     }
 
 }
