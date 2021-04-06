@@ -120,22 +120,4 @@ export class GameCreationComponent implements OnInit {
       }
     )
   }
-
-  // joinPrivateGame(id: string, game: NewGame): void {
-  //   this.lobbyService.joinPrivateGame(id, game).subscribe(
-  //     res => {
-  //       this.router.navigate(['/lobby']);
-  //       this.socketService.emit('joinLobby', {lobbyId: id});
-  //       this.socketService.bind('joinChatRoomCallback', async () => {
-  //         await this.chatService.refreshChatList();
-  //         this.chatService.setCurrentChat(this.gameService.gameId);
-  //         this.socketService.unbind('joinChatRoomCallback')
-  //       });
-  //       this.chatService.joinChat(this.gameService.gameId);
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     }
-  //   )
-  // }
 }
