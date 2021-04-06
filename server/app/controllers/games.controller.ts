@@ -28,7 +28,7 @@ export class GamesController {
 
     this.router.post('/create/public', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-        this.lobbyManagerService.createPublic(req, res, (lobbyId: string) => {
+        this.lobbyManagerService.create(req, res, false, (lobbyId: string) => {
           res.status(StatusCodes.OK).send({ lobbyId })
         });
       });
@@ -36,7 +36,7 @@ export class GamesController {
 
     this.router.post('/create/private', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
-        this.lobbyManagerService.createPrivate(req, res, (lobbyId: string, lobbyInviteId: string) => {
+        this.lobbyManagerService.create(req, res, true, (lobbyId: string, lobbyInviteId: string) => {
           res.status(StatusCodes.OK).send({ lobbyId, lobbyInviteId })
         });
       });

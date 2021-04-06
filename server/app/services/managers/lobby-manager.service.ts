@@ -26,7 +26,7 @@ export class LobbyManagerService {
         this.socketService = SocketService.getInstance();
     }
 
-    createPublic(req: Request, res: Response, next: NextFunction) {
+    create(req: Request, res: Response, privacyType: boolean, next: NextFunction) {
         const lobbyInfo: lobbyInterface.Lobby = req.body;
         lobbyInfo.id = uuid();
         if (!lobbyInterface.validateLobby(lobbyInfo)) {
@@ -34,7 +34,7 @@ export class LobbyManagerService {
         }
         lobbyInfo.gameType = Number(lobbyInfo.gameType);
         lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
-        lobbyInfo.isPrivate = false;
+        lobbyInfo.isPrivate = privacyType;
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
@@ -51,37 +51,14 @@ export class LobbyManagerService {
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
         }
-        next(lobbyInfo.id)
-    }
-
-    createPrivate(req: Request, res: Response, next: NextFunction) {
-        const lobbyInfo: lobbyInterface.Lobby = req.body;
-        lobbyInfo.id = uuid();
-        if (!lobbyInterface.validateLobby(lobbyInfo)) {
-            return res.status(StatusCodes.BAD_REQUEST).send("Provided lobby info is invalid");
+        if (!privacyType) {
+            next(lobbyInfo.id)
         }
-        lobbyInfo.gameType = Number(lobbyInfo.gameType);
-        lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
-        lobbyInfo.isPrivate = true;
-        switch (lobbyInfo.gameType) {
-            case GameType.CLASSIC:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
-                break;
-            case GameType.SOLO:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
-                break;
-            case GameType.COOP:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
-                break;
-            default:
-                return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
-        }
-        next(lobbyInfo.id, lobbyInfo.id.substr(0, 5));
-    }
+        else {
+            next(lobbyInfo.id, lobbyInfo.id.substr(0, 5));
 
+        }
+    }
 
     getLobbies(req: Request, res: Response, next: NextFunction): void {
         let response: lobbyInterface.Lobby[] = [];
