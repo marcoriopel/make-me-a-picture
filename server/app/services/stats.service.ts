@@ -15,7 +15,7 @@ export class StatsService {
         @inject(TYPES.GamesModel) private gamesModel: GamesModel ){
     }
 
-    updateStats(gameName: string, gameType: number, players: any, score: any, startDate: number, endDate: number){
+    updateStats(gameName: string, gameType: number, players: any, score: number[], startDate: number, endDate: number){
         this.saveGame(gameName, gameType, players, score, startDate, endDate)
         let nonVirtualPlayers : any = Array.from(players);
         if(gameType == GameType.CLASSIC){
