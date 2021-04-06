@@ -52,7 +52,6 @@ export abstract class Lobby {
     }
 
     generateRandomVPlayer(){
-        return new VirtualPlayerAnxious(this.id, this.gameType);
         const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
         switch (personnality){
             case Personnality.NICE:
