@@ -26,7 +26,7 @@ export class LobbyManagerService {
         this.socketService = SocketService.getInstance();
     }
 
-    create(req: Request, res: Response, next: NextFunction) {
+    createPublic(req: Request, res: Response, next: NextFunction) {
         const lobbyInfo: lobbyInterface.Lobby = req.body;
         lobbyInfo.id = uuid();
         if (!lobbyInterface.validateLobby(lobbyInfo)) {
@@ -34,17 +34,18 @@ export class LobbyManagerService {
         }
         lobbyInfo.gameType = Number(lobbyInfo.gameType);
         lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
+        lobbyInfo.isPrivate = false;
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.SOLO:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             case GameType.COOP:
-                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id));
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
                 this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
                 break;
             default:
@@ -53,15 +54,44 @@ export class LobbyManagerService {
         next(lobbyInfo.id)
     }
 
+    createPrivate(req: Request, res: Response, next: NextFunction) {
+        const lobbyInfo: lobbyInterface.Lobby = req.body;
+        lobbyInfo.id = uuid();
+        if (!lobbyInterface.validateLobby(lobbyInfo)) {
+            return res.status(StatusCodes.BAD_REQUEST).send("Provided lobby info is invalid");
+        }
+        lobbyInfo.gameType = Number(lobbyInfo.gameType);
+        lobbyInfo.difficulty = Number(lobbyInfo.difficulty);
+        lobbyInfo.isPrivate = true;
+        switch (lobbyInfo.gameType) {
+            case GameType.CLASSIC:
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                break;
+            case GameType.SOLO:
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                break;
+            case GameType.COOP:
+                LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                break;
+            default:
+                return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
+        }
+        next(lobbyInfo.id, lobbyInfo.id.substr(0, 5));
+    }
+
+
     getLobbies(req: Request, res: Response, next: NextFunction): void {
         let response: lobbyInterface.Lobby[] = [];
-        LobbyManagerService.lobbies.forEach((lobby: Lobby, key: string, map: Map<string, Lobby>) => {
-            response.push({ id: key, gameName: lobby.getGameName(), difficulty: lobby.getDifficulty(), gameType: lobby.getGameType() });
+        LobbyManagerService.lobbies.forEach((lobby: Lobby, key: string) => {
+            response.push({ id: key, gameName: lobby.getGameName(), difficulty: lobby.getDifficulty(), gameType: lobby.getGameType(), isPrivate: lobby.getPrivacy() });
         })
         next(response);
     }
 
-    join(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
+    joinPublic(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (this.lobbyExist(req.body.lobbyId)) {
             try {
                 console.log(user)
@@ -79,6 +109,21 @@ export class LobbyManagerService {
         next();
     }
 
+    joinPrivate(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
+        let lobbyFound = false;
+        LobbyManagerService.lobbies.forEach((lobby: Lobby, key: string) => {
+            if (lobby.getId().substr(0, 5) == req.body.lobbyInviteId) {
+                next(lobby.getId());
+                lobbyFound = true;
+                return;
+            }
+        })
+        if (!lobbyFound) {
+            return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
+        }
+    }
+
+
     leave(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (this.lobbyExist(req.query.lobbyId)) {
             try {
@@ -86,12 +131,12 @@ export class LobbyManagerService {
                 lobby.removePlayer(user);
                 this.dispatchTeams(req.query.lobbyId);
                 let hasRealPlayers: boolean = false;
-                for(const player of lobby.getPlayers()){
-                    if (!player.isVirtual){
+                for (const player of lobby.getPlayers()) {
+                    if (!player.isVirtual) {
                         hasRealPlayers = true
                     }
                 }
-                if(!hasRealPlayers){
+                if (!hasRealPlayers) {
                     LobbyManagerService.lobbies.delete(req.query.lobbyId);
                 }
             }
@@ -124,7 +169,7 @@ export class LobbyManagerService {
     }
 
     removeVirtualPlayer(req: Request, res: Response, next: NextFunction): void {
-        if (req.query.username == undefined || req.query.teamNumber == undefined){
+        if (req.query.username == undefined || req.query.teamNumber == undefined) {
             return res.status(StatusCodes.BAD_REQUEST).send("Username or teamNumber undefined");
         }
         req.query.teamNumber = <number>req.query.teamNumber;
@@ -153,6 +198,6 @@ export class LobbyManagerService {
     dispatchTeams(lobbyId: string): void {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
         this.socketService.getSocket().to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
-        this.socketService.getSocket().to("tmp"+lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
+        this.socketService.getSocket().to("tmp" + lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
     }
 }
