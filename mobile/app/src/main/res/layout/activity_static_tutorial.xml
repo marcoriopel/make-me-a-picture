@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/titre"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -10,54 +9,111 @@
     android:orientation="horizontal"
     tools:context=".view.tutorial.StaticTutorial">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/imageViewContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:background="#F7F7F7"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BACK"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dots"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                        android:id="@+id/next"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+
+                <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/description"
+                android:layout_width="74dp"
+                android:layout_height="14dp"
+                android:text="blablalbla"
+                android:translationX="500px"
+                android:translationY="300dp" />
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="296dp"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="93dp"
+                android:layout_marginTop="4dp"
+                android:text="Titre de la pagge"
+                android:textColor="#000000"
+                android:textSize="36sp"
+                android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="1000dp"
-            android:layout_height="1000dp"
+            android:layout_width="331dp"
+            android:layout_height="225dp"
             android:adjustViewBounds="true"
             android:scaleType="center"
             android:src="@drawable/avatar0"
-            android:translationX="500dp"
-            android:translationY="225dp" />
-
-        <Button
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="back"
-            android:translationX="1000dp"
-            android:translationY="600dp" />
-
-        <Button
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Next"
-            android:translationX="1100dp"
-            android:translationY="600dp" />
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="296dp"
-            android:layout_height="45dp"
-            android:text="Titre de la pagge"
-            android:textColor="#000000"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="743dp"
-            android:layout_height="142dp"
-            android:text="blablalbla"
-            android:translationX="400dp"
-            android:translationY="300dp" />
-
-    </FrameLayout>
+            android:translationX="500px"
+            android:translationY="125px" />
+    </RelativeLayout>
 
 </LinearLayout>
+    <!-- Adaptation from https://www.youtube.com/watch?v=9uUMcV-m3Q0 -->
