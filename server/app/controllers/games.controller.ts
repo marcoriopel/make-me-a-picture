@@ -70,7 +70,7 @@ export class GamesController {
     this.router.post('/join/private', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
         this.lobbyManagerService.joinPrivate(req, res, user, (lobbyId: string) => {
-          res.status(StatusCodes.OK).send({ lobbyId });
+          res.status(StatusCodes.OK).send(lobbyId);
         });
       });
     });
