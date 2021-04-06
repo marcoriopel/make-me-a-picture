@@ -26,7 +26,7 @@ const routes: Routes = [
     { path: 'login' , component: LoginComponent },
     { path: 'register' , component: RegisterComponent },
     { path: 'image', component: ImageCreationComponent, canActivate: [AuthGuard, TutorialGuard]},
-    { path: 'profile', component: ProfileComponent},
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard, TutorialGuard]},
     { path: 'leaderboard', component: LeaderboardComponent, canActivate: [AuthGuard, TutorialGuard]},
     { path: 'tutorial', component: TutorialComponent, canActivate: [AuthGuard]},
     { path: '**', redirectTo: '/home' },
