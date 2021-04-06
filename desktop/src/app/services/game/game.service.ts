@@ -28,6 +28,13 @@ export class GameService {
   transitionDialogRef: any;
   suggestionDialogRef: any;
 
+  // Audio
+  tick = new Audio('./assets/sounds/tick.wav');
+  win = new Audio('./assets/sounds/win.wav');
+  defeat = new Audio('./assets/sounds/defeat.wav');
+  countdown = new Audio('./assets/sounds/countdown.wav');
+
+
   // Shared between different game types
   isCorrectGuess: boolean = false;
   isInGame: boolean = false;
@@ -147,10 +154,19 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      let oppositeTeam;
+      this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
+      this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
     })
 
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
   
     this.socketService.bind('transitionTimer', (data: any) => {
@@ -160,6 +176,9 @@ export class GameService {
       }
       if(!data.timer){
         this.transitionDialogRef.close();
+      }
+      if(data.timer == 3){
+        this.countdown.play();
       }
       this.transitionTimer = data.timer;
     })
@@ -215,10 +234,22 @@ export class GameService {
 
     this.socketService.bind('gameTimer', (data: any) => {
       this.gameTimer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('drawingTimer', (data: any) => {
       this.timer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('endGame', (data: any) => {
