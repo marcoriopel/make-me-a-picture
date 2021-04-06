@@ -14,6 +14,7 @@ import com.example.prototype_mobile.SignUpInfo
 import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
+import com.example.prototype_mobile.view.tutorial.StaticTutorial
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModel
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModelFactory
 import java.util.regex.Matcher.*
@@ -104,11 +105,12 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
-        val intent = Intent(this,   MainMenuActivity::class.java);
+        val intent = Intent(this, StaticTutorial::class.java)
+        //val intent = Intent(this,   MainMenuActivity::class.java);
         startActivity(intent)
         Toast.makeText(
             applicationContext,
-            "Bienvenue $username",
+            "Bienvenue $username ! Veillez bien lire les intructions de ce tutoriel ",
             Toast.LENGTH_LONG
         ).show()
     }

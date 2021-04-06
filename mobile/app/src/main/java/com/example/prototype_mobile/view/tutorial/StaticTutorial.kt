@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.tutorial
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
@@ -64,19 +65,14 @@ class StaticTutorial : AppCompatActivity() {
                 val intent = Intent(this, MainMenuActivity::class.java)
                 startActivity(intent)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                Toast.makeText(
-                        applicationContext,
-                        "Bienvenue",
-                        Toast.LENGTH_LONG
-                ).show()
+
             }
-            else{
-                println("Can't increment anymore")
-            }
+
         }
         setNewPageContent()
     }
 
+    @SuppressLint("SetTextI18n")
     fun setNewPageContent() {
         var info = contentMap[tutorialPageIndex]
         binding.image.setImageResource(info!!.image)
@@ -99,10 +95,6 @@ class StaticTutorial : AppCompatActivity() {
         }
     }
 
-    fun getImagePath(@DrawableRes  ressource: Int): String? {
-       var  url = Uri.parse("android.resource://drawable/" + ressource)
-        return url.path
-    }
 
     // Adaptation from https://www.youtube.com/watch?v=9uUMcV-m3Q0
     private fun ProgressDot(tutorialIndex: Int) {
