@@ -13,7 +13,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-button-toggle-group id="toggle-group" appearance="legacy" formControlName="privacy">
+          <mat-button-toggle-group *ngIf="type != 1" id="toggle-group" appearance="legacy" formControlName="privacy">
             <mat-button-toggle value="public">Publique</mat-button-toggle>
             <mat-button-toggle value="private">Privée</mat-button-toggle>
           </mat-button-toggle-group>

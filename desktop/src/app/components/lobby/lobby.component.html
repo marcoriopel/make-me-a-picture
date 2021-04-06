@@ -9,7 +9,7 @@
             <img *ngIf="lobbyService.game.type == 2" [src]="sprintImgRef" class="sprint-logo"> 
             <p class="title"> {{lobbyService.game.name}} </p>            
         </div>
-        <h1>Code de la partie: {{this.lobbyService.lobbyInviteId}}</h1>
+        <h1 *ngIf="this.lobbyService.lobbyInviteId != ''">Code de la partie: {{this.lobbyService.lobbyInviteId}}</h1>
     </div>
     <div class="teamList" *ngIf="lobbyService.game.type == 0">
         <div class="team">
