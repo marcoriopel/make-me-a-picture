@@ -63,14 +63,8 @@ export class ProfileComponent implements OnInit {
       });
 
       this.userInfo = data.privateInfo;
-      console.log(this.userInfo)
       this.userInfo.games = this.userInfo.games.reverse();
       this.userInfo.logs = this.userInfo.logs.reverse();
     })
   }
-
-  updateData(): void {
-    console.log(this.category.value)
-  }
-
 }

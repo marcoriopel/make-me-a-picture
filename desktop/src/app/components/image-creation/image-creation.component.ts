@@ -8,7 +8,6 @@ import { Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
 import { Difficulty } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-image-creation',
@@ -29,10 +28,9 @@ export class ImageCreationComponent implements OnInit {
     text: "Entre 1 et 30 caractères",
   };
 
-  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private router: Router) {
+  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar) {
     this.drawingService.strokeStack = [];
     this.drawingService.redoStack = []
-    console.log('called');
   }  
 
   ngOnInit(): void {
