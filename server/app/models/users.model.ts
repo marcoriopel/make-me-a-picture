@@ -31,6 +31,7 @@ export class UsersModel {
                 'bestCoopScore': 0,  
                 'classicWinRatio': 0,
                 'meanGameTime': 0,
+                'classicGamesPlayed': 0,
                 'rooms': ["General"] 
             });
         } catch (e) {

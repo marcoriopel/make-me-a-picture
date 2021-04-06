@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.view.mainmenu
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -66,10 +67,17 @@ class MainMenuActivity : AppCompatActivity() {
 
         for(fragment in supportFragmentManager.fragments)
             if(fragment is LobbyFragment) {
-                (fragment as LobbyFragment).getViewModel().resetData()
+                (fragment).getViewModel().resetData()
                 supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
                 supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNowAllowingStateLoss()
             }
 
+    }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
     }
 }
