@@ -3,12 +3,14 @@
 <div class="lobby">
     <span class="material-icons leave-button" (click)="leaveLobby()">exit_to_app</span>
     <div class="title-div">
-        <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
-        <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
-        <img *ngIf="lobbyService.game.type == 2" [src]="sprintImgRef" class="sprint-logo"> 
-        <p class="title"> {{lobbyService.game.name}} </p>
+        <div>
+            <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
+            <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
+            <img *ngIf="lobbyService.game.type == 2" [src]="sprintImgRef" class="sprint-logo"> 
+            <p class="title"> {{lobbyService.game.name}} </p>            
+        </div>
+        <h1>Code de la partie: {{this.lobbyService.lobbyInviteId}}</h1>
     </div>
-
     <div class="teamList" *ngIf="lobbyService.game.type == 0">
         <div class="team">
             <!-- <button class="button" id="joint-team-1" *ngIf="lobbyService.game.type == 0" (click)="lobbyService.joinTeam(1)" [ngClass]="{'green' : !lobbyService.team1Full, 'white':  lobbyService.team1Full}"> Rejoindre </button> -->

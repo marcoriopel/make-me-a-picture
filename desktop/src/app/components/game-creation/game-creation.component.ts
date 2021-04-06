@@ -57,6 +57,9 @@ export class GameCreationComponent implements OnInit {
       difficulty: [ '', [
         Validators.required,
       ]],
+      privacy: [ '', [
+        Validators.required,
+      ]]
     })
   }
 
@@ -72,20 +75,36 @@ export class GameCreationComponent implements OnInit {
       gameName: this.gameForm.value.name,
       difficulty: this.gameForm.value.difficulty
     }
-    this.lobbyService.create(game).subscribe(
-      res => {
-        this.join(res.lobbyId, game);
-        this.gameService.gameId = res.lobbyId;
-        this.gameService.initialize(this.type);
-      },
-      err => { 
-        console.log(err);
-      }
-    )
+
+    if(this.gameForm.value.privacy == 'public'){
+      this.lobbyService.createPublicGame(game).subscribe(
+        res => {
+          this.joinPublicGame(res.lobbyId, game);
+          this.gameService.gameId = res.lobbyId;
+          this.gameService.initialize(this.type);
+        },
+        err => { 
+          console.log(err);
+        }
+      )      
+    } else {
+      this.lobbyService.createPrivateGame(game).subscribe(
+        res => {
+          this.lobbyService.lobbyInviteId = res.lobbyInviteId;
+          this.joinPublicGame(res.lobbyId, game);
+          this.gameService.gameId = res.lobbyId;
+          this.gameService.initialize(this.type);
+        },
+        err => { 
+          console.log(err);
+        }
+      ) 
+    }
+
   }
 
-  private join(id: string, game: NewGame): void {
-    this.lobbyService.join(id, game).subscribe(
+  private joinPublicGame(id: string, game: NewGame): void {
+    this.lobbyService.joinPublicGame(id, game).subscribe(
       res => {
         this.router.navigate(['/lobby']);
         this.socketService.emit('joinLobby', {lobbyId: id});
@@ -102,4 +121,21 @@ export class GameCreationComponent implements OnInit {
     )
   }
 
+  // joinPrivateGame(id: string, game: NewGame): void {
+  //   this.lobbyService.joinPrivateGame(id, game).subscribe(
+  //     res => {
+  //       this.router.navigate(['/lobby']);
+  //       this.socketService.emit('joinLobby', {lobbyId: id});
+  //       this.socketService.bind('joinChatRoomCallback', async () => {
+  //         await this.chatService.refreshChatList();
+  //         this.chatService.setCurrentChat(this.gameService.gameId);
+  //         this.socketService.unbind('joinChatRoomCallback')
+  //       });
+  //       this.chatService.joinChat(this.gameService.gameId);
+  //     },
+  //     err => {
+  //       console.log(err);
+  //     }
+  //   )
+  // }
 }
