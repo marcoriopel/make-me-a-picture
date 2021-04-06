@@ -1,15 +1,18 @@
 package com.example.prototype_mobile.view.tutorial
 
+import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
 import androidx.appcompat.app.AppCompatActivity
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticTutorialInfo
-import com.example.prototype_mobile.databinding.ActivityLoginBinding
 import com.example.prototype_mobile.databinding.ActivityStaticTutorialBinding
 
 class StaticTutorial : AppCompatActivity() {
@@ -30,6 +33,7 @@ class StaticTutorial : AppCompatActivity() {
         contentMap.put(1, StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description"))
         contentMap.put(2, StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description"))
         contentMap.put(3, StaticTutorialInfo("title_game",R.drawable.guessing,"game_description"))
+        ProgressDot(tutorialPageIndex)
 
 
 
@@ -41,6 +45,7 @@ class StaticTutorial : AppCompatActivity() {
             } else {
                 tutorialPageIndex--
                 setNewPageContent()
+                ProgressDot(tutorialPageIndex)
             }
         }
         binding.next.setOnClickListener {
@@ -48,6 +53,7 @@ class StaticTutorial : AppCompatActivity() {
             if(tutorialPageIndex < contentMap.size) {
                 tutorialPageIndex++
                 setNewPageContent()
+                ProgressDot(tutorialPageIndex)
             }
             else{
                 println("Can't increment anymore")
@@ -67,6 +73,30 @@ class StaticTutorial : AppCompatActivity() {
     fun getImagePath(@DrawableRes  ressource: Int): String? {
        var  url = Uri.parse("android.resource://drawable/" + ressource)
         return url.path
+    }
+
+    // Adaptation from https://www.youtube.com/watch?v=9uUMcV-m3Q0
+    private fun ProgressDot(tutorialIndex: Int) {
+        var dotsLayout = findViewById<LinearLayout>(R.id.dots)
+        var dots: Array<ImageView> = Array<ImageView>(contentMap.size) {i -> ImageView(this) }
+        dotsLayout.removeAllViews()
+        for (i in 0..dots.size-1 ) {
+            dots[i] = ImageView(this)
+            var width_height = 15
+            var params:LinearLayout.LayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams(width_height,width_height))
+            dots[i].layoutParams = params
+            dots[i].setImageResource(R.drawable.circle)
+            dots[i].setColorFilter(getColor(R.color.grey), PorterDuff.Mode.SRC_IN)
+            dotsLayout.addView(dots[i])
+
+        }
+        if(dots.size > 0) {
+            dots[tutorialIndex-1].setImageResource(R.drawable.circle)
+            dots[tutorialIndex-1].setColorFilter(getColor(R.color.poly_blue), PorterDuff.Mode.SRC_IN)
+        }
+
 
     }
+
+
 }
