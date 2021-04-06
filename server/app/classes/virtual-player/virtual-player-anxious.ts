@@ -7,8 +7,8 @@ import { VirtualPlayer } from './virtual-player';
 @injectable()
 export class VirtualPlayerAnxious extends VirtualPlayer {
     
-    constructor(gameId: string) {
-        super(gameId);
+    constructor(gameId: string, gameType: number) {
+        super(gameId, gameType);
         this.personnality = Personnality.ANXIOUS;
         this.username = "Ginette";
         this.avatar = 7;

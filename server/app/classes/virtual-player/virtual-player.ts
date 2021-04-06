@@ -20,13 +20,15 @@ export class VirtualPlayer {
     protected userService: UserService;
     private currentDrawing: Drawing;
     protected gameId: string;
+    protected gameType: number;
     private isVPlayerTurn: boolean = false;
     private drawingSpeed: number;
     private nextHintIndex = 0;
 
 
-    constructor(gameId: string) {
+    constructor(gameId: string, gameType: number) {
         this.gameId = gameId;
+        this.gameType = gameType;
     }
 
     setServices(drawingsService: DrawingsService, socketService: SocketService, userService: UserService): void {

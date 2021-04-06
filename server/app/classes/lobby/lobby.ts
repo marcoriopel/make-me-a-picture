@@ -46,17 +46,17 @@ export abstract class Lobby {
     }
 
     generateRandomVPlayer(){
-        return new VirtualPlayerAnxious(this.id);
+        return new VirtualPlayerAnxious(this.id, this.gameType);
         const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
         switch (personnality){
             case Personnality.NICE:
-                return new VirtualPlayerNice(this.id);
+                return new VirtualPlayerNice(this.id, this.gameType);
             case Personnality.ANXIOUS:
-                return new VirtualPlayerAnxious(this.id);
+                return new VirtualPlayerAnxious(this.id, this.gameType);
             case Personnality.PASSIVE_AGRESSIVE:
-                return new VirtualPlayerPassiveAgressive(this.id);
+                return new VirtualPlayerPassiveAgressive(this.id, this.gameType);
             case Personnality.COMPETITIVE:
-                return new VirtualPlayerCompetitive(this.id);
+                return new VirtualPlayerCompetitive(this.id, this.gameType);
         }
     }
 }
