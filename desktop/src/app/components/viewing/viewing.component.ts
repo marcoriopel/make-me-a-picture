@@ -59,13 +59,13 @@ export class ViewingComponent implements AfterViewInit {
     let pointsNumber: number = this.calculatePointsInDrawing();
     switch(this.drawing.difficulty){
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
     }
     return drawingSpeed;

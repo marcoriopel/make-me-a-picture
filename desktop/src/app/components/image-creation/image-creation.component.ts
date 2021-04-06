@@ -7,6 +7,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
 import { Difficulty } from '@app/classes/game';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-image-creation',
@@ -27,7 +29,11 @@ export class ImageCreationComponent implements OnInit {
     text: "Entre 1 et 30 caractères",
   };
 
-  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog) { }
+  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private router: Router) {
+    this.drawingService.strokeStack = [];
+    this.drawingService.redoStack = []
+    console.log('called');
+  }  
 
   ngOnInit(): void {
     this.imageCreationForm = this.fb.group({
@@ -35,7 +41,7 @@ export class ImageCreationComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
-        Validators.pattern(/^\S*$/),
+        Validators.pattern(/.*[^ ].*/),
       ]],
       difficulty:['', Validators.required],
     })
@@ -44,7 +50,7 @@ export class ImageCreationComponent implements OnInit {
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(30),
-        Validators.pattern(/^\S*$/),
+        Validators.pattern(/.*[^ ].*/),
       ]],
     })
   }
@@ -58,9 +64,20 @@ export class ImageCreationComponent implements OnInit {
     }
     this.sendDrawing(drawing).subscribe(
       res => {
+        this.snackBar.open("L'image a été enregistrée avec succès", "", {
+          duration: 2000,
+        });
+        this.drawingService.strokeStack = [];
+        this.drawingService.redoStack = []
+        this.drawingService.clearCanvas(this.drawingService.baseCtx);
+        this.hintForm.reset();
+        this.imageCreationForm.reset();
+        this.hints = [];
       },
       err => {
-        alert("Oups, un problème est survenu");
+        this.snackBar.open("Un problème est survenu. Impossible d'enregistrer l'image.", "", {
+          duration: 2000,
+        });
       }
     )
   }
