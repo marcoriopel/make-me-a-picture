@@ -1,12 +1,17 @@
 package com.example.prototype_mobile.view.tutorial
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.transition.Visibility
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 
@@ -14,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticTutorialInfo
 import com.example.prototype_mobile.databinding.ActivityStaticTutorialBinding
+import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 
 class StaticTutorial : AppCompatActivity() {
 
@@ -54,6 +60,15 @@ class StaticTutorial : AppCompatActivity() {
                 tutorialPageIndex++
                 setNewPageContent()
                 ProgressDot(tutorialPageIndex)
+            } else if(tutorialPageIndex == contentMap.size) {
+                val intent = Intent(this, MainMenuActivity::class.java)
+                startActivity(intent)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                Toast.makeText(
+                        applicationContext,
+                        "Bienvenue",
+                        Toast.LENGTH_LONG
+                ).show()
             }
             else{
                 println("Can't increment anymore")
@@ -67,7 +82,21 @@ class StaticTutorial : AppCompatActivity() {
         binding.image.setImageResource(info!!.image)
         binding.description.text = getString(resources.getIdentifier(info!!.description, "string", getPackageName()));
         binding.title.text = getString(resources.getIdentifier(info!!.title, "string", getPackageName()));
-
+        if(tutorialPageIndex == contentMap.size) {
+            val nextText = findViewById<TextView>(R.id.next_text)
+            nextText.text = "Finish"
+        } else {
+            val nextText = findViewById<TextView>(R.id.next_text)
+            nextText.text = "Next"
+        }
+        //Hide back button
+        if(tutorialPageIndex == 1) {
+            val backButton = findViewById<LinearLayout>(R.id.back)
+            backButton.visibility = View.INVISIBLE
+        } else {
+            val backButton = findViewById<LinearLayout>(R.id.back)
+            backButton.visibility = View.VISIBLE
+        }
     }
 
     fun getImagePath(@DrawableRes  ressource: Int): String? {
