@@ -197,8 +197,9 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
     }
 
     sayWeWon(){
+        const teammateStats = this.teammatesStats[0];
         let str = vPlayerText.competitive.weWon.split("##");
-        let message = str[0] + this.teammates + str[1];
+        let message = str[0] + this.teammates + str[1] + teammateStats.classicWinRatio + str[2];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
@@ -237,6 +238,41 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
         }
     }
 
-    
+    sayEndCoopGame(finalScore: number){
+        let newHighScorePlayers: string[] = [];
+        let oldHighScorePlayers: string[] = [];
+        let worstCoopScoreIndex = 0;
+        let bestCoopScoreIndex = 0;
+        for(let i = 0; i < this.teammates.length; ++i){
+            if(this.teammatesStats[i].bestCoopScore >= finalScore){
+                oldHighScorePlayers.push(this.teammates[i]);
+            }
+            else{
+                newHighScorePlayers.push(this.teammates[i]);
+            }
+            if(this.teammatesStats[i].bestCoopScore <= this.teammatesStats[worstCoopScoreIndex].bestCoopScore){
+                worstCoopScoreIndex = i;
+            }
+            if(this.teammatesStats[i].bestCoopScore >= this.teammatesStats[bestCoopScoreIndex].bestCoopScore){
+                bestCoopScoreIndex = i;
+            }
+        }
 
+        const timestamp = new Date().getTime();
+        if(newHighScorePlayers.length == 0){
+            let str = vPlayerText.competitive.endCoopGame.split("##");
+            let message = str[0] + this.teammates[worstCoopScoreIndex] + str[1];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else if(oldHighScorePlayers.length == 0){
+            let str = vPlayerText.competitive.endCoopGameBestScoreAll.split("##");
+            let message = str[0] + this.teammates[bestCoopScoreIndex] + str[1] + finalScore + str[2];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else{
+            let str = vPlayerText.competitive.endCoopGameBestScoreSome.split("##");
+            let message = str[0] + this.arrayToString(newHighScorePlayers) + str[1];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+    }
 }

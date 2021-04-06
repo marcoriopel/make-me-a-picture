@@ -220,7 +220,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
         let newHighScorePlayers: string[] = [];
         let oldHighScorePlayers: string[] = [];
         for(let i = 0; i < this.teammates.length; ++i){
-            if(this.teammatesStats[i].bestSoloScore >= finalScore){
+            if(this.teammatesStats[i].bestCoopScore >= finalScore){
                 oldHighScorePlayers.push(this.teammates[i]);
             }
             else{
