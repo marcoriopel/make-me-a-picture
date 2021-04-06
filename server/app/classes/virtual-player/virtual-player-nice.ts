@@ -41,6 +41,29 @@ export class VirtualPlayerNice extends VirtualPlayer {
         }
     }
 
+    private sayHelloAgainSolo(){
+        const lastMutualGame = this.lastMutualGames[0];
+        let str = vPlayerText.nice.meetAgainSolo.split("##");
+        let message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    private sayHelloAgainCoop(){
+        const lastMutualGame = this.lastMutualGames[0];
+        let str = vPlayerText.nice.meetAgainCoop.split("##");
+        let friends = [];
+        for(let player of lastMutualGame.players){
+            if(player.username != this.username && player.username != this.teammates[0]){
+                friends.push(player.username);
+            }
+        }
+        let friendsStr = this.arrayToString(friends);
+        let message = str[0] + this.teammates + str[1] + friendsStr + str[2];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+    
     private sayHelloAgainClassic(){
         const lastMutualGame = this.lastMutualGames[0];
         let teammateTeam;
@@ -91,29 +114,6 @@ export class VirtualPlayerNice extends VirtualPlayer {
     private sayHelloAgainClassicOpposingTeam(teamNumber: number){
         let str = vPlayerText.anxious.meetAgainClassicOpposingTeam.split("##");
         let message = str[0] + this.teammates + str[1];
-        const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
-    }
-
-    private sayHelloAgainSolo(){
-        const lastMutualGame = this.lastMutualGames[0];
-        let str = vPlayerText.nice.meetAgainSolo.split("##");
-        let message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2];
-        const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
-    }
-
-    private sayHelloAgainCoop(){
-        const lastMutualGame = this.lastMutualGames[0];
-        let str = vPlayerText.nice.meetAgainCoop.split("##");
-        let friends = [];
-        for(let player of lastMutualGame.players){
-            if(player.username != this.username && player.username != this.teammates[0]){
-                friends.push(player.username);
-            }
-        }
-        let friendsStr = this.arrayToString(friends);
-        let message = str[0] + this.teammates + str[1] + friendsStr + str[2];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
@@ -242,7 +242,7 @@ export class VirtualPlayerNice extends VirtualPlayer {
         const timestamp = new Date().getTime();
         if(newHighScorePlayers.length == 0){
             let str = vPlayerText.nice.endCoopGame.split("##");
-            let message = str[0] + this.teammates + str[1] + this.teammatesStats[worstCoopScoreIndex].bestCoopScoreIndex + str[2] + this.teammates[worstCoopScoreIndex] + str[3];
+            let message = str[0] + this.teammates + str[1] + this.teammatesStats[worstCoopScoreIndex].bestCoopScore + str[2] + this.teammates[worstCoopScoreIndex] + str[3];
             this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
         else if(oldHighScorePlayers.length == 0){
@@ -253,10 +253,10 @@ export class VirtualPlayerNice extends VirtualPlayer {
             let str = vPlayerText.nice.endCoopGameBestScoreSome.split("##");
             let message;
             if(newHighScorePlayers.length > 1){
-                message = str[0] + this.arrayToString(newHighScorePlayers) + str[1] + "vous êtes contents" + str[2] + "votre" + str[5];
+                message = str[0] + this.arrayToString(newHighScorePlayers) + str[1] + "vous êtes contents" + str[2] + "votre" + str[3];
             }
             else{
-                message = str[0] + this.arrayToString(newHighScorePlayers) + str[1] + "tu es content" + str[2] + "ton" + str[5];
+                message = str[0] + this.arrayToString(newHighScorePlayers) + str[1] + "tu es content" + str[2] + "ton" + str[3];
             }
             this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }

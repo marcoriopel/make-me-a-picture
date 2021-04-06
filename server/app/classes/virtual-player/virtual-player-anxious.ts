@@ -44,7 +44,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     private sayHelloAgainSolo(){
         const lastMutualGame = this.lastMutualGames[0];
         let str = vPlayerText.anxious.meetAgainSolo.split("##");
-        let message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2] + lastMutualGame.score + str[3];
+        let message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2] + lastMutualGame.score[0] + str[3];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
@@ -59,7 +59,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
             }
         }
         let friendsStr = this.arrayToString(friends);
-        let message = str[0] + this.teammates + str[1] + friendsStr + str[2] + this.getDate(lastMutualGame.start) + str[3] + lastMutualGame.score + str[4];
+        let message = str[0] + this.teammates + str[1] + friendsStr + str[2] + this.getDate(lastMutualGame.start) + str[3] + lastMutualGame.score[0] + str[4];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }

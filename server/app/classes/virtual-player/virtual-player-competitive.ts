@@ -48,7 +48,7 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
         let message: string;
         if(lastMutualGame.gameType == this.gameType){
             let str = vPlayerText.competitive.meetAgainSoloInSolo.split("##");
-            message = str[0] + this.teammates + str[1] + lastMutualGame.score + str[2];
+            message = str[0] + this.teammates + str[1] + lastMutualGame.score[0] + str[2];
         }
         else{
             let str = vPlayerText.competitive.meetAgainSolo.split("##");
