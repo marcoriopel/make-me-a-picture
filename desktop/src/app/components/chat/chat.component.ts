@@ -45,4 +45,12 @@ export class ChatComponent {
   loadChatHistory(): void {
     this.chatService.loadChatHistory();
   }
+
+  isChatHistoryDisplayed(): boolean {
+    try {
+      return this.chatService.joinedChatList[this.chatService.index].isChatHistoryDisplayed;
+    } catch {
+      return false;
+    }
+  }
 }

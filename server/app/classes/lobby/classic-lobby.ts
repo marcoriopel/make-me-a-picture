@@ -9,8 +9,8 @@ export class ClassicLobby extends Lobby {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private vPlayers: VirtualPlayer[] = new Array(2);
 
-    constructor(difficulty: number, gameName: string, id: string) {
-        super(difficulty, gameName, id);
+    constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
+        super(difficulty, gameName, id, isPrivate);
         this.gameType = GameType.CLASSIC;
         console.log("Created classic game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -83,15 +83,15 @@ export class ClassicLobby extends Lobby {
         let players = [];
         for (let i = 0; i < this.teams.length; ++i) {
             this.teams[i].forEach((player: Player) => {
-                players.push({ "username": player.username, "avatar": player.avatar, "team": i, "isVirtual": player.isVirtual});
+                players.push({ "username": player.username, "avatar": player.avatar, "team": i, "isVirtual": player.isVirtual });
             })
         }
         return players;
     }
 
     removePlayer(user: BasicUser): void {
-        for(let team of this.teams){
-            if(team.has(user.username)){
+        for (let team of this.teams) {
+            if (team.has(user.username)) {
                 team.delete(user.username);
                 return
             }
@@ -107,11 +107,28 @@ export class ClassicLobby extends Lobby {
         return this.teams[0].size == 2 && this.teams[1].size == 2;
     }
 
-    getTeams(): Map<string, Player>[]{
+    getTeams(): Map<string, Player>[] {
         return this.teams;
     }
 
-    getVPlayers(): VirtualPlayer[]{
+    getVPlayers(): VirtualPlayer[] {
         return this.vPlayers;
     }
+<<<<<<< HEAD
+=======
+
+    generateRandomVPlayer() {
+        const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
+        switch (personnality) {
+            case Personnality.NICE:
+                return new VirtualPlayerNice(this.id);
+            case Personnality.ANXIOUS:
+                return new VirtualPlayerAnxious(this.id);
+            case Personnality.PASSIVE_AGRESSIVE:
+                return new VirtualPlayerPassiveAgressive(this.id);
+            case Personnality.COMPETITIVE:
+                return new VirtualPlayerCompetitive(this.id);
+        }
+    }
+>>>>>>> 7a5f8fbc747f730f7080b2939e59e8b082683f9d
 }

@@ -95,6 +95,18 @@ export class GameManagerService {
         next();
     }
 
+    requestSuggestions(username: string, gameId: string) {
+        if (!gameId || !GameManagerService.games.has(gameId)) {
+            return;
+        }
+        const game = GameManagerService.games.get(gameId);
+        if (!(game instanceof ClassicGame))
+            return;
+        if (game.validateDrawingPlayer(username)) {
+            game.getDrawingSuggestions();
+        }
+    }
+
     dispatchDrawingEvent(user: BasicUser, event: DrawingEvent) {
         if (this.gameExist(event.gameId)) {
             const game: Game = GameManagerService.games.get(event.gameId);
@@ -123,5 +135,22 @@ export class GameManagerService {
         }
         let game = GameManagerService.games.get(gameId);
         game.requestHint(user);
+    }
+
+    isUserInGame(username: string){
+        let id = null;
+        GameManagerService.games.forEach((game: Game, gameId: string) => {
+            const players = game.getPlayers();
+            for(let player of players){
+                if(player.username == username){
+                    id = gameId;
+                }
+            }
+        })
+        return id;
+    }
+
+    disconnectGame(gameId: string, username: string){
+        GameManagerService.games.get(gameId).disconnectGame(username);
     }
 }

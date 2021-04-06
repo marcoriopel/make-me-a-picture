@@ -17,6 +17,7 @@ export class CoopGame extends Game {
     private vPlayer: VirtualPlayer;
     private score: number = 0;
     private guessesLeft: number = 0;
+    private pastVirtualDrawings: string[] = [];
     private gameTimerCount: number = 0;
     private gameTimerInterval: NodeJS.Timeout;
     private drawingTimerCount: number = 0;
@@ -43,7 +44,8 @@ export class CoopGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTimer();
         this.startDrawingTimer();
         this.vPlayer.startDrawing();
@@ -81,11 +83,19 @@ export class CoopGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        try {
+            this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        } catch (err) {
+            if (err.message == "Max drawings") {
+                this.socketService.getSocket().to(this.id).emit('maxScore', {});
+                this.endGame();
+                return;
+            }
+        }
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
-
     }
 
     private endGame(): void {
@@ -97,7 +107,7 @@ export class CoopGame extends Game {
         this.vPlayer.sayEndCoopGame(this.score);
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
-        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
+        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
     }
 
     getPlayers(): any {
@@ -146,7 +156,7 @@ export class CoopGame extends Game {
             }
             else {
                 --this.gameTimerCount;
-            } 
+            }
         }, 1000);
     }
 
@@ -172,4 +182,17 @@ export class CoopGame extends Game {
             }
         }, 1000);
     }
+
+
+    disconnectGame(username: string){
+        const message: string = username + " s'est déconnecté";
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": message, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+
+    }
+
+    requestHint(user: BasicUser): void {
+        this.vPlayer.sendNextHint();
+    }
+
+
 }

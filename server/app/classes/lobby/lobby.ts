@@ -12,36 +12,42 @@ export abstract class Lobby {
     protected gameName: string;
     protected gameType: number;
     protected id: string;
+    protected isPrivate: boolean;
 
-    constructor(difficulty: number, gameName: string, id: string) {
+    constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
         this.difficulty = difficulty;
         this.gameName = gameName;
         this.id = id;
+        this.isPrivate = isPrivate;
     }
 
     startGame(): void { }
 
     deleteLobby(): void { }
 
-    addPlayer(user: BasicUser, socketId: string): void {}
+    addPlayer(user: BasicUser, socketId: string): void { }
 
-    getPlayers(): any{} 
+    getPlayers(): any { }
 
-    removePlayer(user: BasicUser): void{}
+    removePlayer(user: BasicUser): void { }
 
-    getGameName():string{
+    getGameName(): string {
         return this.gameName;
     }
 
-    getGameType():number{
+    getGameType(): number {
         return this.gameType;
     }
 
-    getDifficulty():number{
+    getDifficulty(): number {
         return this.difficulty;
     }
 
-    getId(): string{
+    getPrivacy(): boolean {
+        return this.isPrivate;
+    }
+
+    getId(): string {
         return this.id;
     }
 
