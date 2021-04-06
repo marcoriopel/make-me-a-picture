@@ -41,7 +41,7 @@ data class Suggestions(val drawingNames: Array<String>)
 data class GameId(val gameId: String)
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
-data class Players(val username: String, val avatar: Int, val team: Int)
+data class Players(val username: String, val avatar: Int, val team: Int = 0)
 sealed class GameCreationMergeData
 
 // Data class for the Game
@@ -57,3 +57,10 @@ data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
+
+//Data class for the profil
+data class PrivateReceivedInfo(val privateInfo: PrivateInfo)
+data class PrivateInfo(val name: String, val surname: String, val stats: Stats, val logs: Array<Log>, val games: Array<GameLog>)
+data class Stats(val gamePlayed: Int, val timePlayed: Long, val bestSoloScore: Int, val bestCoopScore: Int, val classicWinRatio: Double, val meanGameTime: Double)
+data class Log(val _id: String, val username: String, val isLogin: Boolean, val timestamp: Long)
+data class GameLog(val _id: String, val gameName: String, val gameType: Int, val players: Array<Players>, val start: Long, val end: Long)

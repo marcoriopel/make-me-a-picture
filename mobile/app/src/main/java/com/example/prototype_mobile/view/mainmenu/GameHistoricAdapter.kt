@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
 
-class ConnectionAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<ConnectionAdapter.ViewHolder>() {
+class GameHistoricAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<GameHistoricAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHistoricAdapter.ViewHolder {
         var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
         return ViewHolder(view!!)
     }
@@ -21,7 +21,7 @@ class ConnectionAdapter(val context: Context, val gameList: MutableList<Game>): 
         return gameList.size
     }
 
-    override fun onBindViewHolder(holder: ConnectionAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: GameHistoricAdapter.ViewHolder, position: Int) {
 
     }
 
