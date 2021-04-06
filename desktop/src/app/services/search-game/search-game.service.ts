@@ -17,7 +17,7 @@ export class SearchGameService {
 
   // URL
   private baseUrl = environment.api_url;
-  private createGameUrl = this.baseUrl + "/api/games/list";
+  private listGameUrl = this.baseUrl + "/api/games/list";
   
 
   constructor(private http: HttpClient) {
@@ -29,7 +29,7 @@ export class SearchGameService {
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers };
-    this.http.get<any>(this.createGameUrl, options).subscribe(
+    this.http.get<any>(this.listGameUrl, options).subscribe(
       res => {
         this.gameList = res.lobbies;
         this.displayList = this.gameList;
