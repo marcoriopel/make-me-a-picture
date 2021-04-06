@@ -17,14 +17,15 @@ export class StatsService {
 
     updateStats(gameName: string, gameType: number, players: any, score: any, startDate: number, endDate: number){
         this.saveGame(gameName, gameType, players, score, startDate, endDate)
+        let nonVirtualPlayers : any = Array.from(players);
         if(gameType == GameType.CLASSIC){
-            for(let player of players){
-                if(player.isVirtual){
-                    players.pop(player);
+            for(let i = 0; i < nonVirtualPlayers.length; ++i){
+                if(nonVirtualPlayers[i].isVirtual){
+                    nonVirtualPlayers.splice(i, 1);
                 }
             }
         }
-        for(let player of players){
+        for(let player of nonVirtualPlayers){
             this.updateUserStats(gameName, gameType, player, score, startDate, endDate)
         }
     }
@@ -37,11 +38,11 @@ export class StatsService {
         let userInfo = await this.usersModel.getUserInfo(player.username);
 
         if(gameType == GameType.CLASSIC){
-            let gamesWon = userInfo.classicWinRatio * userInfo.gamesPlayed;
+            let gamesWon = userInfo.classicWinRatio * userInfo.classicGamesPlayed;
             if(score[player.team] > score[this.getOpposingTeam(player.team)]){
                 ++gamesWon;
             }
-            userInfo.classicWinRatio = gamesWon / (userInfo.gamesPlayed + 1);
+            userInfo.classicWinRatio = gamesWon / (userInfo.classicGamesPlayed + 1);
         }
         else if(gameType == GameType.SOLO && score > userInfo.bestSoloScore){
             userInfo.bestSoloScore = score;

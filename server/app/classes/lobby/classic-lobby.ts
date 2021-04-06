@@ -1,7 +1,12 @@
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
+import { NB_PERSONNALITIES, Personnality } from '@app/ressources/variables/virtual-player-variables';
 import { injectable } from 'inversify';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
+import { VirtualPlayerAnxious } from '../virtual-player/virtual-player-anxious';
+import { VirtualPlayerCompetitive } from '../virtual-player/virtual-player-competitive';
+import { VirtualPlayerNice } from '../virtual-player/virtual-player-nice';
+import { VirtualPlayerPassiveAgressive } from '../virtual-player/virtual-player-passive-agressive';
 import { Lobby } from './lobby';
 
 @injectable()
@@ -9,8 +14,8 @@ export class ClassicLobby extends Lobby {
     private teams: Map<string, Player>[] = [new Map<string, Player>(), new Map<string, Player>()];
     private vPlayers: VirtualPlayer[] = new Array(2);
 
-    constructor(difficulty: number, gameName: string, id: string) {
-        super(difficulty, gameName, id);
+    constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
+        super(difficulty, gameName, id, isPrivate);
         this.gameType = GameType.CLASSIC;
         console.log("Created classic game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
@@ -49,7 +54,7 @@ export class ClassicLobby extends Lobby {
         let vPlayerIsUnique: boolean = false;
         let tempVPlayer: VirtualPlayer;
         while (!vPlayerIsUnique) {
-            tempVPlayer = new VirtualPlayer(this.id);
+            tempVPlayer = this.generateRandomVPlayer();
             if (!this.isUserInLobby(tempVPlayer.getBasicUser())) {
                 vPlayerIsUnique = true;
             }
@@ -83,15 +88,15 @@ export class ClassicLobby extends Lobby {
         let players = [];
         for (let i = 0; i < this.teams.length; ++i) {
             this.teams[i].forEach((player: Player) => {
-                players.push({ "username": player.username, "avatar": player.avatar, "team": i, "isVirtual": player.isVirtual});
+                players.push({ "username": player.username, "avatar": player.avatar, "team": i, "isVirtual": player.isVirtual });
             })
         }
         return players;
     }
 
     removePlayer(user: BasicUser): void {
-        for(let team of this.teams){
-            if(team.has(user.username)){
+        for (let team of this.teams) {
+            if (team.has(user.username)) {
                 team.delete(user.username);
                 return
             }
@@ -107,11 +112,25 @@ export class ClassicLobby extends Lobby {
         return this.teams[0].size == 2 && this.teams[1].size == 2;
     }
 
-    getTeams(): Map<string, Player>[]{
+    getTeams(): Map<string, Player>[] {
         return this.teams;
     }
 
-    getVPlayers(): VirtualPlayer[]{
+    getVPlayers(): VirtualPlayer[] {
         return this.vPlayers;
+    }
+
+    generateRandomVPlayer() {
+        const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
+        switch (personnality) {
+            case Personnality.NICE:
+                return new VirtualPlayerNice(this.id);
+            case Personnality.ANXIOUS:
+                return new VirtualPlayerAnxious(this.id);
+            case Personnality.PASSIVE_AGRESSIVE:
+                return new VirtualPlayerPassiveAgressive(this.id);
+            case Personnality.COMPETITIVE:
+                return new VirtualPlayerCompetitive(this.id);
+        }
     }
 }

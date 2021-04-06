@@ -6,6 +6,7 @@ import { ACCESS } from '@app/classes/acces';
 import { SocketService } from '@app/services/socket/socket.service';
 import { GameService } from '@app/services/game/game.service';
 import { Router } from '@angular/router';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class LobbyService {
   private startGameUrl = this.baseUrl + "/api/games/start";
   private leaveUrl = this.baseUrl + "/api/games/leave";
 
-  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router) { }
+  constructor(private http: HttpClient, private socketService: SocketService, private gameService: GameService, private router: Router, private chatService: ChatService) { }
 
   addVirtualPlayer(teamNumber: number): void {
     const headers = new HttpHeaders({
@@ -80,6 +81,7 @@ export class LobbyService {
     this.http.delete(this.leaveUrl, options).subscribe(() => {
       this.router.navigate(['/home']);
     });
+    this.chatService.leaveChat(this.gameService.gameId);
   }
 
   create(game: NewGame) {

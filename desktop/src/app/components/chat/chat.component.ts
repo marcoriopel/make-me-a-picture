@@ -9,7 +9,6 @@ import { ChatService } from "@app/services/chat/chat.service"
 })
 
 export class ChatComponent {
-
   @ViewChild("chatContainer") chatContainer: ElementRef;
   @ViewChild("input") input: ElementRef;
 
@@ -43,4 +42,15 @@ export class ChatComponent {
     this.messageForm.reset();
   }
 
+  loadChatHistory(): void {
+    this.chatService.loadChatHistory();
+  }
+
+  isChatHistoryDisplayed(): boolean {
+    try {
+      return this.chatService.joinedChatList[this.chatService.index].isChatHistoryDisplayed;
+    } catch {
+      return false;
+    }
+  }
 }

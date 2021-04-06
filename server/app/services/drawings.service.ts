@@ -53,11 +53,19 @@ export class DrawingsService {
         return wordSuggestions;
     }
 
-    async getRandomDrawing(difficulty): Promise<Drawing> {
+    async getRandomDrawing(difficulty, excludedDrawings): Promise<Drawing> {
         let words = await this.drawingsModel.getWordsOfDifficulty(difficulty);
         if (words.length < 1) {
-            throw new Error('Database is empty')
+            throw new Error("Empty");
         }
+        for (let drawing of excludedDrawings) {
+            words = words.filter(word => word.drawingName !== drawing);
+        }
+
+        if (words.length < 1) {
+            throw new Error("Max drawings");
+        }
+
         let random = Math.floor(Math.random() * words.length);
         return await this.drawingsModel.getDrawing(words[random]._id)
     }

@@ -92,6 +92,7 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainMenuActivity::class.java);
       // val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         Toast.makeText(
                 applicationContext,
                 "Bienvenue $username",
@@ -104,7 +105,16 @@ class LoginActivity : AppCompatActivity() {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
         toast.show()
     }
+
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
+    }
 }
+
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.

@@ -1,0 +1,89 @@
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="game-column">
+            <app-game-bar></app-game-bar>
+        </div>
+        <div id="profile-column">
+            <div id="profile-container">
+                <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
+                <h1>{{username}}</h1>
+                <mat-button-toggle-group id="toggle-group" [formControl]="category">
+                    <mat-button-toggle value="0">
+                        Profil
+                    </mat-button-toggle>
+                    <mat-button-toggle value="1">
+                        Statistiques
+                    </mat-button-toggle>                    
+                    <mat-button-toggle value="2">
+                        Historique des parties
+                    </mat-button-toggle>
+                    <mat-button-toggle value="3">
+                        Historique de connexion
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div id="information">
+                    <div *ngIf="category.value == 0">
+                        <h1>Prénom: {{userInfo.surname}}</h1>
+                        <h1>Nom: {{userInfo.name}}</h1>
+                    </div>
+                    <div id="table-container" *ngIf="category.value == 1">
+                        <table>
+                            <tr>
+                                <th>Parties jouées</th>
+                                <th>Temps jouées</th>
+                                <th>Meilleur score Solo</th>
+                                <th>Meilleur score Coop</th>
+                                <th>Ratio V/D Classic</th>
+                            </tr>
+                            <tr>
+                                <th>{{userInfo.stats.gamesPlayed}}</th>
+                                <th>{{userInfo.stats.timePlayed}}</th>
+                                <th>{{userInfo.stats.bestSoloScore}}</th>
+                                <th>{{userInfo.stats.bestCoopScore}}</th>
+                                <th>{{userInfo.stats.classicWinRatio}}</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="table-container" *ngIf="category.value == 2">
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Nom</th>
+                                <th>Mode</th>
+                                <th>Équipe 1</th>
+                                <th>Équipe 2</th>
+                            </tr>
+                            <tr *ngFor="let game of userInfo.games">
+                                <th>{{game.end}}</th>
+                                <th>{{game.gameName}}</th>
+                                <th>{{game.gameType}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} et {{game.team1[1]}}</th>
+                                <th *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} et {{game.team2[1]}}</th>
+                                <th *ngIf="game.gameType == 'Solo'">{{game.team1[0]}}</th>
+                                <th *ngIf="game.gameType == 'Coop'">{{game.team1[0]}} et {{game.team1[1]}}</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="table-container" *ngIf="category.value == 3">
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr *ngFor="let log of userInfo.logs">
+                                <th>{{log.timestamp}}</th>
+                                <th>{{log.isLogin}}</th>
+                            </tr>
+                        </table>
+                    </div>                       
+                </div>
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>
