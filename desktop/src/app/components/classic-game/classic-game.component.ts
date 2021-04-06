@@ -103,6 +103,8 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.guessForm.reset();
   }
 
-  
+  requestHint(): void {
+    this.socketService.emit('hintRequest', {'gameId': this.gameService.gameId});
+  }
 
 }

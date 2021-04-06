@@ -9,16 +9,16 @@
                 <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
                 <h1>{{username}}</h1>
                 <mat-button-toggle-group id="toggle-group" [formControl]="category">
-                    <mat-button-toggle value="0" (click)="updateData()">
+                    <mat-button-toggle value="0">
                         Profil
                     </mat-button-toggle>
-                    <mat-button-toggle value="1" (click)="updateData()">
+                    <mat-button-toggle value="1">
                         Statistiques
                     </mat-button-toggle>                    
-                    <mat-button-toggle value="2" (click)="updateData()">
+                    <mat-button-toggle value="2">
                         Historique des parties
                     </mat-button-toggle>
-                    <mat-button-toggle value="3" (click)="updateData()">
+                    <mat-button-toggle value="3">
                         Historique de connexion
                     </mat-button-toggle>
                 </mat-button-toggle-group>

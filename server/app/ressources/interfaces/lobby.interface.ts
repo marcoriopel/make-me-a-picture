@@ -3,6 +3,7 @@ export interface Lobby {
     gameName: string;
     gameType: number;
     difficulty: number;
+    isPrivate: boolean;
 }
 
 export function validateLobby(element: any): boolean {

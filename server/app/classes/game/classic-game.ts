@@ -20,6 +20,7 @@ export class ClassicGame extends Game {
     private guessesLeft: number[] = [0, 0];
     private round: number = 0;
     private currentDrawingName: string;
+    private pastVirtualDrawings: string[] = [];
     private timerCount: number = 0;
     private timerInterval: NodeJS.Timeout;
     private transitionInterval: NodeJS.Timeout;
@@ -86,7 +87,8 @@ export class ClassicGame extends Game {
         this.transitionTimerCount = 5;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            this.pastVirtualDrawings.push(this.currentDrawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -260,7 +262,8 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            this.pastVirtualDrawings.push(this.currentDrawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {

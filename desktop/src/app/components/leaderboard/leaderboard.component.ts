@@ -52,7 +52,6 @@ export class LeaderboardComponent implements OnInit {
         element.timePlayed = formatTimePlayed(element.timePlayed);
       });
       this.leaderboard = data.top10;
-      console.log(this.leaderboard)
     })
   }
 
