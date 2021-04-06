@@ -2,13 +2,12 @@ import { SocketService } from '@app/services/sockets/socket.service';
 import { injectable } from 'inversify';
 import { Lobby } from '../lobby/lobby';
 import { Game } from './game';
-import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables'
+import { Difficulty, GuessTime } from '@app/ressources/variables/game-variables'
 import { SoloLobby } from '../lobby/solo-lobby';
 import { Player } from '@app/ressources/interfaces/user.interface';
 import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
-import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { UserService } from '@app/services/user.service';
 
 @injectable()
