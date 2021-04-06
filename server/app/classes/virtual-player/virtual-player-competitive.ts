@@ -233,4 +233,42 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
             this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
     }
+
+    sayEndCoopGame(finalScore: number){
+        let newHighScorePlayers: string[] = [];
+        let oldHighScorePlayers: string[] = [];
+        let worstCoopScoreIndex = 0;
+        let bestCoopScoreIndex = 0;
+        for(let i = 0; i < this.teammates.length; ++i){
+            if(finalScore <= this.teammatesStats[i].bestCoopScore){
+                oldHighScorePlayers.push(this.teammates[i]);
+            }
+            else{
+                newHighScorePlayers.push(this.teammates[i]);
+            }
+            if(this.teammatesStats[i].bestCoopScore <= this.teammatesStats[worstCoopScoreIndex].bestCoopScore){
+                worstCoopScoreIndex = i;
+            }
+            if(this.teammatesStats[i].bestCoopScore >= this.teammatesStats[bestCoopScoreIndex].bestCoopScore){
+                bestCoopScoreIndex = i;
+            }
+        }
+
+        const timestamp = new Date().getTime();
+        if(newHighScorePlayers.length == 0){
+            let str = vPlayerText.competitive.endCoopGame.split("##");
+            let message = str[0] + this.teammates[worstCoopScoreIndex] + str[1];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else if(oldHighScorePlayers.length == 0){
+            let str = vPlayerText.competitive.endCoopGameBestScoreAll.split("##");
+            let message = str[0] + this.teammates[bestCoopScoreIndex] + str[1] + finalScore + str[2];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else{
+            let str = vPlayerText.competitive.endCoopGameBestScoreSome.split("##");
+            let message = str[0] + this.arrayToString(newHighScorePlayers) + str[1];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+    }
 }
