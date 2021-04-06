@@ -202,7 +202,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
     sayEndSoloGame(finalScore: number){
         const teammateStats = this.teammatesStats[0];
 
-        if(teammateStats.bestSoloScore <= finalScore){
+        if(finalScore <= teammateStats.bestSoloScore){
             let str = vPlayerText.anxious.endSoloGame.split("##");
             let message = str[0] + teammateStats.bestSoloScore + str[1] + (teammateStats.gamesPlayed + 1) + str[2];
             const timestamp = new Date().getTime();
@@ -220,7 +220,7 @@ export class VirtualPlayerAnxious extends VirtualPlayer {
         let newHighScorePlayers: string[] = [];
         let oldHighScorePlayers: string[] = [];
         for(let i = 0; i < this.teammates.length; ++i){
-            if(this.teammatesStats[i].bestCoopScore >= finalScore){
+            if(finalScore <= this.teammatesStats[i].bestCoopScore){
                 oldHighScorePlayers.push(this.teammates[i]);
             }
             else{

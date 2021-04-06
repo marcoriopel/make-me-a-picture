@@ -1,3 +1,4 @@
+import { GameType } from '@app/ressources/variables/game-variables';
 import { Personnality } from '@app/ressources/variables/virtual-player-variables';
 import { vPlayerText } from '@app/ressources/variables/vplayer-messages';
 import { injectable } from 'inversify';
@@ -14,27 +15,146 @@ export class VirtualPlayerNice extends VirtualPlayer {
     }
 
     sayHello(){
-        let str = vPlayerText.nice.meet.split("##");
+        if(this.lastMutualGames[0]){
+            this.sayHelloAgain();
+        }
+        else{
+            let str = vPlayerText.nice.meet.split("##");
+            let message = str[0] + this.teammates + str[1];
+            const timestamp = new Date().getTime();
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+    }
+
+    private sayHelloAgain(){
+        const lastMutualGame = this.lastMutualGames[0];
+        switch(lastMutualGame.gameType){
+            case GameType.SOLO:
+                this.sayHelloAgainSolo();
+                break;
+            case GameType.COOP:
+                this.sayHelloAgainCoop();
+                break;
+            case GameType.CLASSIC:
+                this.sayHelloAgainClassic();
+                break;
+        }
+    }
+
+    private sayHelloAgainClassic(){
+        const lastMutualGame = this.lastMutualGames[0];
+        let teammateTeam;
+        let vPlayerTeam;
+        for(let player of lastMutualGame.players){
+            if(player.username == this.username){
+                vPlayerTeam = player.team;
+            }
+            if(player.username == this.teammates[0]){
+                teammateTeam = player.team;
+            }
+        }
+
+        if(teammateTeam == vPlayerTeam){
+            this.sayHelloAgainClassicSameTeam(vPlayerTeam);
+        }
+        else{
+            this.sayHelloAgainClassicOpposingTeam(vPlayerTeam);
+        }
+    }
+
+    private sayHelloAgainClassicSameTeam(teamNumber: number){
+        const lastMutualGame = this.lastMutualGames[0];
+        let opposingTeamNumber = this.getOpposingTeamNumber(teamNumber);
+        let message;
+        let opposingTeamNames = [];
+        for(let player of lastMutualGame.players){
+            if(player.team == opposingTeamNumber){
+                opposingTeamNames.push(player.username);
+            }
+        }
+        if(lastMutualGame.score[teamNumber] > lastMutualGame.score[opposingTeamNumber]){
+            let str = vPlayerText.nice.meetAgainClassicWin.split("##");
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2] + lastMutualGame.score[teamNumber] + str[3] + lastMutualGame[opposingTeamNumber] + str[4];
+        }
+        else if(lastMutualGame.score[teamNumber] < lastMutualGame.score[opposingTeamNumber]){
+            let str = vPlayerText.nice.meetAgainClassicLose.split("##");
+            message = str[0] + this.teammates + str[1];
+        }
+        else{
+            let str = vPlayerText.nice.meetAgainClassicTie.split("##");
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2];
+        }
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    private sayHelloAgainClassicOpposingTeam(teamNumber: number){
+        let str = vPlayerText.anxious.meetAgainClassicOpposingTeam.split("##");
         let message = str[0] + this.teammates + str[1];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
-    sayHelloMany(){
-        let str = vPlayerText.nice.meetMany.split("##");
-        let teamStr = "";
-        for(let i=0; i < this.teammates.length; i++){
-            if(i == this.teammates.length - 1){
-                teamStr = teamStr.slice(0, teamStr.length - 2);
-                teamStr += " et " + this.teammates[i]
-            }
-            else{
-                teamStr += this.teammates[i] + ", "
+    private sayHelloAgainSolo(){
+        const lastMutualGame = this.lastMutualGames[0];
+        let str = vPlayerText.nice.meetAgainSolo.split("##");
+        let message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    private sayHelloAgainCoop(){
+        const lastMutualGame = this.lastMutualGames[0];
+        let str = vPlayerText.nice.meetAgainCoop.split("##");
+        let friends = [];
+        for(let player of lastMutualGame.players){
+            if(player.username != this.username && player.username != this.teammates[0]){
+                friends.push(player.username);
             }
         }
+        let friendsStr = this.arrayToString(friends);
+        let message = str[0] + this.teammates + str[1] + friendsStr + str[2];
+        const timestamp = new Date().getTime();
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayHelloMany(){
+        for(let lastMutualGame of this.lastMutualGames){
+            if(lastMutualGame){
+                this.sayHelloAgainMany();
+                return;
+            }
+        }
+        let str = vPlayerText.nice.meetMany.split("##");
+        let teamStr = this.arrayToString(this.teammates);
         let message = str[0] + teamStr + str[1];
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayHelloAgainMany(){
+        let newPlayers: string[] = [];
+        let oldPlayers: string[] = [];
+        for(let i = 0; i < this.teammates.length; ++i){
+            if(this.lastMutualGames[i]){
+                oldPlayers.push(this.teammates[i]);
+            }
+            else{
+                newPlayers.push(this.teammates[i]);
+            }
+        }
+
+        const timestamp = new Date().getTime();
+        if(newPlayers.length == 0){
+            let str = vPlayerText.nice.meetAgainAll.split("##");
+            let message = str[0] + this.teammates[1] + str[1] + this.teammatesStats[1].bestCoopScore + str[2];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else{
+            let str = vPlayerText.nice.meetAgainMany.split("##");
+            let message = str[0] + this.arrayToString(newPlayers) + str[1] + this.teammatesStats[0].bestCoopScore + str[2] + this.teammates[0] + str[3];
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
     }
 
     sayRightGuess(){
@@ -80,5 +200,22 @@ export class VirtualPlayerNice extends VirtualPlayer {
         let message = vPlayerText.nice.endSprintGame;
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+    }
+
+    sayEndSoloGame(finalScore: number){
+        const teammateStats = this.teammatesStats[0];
+
+        if(finalScore <= teammateStats.bestSoloScore){
+            let str = vPlayerText.nice.endSoloGameBestScore.split("##");
+            let message = str[0] + (teammateStats.bestSoloScore - finalScore) + str[1];
+            const timestamp = new Date().getTime();
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
+        else{
+            let str = vPlayerText.nice.endSoloGameBestScore.split("##");
+            let message = str[0] + this.teammates + str[1] + (finalScore - teammateStats.bestSoloScore) + str[2];
+            const timestamp = new Date().getTime();
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        }
     }
 }
