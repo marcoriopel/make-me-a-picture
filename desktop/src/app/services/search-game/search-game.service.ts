@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 export class SearchGameService {
 
   // Attribute
-  private gameList: any[] = []
+  gameList: any[] = []
   displayList: any[] = []
   currentPreviewId: string
 

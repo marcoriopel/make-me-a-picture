@@ -36,7 +36,7 @@ export class GameService {
   guessesLeft: number = 1;
   timer: number = 60;
   state: State = State.GAMESTART;
-  gameId: string;
+  gameId: string = '';
 
   // Classic game
   isUserTeamGuessing: boolean = false;
