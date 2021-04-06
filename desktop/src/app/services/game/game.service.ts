@@ -8,7 +8,7 @@ import { RoundTransitionComponent } from "@app/components/round-transition/round
 import { GameType } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions/drawing-suggestions.component';
-
+import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
 interface Player {
   username: string;
   avatar: number;
@@ -27,6 +27,7 @@ interface Teams {
 export class GameService {
   transitionDialogRef: any;
   suggestionDialogRef: any;
+  endGameDialogRef: any;
 
   // Shared between different game types
   isCorrectGuess: boolean = false;
@@ -42,6 +43,7 @@ export class GameService {
   isUserTeamGuessing: boolean = false;
   isSuggestionsModalOpen: boolean = false;
   isPlayerDrawing: boolean = false;
+  numberOfDrawings: number = 0;
   drawingSuggestions: string[];
   transitionTimer: number = 5;
   guessingPlayer: string = "";
@@ -135,7 +137,12 @@ export class GameService {
 
     this.socketService.bind('newRound', (data: any) => {
       this.drawingPlayer = data.newDrawingPlayer;
-      this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
+      if(this.drawingPlayer == this.username){
+        this.isPlayerDrawing = true;
+        this.numberOfDrawings++;
+      } else {
+        this.isPlayerDrawing = false;
+      }
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
@@ -238,5 +245,13 @@ export class GameService {
       } else {
         this.isGuessing = false;
       }
+  }
+
+  openEndGameModal(): void {
+    this.endGameDialogRef = this.dialog.open(EndGameDrawingComponent, {
+      disableClose: true,
+      height: '400px',
+      width: "600px"
+    })
   }
 }

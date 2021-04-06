@@ -55,6 +55,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
+import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-drawing.component';
 
 @NgModule({
     declarations: [
@@ -85,6 +86,7 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
         ProfileComponent,
         LeaderboardComponent,
         DrawingSuggestionsComponent,
+        EndGameDrawingComponent,
     ],
     imports: [
         BrowserModule,
