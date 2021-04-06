@@ -1,3 +1,4 @@
+import { FeedImage } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/ressources/variables/game-variables';
@@ -29,6 +30,7 @@ export class ClassicGame extends Game {
     private opposingTeamGuessingTime = 0;
     private startDate: number;
     private endDate: number;
+    private gameImagesUrl: FeedImage[] = [];
 
     constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
         super(<Lobby>lobby, socketService);
@@ -131,7 +133,7 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            if(this.vPlayers[this.drawingTeam]){
+            if (this.vPlayers[this.drawingTeam]) {
                 this.vPlayers[this.drawingTeam].sayRightGuess();
             }
             const drawingEvent: DrawingEvent = {
@@ -149,7 +151,7 @@ export class ClassicGame extends Game {
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
-            if(this.vPlayers[this.drawingTeam]){
+            if (this.vPlayers[this.drawingTeam]) {
                 this.vPlayers[this.drawingTeam].sayWrongGuess();
             }
             --this.guessesLeft[this.drawingTeam];
@@ -170,14 +172,14 @@ export class ClassicGame extends Game {
             console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            if(this.vPlayers[this.getOpposingTeam()]){
+            if (this.vPlayers[this.getOpposingTeam()]) {
                 this.vPlayers[this.getOpposingTeam()].sayRightGuess();
             }
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
-            if(this.vPlayers[this.getOpposingTeam()]){
+            if (this.vPlayers[this.getOpposingTeam()]) {
                 this.vPlayers[this.getOpposingTeam()].sayWrongGuess();
             }
         }
@@ -276,6 +278,7 @@ export class ClassicGame extends Game {
         clearInterval(this.timerInterval);
         this.guessesLeft = [0, 0];
         this.sendVPlayerEndGameMessage();
+        this.uploadRandomFeedImage();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
@@ -374,38 +377,50 @@ export class ClassicGame extends Game {
         }
     }
 
-    disconnectGame(username: string){
-        if(this.teams[0].has(username)){
+    disconnectGame(username: string) {
+        if (this.teams[0].has(username)) {
             this.score[0] = 0;
         }
-        else if(this.teams[1].has(username)){
+        else if (this.teams[1].has(username)) {
             this.score[1] = 0;
         }
         this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
         this.endGame();
     }
-    
-    sendVPlayerEndGameMessage(){
+
+    sendVPlayerEndGameMessage() {
         const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
         const minScoreIndex = this.score.indexOf(Math.min(...this.score));
-        if(maxScoreIndex == minScoreIndex){
-            if(this.vPlayers[maxScoreIndex]){
+        if (maxScoreIndex == minScoreIndex) {
+            if (this.vPlayers[maxScoreIndex]) {
                 this.vPlayers[maxScoreIndex].sayWeTied();
             }
-            if(this.vPlayers[minScoreIndex]){
+            if (this.vPlayers[minScoreIndex]) {
                 this.vPlayers[minScoreIndex].sayWeTied();
             }
-        }else{
-            if(this.vPlayers[maxScoreIndex]){
+        } else {
+            if (this.vPlayers[maxScoreIndex]) {
                 this.vPlayers[maxScoreIndex].sayWeWon();
             }
-            if(this.vPlayers[minScoreIndex]){
+            if (this.vPlayers[minScoreIndex]) {
                 this.vPlayers[minScoreIndex].sayWeLost();
             }
         }
     }
 
-    async getVirtualPlayerImages(): Promise<void> {
-        return await this.drawingsService.getGameVirtualPlayerImage("dfsf");
+    addGameImageUrl(user: BasicUser, imageUrl: string) {
+        const feedImage: FeedImage = {
+            imageURL: imageUrl,
+            timestamp: new Date().getTime(),
+            user: user,
+        }
+        this.gameImagesUrl.push(feedImage);
+    }
+
+    uploadRandomFeedImage() {
+        if (this.gameImagesUrl.length) {
+            const image = this.gameImagesUrl[Math.floor(Math.random() * (this.gameImagesUrl.length - 1))]
+            this.drawingsService.uploadImage(image);
+        }
     }
 }

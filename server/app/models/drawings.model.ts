@@ -27,7 +27,7 @@ export class DrawingsModel {
         }
     }
 
-    async uploadImage(imageId: string, image: any,) {
+    async uploadImageToS3(imageId: string, image: any) {
         const base64Data = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
         const type = image.split(';')[0].split('/')[1];
         var uploadParams = { Bucket: "drawingimages", Key: `${imageId}.${type}`, Body: base64Data, ContentType: `image/${type}`, ContentEncoding: 'base64', ACL: 'public-read', };
@@ -43,8 +43,30 @@ export class DrawingsModel {
         });
     }
 
+    async removeImageFromS3(imageId: string) {
+        const type = "png";
+        var imageParams = { Bucket: "drawingimages", Key: `${imageId}.${type}` };
+        this.s3.deleteObject(imageParams, (err, data) => {
+            if (err) {
+                console.log("Error", err);
+                throw err;
+            }
+            if (data) {
+                console.log("Upload Success");
+            }
+        });
+    }
+
+
     async addImageToFeed(imageId: string, user: BasicUser, timestamp: any) {
         try {
+            const numberOfImages = await this.databaseModel.client.db("database").collection("feed").countDocuments();
+            if (numberOfImages > 50) {
+                const oldestImage = await this.databaseModel.client.db("database").collection("feed").find().sort({ "timestamp": 1 }).limit(1);
+                await this.databaseModel.client.db("database").collection("feed").deleteOne({ 'id': oldestImage.id });
+                await this.removeImageFromS3(oldestImage.id);
+
+            }
             await this.databaseModel.client.db("database").collection("feed").insertOne({ 'username': user.username, 'avatar': user.avatar, 'timestamp': timestamp, 'id': imageId });
         } catch (e) {
             console.error(e);

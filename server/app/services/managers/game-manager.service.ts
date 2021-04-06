@@ -93,6 +93,24 @@ export class GameManagerService {
         next();
     }
 
+    addGameImageURL(user: BasicUser, req: Request, res: Response, next: NextFunction) {
+        const imageURL = req.body.imageUrl;
+        if (!req.body.gameId || !GameManagerService.games.has(req.body.gameId)) {
+            return res.status(StatusCodes.BAD_REQUEST).send("Could not find game with provided id");
+        }
+        const gameId = req.body.gameId;
+        const game = GameManagerService.games.get(gameId);
+        if (!(game instanceof ClassicGame))
+            return res.status(StatusCodes.BAD_REQUEST).send("Game type not valid for current request");
+        try {
+            game.addGameImageUrl(user, imageURL);
+        } catch (e) {
+            return res.status(StatusCodes.UNAUTHORIZED).send(e.message);
+        }
+        next();
+    }
+
+
     requestSuggestions(username: string, gameId: string) {
         if (!gameId || !GameManagerService.games.has(gameId)) {
             return;
@@ -127,21 +145,6 @@ export class GameManagerService {
         game.guessDrawing(username, guess);
     }
 
-    getGameImages(req: Request, res: Response, next: NextFunction) {
-        if (!req.query.gameId || !GameManagerService.games.has(req.query.gameId)) {
-            return res.status(StatusCodes.BAD_REQUEST).send("Could not find game with provided id");
-        }
-        const gameId = req.query.gameId;
-        const game = GameManagerService.games.get(gameId);
-        if (!(game instanceof ClassicGame))
-            return res.status(StatusCodes.BAD_REQUEST).send("Game type not valid for current request");
-        try {
-            next(game.getVirtualPlayerImages());
-        } catch (e) {
-            return res.status(StatusCodes.UNAUTHORIZED).send(e.message);
-        }
-    }
-
     requestHint(gameId: string, user: BasicUser) {
         if (!gameId || !GameManagerService.games.has(gameId)) {
             throw new Error("Game was not found");
@@ -150,12 +153,12 @@ export class GameManagerService {
         game.requestHint(user);
     }
 
-    isUserInGame(username: string){
+    isUserInGame(username: string) {
         let id = null;
         GameManagerService.games.forEach((game: Game, gameId: string) => {
             const players = game.getPlayers();
-            for(let player of players){
-                if(player.username == username){
+            for (let player of players) {
+                if (player.username == username) {
                     id = gameId;
                 }
             }
@@ -163,7 +166,7 @@ export class GameManagerService {
         return id;
     }
 
-    disconnectGame(gameId: string, username: string){
+    disconnectGame(gameId: string, username: string) {
         GameManagerService.games.get(gameId).disconnectGame(username);
     }
 }

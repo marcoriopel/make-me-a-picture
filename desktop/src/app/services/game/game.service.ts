@@ -49,8 +49,10 @@ export class GameService {
   gameId: string = '';
 
   // Classic game
+  virtualPlayerDrawings: string[] = [];
   isUserTeamGuessing: boolean = false;
   isSuggestionsModalOpen: boolean = false;
+  virtualPlayers: string[] = [];
   isPlayerDrawing: boolean = false;
   drawingSuggestions: string[];
   transitionTimer: number = 5;
@@ -114,6 +116,9 @@ export class GameService {
         if (player.username == this.username) {
           this.currentUserTeam = player.team;
         }
+        if (player.isVirtual) {
+          this.virtualPlayers.push(player.username);
+        }
       });
       this.router.navigate(['/game/classic']);
     })
@@ -144,7 +149,9 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
-      console.log(data);
+      if (this.virtualPlayers.includes(this.drawingPlayer)) {
+        this.virtualPlayerDrawings.push(this.drawingService.canvas.toDataURL());
+      }
       if (this.isPlayerDrawing) {
         let dataUrl = this.drawingService.canvas.toDataURL();
         const headers = new HttpHeaders({
@@ -175,10 +182,10 @@ export class GameService {
 
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
-      if(data.timer == 10){
+      if (data.timer == 10) {
         this.tick.play();
       }
-      if(data.timer == 0){
+      if (data.timer == 0) {
         this.tick.pause();
       }
     })
@@ -191,7 +198,7 @@ export class GameService {
       if (!data.timer) {
         this.transitionDialogRef.close();
       }
-      if(data.timer == 3){
+      if (data.timer == 3) {
         this.countdown.play();
       }
       this.transitionTimer = data.timer;
@@ -248,25 +255,26 @@ export class GameService {
 
     this.socketService.bind('gameTimer', (data: any) => {
       this.gameTimer = data.timer;
-      if(data.timer == 10){
+      if (data.timer == 10) {
         this.tick.play();
       }
-      if(data.timer == 0){
+      if (data.timer == 0) {
         this.tick.pause();
       }
     })
 
     this.socketService.bind('drawingTimer', (data: any) => {
       this.timer = data.timer;
-      if(data.timer == 10){
+      if (data.timer == 10) {
         this.tick.play();
       }
-      if(data.timer == 0){
+      if (data.timer == 0) {
         this.tick.pause();
       }
     })
 
     this.socketService.bind('endGame', (data: any) => {
+      console.log(this.virtualPlayerDrawings);
       this.openDialog(State.ENDGAME);
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');

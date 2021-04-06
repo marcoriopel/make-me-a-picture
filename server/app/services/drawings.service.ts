@@ -1,9 +1,9 @@
 import { DrawingsModel } from '@app/models/drawings.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
-import { Drawing } from '@app/ressources/interfaces/drawings.interface';
+import { Drawing, FeedImage } from '@app/ressources/interfaces/drawings.interface';
 import { StatusCodes } from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 
@@ -73,13 +73,25 @@ export class DrawingsService {
         return await this.drawingsModel.getImage(id);
     }
 
-    async uploadImage(user: BasicUser, image: any, timestamp: any): Promise<any> {
+    async uploadImage(image: FeedImage): Promise<any> {
         const id = uuid();
-        return await this.drawingsModel.uploadImage(id, image);
+        try {
+            await this.drawingsModel.uploadImageToS3(id, image.imageURL);
+            await this.drawingsModel.addImageToFeed(id, image.user, image.timestamp);
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
-    async getFeedInfo(): Promise<any> {
-        return await this.drawingsModel.getFeedInfo();
+    async getFeedInfo(res: Response, next: NextFunction) {
+        try {
+            const drawingInfo = await this.drawingsModel.getFeedInfo();
+            next(drawingInfo);
+        }
+        catch (e) {
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
     }
 
 }
