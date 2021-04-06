@@ -8,6 +8,7 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
@@ -37,7 +38,9 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        setSupportActionBar(findViewById(R.id.my_toolbar))
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+        setSupportActionBar(toolbar)
         setAvatar()
 
         signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory())
