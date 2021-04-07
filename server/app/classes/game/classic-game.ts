@@ -57,7 +57,6 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
         this.gameTransition(transitionType.GAMESTART);
-
     }
 
     gameTransition(type: number) {
@@ -382,7 +381,6 @@ export class ClassicGame extends Game {
             this.score[1] = 0;
         }
         this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
-        this.endGame();
     }
     
     sendVPlayerEndGameMessage(){

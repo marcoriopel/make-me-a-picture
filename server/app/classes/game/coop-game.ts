@@ -94,9 +94,12 @@ export class CoopGame extends Game {
         }
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
+        await this.delay();
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
     }
+
+    delay = () => new Promise(res => setTimeout(res, 500));
 
     private endGame(): void {
         this.endDate = new Date().getTime();
