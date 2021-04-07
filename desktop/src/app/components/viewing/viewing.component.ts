@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MINIMUM_CANVAS_HEIGHT, MINIMUM_CANVAS_WIDTH } from '@app/ressources/global-variables/global-variables';
 import { Drawing } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
-import { Difficulty, GuessTime } from '@app/classes/game';
+import { Difficulty } from '@app/classes/game';
 @Component({
   selector: 'app-viewing',
   templateUrl: './viewing.component.html',
@@ -59,13 +59,13 @@ export class ViewingComponent implements AfterViewInit {
     let pointsNumber: number = this.calculatePointsInDrawing();
     switch(this.drawing.difficulty){
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.EASY * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.MEDIUM * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
         case Difficulty.EASY:
-            drawingSpeed = GuessTime.HARD * 1000 / pointsNumber;
+            drawingSpeed = 20 / pointsNumber;
             break;
     }
     return drawingSpeed;

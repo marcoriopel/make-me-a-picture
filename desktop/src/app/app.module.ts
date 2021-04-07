@@ -58,6 +58,7 @@ import { DrawingSuggestionsComponent } from './components/drawing-suggestions/dr
 import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
 
 @NgModule({
     declarations: [
@@ -89,6 +90,7 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
         LeaderboardComponent,
         DrawingSuggestionsComponent,
         TutorialComponent,
+        JoinPrivateGameComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { SHA256, enc } from 'crypto-js';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,10 @@ import { SHA256, enc } from 'crypto-js';
 export class AuthService {
   private baseUrl = environment.api_url;
   private loginUrl = this.baseUrl + "/api/authenticate/login";
+  private logoutUrl = this.baseUrl + "/api/authenticate/logout";
   private registerUrl = this.baseUrl + "/api/authenticate/register";
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(user: User) {
     user.password = enc.Base64.stringify(SHA256(user.password));
@@ -26,6 +28,16 @@ export class AuthService {
   }
 
   logoutUser() {
+    console.log(this.getToken());
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': this.getToken()!,
+    });
+    const options = { headers: headers };
+    this.http.post<any>(this.logoutUrl, null, options)
+      .subscribe((data: any) => {
+        console.log(data);
+      });
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('avatar');

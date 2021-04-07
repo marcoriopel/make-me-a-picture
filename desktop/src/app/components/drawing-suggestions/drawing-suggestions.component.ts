@@ -23,7 +23,6 @@ export class DrawingSuggestionsComponent implements OnInit {
   }
 
   setWord(word: string): void {
-    console.log(word);
     this.gameService.suggestionDialogRef.close();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
