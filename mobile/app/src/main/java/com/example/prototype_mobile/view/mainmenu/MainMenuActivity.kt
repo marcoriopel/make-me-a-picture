@@ -2,6 +2,7 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
@@ -68,17 +69,16 @@ class MainMenuActivity : AppCompatActivity() {
 
         for(fragment in supportFragmentManager.fragments)
             if(fragment is LobbyFragment) {
-                (fragment as LobbyFragment).getViewModel().resetData()
+                (fragment).getViewModel().resetData()
                 supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
                 supportFragmentManager.beginTransaction().replace(R.id.container2, GameListFragment()).commitNowAllowingStateLoss()
             }
 
     }
-
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_ENTER -> {
-                for(fragment in supportFragmentManager.fragments) {
+                for (fragment in supportFragmentManager.fragments) {
                     if (fragment is ChatFragment)
                         fragment.onKeyEnter()
                 }
@@ -86,5 +86,13 @@ class MainMenuActivity : AppCompatActivity() {
             }
             else -> super.onKeyUp(keyCode, event)
         }
+    }
+
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
     }
 }

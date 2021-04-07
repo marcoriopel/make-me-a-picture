@@ -4,7 +4,7 @@ import { Lobby } from '../lobby/lobby';
 import { Game } from './game';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables'
 import { SoloLobby } from '../lobby/solo-lobby';
-import { Player } from '@app/ressources/interfaces/user.interface';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
@@ -16,6 +16,7 @@ export class SoloGame extends Game {
     private vPlayer: VirtualPlayer;
     private score: number = 0;
     private guessesLeft: number = 0;
+    private pastVirtualDrawings: string[] = [];
     private gameTimerCount: number = 0;
     private gameTimerInterval: NodeJS.Timeout;
     private drawingTimerCount: number = 0;
@@ -40,7 +41,9 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        console.log(this.currentDrawingName);
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTimer();
         this.startDrawingTimer();
         this.vPlayer.startDrawing();
@@ -73,7 +76,17 @@ export class SoloGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty);
+        try {
+            this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            console.log(this.currentDrawingName);
+        } catch (err) {
+            if (err.message == "Max drawings") {
+                this.socketService.getSocket().to(this.id).emit('maxScore', {});
+                this.endGame();
+                return;
+            }
+        }
+        this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
@@ -86,7 +99,7 @@ export class SoloGame extends Game {
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
-        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
+        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
     }
 
     getPlayers(): any {
@@ -160,4 +173,15 @@ export class SoloGame extends Game {
             }
         }, 1000);
     }
+
+
+    disconnectGame(username: string){
+        this.endGame();
+    }
+
+    requestHint(user: BasicUser): void {
+        this.vPlayer.sendNextHint();
+    }
+
+
 }

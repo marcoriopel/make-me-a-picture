@@ -119,7 +119,16 @@ class LoginActivity : AppCompatActivity() {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
         toast.show()
     }
+
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
+    }
 }
+
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.

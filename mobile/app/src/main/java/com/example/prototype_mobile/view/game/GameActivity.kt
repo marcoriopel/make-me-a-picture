@@ -85,6 +85,24 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             toast.show()
         })
 
+        gameViewModel.suggestions.observe(this, Observer {
+            if (it != null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, ChooseWordFragment())
+                    .commitNow()
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is ChooseWordFragment) {
+                        fragment.bindButton()
+                    }
+                }
+
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
+                    .commitNow()
+            }
+        })
+
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
@@ -164,6 +182,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         super.onResume()
         println("OnResume")
         setUpGameInit()
+    }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {

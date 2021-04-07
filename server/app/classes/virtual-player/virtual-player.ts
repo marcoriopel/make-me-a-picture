@@ -1,6 +1,6 @@
 import { Drawing, Vec2 } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent, MouseDown } from '@app/ressources/interfaces/game-events';
-import { BasicUser } from '@app/ressources/interfaces/user.interface';
+import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
@@ -11,10 +11,11 @@ export class VirtualPlayer {
     protected personnality: number;
     protected username: string;
     protected avatar: number;
+    protected teammate: string = undefined;
     private drawingsService: DrawingsService;
-    private socketService: SocketService;
+    protected socketService: SocketService;
     private currentDrawing: Drawing;
-    private gameId: string;
+    protected gameId: string;
     private isVPlayerTurn: boolean = false;
     private drawingSpeed: number;
     private nextHintIndex = 0;
@@ -29,14 +30,14 @@ export class VirtualPlayer {
         this.socketService = socketService;
     }
 
-    async getNewDrawing(difficulty: number): Promise<string> {
+    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<string> {
         try {
-            this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty);
+            this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty, pastDrawingNames);
             this.drawingSpeed = this.calculateDrawingSpeed();
             return this.currentDrawing.drawingName;
         }
         catch (err) {
-            console.error(err)
+            throw err;
         }
     }
 
@@ -136,4 +137,30 @@ export class VirtualPlayer {
             this.nextHintIndex++;
         }
     }
+
+    setTeammate(players: any){
+        let team;
+        for(const player of players){
+            if(player.username == this.username){
+                team = player.team;
+            }
+        }
+        for(const player of players){
+            if(player.team == team && !player.isVirtual){
+                this.teammate = player.username;
+            }
+        }
+    }
+
+    sayHello(){}
+
+    sayRightGuess(){}
+
+    sayWrongGuess(){}
+
+    sayWeWon(){}
+
+    sayWeLost(){}
+
+    sayWeTied(){}
 }
