@@ -81,7 +81,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 endGameEvent()
         })
         gameViewModel.transitionMessage.observe(this, Observer{
-            mediaPlayer = MediaPlayer.create(this, R.raw.countdown)
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
             toast.show()
         })

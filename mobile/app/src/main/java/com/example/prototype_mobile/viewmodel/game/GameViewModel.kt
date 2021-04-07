@@ -51,7 +51,6 @@ class GameViewModel():ViewModel() {
         }
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
-//            _teamScore.value = intArrayOf(0,0)
         }
         gameRepository.teamScore.observeForever {
             _teamScore.postValue(it)
