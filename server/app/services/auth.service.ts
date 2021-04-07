@@ -74,7 +74,7 @@ export class AuthService {
                 console.log(userInfo)
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
-            if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Kevin" || userInfo.username == "Émilio") {
+            if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Bernard" || userInfo.username == "Émilio") {
                 return res.sendStatus(StatusCodes.CONFLICT);
             }
             const userDB: DetailedUser = await this.usersModel.getUserInfo(userInfo.username);

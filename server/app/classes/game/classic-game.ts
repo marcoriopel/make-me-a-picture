@@ -4,6 +4,7 @@ import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/re
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -30,7 +31,7 @@ export class ClassicGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         this.vPlayers = lobby.getVPlayers();
@@ -44,11 +45,10 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        for (let vPlayer of this.vPlayers) {
-            if (vPlayer != undefined) {
-                vPlayer.setServices(this.drawingsService, this.socketService);
-                vPlayer.setTeammate(this.getPlayers());
-                vPlayer.sayHello();
+        await this.setupVPlayers();
+        for(const vPlayer of this.vPlayers){
+            if(vPlayer){
+               vPlayer.sayHello(); 
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
@@ -401,6 +401,19 @@ export class ClassicGame extends Game {
             }
             if(this.vPlayers[minScoreIndex]){
                 this.vPlayers[minScoreIndex].sayWeLost();
+            }
+        }
+    }
+
+    async setupVPlayers(){
+        for (let i = 0; i < this.vPlayers.length; ++i) {
+            if (this.vPlayers[i]) {
+                this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
+                for(let player of this.teams[i].values()){
+                    if(player.username != this.vPlayers[i].getBasicUser().username){
+                        await this.vPlayers[i].setTeammates(player);
+                    }
+                }
             }
         }
     }

@@ -1,12 +1,7 @@
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { GameType } from '@app/ressources/variables/game-variables';
-import { NB_PERSONNALITIES, Personnality } from '@app/ressources/variables/virtual-player-variables';
 import { injectable } from 'inversify';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
-import { VirtualPlayerAnxious } from '../virtual-player/virtual-player-anxious';
-import { VirtualPlayerCompetitive } from '../virtual-player/virtual-player-competitive';
-import { VirtualPlayerNice } from '../virtual-player/virtual-player-nice';
-import { VirtualPlayerPassiveAgressive } from '../virtual-player/virtual-player-passive-agressive';
 import { Lobby } from './lobby';
 
 @injectable()
@@ -118,19 +113,5 @@ export class ClassicLobby extends Lobby {
 
     getVPlayers(): VirtualPlayer[] {
         return this.vPlayers;
-    }
-
-    generateRandomVPlayer() {
-        const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
-        switch (personnality) {
-            case Personnality.NICE:
-                return new VirtualPlayerNice(this.id);
-            case Personnality.ANXIOUS:
-                return new VirtualPlayerAnxious(this.id);
-            case Personnality.PASSIVE_AGRESSIVE:
-                return new VirtualPlayerPassiveAgressive(this.id);
-            case Personnality.COMPETITIVE:
-                return new VirtualPlayerCompetitive(this.id);
-        }
     }
 }

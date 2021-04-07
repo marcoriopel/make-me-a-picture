@@ -12,7 +12,7 @@ export class CoopLobby extends Lobby {
     constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
         super(difficulty, gameName, id, isPrivate);
         this.gameType = GameType.COOP;
-        this.vPlayer = new VirtualPlayer(this.id);
+        this.vPlayer = this.generateRandomVPlayer();
         console.log("Created coop game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 

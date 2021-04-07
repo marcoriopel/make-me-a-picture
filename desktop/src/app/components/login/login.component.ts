@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem(ACCESS.TOKEN, res.token);
           localStorage.setItem(ACCESS.USERNAME, this.form.value.username);
           localStorage.setItem(ACCESS.AVATAR, res.avatar);
+          localStorage.setItem('tutorial', '1');
           this.router.navigate(['/home']);
         },
         err => {

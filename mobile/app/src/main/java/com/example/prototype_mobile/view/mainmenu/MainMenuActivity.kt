@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.view.mainmenu
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -63,6 +64,7 @@ class MainMenuActivity : AppCompatActivity() {
         removeLobbyFromStack()
         //Todo reset specific gameData here or in the intent of EndGameFragment
     }
+
     fun removeLobbyFromStack() {
 
         for(fragment in supportFragmentManager.fragments)
@@ -73,6 +75,19 @@ class MainMenuActivity : AppCompatActivity() {
             }
 
     }
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                for (fragment in supportFragmentManager.fragments) {
+                    if (fragment is ChatFragment)
+                        fragment.onKeyEnter()
+                }
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
+
     override fun onBackPressed() {
         Toast.makeText(
                 applicationContext,

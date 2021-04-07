@@ -8,6 +8,7 @@ import { RoundTransitionComponent } from "@app/components/round-transition/round
 import { GameType } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions/drawing-suggestions.component';
+import * as confetti from 'canvas-confetti';
 
 interface Player {
   username: string;
@@ -154,8 +155,28 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('gameTimer');
+      this.socketService.unbind('newRound');
+      this.socketService.unbind('guessCallBack');
+      this.socketService.unbind('guessesLeft');
+      this.socketService.unbind('score');
+
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
+
+      if(this.score[this.currentUserTeam] > this.score[oppositeTeam]){
+        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
+        var myConfetti = confetti.create(canvasEl, { 
+          resize: true, 
+          useWorker: true, 
+        });
+    
+        myConfetti({
+          spread: 180,
+          particleCount: 200,
+        });         
+      }
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
     })
 

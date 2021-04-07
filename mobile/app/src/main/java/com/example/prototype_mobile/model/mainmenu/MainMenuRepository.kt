@@ -21,7 +21,7 @@ class MainMenuRepository() {
         mapCreateGame["difficulty"] = game.gameDifficulty!!.difficulty.toString()
 
         println(mapCreateGame)
-        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create", mapCreateGame,true)
+        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create/public", mapCreateGame,true)
         val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
 
         return result
