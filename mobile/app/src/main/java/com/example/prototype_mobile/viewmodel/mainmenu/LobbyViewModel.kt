@@ -77,8 +77,20 @@ class LobbyViewModel:  ViewModel() {
             }
         }
     }
+
     fun resetData() {
         lobbyRepository.resetData()
+    }
 
+    fun quitLobby() {
+        if (!lobbyRepository.gameStarted) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    lobbyRepository.quitLobby()
+                } catch (e: Exception) {
+                    Result.Error(ResponseCode.BAD_REQUEST.code)
+                }
+            }
+        }
     }
 }
