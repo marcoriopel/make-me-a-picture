@@ -42,7 +42,7 @@ export class AvatarIconComponent implements OnInit {
         this.avatarImgRef += "profileVPlayer4.png"
         break;
       default:
-        this.avatarImgRef += "profileIcon.png"
+        this.avatarImgRef += "SystemUserIcon.png"
     }
   }
 
