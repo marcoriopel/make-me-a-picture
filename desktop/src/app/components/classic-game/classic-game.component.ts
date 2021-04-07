@@ -9,7 +9,6 @@ import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
 import { ChatService } from '@app/services/chat/chat.service';
-
 @Component({
   selector: 'app-classic-game',
   templateUrl: './classic-game.component.html',
