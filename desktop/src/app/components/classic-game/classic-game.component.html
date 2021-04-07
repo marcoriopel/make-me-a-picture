@@ -1,3 +1,4 @@
+<canvas id="confetti-canvas"></canvas>
 <div class="wrapper">
     <app-navbar></app-navbar>
     <div class="column-container">
@@ -33,6 +34,7 @@
                                 class="material-icons">check_circle</span></button>
                     </form>
                 </div>
+                <button *ngIf="this.gameService.isGuessing" id="hint-button" (click)="requestHint()"><span class="material-icons">quiz</span></button>
             </div>
             <div id="tools">
                 <app-tools
