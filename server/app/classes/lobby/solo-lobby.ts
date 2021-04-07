@@ -12,7 +12,7 @@ export class SoloLobby extends Lobby {
     constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
         super(difficulty, gameName, id, isPrivate);
         this.gameType = GameType.SOLO;
-        this.vPlayer = new VirtualPlayer(this.id);
+        this.vPlayer = this.generateRandomVPlayer();
         console.log("Created solo game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
