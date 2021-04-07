@@ -104,10 +104,20 @@ class ProfilFragment : Fragment() {
         profilViewModel.connection.observe(viewLifecycleOwner, {
             addItemToConnectionRecyclerView(it)
         })
+
+        profilViewModel.stats.observe(viewLifecycleOwner, {
+            binding.gamePlayed.setText(it.gamesPlayed.toString())
+            binding.timePlayed.setText(getTimeFromMiliSec(it.timePlayed.toDouble()))
+            binding.soloScore.setText(it.bestSoloScore.toString())
+            binding.coopScore.setText(it.bestCoopScore.toString())
+            binding.ratio.setText("%.2f".format(it.classicWinRatio))
+        })
         profilViewModel.getProfilInfo()
     }
 
     fun addListMetadata() {
+        gameHistoricList.clear()
+        connectionList.clear()
         gameHistoricList.add(GameHistoric("Date", "Nom", "Mode", "Équipe 1", "Équipe 2", "Score"))
         connectionList.add(Connection("Date", "Action"))
         gameHistoricAdapter.notifyDataSetChanged()
@@ -115,18 +125,25 @@ class ProfilFragment : Fragment() {
 
     }
 
-    private fun addItemToGameRecyclerView(game: GameHistoric) {
+    private fun addItemToGameRecyclerView(game: MutableList<GameHistoric>) {
         runOnUiThread {
-            gameHistoricList.add(game)
-            gameHistoricAdapter.notifyItemInserted(gameHistoricList.size - 1)
+            gameHistoricList.addAll(game)
+            gameHistoricAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun addItemToConnectionRecyclerView(connection: Connection) {
+    private fun addItemToConnectionRecyclerView(connection: MutableList<Connection>) {
         runOnUiThread {
-            connectionList.add(connection)
-            connectionAdapter.notifyItemInserted(connectionList.size - 1)
+            connectionList.addAll(connection)
+            connectionAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun getTimeFromMiliSec(milisec : Double): String {
+        val seconds = milisec / 1000
+        val minute = (seconds / 60 ) % 60
+        val heure = seconds / 60 / 60
+        return heure.toInt().toString() + "H" + minute.toInt().toString() + "M"
     }
 
     companion object {

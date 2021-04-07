@@ -36,7 +36,8 @@ class SignUpRepository() {
         if(response.code() == ResponseCode.OK.code) {
             val Jobject = JSONObject(jsonData)
             val Jarray = Jobject.getString("token")
-            val user = LoggedInUser(Jarray.toString(), username)
+            val avatar = Jobject.getString("avatar")
+            val user = LoggedInUser(Jarray.toString(), username, avatar.toInt())
             return Result.Success(user)
         } else {
             return Result.Error(response.code())

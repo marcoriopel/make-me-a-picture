@@ -28,14 +28,18 @@ class ProfilViewModel(val profilRepository: ProfilRepository): ViewModel() {
     private val _surname = MutableLiveData<String>()
     val surname: LiveData<String> = _surname
 
-    private val _gameHistoric = MutableLiveData<GameHistoric>()
-    val gameHistoric: LiveData<GameHistoric> = _gameHistoric
+    private val _gameHistoric = MutableLiveData<MutableList<GameHistoric>>()
+    val gameHistoric: LiveData<MutableList<GameHistoric>> = _gameHistoric
 
-    private val _connection = MutableLiveData<Connection>()
-    val connection: LiveData<Connection> = _connection
+    private val _connection = MutableLiveData<MutableList<Connection>>()
+    val connection: LiveData<MutableList<Connection>> = _connection
+
+    private val _stats = MutableLiveData<Stats>()
+    val stats: LiveData<Stats> = _stats
 
     fun getProfilInfo() {
         _username.value = LoginRepository.getInstance()!!.user!!.username
+        _avatar.value = LoginRepository.getInstance()!!.user!!.avatar
         viewModelScope.launch((Dispatchers.IO)) {
             var result = try {
                 profilRepository.getProfilInfo()
@@ -46,18 +50,23 @@ class ProfilViewModel(val profilRepository: ProfilRepository): ViewModel() {
             if (result is Result.Success) {
                 _name.postValue(result.data.name)
                 _surname.postValue(result.data.surname)
-                result.data.games.forEach { processGameLog(it) }
-                result.data.logs.forEach { processConnectionLog(it)}
+                val gameList = mutableListOf<GameHistoric>()
+                result.data.games.forEach { gameList.add(processGameLog(it)) }
+                _gameHistoric.postValue(gameList)
+                val connectionList = mutableListOf<Connection>()
+                result.data.logs.forEach { connectionList.add(processConnectionLog(it))}
+                _connection.postValue(connectionList)
+                _stats.postValue(result.data.stats)
             }
         }
     }
 
-    fun processConnectionLog(connection: Log) {
+    fun processConnectionLog(connection: Log): Connection {
         val action = if (connection.isLogin) "Connexion" else "Déconnexion"
-        _connection.postValue(Connection(processTimestamp(connection.timestamp), action))
+        return Connection(processTimestamp(connection.timestamp), action)
     }
 
-    fun processGameLog(game: GameLog) {
+    fun processGameLog(game: GameLog): GameHistoric {
         val date = processTimestamp(game.start)
         var mode: String = ""
         var team1: String = ""
@@ -92,7 +101,8 @@ class ProfilViewModel(val profilRepository: ProfilRepository): ViewModel() {
                 }
             }
         }
-        _gameHistoric.postValue(GameHistoric(date, game.gameName, mode, team1, team2, score))
+
+        return GameHistoric(date, game.gameName, mode, team1, team2, score)
     }
 
     private fun processTimestamp(timestamp: Long): String {

@@ -2,6 +2,8 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
+import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.view.game.*
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
@@ -26,6 +29,7 @@ class MainMenuActivity : AppCompatActivity() {
         getSupportActionBar()?.setLogo(R.mipmap.ic_launcher2)
         getSupportActionBar()?.setDisplayUseLogoEnabled(true)
         MenuCompat.setGroupDividerEnabled(menu, true);
+        menu?.getItem(0)?.setIcon(Drawable.avatars[mainMenuViewModel.avatar])
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

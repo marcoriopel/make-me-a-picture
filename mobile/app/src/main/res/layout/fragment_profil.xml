@@ -179,13 +179,13 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
             <TextView
-                android:id="@+id/solo_coop_label"
+                android:id="@+id/coop_score_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Meilleur score Coop" />
             <TextView
-                android:id="@+id/solo_coop"
+                android:id="@+id/coop_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -23,7 +23,7 @@ data class ChatHistory(val chatHistory: Array<ChatHistoryMessage>)
 data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String, val avatar: Int)
 
 // Data class for the login
-data class LoggedInUser(val token: String, val username: String)
+data class LoggedInUser(val token: String, val username: String, val avatar: Int)
 data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies

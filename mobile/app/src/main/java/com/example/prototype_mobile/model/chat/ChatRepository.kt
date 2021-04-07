@@ -250,6 +250,10 @@ class ChatRepository() {
     }
 
     private fun treatTimestamp(timestamp: Long): String {
+        if (timestamp == 0L) {
+            return ""
+        }
+        
         val date = Date(timestamp)
         val cal = Calendar.getInstance()
         cal.time = date
