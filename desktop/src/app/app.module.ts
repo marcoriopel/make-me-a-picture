@@ -56,6 +56,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
 import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
+import { FeedComponent } from './components/feed/feed.component';
 
 @NgModule({
     declarations: [
@@ -87,6 +88,7 @@ import { JoinPrivateGameComponent } from './components/join-private-game/join-pr
         LeaderboardComponent,
         DrawingSuggestionsComponent,
         JoinPrivateGameComponent,
+        FeedComponent,
     ],
     imports: [
         BrowserModule,

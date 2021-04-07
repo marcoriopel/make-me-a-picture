@@ -413,7 +413,7 @@ export class ClassicGame extends Game {
             imageURL: imageUrl,
             timestamp: new Date().getTime(),
             user: user,
-        }
+        };
         this.gameImagesUrl.push(feedImage);
     }
 

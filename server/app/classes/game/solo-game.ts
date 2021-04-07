@@ -42,7 +42,6 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-        console.log(this.currentDrawingName);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTimer();
         this.startDrawingTimer();
@@ -78,7 +77,6 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         try {
             this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-            console.log(this.currentDrawingName);
         } catch (err) {
             if (err.message == "Max drawings") {
                 this.socketService.getSocket().to(this.id).emit('maxScore', {});
@@ -175,7 +173,7 @@ export class SoloGame extends Game {
     }
 
 
-    disconnectGame(username: string){
+    disconnectGame(username: string) {
         this.endGame();
     }
 

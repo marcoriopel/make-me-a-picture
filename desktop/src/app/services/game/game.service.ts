@@ -152,16 +152,24 @@ export class GameService {
       if (this.virtualPlayers.includes(this.drawingPlayer)) {
         this.virtualPlayerDrawings.push(this.drawingService.canvas.toDataURL());
       }
-      if (this.isPlayerDrawing) {
+      if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'authorization': localStorage.getItem(ACCESS.TOKEN)!
         });
         const options = { headers: headers, responseType: 'text' as 'json' };
-        const body = { image: dataUrl }
-        this.http.post<any>(environment.socket_url + 'api/drawings/upload', body, options).subscribe();
+        const body = { imageUrl: dataUrl, gameId: this.gameId }
+        this.http.post<any>(environment.socket_url + 'api/games/upload', body, options).subscribe(
+          res => {
+            console.log(res);
+          },
+          err => {
+            console.log(err);
+          }
+        );
       }
+      console.log(this.drawingPlayer, this.username);
       this.drawingPlayer = data.newDrawingPlayer;
       this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
@@ -274,7 +282,6 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      console.log(this.virtualPlayerDrawings);
       this.openDialog(State.ENDGAME);
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
