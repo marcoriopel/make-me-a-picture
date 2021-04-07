@@ -114,21 +114,4 @@ export class ClassicLobby extends Lobby {
     getVPlayers(): VirtualPlayer[] {
         return this.vPlayers;
     }
-<<<<<<< HEAD
-=======
-
-    generateRandomVPlayer() {
-        const personnality = Math.floor(Math.random() * NB_PERSONNALITIES);
-        switch (personnality) {
-            case Personnality.NICE:
-                return new VirtualPlayerNice(this.id);
-            case Personnality.ANXIOUS:
-                return new VirtualPlayerAnxious(this.id);
-            case Personnality.PASSIVE_AGRESSIVE:
-                return new VirtualPlayerPassiveAgressive(this.id);
-            case Personnality.COMPETITIVE:
-                return new VirtualPlayerCompetitive(this.id);
-        }
-    }
->>>>>>> 7a5f8fbc747f730f7080b2939e59e8b082683f9d
 }
