@@ -29,8 +29,8 @@ class SignUpActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.loginmenu, menu)
-        getSupportActionBar()?.setLogo(R.mipmap.ic_launcher2)
-        getSupportActionBar()?.setDisplayUseLogoEnabled(true)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
         return true
     }
 
@@ -123,7 +123,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
-        val intent = Intent(this,   MainMenuActivity::class.java);
+        val intent = Intent(this,   MainMenuActivity::class.java)
         startActivity(intent)
         Toast.makeText(
             applicationContext,

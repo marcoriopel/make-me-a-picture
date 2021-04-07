@@ -123,7 +123,7 @@ class ProfilViewModel(val profilRepository: ProfilRepository): ViewModel() {
             Calendar.MONTH).toString()
         val year = if(cal.get(Calendar.YEAR).toString().length == 1) "0" + cal.get(Calendar.YEAR).toString() else cal.get(
             Calendar.YEAR).toString()
-        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds
     }
 
 }

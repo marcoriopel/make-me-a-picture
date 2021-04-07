@@ -26,9 +26,9 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.mainmenu, menu)
-        getSupportActionBar()?.setLogo(R.mipmap.ic_launcher2)
-        getSupportActionBar()?.setDisplayUseLogoEnabled(true)
-        MenuCompat.setGroupDividerEnabled(menu, true);
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+        MenuCompat.setGroupDividerEnabled(menu, true)
         menu?.getItem(0)?.setIcon(Drawable.avatars[mainMenuViewModel.avatar])
         return true
     }
@@ -65,7 +65,7 @@ class MainMenuActivity : AppCompatActivity() {
         mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory())
                 .get(MainMenuViewModel::class.java)
 
-        mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, Observer {
+        mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, {
             if (it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
                 supportFragmentManager.beginTransaction().replace(
                     R.id.container2,

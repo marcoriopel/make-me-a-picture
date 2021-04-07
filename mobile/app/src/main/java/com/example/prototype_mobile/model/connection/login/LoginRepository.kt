@@ -14,7 +14,7 @@ import org.json.JSONObject
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository() {
+class LoginRepository {
     companion object {
         private var instance: LoginRepository? = null
 
@@ -64,9 +64,9 @@ class LoginRepository() {
              Log.d("token", result.data.token)
          }
 
-         return result;
+         return result
 
-    }
+     }
 
     fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.user = loggedInUser

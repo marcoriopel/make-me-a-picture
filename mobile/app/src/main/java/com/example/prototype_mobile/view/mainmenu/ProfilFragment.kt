@@ -86,15 +86,15 @@ class ProfilFragment : Fragment() {
         })
 
         profilViewModel.username.observe(viewLifecycleOwner, {
-            binding.profilUsername.setText(it)
+            binding.profilUsername.text = it
         })
 
         profilViewModel.name.observe(viewLifecycleOwner, {
-            binding.prenom.setText(it)
+            binding.prenom.text = it
         })
 
         profilViewModel.surname.observe(viewLifecycleOwner, {
-            binding.nom.setText(it)
+            binding.nom.text = it
         })
 
         profilViewModel.gameHistoric.observe(viewLifecycleOwner, {
@@ -106,11 +106,11 @@ class ProfilFragment : Fragment() {
         })
 
         profilViewModel.stats.observe(viewLifecycleOwner, {
-            binding.gamePlayed.setText(it.gamesPlayed.toString())
-            binding.timePlayed.setText(getTimeFromMiliSec(it.timePlayed.toDouble()))
-            binding.soloScore.setText(it.bestSoloScore.toString())
-            binding.coopScore.setText(it.bestCoopScore.toString())
-            binding.ratio.setText("%.2f".format(it.classicWinRatio))
+            binding.gamePlayed.text = it.gamesPlayed.toString()
+            binding.timePlayed.text = getTimeFromMiliSec(it.timePlayed.toDouble())
+            binding.soloScore.text = it.bestSoloScore.toString()
+            binding.coopScore.text = it.bestCoopScore.toString()
+            binding.ratio.text = "%.2f".format(it.classicWinRatio)
         })
         profilViewModel.getProfilInfo()
     }

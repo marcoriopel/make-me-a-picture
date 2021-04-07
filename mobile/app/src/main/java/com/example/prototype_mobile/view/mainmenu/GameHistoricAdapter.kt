@@ -22,12 +22,12 @@ class GameHistoricAdapter(val context: Context, val gameList: MutableList<GameHi
 
     override fun onBindViewHolder(holder: GameHistoricAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
-        holder.date.setText(gameData.date)
-        holder.name.setText(gameData.name)
-        holder.mode.setText(gameData.mode)
-        holder.team1.setText(gameData.team1)
-        holder.team2.setText(gameData.team2)
-        holder.score.setText(gameData.score)
+        holder.date.text = gameData.date
+        holder.name.text = gameData.name
+        holder.mode.text = gameData.mode
+        holder.team1.text = gameData.team1
+        holder.team2.text = gameData.team2
+        holder.score.text = gameData.score
     }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {

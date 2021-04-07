@@ -18,7 +18,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 
-class ChatRepository() {
+class ChatRepository {
 
     var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
     val channelList = mutableListOf<Channel>()
@@ -39,7 +39,7 @@ class ChatRepository() {
 
     var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
-        var messageType = 1;
+        var messageType = 1
         if (myUsername == messageReceive.user.username) {
             messageType = 0
         }
@@ -110,7 +110,7 @@ class ChatRepository() {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
-                    newMessageList.add(Message("","", "", 2, 0))
+                    newMessageList.add(Message("", "", "", 2, 0))
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
@@ -184,7 +184,7 @@ class ChatRepository() {
 
         }
         channelList.sortBy { c -> c.channelState.ordinal }
-        return Result.Success(true);
+        return Result.Success(true)
     }
 
     private suspend fun getChannelsList(urlPath: String): Result<ChannelList> {
@@ -216,7 +216,7 @@ class ChatRepository() {
             val historyMessage = mutableListOf<Message>()
             for (message in result.data.chatHistory) {
                 val timestamp = treatTimestamp(message.timestamp)
-                var messageType = 1;
+                var messageType = 1
                 if (myUsername == message.username) {
                     messageType = 0
                 }
@@ -253,7 +253,7 @@ class ChatRepository() {
         if (timestamp == 0L) {
             return ""
         }
-        
+
         val date = Date(timestamp)
         val cal = Calendar.getInstance()
         cal.time = date
@@ -271,7 +271,7 @@ class ChatRepository() {
             Calendar.MONTH).toString()
         val year = if(cal.get(Calendar.YEAR).toString().length == 1) "0" + cal.get(Calendar.YEAR).toString() else cal.get(
             Calendar.YEAR).toString()
-        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds
     }
 
 }

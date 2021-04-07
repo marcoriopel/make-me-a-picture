@@ -22,8 +22,8 @@ class ConnectionAdapter(val context: Context, val connectionList: MutableList<Co
 
     override fun onBindViewHolder(holder: ConnectionAdapter.ViewHolder, position: Int) {
         val connection  = connectionList[position]
-        holder.date.setText(connection.date)
-        holder.action.setText(connection.action)
+        holder.date.text = connection.date
+        holder.action.text = connection.action
     }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {

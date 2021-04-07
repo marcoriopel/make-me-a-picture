@@ -67,7 +67,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(checkIfDrawingFragment(fragment)) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
                     }
                 }
             }
@@ -81,7 +81,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is GuessFragment) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
                     }
                 }
             }
