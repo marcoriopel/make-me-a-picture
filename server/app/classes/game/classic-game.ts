@@ -388,8 +388,6 @@ export class ClassicGame extends Game {
     sendVPlayerEndGameMessage(){
         const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
         const minScoreIndex = this.score.indexOf(Math.min(...this.score));
-        console.log(maxScoreIndex);
-        console.log(minScoreIndex);
         if(maxScoreIndex == minScoreIndex){
             if(this.vPlayers[maxScoreIndex]){
                 this.vPlayers[maxScoreIndex].sayWeTied();
