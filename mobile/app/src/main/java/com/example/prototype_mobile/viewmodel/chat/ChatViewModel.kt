@@ -28,6 +28,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     val getChannelResult: LiveData<Int> = _getChannelResult
     var channelList: MutableList<Channel>
 
+    var gameId: String? = null
+
     init {
         chatRepository.messageReceived.observeForever(Observer {
             _messageReceived.value = it ?: return@Observer
@@ -41,11 +43,14 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
-            if(it != null)
+            if(it != null) {
+                gameId = it.gameID
                 joinLobbyChannel(it.gameID)
+            }
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
             if(it != null)
+                switchChannel("General")
                 leaveChannel(it)
         }
     }
@@ -62,13 +67,14 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     fun createChannel(channelName: String) {
         viewModelScope.launch()
         {
-            val result: Result<Boolean> = try {
+            val result: Result<String> = try {
                 chatRepository.createChannel(channelName)
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
             }
 
             if (result is Result.Success) {
+                joinChannel(result.data)
             }
 
             if(result is Result.Error){
@@ -81,7 +87,13 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         getChannels()
     }
 
+    var joinLimit = 4
+    var chatTryingToBeJoined = ""
     fun joinLobbyChannel(chatId: String) {
+        if (chatTryingToBeJoined != chatId) {
+            joinLimit = 4
+            chatTryingToBeJoined = chatId
+        }
         viewModelScope.launch(Dispatchers.IO)
         {
             chatRepository.joinChannel(chatId)
@@ -93,15 +105,22 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
             if (result is Result.Success) {
                 _getChannelResult.postValue(-1)
+                if (chatRepository.channelMap.containsKey(chatId)) {
+                    switchChannel(chatId)
+                } else {
+                    if (joinLimit-- > 0) {
+                        joinLobbyChannel(chatId)
+                    }
+                }
             }
 
-            if(result is Result.Error){
+            if(result is Result.Error && joinLimit == 0){
                 when(result.exception) {
                     ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
                     ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
                 }
             }
-            switchChannel(chatId)
+
         }
     }
 
@@ -138,11 +157,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun switchChannel(chatId: String) {
-        if (chatRepository.channelMap.containsKey(chatId)) {
-            _messageList.postValue(chatRepository.channelMap[chatId]!!)
-        } else {
-            _messageList.postValue(mutableListOf())
-        }
+
+        _messageList.postValue(chatRepository.channelMap[chatId]!!)
+
         viewModelScope.launch(Dispatchers.IO){
             channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
             channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN

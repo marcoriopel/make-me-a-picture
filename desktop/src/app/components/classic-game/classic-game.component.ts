@@ -101,4 +101,9 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
+
+  requestHint(): void {
+    this.socketService.emit('hintRequest', {'gameId': this.gameService.gameId});
+  }
+
 }
