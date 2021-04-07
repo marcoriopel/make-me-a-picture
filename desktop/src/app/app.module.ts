@@ -56,6 +56,10 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
 import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-drawing.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
 
 @NgModule({
     declarations: [
@@ -87,6 +91,8 @@ import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-
         LeaderboardComponent,
         DrawingSuggestionsComponent,
         EndGameDrawingComponent,
+        TutorialComponent,
+        JoinPrivateGameComponent,
     ],
     imports: [
         BrowserModule,
@@ -116,10 +122,15 @@ import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-
         MatToolbarModule,
         NgxElectronModule,
         MatMenuModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatStepperModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService,
+    {
+        provide: STEPPER_GLOBAL_OPTIONS,
+        useValue: { displayDefaultIndicatorType: false }
+    }],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

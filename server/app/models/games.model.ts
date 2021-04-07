@@ -5,7 +5,7 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 
 @injectable()
 export class GamesModel {
-
+    
     constructor(@inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel) {
         this.databaseModel = DatabaseModel.getInstance();
     }
@@ -21,6 +21,14 @@ export class GamesModel {
     async getGames(username: string) {
         try {
             return await this.databaseModel.client.db("database").collection("games").find({'players.username' : username}).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getMutualGames(username: string, usernameVPlayer: string) {
+        try {
+            return await this.databaseModel.client.db("database").collection("games").find( {$and: [{'players.username' : username} , {'players.username' : usernameVPlayer} ]}).toArray();
         } catch (e) {
             console.error(e);
         }
