@@ -133,6 +133,7 @@ export class GameService {
           this.isUserTeamGuessing = false;
         }
       }
+      this.tick.pause();
       this.updateGuessingStatus();
     })
 
