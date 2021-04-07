@@ -21,11 +21,14 @@ export class LobbyService {
   isTeam2Full: boolean = false;
   isLobbyFull: boolean = false;
   oldLobbyId: string = "";
+  lobbyInviteId: string = "";
 
   // URL
   private baseUrl = environment.api_url;
-  private createGameUrl = this.baseUrl + "/api/games/create";
-  private joinUrl = this.baseUrl + "/api/games/join";
+  private createPrivateGameUrl = this.baseUrl + "/api/games/create/private";
+  private createPublicGameUrl = this.baseUrl + "/api/games/create/public";
+  private joinPublicGameUrl = this.baseUrl + "/api/games/join/public";
+  private joinPrivateGameUrl = this.baseUrl + "/api/games/join/private";
   private addVirtualPlayerUrl = this.baseUrl + "/api/games/add/virtual/player";
   private deleteVirtualPlayerUrl = this.baseUrl + "/api/games/remove/virtual/player";
   private startGameUrl = this.baseUrl + "/api/games/start";
@@ -84,15 +87,23 @@ export class LobbyService {
     this.chatService.leaveChat(this.gameService.gameId);
   }
 
-  create(game: NewGame) {
+  createPublicGame(game: NewGame) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers };
-    return this.http.post<any>(this.createGameUrl, game, options);
+    return this.http.post<any>(this.createPublicGameUrl, game, options);
   }
 
-  join(id: string, game: NewGame) {
+  createPrivateGame(game: NewGame) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!});
+    const options = { headers: headers };
+    return this.http.post<any>(this.createPrivateGameUrl, game, options);
+  }
+
+  joinPublicGame(id: string, game: NewGame) {
     this.game = {
       id: id,
       name: game.gameName,
@@ -102,35 +113,43 @@ export class LobbyService {
       team1: [],
       team2: []
     }
-    this.listen();
+    this.listen(this.game);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem(ACCESS.TOKEN)!});
     const options = { headers: headers, responseType: 'text' as 'json'};
-    return this.http.post<any>(this.joinUrl, {lobbyId: id, socketId: this.socketService.socketId}, options);
+    return this.http.post<any>(this.joinPublicGameUrl, {lobbyId: id, socketId: this.socketService.socketId}, options);
   }
 
-  private listen() {
-      this.socketService.emit('listenLobby', {oldLobbyId: this.oldLobbyId, lobbyId: this.game.id});
-      this.oldLobbyId = this.game.id;
+  joinPrivateGame(id: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem(ACCESS.TOKEN)!});
+    const options = { headers: headers, responseType: 'text' as 'json'};
+    return this.http.post<any>(this.joinPrivateGameUrl, {lobbyInviteId: id, socketId: this.socketService.socketId}, options);
+  }
+
+  listen(game: Game) {
+      this.socketService.emit('listenLobby', {oldLobbyId: this.oldLobbyId, lobbyId: game.id});
+      this.oldLobbyId = game.id;
       this.socketService.bind('dispatchTeams', (res: any) => {
         this.clearPlayers();
-        if(this.game.type == GameType.Classic){
+        if(game.type == GameType.Classic){
           res.players.forEach((user: { username: string; avatar: number; team: number}) => {
-            this.game.player.push(user.username);
+            game.player.push(user.username);
             if (user.team == 0) {
-              this.game.team1.push(user.username);
+              game.team1.push(user.username);
               if (user.avatar > 5)
                 this.virtalPlayer0 = user.username;
             } else { 
-              this.game.team2.push(user.username);
+              game.team2.push(user.username);
               if (user.avatar > 5)
                 this.virtalPlayer1 = user.username;
             }
           });          
         } else {
           res.players.forEach((user: { username: string; avatar: number}) => {
-            this.game.player.push(user.username);
+            game.player.push(user.username);
           });
         }
       this.isFull();

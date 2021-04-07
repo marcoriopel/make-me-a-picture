@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -15,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.databinding.ActivityLoginBinding
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
-import com.example.prototype_mobile.view.game.GameActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
@@ -88,6 +90,18 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                Log.e("Enter key", "UP")
+                binding.loading.visibility = View.VISIBLE
+                loginViewModel.login(binding.username.text.toString(), StringUtil.hashSha256(binding.password.text.toString()))
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
+
     private fun updateUiWithUser(username: String) {
         val intent = Intent(this, MainMenuActivity::class.java);
       // val intent = Intent(this, GameActivity::class.java)
@@ -105,7 +119,16 @@ class LoginActivity : AppCompatActivity() {
         toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
         toast.show()
     }
+
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
+    }
 }
+
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
@@ -120,4 +143,5 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
+
 }

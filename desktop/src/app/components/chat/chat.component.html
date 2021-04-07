@@ -1,7 +1,7 @@
 <div class="chat-bar">
     <div class="container">
         <div id="message-scroller" class="chat-container">
-            <div *ngIf="!chatService.joinedChatList[chatService.index].isChatHistoryDisplayed" id="history-button-container">
+            <div *ngIf="!this.isChatHistoryDisplayed()" id="history-button-container">
                 <p id="history-button" (click)="loadChatHistory()">Afficher l'historique</p>
             </div>
             <div *ngFor="let message of chatService.getChatMessages()">
