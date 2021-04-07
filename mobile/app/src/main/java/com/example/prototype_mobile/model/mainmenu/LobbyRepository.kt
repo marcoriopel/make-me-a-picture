@@ -96,7 +96,7 @@ class LobbyRepository() {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
-        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join", map, true)
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
 
         if (result is Result.Success) {
