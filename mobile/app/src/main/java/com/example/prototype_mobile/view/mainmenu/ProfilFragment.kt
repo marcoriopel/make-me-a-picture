@@ -9,10 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Connection
+import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.GameHistoric
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentProfilBinding
+import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.viewmodel.mainmenu.ProfilViewModel
+import com.example.prototype_mobile.viewmodel.mainmenu.ProfilViewModelFactory
+import org.jetbrains.anko.support.v4.runOnUiThread
 
 
 class ProfilFragment : Fragment() {
@@ -26,7 +30,7 @@ class ProfilFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        profilViewModel = ViewModelProvider(this).get(ProfilViewModel::class.java)
+        profilViewModel = ViewModelProvider(this, ProfilViewModelFactory()).get(ProfilViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -76,6 +80,31 @@ class ProfilFragment : Fragment() {
                 }
             }
         }
+
+        profilViewModel.avatar.observe(viewLifecycleOwner, {
+            binding.avatarProfil.setImageResource(Drawable.avatars[it])
+        })
+
+        profilViewModel.username.observe(viewLifecycleOwner, {
+            binding.profilUsername.setText(it)
+        })
+
+        profilViewModel.name.observe(viewLifecycleOwner, {
+            binding.prenom.setText(it)
+        })
+
+        profilViewModel.surname.observe(viewLifecycleOwner, {
+            binding.nom.setText(it)
+        })
+
+        profilViewModel.gameHistoric.observe(viewLifecycleOwner, {
+            addItemToGameRecyclerView(it)
+        })
+
+        profilViewModel.connection.observe(viewLifecycleOwner, {
+            addItemToConnectionRecyclerView(it)
+        })
+        profilViewModel.getProfilInfo()
     }
 
     fun addListMetadata() {
@@ -84,6 +113,20 @@ class ProfilFragment : Fragment() {
         gameHistoricAdapter.notifyDataSetChanged()
         connectionAdapter.notifyDataSetChanged()
 
+    }
+
+    private fun addItemToGameRecyclerView(game: GameHistoric) {
+        runOnUiThread {
+            gameHistoricList.add(game)
+            gameHistoricAdapter.notifyItemInserted(gameHistoricList.size - 1)
+        }
+    }
+
+    private fun addItemToConnectionRecyclerView(connection: Connection) {
+        runOnUiThread {
+            connectionList.add(connection)
+            connectionAdapter.notifyItemInserted(connectionList.size - 1)
+        }
     }
 
     companion object {

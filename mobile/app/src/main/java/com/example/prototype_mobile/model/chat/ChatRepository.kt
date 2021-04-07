@@ -256,9 +256,17 @@ class ChatRepository() {
         var tmpHour: Int = cal.get(Calendar.HOUR_OF_DAY)
         if (tmpHour < 0) { tmpHour += 24 }
         val hours = if (tmpHour.toString().length == 1) "0" + tmpHour.toString() else tmpHour.toString()
-        val minutes = if(cal.get(Calendar.MINUTE).toString().length == 1) "0" + cal.get(Calendar.MINUTE).toString() else cal.get(Calendar.MINUTE).toString()
-        val seconds = if(cal.get(Calendar.SECOND).toString().length == 1) "0" + cal.get(Calendar.SECOND).toString() else cal.get(Calendar.SECOND).toString()
-        return hours + ":" + minutes + ":" + seconds;
+        val minutes = if(cal.get(Calendar.MINUTE).toString().length == 1) "0" + cal.get(Calendar.MINUTE).toString() else cal.get(
+            Calendar.MINUTE).toString()
+        val seconds = if(cal.get(Calendar.SECOND).toString().length == 1) "0" + cal.get(Calendar.SECOND).toString() else cal.get(
+            Calendar.SECOND).toString()
+        val day = if(cal.get(Calendar.DAY_OF_MONTH).toString().length == 1) "0" + cal.get(Calendar.DAY_OF_MONTH).toString() else cal.get(
+            Calendar.DAY_OF_MONTH).toString()
+        val month = if(cal.get(Calendar.MONTH).toString().length == 1) "0" + cal.get(Calendar.MONTH).toString() else cal.get(
+            Calendar.MONTH).toString()
+        val year = if(cal.get(Calendar.YEAR).toString().length == 1) "0" + cal.get(Calendar.YEAR).toString() else cal.get(
+            Calendar.YEAR).toString()
+        return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
     }
 
 }
