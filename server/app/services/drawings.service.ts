@@ -6,11 +6,13 @@ import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { Drawing } from '@app/ressources/interfaces/drawings.interface';
 import { StatusCodes } from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
+import { UsersModel } from '@app/models/users.model';
 
 @injectable()
 export class DrawingsService {
 
     constructor(
+        @inject(TYPES.UsersModel) private usersModel: UsersModel,
         @inject(TYPES.DrawingsModel) private drawingsModel: DrawingsModel) {
     }
 
@@ -66,7 +68,24 @@ export class DrawingsService {
         }
 
         let random = Math.floor(Math.random() * words.length);
-        return await this.drawingsModel.getDrawing(words[random]._id)
+        return await this.drawingsModel.getDrawing(words[random].drawingId)
+    }
+
+    async vote(req: Request, res: Response, user: BasicUser) {
+        try {
+            if (req.body.isUpvote == undefined || req.body.drawingId == undefined) {
+                return res.sendStatus(StatusCodes.BAD_REQUEST)
+            }
+
+            await this.drawingsModel.vote(req.body.drawingId, req.body.isUpvote);
+            const artistUsername = (await this.drawingsModel.getDrawing(req.body.drawingId)).username;
+            await this.usersModel.vote(artistUsername, req.body.isUpvote);
+            return res.sendStatus(StatusCodes.OK);
+        }
+        catch (e) {
+            console.log(e);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
     }
 
 }
