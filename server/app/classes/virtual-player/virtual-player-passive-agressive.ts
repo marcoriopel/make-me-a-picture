@@ -22,7 +22,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
             let str = vPlayerText.passiveAgressive.meet.split("##");
             let message = str[0] + this.teammates + str[1];
             const timestamp = new Date().getTime();
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
     }
 
@@ -45,7 +45,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         let str = vPlayerText.passiveAgressive.meetAgainSolo.split("##");
         let message = str[0] + this.teammates + str[1];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     private sayHelloAgainCoop(){
@@ -60,7 +60,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         let friendsStr = this.arrayToString(friends);
         let message = str[0] + this.teammates + str[1] + friendsStr + str[2] + lastMutualGame.score[0] + str[3];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     private sayHelloAgainClassic(){
@@ -90,7 +90,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         let str = vPlayerText.passiveAgressive.meetAgainClassicSameTeam.split("##");
         let message = str[0] + lastMutualGame.score[teamNumber] + str[1] + lastMutualGame.score[opposingTeamNumber];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     private sayHelloAgainClassicOpposingTeam(teamNumber: number){
@@ -116,7 +116,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
             message = str[0] + this.teammates + str[1] + lastMutualGame.score[0] + str[2] + lastMutualGame.score[1] + str[3];
         }
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     
     }
 
@@ -131,7 +131,7 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         let teamStr = this.arrayToString(this.teammates);
         let message = str[0] + teamStr + str[1];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayHelloAgainMany(){
@@ -150,51 +150,51 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         if(newPlayers.length == 0){
             let str = vPlayerText.passiveAgressive.meetAgainAll.split("##");
             let message = str[0] + this.arrayToString(this.teammates) + str[1];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
         else{
             let str = vPlayerText.passiveAgressive.meetAgainMany.split("##");
             let message = str[0] + this.arrayToString(newPlayers) + str[1] + (newPlayers.length > 1 ? "votre" : "ta") + str[2] + this.arrayToString(oldPlayers) + (oldPlayers.length > 1 ? "leur" : "sa") + str[3];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
     }
 
     sayRightGuess(){
         let message = vPlayerText.passiveAgressive.rightGuess;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWrongGuess(){
         let str = vPlayerText.passiveAgressive.wrongGuess.split("##");
         let message = str[0] + this.teammates + str[1];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWrongTry(){
         let message = vPlayerText.passiveAgressive.wrongTry;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWeWon(){
         let str = vPlayerText.passiveAgressive.weWon.split("##");
         let message = str[0] + this.teammates + str[1];
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWeLost(){
         let message = vPlayerText.passiveAgressive.weLost;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayWeTied(){
         let message = vPlayerText.passiveAgressive.weTied;
         const timestamp = new Date().getTime();
-        this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+        this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
     }
 
     sayEndSoloGame(finalScore: number){
@@ -204,13 +204,13 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
             let str = vPlayerText.passiveAgressive.endSoloGameBestScore.split("##");
             let message = str[0] + finalScore + str[1] + teammateStats.bestSoloScore + str[2];
             const timestamp = new Date().getTime();
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
         else{
             let str = vPlayerText.passiveAgressive.endSoloGameBestScore.split("##");
             let message = str[0] + teammateStats.bestSoloScore + str[1];
             const timestamp = new Date().getTime();
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
     }
 
@@ -238,17 +238,17 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         if(newHighScorePlayers.length == 0){
             let str = vPlayerText.passiveAgressive.endCoopGame.split("##");
             let message = str[0] + finalScore + str[1] + this.teammates[worstCoopScoreIndex] + str[2];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
         else if(oldHighScorePlayers.length == 0){
             let str = vPlayerText.passiveAgressive.endCoopGameBestScoreAll.split("##");
             let message = str[0] + this.teammates[bestCoopScoreIndex] + str[2];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
         else{
             let str = vPlayerText.passiveAgressive.endCoopGameBestScoreSome.split("##");
             let message = str[0] + this.arrayToString(newHighScorePlayers) + str[1] + this.arrayToString(oldHighScorePlayers) + str[2];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": { username: this.username }, "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
         }
     }
 }
