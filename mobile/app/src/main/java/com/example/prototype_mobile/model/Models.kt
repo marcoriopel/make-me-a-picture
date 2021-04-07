@@ -64,3 +64,5 @@ data class PrivateInfo(val name: String, val surname: String, val stats: Stats, 
 data class Stats(val gamePlayed: Int, val timePlayed: Long, val bestSoloScore: Int, val bestCoopScore: Int, val classicWinRatio: Double, val meanGameTime: Double)
 data class Log(val _id: String, val username: String, val isLogin: Boolean, val timestamp: Long)
 data class GameLog(val _id: String, val gameName: String, val gameType: Int, val players: Array<Players>, val start: Long, val end: Long)
+data class Connection(val date: String, val action: String)
+data class GameHistoric(val date: String, val name: String, val mode: String, val team1: String, val team2: String, val score: String)

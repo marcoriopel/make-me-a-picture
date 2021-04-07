@@ -4,31 +4,30 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.prototype_mobile.Game
+import com.example.prototype_mobile.Connection
 import com.example.prototype_mobile.R
 
-class ConnectionAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<ConnectionAdapter.ViewHolder>() {
+class ConnectionAdapter(val context: Context, val connectionList: MutableList<Connection>): RecyclerView.Adapter<ConnectionAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionAdapter.ViewHolder {
-        var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
+        var view = LayoutInflater.from(context).inflate(R.layout.row_connection_profil,parent,false)
         return ViewHolder(view!!)
     }
 
     override fun getItemCount(): Int {
-        return gameList.size
+        return connectionList.size
     }
 
     override fun onBindViewHolder(holder: ConnectionAdapter.ViewHolder, position: Int) {
-
+        val connection  = connectionList[position]
+        holder.date.setText(connection.date)
+        holder.action.setText(connection.action)
     }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
-        val view = itemView
-        val gameName = itemView.findViewById<TextView>(R.id.gamelist_name)
-        val gameDifficulty = itemView.findViewById<ImageView>(R.id.gamelist_difficulty)
-        val gameType = itemView.findViewById<ImageView>(R.id.gamelist_type)
+        val date = itemView.findViewById<TextView>(R.id.date)
+        val action = itemView.findViewById<TextView>(R.id.action)
     }
 }

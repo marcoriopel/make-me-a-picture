@@ -4,16 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.prototype_mobile.Game
+import com.example.prototype_mobile.GameHistoric
 import com.example.prototype_mobile.R
 
-class GameHistoricAdapter(val context: Context, val gameList: MutableList<Game>): RecyclerView.Adapter<GameHistoricAdapter.ViewHolder>() {
+class GameHistoricAdapter(val context: Context, val gameList: MutableList<GameHistoric>): RecyclerView.Adapter<GameHistoricAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameHistoricAdapter.ViewHolder {
-        var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
+        var view = LayoutInflater.from(context).inflate(R.layout.row_game_profil,parent,false)
         return ViewHolder(view!!)
     }
 
@@ -22,13 +21,21 @@ class GameHistoricAdapter(val context: Context, val gameList: MutableList<Game>)
     }
 
     override fun onBindViewHolder(holder: GameHistoricAdapter.ViewHolder, position: Int) {
-
+        val gameData  = gameList[position]
+        holder.date.setText(gameData.date)
+        holder.name.setText(gameData.name)
+        holder.mode.setText(gameData.mode)
+        holder.team1.setText(gameData.team1)
+        holder.team2.setText(gameData.team2)
+        holder.score.setText(gameData.score)
     }
 
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
-        val view = itemView
-        val gameName = itemView.findViewById<TextView>(R.id.gamelist_name)
-        val gameDifficulty = itemView.findViewById<ImageView>(R.id.gamelist_difficulty)
-        val gameType = itemView.findViewById<ImageView>(R.id.gamelist_type)
+        val date = itemView.findViewById<TextView>(R.id.date)
+        val name = itemView.findViewById<TextView>(R.id.name)
+        val mode = itemView.findViewById<TextView>(R.id.mode)
+        val team1 = itemView.findViewById<TextView>(R.id.team1)
+        val team2 = itemView.findViewById<TextView>(R.id.team2)
+        val score = itemView.findViewById<TextView>(R.id.score)
     }
 }
