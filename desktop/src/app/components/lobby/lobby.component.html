@@ -6,7 +6,7 @@
         <div>
             <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
             <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
-            <img *ngIf="lobbyService.game.type == 2" [src]="sprintImgRef" class="sprint-logo"> 
+            <img *ngIf="lobbyService.game.type == 2" [src]="coopImgRef" class="sprint-logo"> 
             <p class="title"> {{lobbyService.game.name}} </p>            
         </div>
         <h1 *ngIf="this.lobbyService.lobbyInviteId != ''">Code de la partie: {{this.lobbyService.lobbyInviteId}}</h1>

@@ -10,6 +10,8 @@ export class LobbyComponent implements OnInit {
 
   classicBlackImgRef: string = "./assets/img/classicLogoBlack.png"
   sprintImgRef: string = "./assets/img/sprintLogo.png";
+  coopImgRef: string = "./assets/img/hands-helping-solid.svg";
+
 
   constructor(public lobbyService: LobbyService, private chatService: ChatService) { }
 
