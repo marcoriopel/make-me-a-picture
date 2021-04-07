@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.game
 
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     private lateinit var colorFragment: ColorFragment
     private lateinit var canvasViewModel: CanvasViewModel
     private lateinit var binding: ActivityGameBinding
-
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +81,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 endGameEvent()
         })
         gameViewModel.transitionMessage.observe(this, Observer{
+            mediaPlayer = MediaPlayer.create(this, R.raw.countdown)
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
             toast.show()
         })
@@ -102,6 +104,23 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         })
 
+        gameViewModel.countDownSound.observe(this, Observer {
+            if (it) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.countdown)
+                mediaPlayer?.start()
+            }
+        })
+
+        gameViewModel.tikSound.observe(this, Observer {
+            if (it) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.tick)
+                mediaPlayer?.start()
+            } else {
+                if(gameViewModel.countDownSound.value != null)
+                    if(!gameViewModel.countDownSound.value!!)
+                        mediaPlayer?.stop()
+            }
+        })
     }
     fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
@@ -125,13 +144,25 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
     
     fun endGameEvent() {
-
-        for(fragment in supportFragmentManager.fragments)
-            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
+        for(fragment in supportFragmentManager.fragments) {
+            if (fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
                 supportFragmentManager.beginTransaction().replace(R.id.containerCanvas, EndGameFragment()).commitNow()
             }
-
+        }
+        // End game Audio effects
+        if (gameViewModel.teamScore.value != null) {
+            if (gameViewModel.teamScore.value!!.score.size == 2) {
+                val team = gameViewModel.gameRepository.team
+                val otherTeam = if (team == 1) 0 else 1
+                mediaPlayer = if (gameViewModel.teamScore.value!!.score[team] > gameViewModel.teamScore.value!!.score[otherTeam])
+                    MediaPlayer.create(this, R.raw.win)
+                else
+                    MediaPlayer.create(this, R.raw.defeat)
+                mediaPlayer?.start()
+                Log.e("Audio", "endgame")
+            }
+        }
     }
 
     //maybe we will need to

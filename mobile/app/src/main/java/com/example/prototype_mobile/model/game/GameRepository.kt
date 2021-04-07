@@ -141,8 +141,8 @@ class GameRepository {
 
     private var onTransition = Emitter.Listener {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
-        _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
+        _transition.postValue(transitionTemp)
         if(Timer(transitionTemp.timer).timer == 0) {
             if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
                 _isPlayerDrawing.postValue(true)
