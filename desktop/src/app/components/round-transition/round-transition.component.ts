@@ -36,7 +36,7 @@ export class RoundTransitionComponent implements OnInit {
   } 
 
   endGame(): void {
-    this.router.navigate(['/home']);
+    this.gameService.numberOfDrawings == 0 ? this.router.navigate(['/home']) : this.gameService.openEndGameModal();
   }
 
   ngOnInit(): void {
