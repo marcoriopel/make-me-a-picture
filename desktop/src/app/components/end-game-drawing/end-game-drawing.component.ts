@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameService } from '@app/services/game/game.service';
 
 @Component({
   selector: 'app-end-game-drawing',
@@ -7,9 +8,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EndGameDrawingComponent implements OnInit {
 
-  constructor() { }
+  virtualPlayerDrawings: string[] = [];
+  realPlayerDrawings: string[] = [];
+
+  constructor(private gameService: GameService) {
+    this.virtualPlayerDrawings = this.gameService.virtualPlayerDrawings;
+    this.realPlayerDrawings = this.realPlayerDrawings;
+    console.log(this.virtualPlayerDrawings);
+   }
 
   ngOnInit(): void {
+  }
+
+  upVote(): void {
+    console.log('upvote')
+  }
+
+  downVote(): void {
+    console.log('downVote')
+  }
+
+  quit(): void {
+    console.log('quit')
   }
 
 }
