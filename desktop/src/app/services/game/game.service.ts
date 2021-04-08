@@ -47,6 +47,10 @@ export class GameService {
   gameId: string = '';
 
   // Classic game
+  virtualPlayerDrawings: string[] = [];
+  realPlayerDrawings: string[] = [];
+  virtualPlayers: string[] = [];
+
   isUserTeamGuessing: boolean = false;
   isSuggestionsModalOpen: boolean = false;
   isPlayerDrawing: boolean = false;
@@ -54,6 +58,7 @@ export class GameService {
   drawingSuggestions: string[];
   transitionTimer: number = 5;
   guessingPlayer: string = "";
+  drawings: string[] = [];
   isGuessing: boolean = false;
   drawingName: string = "";
   currentUserTeam: number;
@@ -113,6 +118,9 @@ export class GameService {
         if (player.username == this.username) {
           this.currentUserTeam = player.team;
         }
+        if (player.isVirtual) {
+          this.virtualPlayers.push(player.username);
+        }
       });
       this.router.navigate(['/game/classic']);
     })
@@ -143,6 +151,13 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
+
+      if (this.virtualPlayers.includes(this.drawingPlayer)) {
+        this.virtualPlayerDrawings.push(this.drawingService.canvas.toDataURL());
+      } else {
+        this.realPlayerDrawings.push(this.drawingService.canvas.toDataURL());
+      }
+
       this.drawingPlayer = data.newDrawingPlayer;
       if(this.drawingPlayer == this.username){
         this.isPlayerDrawing = true;
@@ -160,7 +175,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      this.openDialog(State.ENDGAME);
+      this.openEndGameModal();
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
@@ -281,8 +296,8 @@ export class GameService {
   openEndGameModal(): void {
     this.endGameDialogRef = this.dialog.open(EndGameDrawingComponent, {
       disableClose: true,
-      height: '400px',
-      width: "600px"
+      height: '800px',
+      width: "1200px"
     })
   }
 }

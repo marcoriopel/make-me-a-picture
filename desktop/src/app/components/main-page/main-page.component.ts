@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatService } from '@app/services/chat/chat.service';
+import { GameService } from '@app/services/game/game.service';
 
 @Component({
     selector: 'app-main-page',
@@ -9,7 +10,8 @@ import { ChatService } from '@app/services/chat/chat.service';
 })
 export class MainPageComponent {
     readonly title: string = 'PolyDessin';
-    constructor(public dialog: MatDialog, public chatService: ChatService) {
+    constructor(public dialog: MatDialog, public chatService: ChatService, public gameService: GameService) {
+        this.gameService.openEndGameModal();
     }
 
 }
