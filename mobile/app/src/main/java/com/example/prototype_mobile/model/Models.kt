@@ -2,6 +2,8 @@ package com.example.prototype_mobile
 
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
@@ -57,3 +59,5 @@ data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
+
+data class StaticTutorialInfo(val title:String, @DrawableRes val image: Int, val description: String?)
