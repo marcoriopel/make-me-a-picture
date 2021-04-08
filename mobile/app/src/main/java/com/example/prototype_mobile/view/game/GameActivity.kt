@@ -1,11 +1,12 @@
 package com.example.prototype_mobile.view.game
 
 import android.graphics.Color
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -29,7 +30,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     private lateinit var colorFragment: ColorFragment
     private lateinit var canvasViewModel: CanvasViewModel
     private lateinit var binding: ActivityGameBinding
-
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,11 +109,30 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .commitNow()
             }
         })
-        startKonfetti()
+        gameViewModel.countDownSound.observe(this, Observer {
+            if (it) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.countdown)
+                mediaPlayer?.start()
+            }
+        })
+
+        gameViewModel.tikSound.observe(this, Observer {
+            if (it) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.tick)
+                mediaPlayer?.start()
+            } else {
+                if(gameViewModel.countDownSound.value != null)
+                    if(!gameViewModel.countDownSound.value!!)
+                        mediaPlayer?.stop()
+            }
+        })
     }
 
-    private fun startKonfetti() {
+    private fun burstKonfetti() {
         val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
+        Log.e("konfetti width", konfettiView.width.toString())
+        Log.e("konfetti height", konfettiView.height.toString())
+
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart);
         val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
         konfettiView.build()
@@ -123,7 +143,10 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             .setTimeToLive(2000L)
             .addShapes(Shape.Square, Shape.Circle, drawableShape!!)
             .addSizes(Size(12, 5f))
-            .setPosition(konfettiView.x + konfettiView.width / 2, konfettiView.y + konfettiView.height / 3)
+            .setPosition(
+                konfettiView.x + 800,
+                konfettiView.y + 350
+            )
             .burst(100)
     }
 
@@ -147,14 +170,28 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 return fragment
         return null
     }
-    
+
     private fun endGameEvent() {
-        for(fragment in supportFragmentManager.fragments)
-            if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
+        for(fragment in supportFragmentManager.fragments) {
+            if (fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
                 supportFragmentManager.beginTransaction().replace(R.id.containerCanvas, EndGameFragment()).commitNow()
             }
-
+        }
+        // End game Audio effects
+        if (gameViewModel.teamScore.value != null) {
+            if (gameViewModel.teamScore.value!!.score.size == 2) {
+                val team = gameViewModel.gameRepository.team
+                val otherTeam = if (team == 1) 0 else 1
+                if (gameViewModel.teamScore.value!!.score[team] > gameViewModel.teamScore.value!!.score[otherTeam]) {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.win)
+                    burstKonfetti()
+                } else {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                }
+                mediaPlayer?.start()
+            }
+        }
     }
 
     //maybe we will need to
@@ -163,7 +200,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         println("Restart")
 
     }
-
 
     private fun setUpGameInit() {
         supportFragmentManager.beginTransaction()
