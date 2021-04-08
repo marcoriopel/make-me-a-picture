@@ -29,5 +29,10 @@ export class DrawingsController {
             });
         });
 
+        this.router.patch('/vote', (req, res) => {
+            this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+                this.drawingsService.vote(req, res, user);
+            });
+        });
     }
 }

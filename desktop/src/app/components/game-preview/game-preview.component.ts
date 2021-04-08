@@ -81,7 +81,7 @@ export class GamePreviewComponent{
       gameName: this.game.gameName,
       difficulty: this.game.difficulty
     }
-    this.lobbyService.join(this.game.id, game).subscribe(
+    this.lobbyService.joinPublicGame(this.game.id, game).subscribe(
       res => {
         this.gameService.gameId = this.game.id;
         this.router.navigate(['/lobby']);

@@ -62,7 +62,8 @@ export class RegisterComponent implements OnInit {
       res => {
         localStorage.setItem(ACCESS.TOKEN, res.token);
         localStorage.setItem(ACCESS.USERNAME, this.userRegistrationForm.value.username);
-        localStorage.setItem(ACCESS.USERNAME, res.avatar);
+        localStorage.setItem(ACCESS.AVATAR, res.avatar);
+        localStorage.setItem('tutorial', '0');
         this.router.navigate(['/home']);
       },
       err => {

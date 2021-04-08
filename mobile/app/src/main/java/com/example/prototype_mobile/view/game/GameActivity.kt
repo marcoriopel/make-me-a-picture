@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -82,6 +83,24 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         gameViewModel.transitionMessage.observe(this, Observer{
             val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
             toast.show()
+        })
+
+        gameViewModel.suggestions.observe(this, Observer {
+            if (it != null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, ChooseWordFragment())
+                    .commitNow()
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is ChooseWordFragment) {
+                        fragment.bindButton()
+                    }
+                }
+
+            } else {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
+                    .commitNow()
+            }
         })
 
     }
@@ -164,6 +183,27 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         println("OnResume")
         setUpGameInit()
     }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
+    }
 
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                for(fragment in supportFragmentManager.fragments) {
+                    if (fragment is GuessFragment)
+                        fragment.onKeyEnter()
+                    if (fragment is ChatFragment)
+                        fragment.onKeyEnter()
+                }
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
 
 }

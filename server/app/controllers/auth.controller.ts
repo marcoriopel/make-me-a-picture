@@ -41,7 +41,7 @@ export class AuthController {
       });
     });
 
-    this.router.post('/logout', (req: Request, res: Response) => {
+    this.router.post('/logout', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: any) => {
         this.authService.addUserToLogCollection(user.username, false);
         res.sendStatus(StatusCodes.OK);
@@ -50,7 +50,7 @@ export class AuthController {
 
     this.router.get('/last/logout', (req: Request, res: Response) => {
       this.tokenService.authenticateToken(req, res, (user: any) => {
-        this.authService.getLastLogout(user.username, res, (lastLogout: any) => {
+        this.authService.returnLastLogout(user.username, res, (lastLogout: any) => {
           res.status(StatusCodes.OK).send({ lastLogout });
         });
       });

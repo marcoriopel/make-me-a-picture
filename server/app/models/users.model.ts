@@ -31,6 +31,8 @@ export class UsersModel {
                 'bestCoopScore': 0,  
                 'classicWinRatio': 0,
                 'meanGameTime': 0,
+                'classicGamesPlayed': 0,
+                'totalDrawingVotes': 0,
                 'rooms': ["General"] 
             });
         } catch (e) {
@@ -125,6 +127,18 @@ export class UsersModel {
             {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async vote(artistUsername: string, isUpvote: boolean){
+        try {
+            const vote = isUpvote ? 1 : -1;
+            const voteResponse = await this.databaseModel.client.db("database").collection("users").updateOne({ "username": artistUsername }, { $inc: { "totalDrawingVotes": vote }});
+            if(!voteResponse.modifiedCount){
+                throw new Error("Did not update user's totalDrawingVotes score because user " + artistUsername + " does not exists anymore");
+            }
         } catch (e) {
             console.error(e);
         }

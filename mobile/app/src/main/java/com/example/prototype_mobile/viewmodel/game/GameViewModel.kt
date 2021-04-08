@@ -5,8 +5,14 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.Suggestions
+import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.GameRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class GameViewModel():ViewModel() {
@@ -25,27 +31,24 @@ class GameViewModel():ViewModel() {
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
 
+    private val _suggestions = MutableLiveData<Suggestions>()
+    var suggestions: LiveData<Suggestions> = _suggestions
+
     val gameRepository = GameRepository.getInstance()!!
     init {
-        _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
+        _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
 
+        _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
         gameRepository.isPlayerDrawing.observeForever {
             _isPlayerDrawing.value = it
         }
-
-        _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
-
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
-
             _teamScore.value = intArrayOf(0,0)
         }
         gameRepository.isGameEnded.observeForever{
             _isGameEnded.value = true
         }
-
-
-
         gameRepository.transition.observeForever {
             if (it.timer == 5) {
                 val msg = when (it.state) {
@@ -57,10 +60,31 @@ class GameViewModel():ViewModel() {
                 _transitionMessage.postValue(msg)
             }
         }
+        gameRepository.suggestions.observeForever {
+            _suggestions.postValue(it)
+        }
     }
 
     fun getGameType(): GameType {
         return GameRepository.getInstance()!!.gameType
+    }
+
+    fun chooseWord(word: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                gameRepository.postWordChose(word)
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+        }
+    }
+
+    fun getSuggestion(): Suggestions {
+        return gameRepository.suggestion
+    }
+
+    fun refreshSuggestions() {
+        gameRepository.refreshSuggestions()
     }
 
 }
