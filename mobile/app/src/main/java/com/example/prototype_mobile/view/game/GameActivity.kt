@@ -1,21 +1,27 @@
 package com.example.prototype_mobile.view.game
 
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.view.chat.ChatFragment
-import com.example.prototype_mobile.viewmodel.game.*
 import com.example.prototype_mobile.databinding.ActivityGameBinding
-import com.example.prototype_mobile.databinding.FragmentEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
+import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
+import com.example.prototype_mobile.viewmodel.game.GameViewModel
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
+
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
@@ -102,9 +108,26 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .commitNow()
             }
         })
-
+        startKonfetti()
     }
-    fun checkIfDrawingFragment(fragment: Fragment): Boolean {
+
+    private fun startKonfetti() {
+        val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart);
+        val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
+        konfettiView.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(1f, 5f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .addShapes(Shape.Square, Shape.Circle, drawableShape!!)
+            .addSizes(Size(12, 5f))
+            .setPosition(konfettiView.x + konfettiView.width / 2, konfettiView.y + konfettiView.height / 3)
+            .burst(100)
+    }
+
+    private fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
     }
 
@@ -118,15 +141,14 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         colorFragment.updateButtonColor(color)
     }
 
-    fun findColorFragment(): Fragment? {
+    private fun findColorFragment(): Fragment? {
         for (fragment in supportFragmentManager.fragments)
             if(fragment is ColorFragment)
                 return fragment
         return null
     }
     
-    fun endGameEvent() {
-
+    private fun endGameEvent() {
         for(fragment in supportFragmentManager.fragments)
             if(fragment is ColorFragment || fragment is ToolsAdjustmentFragment || fragment is CanvasFragment || fragment is ToolsFragment || fragment is GuessFragment || fragment is GameInfoFragment) {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
@@ -142,7 +164,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     }
 
-    fun setUpGameInit() {
+
+    private fun setUpGameInit() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
             .commitNow()
