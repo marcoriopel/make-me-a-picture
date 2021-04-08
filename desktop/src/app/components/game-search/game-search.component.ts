@@ -1,7 +1,9 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { SearchGameService } from '@app/services/search-game/search-game.service';
 import { GamePreviewComponent } from '../game-preview/game-preview.component';
+import { JoinPrivateGameComponent } from '../join-private-game/join-private-game.component';
 
 @Component({
   selector: 'app-game-search',
@@ -9,6 +11,7 @@ import { GamePreviewComponent } from '../game-preview/game-preview.component';
   styleUrls: ['./game-search.component.scss']
 })
 export class GameSearchComponent implements OnInit {
+  joinPrivateGameRef: any;
 
   private emptyOrSpaceRegex: string = "^\\s+$";
   filter = new Map([
@@ -22,6 +25,7 @@ export class GameSearchComponent implements OnInit {
   @ViewChildren('preview') previews: QueryList<GamePreviewComponent>;
 
   sprintImgRef: string = "./assets/img/sprintLogo.png";
+  coopImgRef: string = "./assets/img/hands-helping-solid.svg";
   classicBlackImgRef: string =  "./assets/img/classicLogoBlack.png";
   classicGreyImgRef: string = "./assets/img/classicLogoWhite.png"
   allLogoBlackImgRef: string =  "./assets/img/allLogoBlack.png";
@@ -32,7 +36,7 @@ export class GameSearchComponent implements OnInit {
   searchForm = this.formBuilder.group({
     gameNameOrId: ''
   })
-  constructor(private formBuilder: FormBuilder, public searchGameService: SearchGameService) { }
+  constructor(private formBuilder: FormBuilder, public searchGameService: SearchGameService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.searchGameService.fetchGameList();
@@ -61,8 +65,15 @@ export class GameSearchComponent implements OnInit {
     });
   }
 
-  onRefreshClick() : void {
+  onRefreshClick(): void {
     this.searchGameService.fetchGameList();
+  }
+
+  joinPrivateGame(): void {
+    this.joinPrivateGameRef = this.dialog.open(JoinPrivateGameComponent, {
+      height: '400px',
+      width: "600px"
+    })
   }
 
 }
