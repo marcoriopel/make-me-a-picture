@@ -22,7 +22,7 @@ import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
 class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
-
+    var blockProfilButton = false
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.mainmenu, menu)
@@ -34,10 +34,14 @@ class MainMenuActivity : AppCompatActivity() {
     }
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_profil -> {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container2, ProfilFragment.newInstance())
-                .commit()
+            if (!blockProfilButton) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.container2, ProfilFragment.newInstance())
+                        .commit()
+                blockProfilButton = true
+            }
             true
+
         }
         else -> {
             super.onOptionsItemSelected(item)
@@ -66,6 +70,7 @@ class MainMenuActivity : AppCompatActivity() {
                 .get(MainMenuViewModel::class.java)
 
         mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, {
+            blockProfilButton = false
             if (it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
                 supportFragmentManager.beginTransaction().replace(
                     R.id.container2,
@@ -83,7 +88,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
             val gameJoined = it ?: return@Observer
-
+            blockProfilButton = false
             supportFragmentManager.beginTransaction().replace(
                 R.id.container2, LobbyFragment.newInstance(
                     gameJoined.gameName,
