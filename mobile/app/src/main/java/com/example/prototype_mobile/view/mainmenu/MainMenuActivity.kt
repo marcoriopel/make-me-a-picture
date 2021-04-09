@@ -23,6 +23,7 @@ import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
     var blockProfilButton = false
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.mainmenu, menu)
@@ -35,8 +36,9 @@ class MainMenuActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_profil -> {
             if (!blockProfilButton) {
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.container2, ProfilFragment.newInstance())
+                supportFragmentManager.beginTransaction().replace(
+                    R.id.container2,
+                    ProfilFragment.newInstance())
                         .commit()
                 blockProfilButton = true
             }

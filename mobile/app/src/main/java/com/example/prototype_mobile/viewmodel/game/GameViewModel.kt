@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.Suggestions
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
@@ -19,8 +20,8 @@ class GameViewModel :ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
-    private val _teamScore = MutableLiveData<IntArray>()
-    val teamScore: LiveData<IntArray> = _teamScore
+    private val _teamScore = MutableLiveData<Score>()
+    val teamScore: LiveData<Score> = _teamScore
 
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
@@ -30,6 +31,12 @@ class GameViewModel :ViewModel() {
 
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
+
+    private val _countDownSound = MutableLiveData<Boolean>()
+    val countDownSound: LiveData<Boolean> = _countDownSound
+
+    private val _tikSound = MutableLiveData<Boolean>()
+    val tikSound: LiveData<Boolean> = _tikSound
 
     private val _suggestions = MutableLiveData<Suggestions>()
     var suggestions: LiveData<Suggestions> = _suggestions
@@ -44,13 +51,16 @@ class GameViewModel :ViewModel() {
         }
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
-            _teamScore.value = intArrayOf(0,0)
+        }
+        gameRepository.teamScore.observeForever {
+            _teamScore.postValue(it)
         }
         gameRepository.isGameEnded.observeForever{
             _isGameEnded.value = true
         }
         gameRepository.transition.observeForever {
             if (it.timer == 5) {
+                _tikSound.postValue(false)
                 val msg = when (it.state) {
                     0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
                     1 -> "Droit de réplique!"
@@ -58,10 +68,20 @@ class GameViewModel :ViewModel() {
                     else -> throw Exception("Transition state undefined")
                 }
                 _transitionMessage.postValue(msg)
+            } else if(it.timer == 3) {
+                _countDownSound.postValue(true)
+            } else if(it.timer == 0) {
+                _countDownSound.postValue(false)
             }
         }
         gameRepository.suggestions.observeForever {
             _suggestions.postValue(it)
+        }
+        gameRepository.roundTimer.observeForever {
+            if (it.timer == 10)
+                _tikSound.postValue(true)
+            else if (it.timer == 0)
+                _tikSound.postValue(false)
         }
     }
 

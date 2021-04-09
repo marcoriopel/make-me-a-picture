@@ -49,6 +49,18 @@ export class DrawingsModel {
             throw e;
         }
     }
+
+    async removeBadDrawing(drawingId: string) {
+        try {
+            const response = await this.databaseModel.client.db("database").collection("drawings").deleteOne( { "drawingId": drawingId, "drawingVotes": { $lt: -10 } } );
+            if(response.deletedCount){
+                console.log("deleted drawing " + drawingId + " from database because it recieved too many down votes")
+            }
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
 }
 
 

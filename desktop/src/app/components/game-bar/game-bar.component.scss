@@ -24,6 +24,10 @@
     transition: all 0.8s ease-out;
 }
 
+img{
+    max-width: 40px;
+}
+
 .button-expanded {
     height: 400px;
     transition: all 0.8s ease;

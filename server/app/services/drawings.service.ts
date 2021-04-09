@@ -80,6 +80,7 @@ export class DrawingsService {
             await this.drawingsModel.vote(req.body.drawingId, req.body.isUpvote);
             const artistUsername = (await this.drawingsModel.getDrawing(req.body.drawingId)).username;
             await this.usersModel.vote(artistUsername, req.body.isUpvote);
+            await this.drawingsModel.removeBadDrawing(req.body.drawingId);
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {
