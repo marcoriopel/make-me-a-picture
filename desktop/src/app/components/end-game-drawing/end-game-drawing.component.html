@@ -3,11 +3,38 @@
     <mat-step [editable]="false">
         <ng-template matStepLabel>Résultat</ng-template>
         <div id="content">
-            <div id="content">
-                <img src="./assets/img/placeholder.png">
-                <div>
-                <button mat-button matStepperNext>Suivant</button>
+            <h1 id="title">{{result}}</h1>
+            <div id="draw">
+                <div id="results" class="draw-game">
+                    <div class="team">
+                        <p id="score">3</p>
+                        <p class="player">Marc-Alain</p>
+                        <p class="player">Guillaume</p>
+                    </div>
+                    <div class="team">
+                        <p id="score">1</p>
+                        <p class="player">Marc-Olivier</p>
+                        <p class="player">Samuel</p>
+                    </div>
                 </div>
+            </div>
+            <div *ngIf="result != 'Partie nulle'" id="not-draw">
+                <div id="results">
+                    <div id="winning-team" class="team winning">
+                        <p>3</p>
+                        <img id="crown" src="./assets/img/couronner.png">
+                        <p class="player winning-player">Marc-Alain</p>
+                        <p class="player winning-player">Guillaume</p>
+                    </div>
+                    <div class="team loosing">
+                        <p id="loosing-team-score">1</p>
+                        <p class="player loosing-player">Marc-Olivier</p>
+                        <p class="player loosing-player">Samuel</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button mat-button matStepperNext>Suivant</button>
             </div>
         </div>
     </mat-step>
@@ -32,7 +59,7 @@
             <div>
                 <p>Voulez-vous ajouter votre dessin à la banque de dessins?</p>
                 <button mat-button>Oui</button>
-                <button mat-button (click)="quit()">Non</button>
+                <button mat-button mat-dialog-close (click)="quit()">Non</button>
             </div>
         </div>
     </mat-step>
