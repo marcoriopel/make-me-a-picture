@@ -19,6 +19,11 @@
             android:label="@string/title_activity_static_tutorial"
             android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
         <activity
+            android:name=".view.game.endgame.StaticEndGame"
+            android:screenOrientation="landscape"
+            android:label="StaticEndGame"
+            android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
+        <activity
             android:name=".view.game.GameActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan"></activity>

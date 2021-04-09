@@ -36,9 +36,9 @@ class CanvasRepository {
     }
 
     // Attribute
-    var socket: io.socket.client.Socket
-    val gson: Gson = Gson()
-    val gameRepo = GameRepository.getInstance()!!
+    var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
+    private val gson: Gson = Gson()
+    private val gameRepo = GameRepository.getInstance()!!
 
     // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
@@ -61,7 +61,6 @@ class CanvasRepository {
     }
 
     init {
-        socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_EVENT, onDrawingEvent)
     }
 

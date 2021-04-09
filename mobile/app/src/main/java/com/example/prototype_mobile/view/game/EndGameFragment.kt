@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 package com.example.prototype_mobile.view.game
 
 import android.annotation.SuppressLint

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    tools:context=".view.tutorial.StaticTutorial">
+
+    <RelativeLayout
+        android:id="@+id/imageViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentBottom="true"
+            android:background="#F7F7F7"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+
+                <TextView
+                    android:id="@+id/back_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PRÉCÉDENT"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dots"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/next_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SUIVANT"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    android:textColor="#666666"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="281dp"
+            android:layout_height="86dp"
+            android:text="blablalbla"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:translationX="1000px"
+            android:translationY="175px" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="296dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="30px"
+            android:layout_marginTop="7dp"
+            android:text="Titre de la pagge"
+            android:textColor="#000000"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="520dp"
+            android:layout_height="417dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/avatar0"
+            android:translationX="30px"
+            android:translationY="175px" />
+
+
+        <Button
+            android:id="@+id/buttonUpVote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Up vote"
+            android:theme="@style/Widget.App.Button.Green"
+            android:translationX="1000px"
+            android:translationY="275px" />
+
+        <Button
+            android:id="@+id/buttonDownVote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Down vote"
+            android:theme="@style/Widget.App.Button.Red"
+            android:translationX="1150px"
+            android:translationY="275px" />
+
+
+        <LinearLayout
+            android:id="@+id/upload"
+            android:layout_width="451dp"
+            android:layout_height="241dp"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:translationX="1000px"
+            android:translationY="275px">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHint"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                tools:layout_editor_absoluteX="130dp"
+                tools:layout_editor_absoluteY="402dp" />
+
+            <Button
+                android:id="@+id/buttonAddHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="+ Indice"
+                android:theme="@style/Widget.App.Button.Orange" />
+
+            <Button
+                android:id="@+id/buttonUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Téléverser"
+                android:theme="@style/Widget.App.Button.Blue" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>
+    <!-- Adaptation from https://www.youtube.com/watch?v=9uUMcV-m3Q0 -->
