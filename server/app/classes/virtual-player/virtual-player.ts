@@ -30,11 +30,11 @@ export class VirtualPlayer {
         this.socketService = socketService;
     }
 
-    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<string> {
+    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<Drawing> {
         try {
             this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty, pastDrawingNames);
             this.drawingSpeed = this.calculateDrawingSpeed();
-            return this.currentDrawing.drawingName;
+            return this.currentDrawing;
         }
         catch (err) {
             throw err;
@@ -138,29 +138,29 @@ export class VirtualPlayer {
         }
     }
 
-    setTeammate(players: any){
+    setTeammate(players: any) {
         let team;
-        for(const player of players){
-            if(player.username == this.username){
+        for (const player of players) {
+            if (player.username == this.username) {
                 team = player.team;
             }
         }
-        for(const player of players){
-            if(player.team == team && !player.isVirtual){
+        for (const player of players) {
+            if (player.team == team && !player.isVirtual) {
                 this.teammate = player.username;
             }
         }
     }
 
-    sayHello(){}
+    sayHello() { }
 
-    sayRightGuess(){}
+    sayRightGuess() { }
 
-    sayWrongGuess(){}
+    sayWrongGuess() { }
 
-    sayWeWon(){}
+    sayWeWon() { }
 
-    sayWeLost(){}
+    sayWeLost() { }
 
-    sayWeTied(){}
+    sayWeTied() { }
 }

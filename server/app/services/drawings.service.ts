@@ -25,10 +25,11 @@ export class DrawingsService {
                 "drawingName": req.body.drawingName
             };
 
-            if (!drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
+            if (!req.body.imageUrl || !drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
 
-            // await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {

@@ -22,6 +22,7 @@ export class ClassicGame extends Game {
     private round: number = 0;
     private currentDrawingName: string;
     private pastVirtualDrawings: string[] = [];
+    private pastVirtualDrawingsId: string[] = [];
     private timerCount: number = 0;
     private timerInterval: NodeJS.Timeout;
     private transitionInterval: NodeJS.Timeout;
@@ -89,8 +90,10 @@ export class ClassicGame extends Game {
         this.transitionTimerCount = 5;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-            this.pastVirtualDrawings.push(this.currentDrawingName);
+            const drawing = await (await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+            this.currentDrawingName = drawing.drawingName;
+            this.pastVirtualDrawingsId.push(drawing.drawingId);
+            this.pastVirtualDrawings.push(drawing.drawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -264,8 +267,10 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-            this.pastVirtualDrawings.push(this.currentDrawingName);
+            const drawing = await (await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+            this.currentDrawingName = drawing.drawingName;
+            this.pastVirtualDrawingsId.push(drawing.drawingId);
+            this.pastVirtualDrawings.push(drawing.drawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -279,7 +284,7 @@ export class ClassicGame extends Game {
         this.guessesLeft = [0, 0];
         this.sendVPlayerEndGameMessage();
         this.uploadRandomFeedImage();
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
     }
