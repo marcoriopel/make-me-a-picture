@@ -9,6 +9,7 @@ import { DrawingsService } from '@app/services/drawings.service';
 import { VirtualPlayer } from '../virtual-player/virtual-player';
 import { StatsService } from '@app/services/stats.service';
 import { UserService } from '@app/services/user.service';
+import { ChatManagerService } from '@app/services/managers/chat-manager.service';
 
 @injectable()
 export class SoloGame extends Game {
@@ -25,7 +26,13 @@ export class SoloGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: SoloLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
+    constructor(
+        lobby: SoloLobby, 
+        socketService: SocketService, 
+        private drawingsService: DrawingsService, 
+        private statsService: StatsService, 
+        private userService: UserService, 
+        private chatManagerService: ChatManagerService) {
         super(<Lobby>lobby, socketService);
         for (const player of lobby.getPlayers()) {
             this.players.set(player.username, player);
@@ -109,6 +116,7 @@ export class SoloGame extends Game {
         this.vPlayer.sayEndSoloGame(this.score);
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
+        this.chatManagerService.deleteChat(this.id);
     }
 
     getPlayers(): any {
