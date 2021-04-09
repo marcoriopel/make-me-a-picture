@@ -389,6 +389,7 @@ export class ClassicGame extends Game {
             this.score[1] = 0;
         }
         this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
+        this.endGame();
     }
     
     sendVPlayerEndGameMessage(){
