@@ -95,6 +95,8 @@ class ChatFragment : Fragment() {
                 refreshChannels()
             }
         })
+
+        chatViewModel.getChannels(true)
     }
 
     private fun sendMessage() {

@@ -39,7 +39,6 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             getChannels()
         } )
 
-        getChannels(true)
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {

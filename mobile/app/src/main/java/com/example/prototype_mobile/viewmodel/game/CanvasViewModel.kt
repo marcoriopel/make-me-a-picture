@@ -6,9 +6,12 @@ import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.*
 import kotlin.math.abs
@@ -120,7 +123,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 pathStack.clear()
                 redoStack.clear()
                 curPath.reset()
-                _newCurPath.value = curPath
+                _newCurPath.postValue(curPath)
             }
         }
     }
@@ -139,7 +142,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         currentY = motionTouchEventY
 
         // Call the onDraw() method to update the view
-        _newCurPath.value = curPath
+        _newCurPath.postValue(curPath)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -158,7 +161,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             currentY = motionTouchEventY
 
             // Call the onDraw() method to update the view
-            _newCurPath.value = curPath
+            _newCurPath.postValue(curPath)
         }
     }
 
@@ -175,7 +178,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         curPath = Path()
 
         // Call the onDraw() method to update the view
-        _newCurPath.value = curPath
+        _newCurPath.postValue(curPath)
     }
     
     // Grid attribute
@@ -232,43 +235,51 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private fun undo() {
         if (!pathStack.empty())
             redoStack.push(pathStack.pop())
-        _newCurPath.value = null
+        _newCurPath.postValue(null)
     }
 
     private fun redo() {
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
-        _newCurPath.value = null
+        _newCurPath.postValue(null)
     }
 
+    var canStartNewThread = true
    private fun onReceivingEvent() {
-       while (!canvasRepository.drawingEventList.isEmpty()) {
-           val json = canvasRepository.drawingEventList.poll()
-           if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
-               val objectString = JSONObject(json).getString("drawingEvent")
-               val objectJson = JSONObject(objectString)
-               // try {
-               val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
-                   EVENT_TOUCH_DOWN -> {
-                       val Jevent = JSONObject(objectJson.getString("event"))
-                       val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                       val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
-                       DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
-                   }
-                   EVENT_TOUCH_MOVE -> {
-                       lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
-                       DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
-                   }
-                   EVENT_TOUCH_UP -> {
-                       DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
-                   }
-                   else -> {
-                       DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+       if (canStartNewThread) {
+           canStartNewThread = false
+           viewModelScope.launch(Dispatchers.IO) {
+               while (!canvasRepository.drawingEventList.isEmpty()) {
+                   val json = canvasRepository.drawingEventList.poll()
+                   if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
+                       val objectString = JSONObject(json).getString("drawingEvent")
+                       val objectJson = JSONObject(objectString)
+                       // try {
+                       val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
+                           EVENT_TOUCH_DOWN -> {
+                               val Jevent = JSONObject(objectJson.getString("event"))
+                               val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                               DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
+                           }
+                           EVENT_TOUCH_MOVE -> {
+                               lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+                               DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
+                           }
+                           EVENT_TOUCH_UP -> {
+                               DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
+                           }
+                           else -> {
+                               DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+                           }
+                       }
+                       onDrawingEvent(drawingEventReceive)
                    }
                }
-               onDrawingEvent(drawingEventReceive)
+               canStartNewThread = true
            }
        }
+
    }
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Bind observer
