@@ -3,7 +3,6 @@ import { UserLogsModel } from '@app/models/user-logs.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
 import { GamesModel } from '@app/models/games.model';
-import { BasicUser } from '@app/ressources/interfaces/user.interface';
 import { GameTime, GameType } from '@app/ressources/variables/game-variables';
 
 @injectable()
@@ -15,7 +14,7 @@ export class StatsService {
         @inject(TYPES.GamesModel) private gamesModel: GamesModel ){
     }
 
-    updateStats(gameName: string, gameType: number, players: any, score: any, startDate: number, endDate: number){
+    updateStats(gameName: string, gameType: number, players: any, score: number[], startDate: number, endDate: number){
         this.saveGame(gameName, gameType, players, score, startDate, endDate)
         let nonVirtualPlayers : any = Array.from(players);
         if(gameType == GameType.CLASSIC){
@@ -24,6 +23,9 @@ export class StatsService {
                     nonVirtualPlayers.splice(i, 1);
                 }
             }
+        }
+        else{
+            nonVirtualPlayers.pop();
         }
         for(let player of nonVirtualPlayers){
             this.updateUserStats(gameName, gameType, player, score, startDate, endDate)
@@ -34,21 +36,21 @@ export class StatsService {
         this.gamesModel.setGameInfo(gameName, gameType, players, score, startDate, endDate)
     }
 
-    private async updateUserStats(gameName: string, gameType: number, player: any, score: any, startDate: number, endDate: number){
+    private async updateUserStats(gameName: string, gameType: number, player: any, score: number[], startDate: number, endDate: number){
         let userInfo = await this.usersModel.getUserInfo(player.username);
 
         if(gameType == GameType.CLASSIC){
-            let gamesWon = userInfo.classicWinRatio * userInfo.gamesPlayed;
+            let gamesWon = userInfo.classicWinRatio * userInfo.classicGamesPlayed;
             if(score[player.team] > score[this.getOpposingTeam(player.team)]){
                 ++gamesWon;
             }
-            userInfo.classicWinRatio = gamesWon / (userInfo.gamesPlayed + 1);
+            userInfo.classicWinRatio = gamesWon / (userInfo.classicGamesPlayed + 1);
         }
-        else if(gameType == GameType.SOLO && score > userInfo.bestSoloScore){
-            userInfo.bestSoloScore = score;
+        else if(gameType == GameType.SOLO && score[0] > userInfo.bestSoloScore){
+            userInfo.bestSoloScore = score[0];
         }
-        else if(gameType == GameType.COOP && score > userInfo.bestCoopScore){
-            userInfo.bestCoopScore = score;
+        else if(gameType == GameType.COOP && score[0] > userInfo.bestCoopScore){
+            userInfo.bestCoopScore = score[0];
         }
 
         ++userInfo.gamesPlayed;

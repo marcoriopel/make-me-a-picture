@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.model.mainmenu
 
+import android.util.Log
 import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result

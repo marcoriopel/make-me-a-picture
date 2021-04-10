@@ -124,6 +124,18 @@ export class SocketConnectionService {
                 }
             });
 
+            socket.on('drawingSuggestions', (request: any) => {
+                if (!(request instanceof Object)) {
+                    request = JSON.parse(request)
+                }
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    this.gameManagerService.requestSuggestions(user.username, request.gameId)
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
+            });
+
             socket.on('hintRequest', (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
@@ -140,31 +152,43 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                socket.join(request.chatId);
-                await this.userService.addUserToChat(user.username, request.chatId)
-                await this.chatManagerService.addUserToChat(user.username, request.chatId)
-                this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
-                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                try{
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                    socket.join(request.chatId);
+                    await this.userService.addUserToChat(user.username, request.chatId)
+                    await this.chatManagerService.addUserToChat(user.username, request.chatId)
+                    this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
+                }
+                catch(e){
+                    console.error(e);
+                }
             });
 
             socket.on('leaveChatRoom', async (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                socket.leave(request.chatId);
-                await this.userService.removeUserFromChat(user.username, request.chatId)
-                await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
-                this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');
-                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                try{
+                   const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                    socket.leave(request.chatId);
+                    await this.userService.removeUserFromChat(user.username, request.chatId)
+                    await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                    this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback'); 
+                }
+                catch(e){
+                    console.error(e);
+                }
             });
 
             socket.on('disconnect', () => {
                 const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                 this.authService.addUserToLogCollection(user.username, false);
                 console.log('disconnection of ' + user.username);
-              });
+                const gameId= this.gameManagerService.isUserInGame(user.username);
+                if(gameId){
+                    this.gameManagerService.disconnectGame(gameId, user.username);
+                }
+            });
         });
     }
 

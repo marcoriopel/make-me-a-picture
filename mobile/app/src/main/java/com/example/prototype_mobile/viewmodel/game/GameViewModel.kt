@@ -8,8 +8,15 @@ import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.BasicUser
 import com.example.prototype_mobile.Transition
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.Score
+import com.example.prototype_mobile.Suggestions
+import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.GameRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class GameViewModel():ViewModel() {
@@ -18,8 +25,8 @@ class GameViewModel():ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
-    private val _teamScore = MutableLiveData<IntArray>()
-    val teamScore: LiveData<IntArray> = _teamScore
+    private val _teamScore = MutableLiveData<Score>()
+    val teamScore: LiveData<Score> = _teamScore
 
     private val _isPlayerGuessing = MutableLiveData<Boolean>()
     val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
@@ -36,30 +43,41 @@ class GameViewModel():ViewModel() {
     private val _hint = MutableLiveData<String>()
     val hint: LiveData<String> = _transitionMessage
 
+    private val _countDownSound = MutableLiveData<Boolean>()
+    val countDownSound: LiveData<Boolean> = _countDownSound
+
+    private val _tikSound = MutableLiveData<Boolean>()
+    val tikSound: LiveData<Boolean> = _tikSound
+
+    private val _suggestions = MutableLiveData<Suggestions>()
+    var suggestions: LiveData<Suggestions> = _suggestions
+
+
     val gameRepository = GameRepository.getInstance()!!
 
     var gameTypeViewModel = GameType.CLASSIC
     init {
-        _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
+        _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
 
+        _isPlayerDrawing.value = gameRepository.isPlayerDrawing.value
         gameRepository.isPlayerDrawing.observeForever {
             _isPlayerDrawing.value = it
         }
-
-        _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
-
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
-
-            _teamScore.value = intArrayOf(0,0)
+        }
+        gameRepository.teamScore.observeForever {
+            _teamScore.postValue(it)
         }
         gameRepository.isGameEnded.observeForever{
             _isGameEnded.value = true
         }
 
         gameRepository.transition.observeForever {
+            _transitionState.postValue(it)
             if (it.timer == 5) {
-                _transitionState.postValue(it)
+                _tikSound.postValue(false)
+
                 val msg = when (it.state) {
                     0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
                     1 -> "Droit de réplique!"
@@ -67,13 +85,25 @@ class GameViewModel():ViewModel() {
                     else -> throw Exception("Transition state undefined")
                 }
                 _transitionMessage.postValue(msg)
-            } else {
-                _transitionState.postValue(it)
+            } else if(it.timer == 3) {
+                _countDownSound.postValue(true)
+            } else if(it.timer == 0) {
+                _countDownSound.postValue(false)
             }
         }
 
         gameRepository.gameTypeLiveData.observeForever{
             gameTypeViewModel = it
+        }
+
+        gameRepository.suggestions.observeForever {
+            _suggestions.postValue(it)
+        }
+        gameRepository.roundTimer.observeForever {
+            if (it.timer == 10)
+                _tikSound.postValue(true)
+            else if (it.timer == 0)
+                _tikSound.postValue(false)
         }
     }
 
@@ -85,6 +115,24 @@ class GameViewModel():ViewModel() {
 
     fun getGameType(): GameType {
         return GameRepository.getInstance()!!.gameType
+    }
+
+    fun chooseWord(word: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                gameRepository.postWordChose(word)
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+        }
+    }
+
+    fun getSuggestion(): Suggestions {
+        return gameRepository.suggestion
+    }
+
+    fun refreshSuggestions() {
+        gameRepository.refreshSuggestions()
     }
 
 }

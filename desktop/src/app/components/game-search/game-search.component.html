@@ -4,7 +4,7 @@
     </button>   
 
     <button class="game-type-button" (click)="filterGameType('sprint')" [ngClass]="{'blue' : this.filter.get('sprint'), 'white': !this.filter.get('sprint')}">
-        <img [src]="sprintImgRef" alt="avatar" class="logo"> 
+        <img [src]="coopImgRef" alt="avatar" class="logo"> 
     </button>   
 
     <button class="game-type-button" (click)="filterGameType('easy')" [ngClass]="{'green' : this.filter.get('easy'), 'white': !this.filter.get('easy')}">
@@ -19,6 +19,10 @@
         <img [src]="hardImgRef" alt="avatar" class="logo"> 
     </button>   
 
+    <div id="join-private-container">
+        <button (click)="joinPrivateGame()" id="join-private-button">Rejoindre partie privée</button>
+    </div>
+
     <div id="form-container">
         <form [formGroup]="searchForm" class="search-form">
             <input #box type="text" placeholder="Recherche de partie" formControlName="gameNameOrId" (keyup)="filterName(box.value)">
@@ -28,7 +32,7 @@
 
     <div class="game-list">
         <div *ngFor="let game of this.searchGameService.displayList">
-            <app-game-preview #preview [game]=game (closeAllPreview)="closeAllPreview()"></app-game-preview>
+            <app-game-preview *ngIf="!game.isPrivate" #preview [game]=game (closeAllPreview)="closeAllPreview()"></app-game-preview>
         </div>
     </div>
 

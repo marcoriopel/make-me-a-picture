@@ -51,6 +51,14 @@ import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
 import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
 
 @NgModule({
     declarations: [
@@ -78,6 +86,11 @@ import { SprintGameComponent } from './components/sprint-game/sprint-game.compon
         RoundTransitionComponent,
         ClassicGameComponent,
         SprintGameComponent,
+        ProfileComponent,
+        LeaderboardComponent,
+        DrawingSuggestionsComponent,
+        TutorialComponent,
+        JoinPrivateGameComponent,
     ],
     imports: [
         BrowserModule,
@@ -106,10 +119,16 @@ import { SprintGameComponent } from './components/sprint-game/sprint-game.compon
         MatInputModule,
         MatToolbarModule,
         NgxElectronModule,
-        BrowserAnimationsModule
+        MatMenuModule,
+        BrowserAnimationsModule,
+        MatStepperModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService,
+    {
+        provide: STEPPER_GLOBAL_OPTIONS,
+        useValue: { displayDefaultIndicatorType: false }
+    }],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

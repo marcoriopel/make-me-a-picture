@@ -84,17 +84,18 @@ class ChatRepository() {
         socket.emit("leaveChatRoom", gson.toJson(JoinChannel(chatId)))
     }
 
-    suspend fun createChannel(channelName: String): Result<Boolean> {
+    suspend fun createChannel(channelName: String): Result<String> {
         val mapChannel = HashMap<String, String>()
         mapChannel["chatName"] = channelName
         val response = HttpRequestDrawGuess.httpRequestPost("/api/chat/create", mapChannel, true)
-
         return analyseCreateChannelAnswer(response)
     }
 
-    private fun analyseCreateChannelAnswer(response: Response): Result<Boolean> {
+    private fun analyseCreateChannelAnswer(response: Response): Result<String> {
         return if(response.code() == ResponseCode.OK.code) {
-            Result.Success(true)
+            val jsonData: String = response.body()!!.string()
+            val chat = gson.fromJson(jsonData, JoinChannel::class.java)
+            Result.Success(chat.chatId)
         } else {
             Result.Error(response.code())
         }

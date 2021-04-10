@@ -16,23 +16,12 @@ private const val STROKE_WIDTH = 12f // has to be float
 class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View(context) {
 
     private lateinit var gridBitmap: Bitmap
-    private lateinit var wordBitmap: Bitmap
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         // Color background white
         canvas.drawColor(-1)
-
-        if (canvasViewModel.pathStack.empty() && canvasViewModel.curPath.isEmpty) {
-            return
-        }
-        // Draw the drawing so far
-        for (paintedPath in canvasViewModel.pathStack)
-            canvas.drawPath(paintedPath.path, paintedPath.paint)
-
-        // Draw any current squiggle
-        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
 
         // Add if to activate / unactivated the grid
         if (canvasViewModel.isGrid) {
@@ -45,6 +34,18 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         if (word != null) {
             canvas.drawText("Le mot à dessiner est: $word", 10F, 30F, canvasViewModel.getTextPaint())
         }
+
+        if (canvasViewModel.pathStack.empty() && canvasViewModel.curPath.isEmpty) {
+            return
+        }
+        // Draw the drawing so far
+        for (paintedPath in canvasViewModel.pathStack)
+            canvas.drawPath(paintedPath.path, paintedPath.paint)
+
+        // Draw any current squiggle
+        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
+
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
