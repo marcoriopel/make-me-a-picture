@@ -4,6 +4,7 @@ import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/re
 import { DrawingsService } from '@app/services/drawings.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -20,6 +21,7 @@ export class ClassicGame extends Game {
     private guessesLeft: number[] = [0, 0];
     private round: number = 0;
     private currentDrawingName: string;
+    private pastVirtualDrawings: string[] = [];
     private timerCount: number = 0;
     private timerInterval: NodeJS.Timeout;
     private transitionInterval: NodeJS.Timeout;
@@ -29,7 +31,7 @@ export class ClassicGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         this.vPlayers = lobby.getVPlayers();
@@ -43,11 +45,10 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        for (let vPlayer of this.vPlayers) {
-            if (vPlayer != undefined) {
-                vPlayer.setServices(this.drawingsService, this.socketService);
-                vPlayer.setTeammate(this.getPlayers());
-                vPlayer.sayHello();
+        await this.setupVPlayers();
+        for(const vPlayer of this.vPlayers){
+            if(vPlayer){
+               vPlayer.sayHello(); 
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
@@ -56,7 +57,6 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
         this.gameTransition(transitionType.GAMESTART);
-
     }
 
     gameTransition(type: number) {
@@ -86,7 +86,8 @@ export class ClassicGame extends Game {
         this.transitionTimerCount = 5;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            this.pastVirtualDrawings.push(this.currentDrawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -260,7 +261,8 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty);
+            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            this.pastVirtualDrawings.push(this.currentDrawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -379,7 +381,6 @@ export class ClassicGame extends Game {
             this.score[1] = 0;
         }
         this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
-        this.endGame();
     }
     
     sendVPlayerEndGameMessage(){
@@ -398,6 +399,19 @@ export class ClassicGame extends Game {
             }
             if(this.vPlayers[minScoreIndex]){
                 this.vPlayers[minScoreIndex].sayWeLost();
+            }
+        }
+    }
+
+    async setupVPlayers(){
+        for (let i = 0; i < this.vPlayers.length; ++i) {
+            if (this.vPlayers[i]) {
+                this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
+                for(let player of this.teams[i].values()){
+                    if(player.username != this.vPlayers[i].getBasicUser().username){
+                        await this.vPlayers[i].setTeammates(player);
+                    }
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ import { RoundTransitionComponent } from "@app/components/round-transition/round
 import { GameType } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions/drawing-suggestions.component';
+import * as confetti from 'canvas-confetti';
 
 interface Player {
   username: string;
@@ -28,6 +29,13 @@ export class GameService {
   transitionDialogRef: any;
   suggestionDialogRef: any;
 
+  // Audio
+  tick = new Audio('./assets/sounds/tick.wav');
+  win = new Audio('./assets/sounds/win.wav');
+  defeat = new Audio('./assets/sounds/defeat.wav');
+  countdown = new Audio('./assets/sounds/countdown.wav');
+
+
   // Shared between different game types
   isCorrectGuess: boolean = false;
   isInGame: boolean = false;
@@ -36,7 +44,7 @@ export class GameService {
   guessesLeft: number = 1;
   timer: number = 60;
   state: State = State.GAMESTART;
-  gameId: string;
+  gameId: string = '';
 
   // Classic game
   isUserTeamGuessing: boolean = false;
@@ -125,6 +133,7 @@ export class GameService {
           this.isUserTeamGuessing = false;
         }
       }
+      this.tick.pause();
       this.updateGuessingStatus();
     })
 
@@ -147,10 +156,39 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('gameTimer');
+      this.socketService.unbind('newRound');
+      this.socketService.unbind('guessCallBack');
+      this.socketService.unbind('guessesLeft');
+      this.socketService.unbind('score');
+
+      let oppositeTeam;
+      this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
+
+      if(this.score[this.currentUserTeam] > this.score[oppositeTeam]){
+        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
+        var myConfetti = confetti.create(canvasEl, { 
+          resize: true, 
+          useWorker: true, 
+        });
+    
+        myConfetti({
+          spread: 180,
+          particleCount: 200,
+        });         
+      }
+      this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
     })
 
     this.socketService.bind('timer', (data: any) => {
       this.timer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
   
     this.socketService.bind('transitionTimer', (data: any) => {
@@ -160,6 +198,9 @@ export class GameService {
       }
       if(!data.timer){
         this.transitionDialogRef.close();
+      }
+      if(data.timer == 3){
+        this.countdown.play();
       }
       this.transitionTimer = data.timer;
     })
@@ -215,10 +256,22 @@ export class GameService {
 
     this.socketService.bind('gameTimer', (data: any) => {
       this.gameTimer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('drawingTimer', (data: any) => {
       this.timer = data.timer;
+      if(data.timer == 10){
+        this.tick.play();
+      }
+      if(data.timer == 0){
+        this.tick.pause();
+      }
     })
 
     this.socketService.bind('endGame', (data: any) => {

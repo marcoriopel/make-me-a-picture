@@ -8,20 +8,20 @@ import { Lobby } from './lobby';
 export class SoloLobby extends Lobby {
     private team: Map<string, Player> = new Map<string, Player>();
     private vPlayer: VirtualPlayer;
-    
-    constructor(difficulty: number, gameName: string, id: string) {
-        super(difficulty, gameName, id);
+
+    constructor(difficulty: number, gameName: string, id: string, isPrivate: boolean) {
+        super(difficulty, gameName, id, isPrivate);
         this.gameType = GameType.SOLO;
-        this.vPlayer = new VirtualPlayer(this.id);
+        this.vPlayer = this.generateRandomVPlayer();
         console.log("Created solo game lobby with difficulty: " + this.difficulty + " and name: " + this.gameName);
     }
 
-    startGame(): void{}
+    startGame(): void { }
 
-    deleteLobby(): void{}
+    deleteLobby(): void { }
 
-    addPlayer(user: BasicUser, socketId: string): void{
-        if(this.team.size){
+    addPlayer(user: BasicUser, socketId: string): void {
+        if (this.team.size) {
             throw new Error("You have already joined this lobby");
         }
         const player: Player = {
@@ -31,18 +31,18 @@ export class SoloLobby extends Lobby {
             "socketId": socketId,
         }
         this.team.set(user.username, player);
-    }    
+    }
 
-    getPlayers(): any{
+    getPlayers(): any {
         let players = [];
-        this.team.forEach((player: Player) =>{
-            players.push({"username": player.username, "avatar": player.avatar, "team": 0, "isVirtual": player.isVirtual});
+        this.team.forEach((player: Player) => {
+            players.push({ "username": player.username, "avatar": player.avatar, "team": 0, "isVirtual": player.isVirtual });
         })
         return players;
-    } 
+    }
 
     removePlayer(user: BasicUser): void {
-        if(this.team.has(user.username)){
+        if (this.team.has(user.username)) {
             this.team.delete(user.username);
             return
         }
