@@ -1,5 +1,7 @@
 package com.example.prototype_mobile.model.game
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.DrawingEvent
 
 class EndGameRepository {
@@ -20,11 +22,21 @@ class EndGameRepository {
 
     val myDrawing: Array<DrawingEvent> = arrayOf()
     val eraser: Array<DrawingEvent> = arrayOf()
-    private val hints: MutableList<String> = mutableListOf()
     lateinit var name: String
 
+    private val _hints = MutableLiveData<MutableList<String>>()
+    val hints: LiveData<MutableList<String>> = _hints
+
+    init {
+        initializeData()
+    }
+
+    fun initializeData() {
+        _hints.value = mutableListOf()
+    }
+
     fun addHint(hint: String) {
-        hints.add(hint)
+        _hints.value?.add(hint)
     }
 
     fun addDrawing(drawing: Array<DrawingEvent>) {
@@ -32,7 +44,7 @@ class EndGameRepository {
         TODO()
     }
 
-    fun uplaod() {
+    fun upload() {
         TODO()
     }
 

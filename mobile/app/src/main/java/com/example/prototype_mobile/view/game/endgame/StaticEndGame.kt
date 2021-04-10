@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +21,7 @@ import com.example.prototype_mobile.databinding.ActivityStaticEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
-import com.example.prototype_mobile.viewmodel.game.GameViewModel
+import com.google.android.material.chip.ChipDrawable
 
 class StaticEndGame: AppCompatActivity() {
 
@@ -42,14 +42,11 @@ class StaticEndGame: AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val recyclerViewHint: RecyclerView = view.findViewById(R.id.recyclerViewHint)
-        val layoutManagerHint: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
-        recyclerViewHint.layoutManager = layoutManagerHint
-
         // Creating content view
         createContentView()
 
         // Binding
+        bindHint()
         bindNavigation()
 
         // Display first page
@@ -70,6 +67,17 @@ class StaticEndGame: AppCompatActivity() {
         // Set progress bar
         progressDot(pageIndex)
 
+    }
+
+    private fun bindHint() {
+        // Button
+        binding.buttonAddHint.setOnClickListener {
+            if (binding.hintInput.text.toString() != "") {
+                endGameViewModel.addHint(binding.hintInput.text.toString())
+                binding.hintInput.text.clear()
+            }
+        }
+        // Display hint
     }
 
     private fun bindNavigation() {

@@ -147,14 +147,25 @@
             android:translationX="1000px"
             android:translationY="275px">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewHint"
+            <EditText
+                android:id="@+id/hintInput"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Indice"
+                android:inputType="textEmailAddress"
+                android:maxLength="126"
+                android:selectAllOnFocus="true"
+                android:textSize="20dp"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                tools:layout_editor_absoluteX="130dp"
-                tools:layout_editor_absoluteY="402dp" />
+                android:layout_height="62dp">
+                <!-- Chips can be declared here, or added dynamically. -->
+            </com.google.android.material.chip.ChipGroup>
 
             <Button
                 android:id="@+id/buttonAddHint"
