@@ -20,7 +20,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
     var lastGameChecked: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GameListAdapter.ViewHolder {
-        var view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
+        val view = LayoutInflater.from(context).inflate(R.layout.row_game_list,parent,false)
         return ViewHolder(view!!)
     }
 

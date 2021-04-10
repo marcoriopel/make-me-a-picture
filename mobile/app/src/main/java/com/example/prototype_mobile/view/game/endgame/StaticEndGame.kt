@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.view.game.endgame
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticEndGameInfo
 import com.example.prototype_mobile.databinding.ActivityStaticEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
+import com.example.prototype_mobile.view.mainmenu.GameListAdapter
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
 import com.google.android.material.chip.ChipDrawable
@@ -26,11 +29,11 @@ import com.google.android.material.chip.ChipDrawable
 class StaticEndGame: AppCompatActivity() {
 
     var pageIndex = 1
-    var numberOfPage = 1
-    lateinit var binding: ActivityStaticEndGameBinding
+    var hintList: MutableList<String> = mutableListOf()
     var contentMap = mutableMapOf<Int, StaticEndGameInfo>()
+    lateinit var hintListAdapter: HintListAdapter
+    lateinit var binding: ActivityStaticEndGameBinding
     private lateinit var endGameViewModel: EndGameViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +51,20 @@ class StaticEndGame: AppCompatActivity() {
         // Binding
         bindHint()
         bindNavigation()
+
+        // Display hint
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = layoutManager
+
+        hintListAdapter = HintListAdapter(view.context, hintList, endGameViewModel);
+        recyclerView.adapter = hintListAdapter
+
+        endGameViewModel.hints.observe(this, Observer {
+            hintList = it
+            hintListAdapter.hintList = hintList
+            addItemToRecyclerView(hintList)
+        })
 
         // Display first page
         setPageContent()
@@ -77,7 +94,13 @@ class StaticEndGame: AppCompatActivity() {
                 binding.hintInput.text.clear()
             }
         }
-        // Display hint
+    }
+
+    private fun addItemToRecyclerView(hints: MutableList<String>) {
+        runOnUiThread {
+            hintList = hints
+            hintListAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun bindNavigation() {

@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.model.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.DrawingEvent
@@ -37,6 +38,12 @@ class EndGameRepository {
 
     fun addHint(hint: String) {
         _hints.value?.add(hint)
+        _hints.postValue(_hints.value)
+    }
+
+    fun removeHint(hint: String) {
+        _hints.value?.remove(hint)
+        _hints.postValue(_hints.value)
     }
 
     fun addDrawing(drawing: Array<DrawingEvent>) {

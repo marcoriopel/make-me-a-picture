@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.viewmodel.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,6 +29,10 @@ class EndGameViewModel(): ViewModel() {
 
     fun addHint(hint: String) {
         endGameRepo.addHint(hint)
+    }
+
+    fun removeHint(hint: String) {
+        endGameRepo.removeHint(hint)
     }
 
 }

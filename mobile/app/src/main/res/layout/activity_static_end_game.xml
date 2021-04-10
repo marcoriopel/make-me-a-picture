@@ -140,8 +140,8 @@
 
         <LinearLayout
             android:id="@+id/upload"
-            android:layout_width="451dp"
-            android:layout_height="241dp"
+            android:layout_width="483dp"
+            android:layout_height="306dp"
             android:layout_gravity="center"
             android:orientation="vertical"
             android:translationX="1000px"
@@ -158,14 +158,16 @@
                 android:inputType="textEmailAddress"
                 android:maxLength="126"
                 android:selectAllOnFocus="true"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="62dp">
-                <!-- Chips can be declared here, or added dynamically. -->
-            </com.google.android.material.chip.ChipGroup>
+                android:layout_height="200px"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp" />
+
 
             <Button
                 android:id="@+id/buttonAddHint"

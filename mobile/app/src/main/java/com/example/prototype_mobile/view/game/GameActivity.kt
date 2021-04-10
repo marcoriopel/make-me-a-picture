@@ -36,7 +36,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
         canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
@@ -45,7 +44,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         if (savedInstanceState == null) {
             setUpGameInit()
         }
-
 
         gameViewModel.isPlayerDrawing.observe(this, Observer {
             if (it) {
@@ -130,8 +128,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
     private fun burstKonfetti() {
         val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
-        Log.e("konfetti width", konfettiView.width.toString())
-        Log.e("konfetti height", konfettiView.height.toString())
 
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart);
         val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
