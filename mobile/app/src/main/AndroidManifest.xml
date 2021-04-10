@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Prototype_mobile"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".view.tutorial.StaticTutorial"
+            android:name=".view.tutorial.StaticTutorialActivity"
             android:screenOrientation="landscape"
             android:label="@string/title_activity_static_tutorial"
             android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>

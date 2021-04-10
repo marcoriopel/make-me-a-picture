@@ -6,6 +6,7 @@
     <string name="bad_request">"Mauvaise requête"</string>
     <string name="not_authorized">"Vous n'êtes pas autorisés à faire cette requête"</string>
     <string name="mandatory_field">"Champ requis"</string>
+    <string name= "tutorial">Tutoriel</string>
 
     <!-- Strings related to login and sign up -->
     <string name="sign_up">Inscription</string>

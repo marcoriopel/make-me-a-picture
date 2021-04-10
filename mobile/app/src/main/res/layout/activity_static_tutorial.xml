@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    tools:context=".view.tutorial.StaticTutorial">
+    tools:context=".view.tutorial.StaticTutorialActivity">
 
     <RelativeLayout
         android:id="@+id/imageViewContainer"
