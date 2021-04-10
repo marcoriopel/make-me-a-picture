@@ -27,8 +27,8 @@ class GameViewModel():ViewModel() {
     private val _teamScore = MutableLiveData<Score>()
     val teamScore: LiveData<Score> = _teamScore
 
-    private val _isPlayerGuessing = MutableLiveData<Boolean>()
-    val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
+    private val _isPlayerGuessing = MutableLiveData<Boolean?>()
+    val isPlayerGuessing: LiveData<Boolean?> = _isPlayerGuessing
 
     private val _isGameEnded = MutableLiveData<Boolean>()
     val isGameEnded:LiveData<Boolean> = _isGameEnded
