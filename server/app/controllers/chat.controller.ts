@@ -61,6 +61,13 @@ export class ChatController {
             });
         });
 
+        this.router.delete('/delete', (req: Request, res: Response) => {
+            this.tokenService.authenticateToken(req, res, () => {
+                this.chatManagerService.deleteChatRequest(req.query.chatId, res, () => {
+                    res.sendStatus(StatusCodes.OK);
+                });
+            });
+        });
     }
 }
 

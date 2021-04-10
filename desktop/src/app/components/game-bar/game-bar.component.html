@@ -21,7 +21,7 @@
     <div id="coop-button" class="button" #coop>
         <div (click)="displayGameMenu('coop')">
             <p class="title"> Sprint Coop
-                <img [src]="sprintImgRef" class="game-logo">         
+                <img [src]="coopImgRef" class="game-logo">         
             </p>
         </div>
         <app-game-creation *ngIf="coopOpen" [type]="2"></app-game-creation>

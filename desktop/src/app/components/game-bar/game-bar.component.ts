@@ -16,6 +16,7 @@ export class GameBarComponent {
   classicOpen: boolean = false;
 
   sprintImgRef: string = "./assets/img/sprintLogo.png";
+  coopImgRef: string = "./assets/img/hands-helping-solid.svg";
   classicBlackImgRef: string =  "./assets/img/classicLogoBlack.png";
 
   constructor(public searchGameService: SearchGameService, private renderer: Renderer2) { }

@@ -2,6 +2,7 @@ import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
+import { ChatManagerService } from '@app/services/managers/chat-manager.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
 import { UserService } from '@app/services/user.service';
@@ -26,7 +27,13 @@ export class CoopGame extends Game {
     private startDate: number;
     private endDate: number;
 
-    constructor(lobby: CoopLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService, private userService: UserService) {
+    constructor(
+        lobby: CoopLobby, 
+        socketService: SocketService, 
+        private drawingsService: DrawingsService, 
+        private statsService: StatsService, 
+        private userService: UserService, 
+        private chatManagerService: ChatManagerService) {
         super(<Lobby>lobby, socketService);
         for (let player of lobby.getPlayers()) {
             this.players.set(player.username, player);
@@ -94,9 +101,12 @@ export class CoopGame extends Game {
         }
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
+        await this.delay();
         this.vPlayer.startDrawing();
         this.startDrawingTimer();
     }
+
+    delay = () => new Promise(res => setTimeout(res, 500));
 
     private endGame(): void {
         this.endDate = new Date().getTime();
@@ -108,6 +118,7 @@ export class CoopGame extends Game {
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
+        this.chatManagerService.deleteChat(this.id);
     }
 
     getPlayers(): any {

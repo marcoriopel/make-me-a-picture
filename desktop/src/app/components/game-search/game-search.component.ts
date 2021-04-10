@@ -25,6 +25,7 @@ export class GameSearchComponent implements OnInit {
   @ViewChildren('preview') previews: QueryList<GamePreviewComponent>;
 
   sprintImgRef: string = "./assets/img/sprintLogo.png";
+  coopImgRef: string = "./assets/img/hands-helping-solid.svg";
   classicBlackImgRef: string =  "./assets/img/classicLogoBlack.png";
   classicGreyImgRef: string = "./assets/img/classicLogoWhite.png"
   allLogoBlackImgRef: string =  "./assets/img/allLogoBlack.png";

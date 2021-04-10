@@ -23,6 +23,7 @@ const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
+const val REQUEST_HINT = "hintRequest"
 const val DRAWING_SUGGESTIONS_EVENT = "drawingSuggestions"
 const val DRAWING_TIMER_EVENT = "drawingTimer"
 const val GAME_TIMER_EVENT = "gameTimer"
@@ -51,6 +52,9 @@ class GameRepository {
 
     var team1: MutableList<Players> = mutableListOf()
     var team2: MutableList<Players> = mutableListOf()
+
+    private val _gameTypeLiveData= MutableLiveData<GameType>()
+    val gameTypeLiveData: LiveData<GameType> = _gameTypeLiveData
 
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
@@ -142,8 +146,8 @@ class GameRepository {
 
     private var onTransition = Emitter.Listener {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
-        _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
+        _transition.postValue(transitionTemp)
         if(Timer(transitionTemp.timer).timer == 0) {
             if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
                 _isPlayerDrawing.postValue(true)
@@ -173,6 +177,19 @@ class GameRepository {
         val guessEvent = GuessEvent(this.gameId!!, guess)
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
+//    private var onRequestHint =  Emitter.Listener {
+//        println("Request hint receive")
+//        val hintValue = gson.fromJson(it[0].toString(), HintRequest::class.java)
+//        _hint.postValue(hintValue)
+//    }
+    fun sendHintRequest(user: BasicUser) {
+        val hintRequest = HintRequest(this.gameId!!, user)
+        socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
+    }
+
+    fun getTransition (): MutableLiveData<Transition>{
+        return _transition
+    }
 
     suspend fun postWordChose(word: String) {
         val body = HashMap<String, String>()
@@ -193,6 +210,7 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
+
         _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
@@ -207,4 +225,9 @@ class GameRepository {
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
         socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
     }
+
+    fun getGameTypeLiveData() : MutableLiveData<GameType> {
+        return _gameTypeLiveData
+    }
 }
+

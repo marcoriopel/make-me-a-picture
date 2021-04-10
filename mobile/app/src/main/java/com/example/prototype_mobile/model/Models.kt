@@ -9,7 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 // Data class for the chat
 data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long)
 data class MessageReceive (val id : String, val user : User, val text : String, val timestamp : Long, val textColor : String, val chatId: String)
-data class User (val username: String, val Avatar: Int);
+data class User (val username: String, val Avatar: Int)
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val chatId: String)
 data class ChannelReceived(val chatId: String, val chatName: String)
@@ -23,7 +23,7 @@ data class ChatHistory(val chatHistory: Array<ChatHistoryMessage>)
 data class SignUpInfo(val firstName: String, val lastName: String, val username: String, val password: String, val avatar: Int)
 
 // Data class for the login
-data class LoggedInUser(val token: String, val username: String)
+data class LoggedInUser(val token: String, val username: String, val avatar: Int)
 data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies
@@ -41,7 +41,7 @@ data class Suggestions(val drawingNames: Array<String>)
 data class GameId(val gameId: String)
 data class ListenLobby(val oldLobbyId: String, val lobbyId: String)
 data class LobbyPlayers(val players: Array<Players>)
-data class Players(val username: String, val avatar: Int, val team: Int)
+data class Players(val username: String, val avatar: Int, val team: Int = 0)
 sealed class GameCreationMergeData
 
 // Data class for the Game
@@ -52,8 +52,22 @@ data class Transition(val timer: Int, val state: Int)
 // Data class for the drawing
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
-abstract class Event()
+abstract class Event
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
+
+data class BasicUser(val username: String, val avatar: Int)
+
+data class HintRequest(val gameId: String, val user: BasicUser)
+
+//Data class for the profil
+data class PrivateReceivedInfo(val privateInfo: PrivateInfo)
+data class PrivateInfo(val name: String, val surname: String, val stats: Stats, val logs: Array<Log>, val games: Array<GameLog>)
+data class Stats(val gamesPlayed: Int, val timePlayed: Long, val bestSoloScore: Int, val bestCoopScore: Int, val classicWinRatio: Double, val meanGameTime: Double)
+data class Log(val _id: String, val username: String, val isLogin: Boolean, val timestamp: Long)
+data class GameLog(val _id: String, val gameName: String, val gameType: Int, val players: Array<Players>, val start: Long, val end: Long, val score: Array<Int> = arrayOf(0, 0))
+data class Connection(val date: String, val action: String)
+data class GameHistoric(val date: String, val name: String, val mode: String, val team1: String, val team2: String, val score: String)
+
