@@ -26,6 +26,7 @@ class GameParameterFragment : Fragment() {
     private var filterDifficulty: Vector<Button> = Vector<Button>()
     private val mainMenuViewModel: MainMenuViewModel by activityViewModels()
 
+    private var isPrivate = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -81,8 +82,10 @@ class GameParameterFragment : Fragment() {
             binding.incognito.isActivated = ! binding.incognito.isActivated
             if(binding.incognito.isActivated) {
                 binding.passwordPrivateGame.visibility = View.VISIBLE
+                isPrivate = true
             } else {
                 binding.passwordPrivateGame.visibility = View.INVISIBLE
+                isPrivate = false
             }
 
             mainMenuViewModel.setIncognitoMode(binding.incognito.isActivated)
@@ -114,7 +117,9 @@ class GameParameterFragment : Fragment() {
 
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
+                if(isPrivate)
                 mainMenuViewModel.createGame()
+
             }
         }
     }
@@ -151,6 +156,7 @@ class GameParameterFragment : Fragment() {
                 binding.GameCreation.text = "Création d'une partie coop"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
             }
+            else -> throw(Exception("Unknown state exception"))
         }
     }
 

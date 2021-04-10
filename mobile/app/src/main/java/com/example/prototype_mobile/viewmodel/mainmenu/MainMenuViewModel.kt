@@ -19,7 +19,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     val creationGameButtonType: LiveData<SelectedButton> = _creationGameButtonType
 
     private val _gameName = MutableLiveData<String>()
-    private val _incognitoModeActivated = MutableLiveData<Boolean>()
+    val _incognitoModeActivated = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
@@ -109,4 +109,6 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             }
         }
     }
+
+
 }
