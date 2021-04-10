@@ -9,7 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import okhttp3.Response
 import org.json.JSONObject
 
-class SignUpRepository() {
+class SignUpRepository {
     suspend fun signUp(signUpInfo : SignUpInfo): Result<LoggedInUser> {
         val mapSignUp= HashMap<String, String>()
         mapSignUp["username"] = signUpInfo.username
@@ -36,7 +36,8 @@ class SignUpRepository() {
         if(response.code() == ResponseCode.OK.code) {
             val Jobject = JSONObject(jsonData)
             val Jarray = Jobject.getString("token")
-            val user = LoggedInUser(Jarray.toString(), username)
+            val avatar = Jobject.getString("avatar")
+            val user = LoggedInUser(Jarray.toString(), username, avatar.toInt())
             return Result.Success(user)
         } else {
             return Result.Error(response.code())

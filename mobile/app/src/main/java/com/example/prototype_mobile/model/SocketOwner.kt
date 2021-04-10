@@ -7,7 +7,7 @@ import io.socket.emitter.Emitter
 import org.json.JSONObject
 
 
-class SocketOwner() {
+class SocketOwner {
     companion object {
         private var instance: SocketOwner? = null
 

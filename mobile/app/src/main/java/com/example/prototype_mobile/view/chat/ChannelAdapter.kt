@@ -28,7 +28,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val channel = values[position]
-        holder.channelName.setText(channel.chatName)
+        holder.channelName.text = channel.chatName
         when(channel.channelState) {
             ChannelState.JOINED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel)

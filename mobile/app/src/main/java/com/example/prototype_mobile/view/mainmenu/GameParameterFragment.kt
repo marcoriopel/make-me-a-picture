@@ -26,10 +26,6 @@ class GameParameterFragment : Fragment() {
     private var filterDifficulty: Vector<Button> = Vector<Button>()
     private val mainMenuViewModel: MainMenuViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_game_parameter, container, false)

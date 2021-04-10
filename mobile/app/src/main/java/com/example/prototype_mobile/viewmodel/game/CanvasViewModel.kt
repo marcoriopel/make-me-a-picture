@@ -179,7 +179,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     }
     
     // Grid attribute
-    var isGrid = false;
+    var isGrid = false
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
     private val gridColor = Color.GRAY

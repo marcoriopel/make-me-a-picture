@@ -52,14 +52,14 @@ class GameListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         // define an adapter
-        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel);
+        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel)
         recyclerView.adapter = gameListAdapter
         binding = FragmentGameListBinding.bind(view)
 
         gameListViewModel.gameListResult.observe(viewLifecycleOwner, Observer {
             val gameListResult = it ?: return@Observer
             if (gameListResult.error != null) {
-                showLoadingFailed(view.getContext(), gameListResult.error)
+                showLoadingFailed(view.context, gameListResult.error)
             }
 
             gameList.clear()
@@ -72,7 +72,7 @@ class GameListFragment : Fragment() {
         gameListViewModel.joinLobbyResult.observe(viewLifecycleOwner, Observer {
             val joinLobbyResult = it ?: return@Observer
             if (joinLobbyResult.error != null) {
-                showLoadingFailed(view.getContext(), joinLobbyResult.error)
+                showLoadingFailed(view.context, joinLobbyResult.error)
             }
         })
 

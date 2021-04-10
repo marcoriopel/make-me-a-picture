@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class GameViewModel():ViewModel() {
+class GameViewModel :ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -64,7 +64,7 @@ class GameViewModel():ViewModel() {
                 val msg = when (it.state) {
                     0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
                     1 -> "Droit de réplique!"
-                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!";
+                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!"
                     else -> throw Exception("Transition state undefined")
                 }
                 _transitionMessage.postValue(msg)

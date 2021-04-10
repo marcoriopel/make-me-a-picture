@@ -9,7 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import org.json.JSONObject
 
 
-class MainMenuRepository() {
+class MainMenuRepository {
 
 
 
