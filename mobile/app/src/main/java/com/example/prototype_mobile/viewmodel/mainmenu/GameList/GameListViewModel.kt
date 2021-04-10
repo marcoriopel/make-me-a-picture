@@ -71,7 +71,7 @@ class GameListViewModel(val gameListRepository: GameListRepository) : ViewModel(
     }
 
     fun joinLobby(game: Game) {
-        viewModelScope.launch() {
+        viewModelScope.launch {
             val result: Result<Game> = try {
                 gameListRepository.joinLobby(game)
             } catch (e: Exception) {

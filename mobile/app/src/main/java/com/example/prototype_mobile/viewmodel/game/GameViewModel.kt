@@ -5,6 +5,9 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.prototype_mobile.BasicUser
+import com.example.prototype_mobile.Transition
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.Suggestions
@@ -17,20 +20,27 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class GameViewModel():ViewModel() {
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
     private val _teamScore = MutableLiveData<Score>()
     val teamScore: LiveData<Score> = _teamScore
 
-    private val _isPlayerGuessing = MutableLiveData<Boolean>()
-    val isPlayerGuessing: LiveData<Boolean> = _isPlayerGuessing
+    private val _isPlayerGuessing = MutableLiveData<Boolean?>()
+    val isPlayerGuessing: LiveData<Boolean?> = _isPlayerGuessing
 
     private val _isGameEnded = MutableLiveData<Boolean>()
     val isGameEnded:LiveData<Boolean> = _isGameEnded
 
     private val _transitionMessage = MutableLiveData<String>()
     val transitionMessage: LiveData<String> = _transitionMessage
+
+    private val _transitionState = MutableLiveData<Transition>()
+    var transitionState: LiveData<Transition> = _transitionState
+
+    private val _hint = MutableLiveData<String>()
+    val hint: LiveData<String> = _transitionMessage
 
     private val _countDownSound = MutableLiveData<Boolean>()
     val countDownSound: LiveData<Boolean> = _countDownSound
@@ -41,7 +51,10 @@ class GameViewModel():ViewModel() {
     private val _suggestions = MutableLiveData<Suggestions>()
     var suggestions: LiveData<Suggestions> = _suggestions
 
+
     val gameRepository = GameRepository.getInstance()!!
+
+    var gameTypeViewModel = GameType.CLASSIC
     init {
         _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
 
@@ -58,13 +71,16 @@ class GameViewModel():ViewModel() {
         gameRepository.isGameEnded.observeForever{
             _isGameEnded.value = true
         }
+
         gameRepository.transition.observeForever {
+            _transitionState.postValue(it)
             if (it.timer == 5) {
                 _tikSound.postValue(false)
+
                 val msg = when (it.state) {
                     0 -> "Bienvenue dans la partie! C'est " + gameRepository.drawingPlayer + " qui commence à dessiner!"
                     1 -> "Droit de réplique!"
-                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!";
+                    2 -> "Prochain round!!! C'est à " + gameRepository.drawingPlayer + " de dessiner!"
                     else -> throw Exception("Transition state undefined")
                 }
                 _transitionMessage.postValue(msg)
@@ -74,6 +90,11 @@ class GameViewModel():ViewModel() {
                 _countDownSound.postValue(false)
             }
         }
+
+        gameRepository.gameTypeLiveData.observeForever{
+            gameTypeViewModel = it
+        }
+
         gameRepository.suggestions.observeForever {
             _suggestions.postValue(it)
         }
@@ -83,6 +104,12 @@ class GameViewModel():ViewModel() {
             else if (it.timer == 0)
                 _tikSound.postValue(false)
         }
+    }
+
+
+    fun hintRequest() {
+        val username = LoginRepository.getInstance()!!.user!!.username
+        gameRepository.sendHintRequest(BasicUser(username, 0))
     }
 
     fun getGameType(): GameType {

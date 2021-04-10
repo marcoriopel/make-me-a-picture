@@ -16,7 +16,7 @@ import io.socket.emitter.Emitter
 import okhttp3.Response
 import org.json.JSONObject
 
-class LobbyRepository() {
+class LobbyRepository {
     companion object {
         private var instance: LobbyRepository? = null
 
@@ -65,6 +65,8 @@ class LobbyRepository() {
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+            //To access gameType inside game View model later with a liveData
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
             _lobbyPlayers.value!!.players.forEach { player ->
                 run {
                     when (player.team) {
@@ -77,6 +79,9 @@ class LobbyRepository() {
             _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
         } else {
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
+            //gameRepo.getTransition().postValue(Transition(gameRepo.gameTimer.value!!.timer, 1))
             _isPlayerDrawing.postValue(false)
         }
     }
@@ -107,7 +112,7 @@ class LobbyRepository() {
             socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
         }
 
-        return result;
+        return result
     }
 
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
@@ -124,7 +129,7 @@ class LobbyRepository() {
         map["teamNumber"] = team.toString()
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/add/virtual/player", map, true)
 
-        return analyseGeneralAnswer(response);
+        return analyseGeneralAnswer(response)
     }
 
     suspend fun removeVirtualPlayer(team: Int, username: String): Result<String> {
@@ -134,7 +139,7 @@ class LobbyRepository() {
         map["username"] = username
         val response = HttpRequestDrawGuess.httpRequestDelete("/api/games/remove/virtual/player", map, true)
 
-        return analyseGeneralAnswer(response);
+        return analyseGeneralAnswer(response)
     }
 
     suspend fun startGame(): Result<String> {
@@ -143,7 +148,7 @@ class LobbyRepository() {
         map["lobbyId"] = currentListenLobby
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/start", map, true)
 
-        return analyseGeneralAnswer(response);
+        return analyseGeneralAnswer(response)
     }
 
     suspend fun quitLobby(): Result<String> {
