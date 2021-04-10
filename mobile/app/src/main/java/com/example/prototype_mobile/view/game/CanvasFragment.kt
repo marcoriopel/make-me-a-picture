@@ -23,7 +23,7 @@ class CanvasFragment(val viewModel: CanvasViewModel) : Fragment() {
         canvasViewModel = viewModel
         if (container != null) {
             return MyCanvasView(container.context, canvasViewModel)
-        };
+        }
         return inflater.inflate(R.layout.fragment_canvas, container, false)
     }
 

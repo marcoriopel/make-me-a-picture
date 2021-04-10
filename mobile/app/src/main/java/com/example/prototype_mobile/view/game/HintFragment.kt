@@ -47,12 +47,7 @@ class HintFragment : Fragment() {
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
         binding.hintButton.setOnClickListener {
-            println("Hint button clicked")
-            if(gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
-                gameViewModel.hintRequest()
-            } else {
-                println("Coop and sprint not implemented yet.")
-            }
+            gameViewModel.hintRequest()
         }
 
     }

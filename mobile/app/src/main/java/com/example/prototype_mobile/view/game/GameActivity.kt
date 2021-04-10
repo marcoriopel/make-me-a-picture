@@ -6,14 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
+import android.view.Menu
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
@@ -32,10 +35,20 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     private lateinit var binding: ActivityGameBinding
     private var mediaPlayer: MediaPlayer? = null
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.gamemenu, menu)
+        return true
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+        setSupportActionBar(toolbar)
 
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -62,7 +75,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(checkIfDrawingFragment(fragment)) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
                     }
                 }
             }
@@ -150,7 +163,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         Log.e("konfetti width", konfettiView.width.toString())
         Log.e("konfetti height", konfettiView.height.toString())
 
-        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart);
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart)
         val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
         konfettiView.build()
             .addColors(Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA)
