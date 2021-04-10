@@ -65,6 +65,8 @@ class LobbyRepository {
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+            //To access gameType inside game View model later with a liveData
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
             _lobbyPlayers.value!!.players.forEach { player ->
                 run {
                     when (player.team) {
@@ -77,6 +79,9 @@ class LobbyRepository {
             _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
         } else {
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
+            //gameRepo.getTransition().postValue(Transition(gameRepo.gameTimer.value!!.timer, 1))
             _isPlayerDrawing.postValue(false)
         }
     }

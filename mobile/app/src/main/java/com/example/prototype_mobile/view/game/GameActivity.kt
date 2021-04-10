@@ -59,7 +59,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             setUpGameInit()
         }
 
-
         gameViewModel.isPlayerDrawing.observe(this, Observer {
             if (it) {
                 supportFragmentManager.beginTransaction()
@@ -83,16 +82,38 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         })
 
         gameViewModel.isPlayerGuessing.observe(this, Observer {
-            if (it) {
+            if (it!!) {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGuess, GuessFragment())
                     .commitNow()
-            } else {
-                for (fragment in supportFragmentManager.fragments) {
-                    if(fragment is GuessFragment) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit()
+                if(gameViewModel.gameRepository.gameType == GameType.CLASSIC) {
+                    //When connecting to the game transition state is null since it doesn't receive can't set a timer
+                    hintFragment()
+                    if (gameViewModel.transitionState.value != null) {
+                        //Right of reply. We don't want to display hint button
+                        if (gameViewModel.transitionState.value!!.state != 1) {
+                            hintFragment()
+                        }
+                    }
+                    //If guessing when starting the game
+                    else if(gameViewModel.isPlayerGuessing.value!!) {
+                        hintFragment()
                     }
                 }
+                //Coop always have a hintFragment.
+                else {
+                    hintFragment()
+                }
+
+            } else if(!it){
+                for (fragment in supportFragmentManager.fragments) {
+                    if(fragment is GuessFragment || fragment is HintFragment) {
+                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                    }
+                }
+            }
+            else{
+                hintFragment()
             }
         })
 
@@ -234,7 +255,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 .commitNow()
             colorFragment =  (findColorFragment() as ColorFragment?)!!
         }
-        if (gameViewModel.getGameType() == GameType.CLASSIC) {
+        if (gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGameInfo, GameInfoFragment())
                     .commit()
@@ -248,6 +269,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerGuess, GuessFragment())
                 .commitNow()
+            supportFragmentManager.beginTransaction().replace(R.id.containerTools, HintFragment()).commitNow()
         }
     }
     override fun onResume() {
@@ -255,12 +277,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         println("OnResume")
         setUpGameInit()
     }
-    override fun onBackPressed() {
-        Toast.makeText(
-                applicationContext,
-                "Il n'est pas possible d'utiliser le bouton back dans l'application",
-                Toast.LENGTH_LONG
-        ).show()
+
+    fun hintFragment() {
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerTools, HintFragment())
+                .commitNow()
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
@@ -276,6 +297,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
             else -> super.onKeyUp(keyCode, event)
         }
+    }
+    override fun onBackPressed() {
+        Toast.makeText(
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
+        ).show()
     }
 
 }

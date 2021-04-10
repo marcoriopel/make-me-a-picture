@@ -122,7 +122,6 @@ class MainMenuActivity : AppCompatActivity() {
                     GameListFragment()
                 ).commitNowAllowingStateLoss()
             }
-
     }
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {

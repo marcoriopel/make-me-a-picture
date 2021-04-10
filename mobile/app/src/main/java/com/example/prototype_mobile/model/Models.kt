@@ -58,6 +58,10 @@ data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
 
+data class BasicUser(val username: String, val avatar: Int)
+
+data class HintRequest(val gameId: String, val user: BasicUser)
+
 //Data class for the profil
 data class PrivateReceivedInfo(val privateInfo: PrivateInfo)
 data class PrivateInfo(val name: String, val surname: String, val stats: Stats, val logs: Array<Log>, val games: Array<GameLog>)
@@ -66,3 +70,4 @@ data class Log(val _id: String, val username: String, val isLogin: Boolean, val 
 data class GameLog(val _id: String, val gameName: String, val gameType: Int, val players: Array<Players>, val start: Long, val end: Long, val score: Array<Int> = arrayOf(0, 0))
 data class Connection(val date: String, val action: String)
 data class GameHistoric(val date: String, val name: String, val mode: String, val team1: String, val team2: String, val score: String)
+
