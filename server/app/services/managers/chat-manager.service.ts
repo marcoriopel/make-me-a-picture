@@ -157,7 +157,7 @@ export class ChatManagerService {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
                 await this.chatModel.deleteChat(chatId);
-                this.socketService.getSocket().to(chatId).emit('deleteChat');
+                this.socketService.getSocket().to(chatId).emit('message', { "user": { username: "System" }, "text": "Ce canal a été supprimé", "timestamp": 0, "textColor": "#2065d4", chatId: chatId });
                 return true; 
             } 
         }
