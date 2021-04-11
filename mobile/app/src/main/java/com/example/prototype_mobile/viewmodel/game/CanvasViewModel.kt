@@ -1,17 +1,25 @@
 package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
+import android.util.Base64
+import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.prototype_mobile.*
+import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.DrawingEvent
+import com.example.prototype_mobile.MouseDown
+import com.example.prototype_mobile.PaintedPath
+import com.example.prototype_mobile.Vec2
 import com.example.prototype_mobile.model.game.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.FileOutputStream
+import java.io.ByteArrayOutputStream
 import java.util.*
-import kotlin.Exception
 import kotlin.math.abs
+
 
 const val GRID_WIDTH = 2f // has to be float
 const val TOUCH_TOLERANCE = 12
@@ -120,7 +128,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 pathStack.clear()
                 redoStack.clear()
                 curPath.reset()
-                _newCurPath.value = curPath
+                _newCurPath.postValue(curPath)
             }
         }
     }
@@ -139,7 +147,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         currentY = motionTouchEventY
 
         // Call the onDraw() method to update the view
-        _newCurPath.value = curPath
+        _newCurPath.postValue(curPath)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -158,7 +166,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             currentY = motionTouchEventY
 
             // Call the onDraw() method to update the view
-            _newCurPath.value = curPath
+            _newCurPath.postValue(curPath)
         }
     }
 
@@ -175,11 +183,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         curPath = Path()
 
         // Call the onDraw() method to update the view
-        _newCurPath.value = curPath
+        _newCurPath.postValue(curPath)
     }
     
     // Grid attribute
-    var isGrid = false;
+    var isGrid = false
     private lateinit var gridBitmap: Bitmap
     private lateinit var gridCanvas: Canvas
     private val gridColor = Color.GRAY
@@ -232,49 +240,57 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private fun undo() {
         if (!pathStack.empty())
             redoStack.push(pathStack.pop())
-        _newCurPath.value = null
+        _newCurPath.postValue(null)
     }
 
     private fun redo() {
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
-        _newCurPath.value = null
+        _newCurPath.postValue(null)
     }
 
+    var canStartNewThread = true
    private fun onReceivingEvent() {
-       while (!canvasRepository.drawingEventList.isEmpty()) {
-           val json = canvasRepository.drawingEventList.poll()
-           if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
-               val objectString = JSONObject(json).getString("drawingEvent")
-               val objectJson = JSONObject(objectString)
-               // try {
-               val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
-                   EVENT_TOUCH_DOWN -> {
-                       val Jevent = JSONObject(objectJson.getString("event"))
-                       val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                       val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
-                       DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
-                   }
-                   EVENT_TOUCH_MOVE -> {
-                       lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
-                       DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
-                   }
-                   EVENT_TOUCH_UP -> {
-                       DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
-                   }
-                   else -> {
-                       DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+       if (canStartNewThread) {
+           canStartNewThread = false
+           viewModelScope.launch(Dispatchers.IO) {
+               while (!canvasRepository.drawingEventList.isEmpty()) {
+                   val json = canvasRepository.drawingEventList.poll()
+                   if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
+                       val objectString = JSONObject(json).getString("drawingEvent")
+                       val objectJson = JSONObject(objectString)
+                       // try {
+                       val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
+                           EVENT_TOUCH_DOWN -> {
+                               val Jevent = JSONObject(objectJson.getString("event"))
+                               val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                               DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
+                           }
+                           EVENT_TOUCH_MOVE -> {
+                               lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+                               DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
+                           }
+                           EVENT_TOUCH_UP -> {
+                               DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
+                           }
+                           else -> {
+                               DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+                           }
+                       }
+                       onDrawingEvent(drawingEventReceive)
                    }
                }
-               onDrawingEvent(drawingEventReceive)
+               canStartNewThread = true
            }
        }
+
    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Get an image of the drawing
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    private fun getDrawingImage(): FileOutputStream? {
+    private fun getDrawingImage(): String {
         // Draw all path
         val bitmap = Bitmap.createBitmap(1200, 820, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -282,23 +298,20 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             canvas.drawPath(paintedPath.path, paintedPath.paint)
         canvas.drawPath(curPath, getPaint())
         // Create drawing image
-        val fos: FileOutputStream? = null
-        val isCompress = bitmap.compress(Bitmap.CompressFormat.PNG, 95, fos);
-        if (isCompress)
-            return fos
-        else
-            throw Exception("Not able to compress image")
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
+        val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        return encoded
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Save the image to the end game repo
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun saveDrawingImage() {
+    private fun saveDrawingImage() {
+        Log.e("Image", "Saving image")
         val image = getDrawingImage()
-        if (image != null)
-            EndGameRepository.getInstance()!!.addDrawingImage(image)
-        else
-            throw Exception("Image is null")
+        EndGameRepository.getInstance()!!.addDrawingImage(image)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *

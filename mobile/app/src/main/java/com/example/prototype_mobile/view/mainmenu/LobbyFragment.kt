@@ -243,7 +243,7 @@ class LobbyFragment : Fragment() {
 
     fun startGame(view: View) {
         val intent = Intent(view.context, GameActivity::class.java)
-      intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
         startActivity(intent)
     }
     fun getViewModel() : LobbyViewModel{

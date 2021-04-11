@@ -1,12 +1,10 @@
 package com.example.prototype_mobile.model.game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.prototype_mobile.DrawingData
-import com.example.prototype_mobile.DrawingEvent
+import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.google.gson.Gson
-import java.io.FileOutputStream
 import java.util.*
 
 class EndGameRepository {
@@ -29,7 +27,7 @@ class EndGameRepository {
 
     // Drawing Data
     private lateinit var drawingList: MutableList<DrawingData>
-
+    private lateinit var gameResult: StaticEndGameInfo
     // Current hint
     private val _hints = MutableLiveData<MutableList<String>>()
     val hints: LiveData<MutableList<String>> = _hints
@@ -41,6 +39,15 @@ class EndGameRepository {
     fun initializeData() {
         _hints.value = mutableListOf()
         drawingList = mutableListOf()
+        gameResult = StaticEndGameInfo("No Result", "", EndGamePageType.RESULT, null)
+    }
+
+    fun addGameResult(title: String, description: String, endGameResult: EndGameResult, ) {
+        this.gameResult = StaticEndGameInfo(title, description, EndGamePageType.RESULT, endGameResult)
+    }
+
+    fun getGameResult(): StaticEndGameInfo {
+        return gameResult
     }
 
     fun addHint(hint: String) {
@@ -65,9 +72,8 @@ class EndGameRepository {
         return drawingList
     }
 
-    fun addDrawingImage(fos: FileOutputStream) {
-        TODO()
-//        drawingList[drawingList.lastIndex].image = fos
+    fun addDrawingImage(encodedImg: String) {
+        drawingList[drawingList.lastIndex].image = encodedImg
     }
 
     fun addDrawingEvent(event: DrawingEvent) {
@@ -78,8 +84,9 @@ class EndGameRepository {
         TODO()
     }
 
-    fun upload() {
-        TODO()
+    fun upload(drawingData: DrawingData) {
+        drawingData.hint.addAll(_hints.value!!)
+        // TODO: Upload drawing
     }
 
     fun vote(drawing: String, upvote: Boolean) {

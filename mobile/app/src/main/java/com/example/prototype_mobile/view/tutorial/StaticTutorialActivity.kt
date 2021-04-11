@@ -22,7 +22,7 @@ import com.example.prototype_mobile.StaticTutorialInfo
 import com.example.prototype_mobile.databinding.ActivityStaticTutorialBinding
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 
-class StaticTutorial : AppCompatActivity() {
+class StaticTutorialActivity : AppCompatActivity() {
 
     var tutorialPageIndex = 1
     lateinit var binding: ActivityStaticTutorialBinding
@@ -41,6 +41,7 @@ class StaticTutorial : AppCompatActivity() {
         contentMap.put(2, StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description"))
         contentMap.put(3, StaticTutorialInfo("title_game",R.drawable.guessing,"game_description"))
         ProgressDot(tutorialPageIndex)
+
 
 
 
@@ -72,6 +73,10 @@ class StaticTutorial : AppCompatActivity() {
         setNewPageContent()
     }
 
+    override fun onResume() {
+        super.onResume()
+        tutorialPageIndex =1
+    }
     @SuppressLint("SetTextI18n")
     fun setNewPageContent() {
         var info = contentMap[tutorialPageIndex]

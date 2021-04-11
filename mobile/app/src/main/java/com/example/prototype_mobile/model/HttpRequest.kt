@@ -38,7 +38,7 @@ class HttpRequestDrawGuess {
                 val token = LoginRepository.getInstance()!!.user!!.token
 
                 val httpBuilder = HttpUrl.parse(url + urlPath)!!.newBuilder()
-                parameters?.forEach { (key, value) -> httpBuilder.addQueryParameter(key, value) }
+                parameters.forEach { (key, value) -> httpBuilder.addQueryParameter(key, value) }
 
                 val request: Request = Request.Builder()
                     .url(httpBuilder.build())

@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,7 +20,6 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
-import java.util.*
 
 class GameListFragment : Fragment() {
     companion object {
@@ -52,14 +50,14 @@ class GameListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         // define an adapter
-        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel);
+        gameListAdapter = GameListAdapter(view.context, gameList, gameListViewModel)
         recyclerView.adapter = gameListAdapter
         binding = FragmentGameListBinding.bind(view)
 
         gameListViewModel.gameListResult.observe(viewLifecycleOwner, Observer {
             val gameListResult = it ?: return@Observer
             if (gameListResult.error != null) {
-                showLoadingFailed(view.getContext(), gameListResult.error)
+                showLoadingFailed(view.context, gameListResult.error)
             }
 
             gameList.clear()
@@ -72,7 +70,7 @@ class GameListFragment : Fragment() {
         gameListViewModel.joinLobbyResult.observe(viewLifecycleOwner, Observer {
             val joinLobbyResult = it ?: return@Observer
             if (joinLobbyResult.error != null) {
-                showLoadingFailed(view.getContext(), joinLobbyResult.error)
+                showLoadingFailed(view.context, joinLobbyResult.error)
             }
         })
 

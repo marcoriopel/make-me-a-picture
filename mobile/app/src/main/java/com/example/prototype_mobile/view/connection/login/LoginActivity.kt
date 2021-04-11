@@ -8,19 +8,21 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.Menu
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.ActivityLoginBinding
 import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
-import com.example.prototype_mobile.view.game.endgame.StaticEndGame
+import com.example.prototype_mobile.view.game.endgame.EndGameActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
-import com.example.prototype_mobile.view.tutorial.StaticTutorial
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModel
 import com.example.prototype_mobile.viewmodel.connection.login.LoginViewModelFactory
 
@@ -30,12 +32,22 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.loginmenu, menu)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+        setSupportActionBar(toolbar)
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
                 .get(LoginViewModel::class.java)
 
@@ -81,7 +93,10 @@ class LoginActivity : AppCompatActivity() {
 
         binding.login.setOnClickListener {
             binding.loading.visibility = View.VISIBLE
-            loginViewModel.login(binding.username.text.toString(), StringUtil.hashSha256(binding.password.text.toString()))
+            loginViewModel.login(
+                binding.username.text.toString(),
+                StringUtil.hashSha256(binding.password.text.toString())
+            )
         }
 
         binding.signUp.setOnClickListener {
@@ -105,19 +120,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(username: String) {
-//        val intent = Intent(this, MainMenuActivity::class.java);
-//      // val intent = Intent(this, StaticTutorial::class.java)
-//        startActivity(intent)
+        val intent = Intent(this, MainMenuActivity::class.java);
+//        val intent = Intent(this, EndGameActivity::class.java)
 
-        val intent = Intent(this, StaticEndGame::class.java)
-        //val intent = Intent(this,   MainMenuActivity::class.java);
         startActivity(intent)
 
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         Toast.makeText(
-                applicationContext,
-                "Bienvenue $username",
-                Toast.LENGTH_LONG
+            applicationContext,
+            "Bienvenue $username",
+            Toast.LENGTH_LONG
         ).show()
     }
 
@@ -129,9 +141,9 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         Toast.makeText(
-                applicationContext,
-                "Il n'est pas possible d'utiliser le bouton back dans l'application",
-                Toast.LENGTH_LONG
+            applicationContext,
+            "Il n'est pas possible d'utiliser le bouton back dans l'application",
+            Toast.LENGTH_LONG
         ).show()
     }
 }

@@ -30,7 +30,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
 
     override fun onBindViewHolder(holder: GameListAdapter.ViewHolder, position: Int) {
         val gameData  = gameList[position]
-        holder.gameName.setText(gameData.gameName)
+        holder.gameName.text = gameData.gameName
         holder.gameDifficulty.setImageResource(Drawable.difficulty[gameData.difficulty.difficulty])
         holder.gameType.setImageResource(Drawable.gameTypeDrawableWhite[gameData.gameType.type])
         val joinButton = holder.view.findViewById<Button>(R.id.gamelist_join)

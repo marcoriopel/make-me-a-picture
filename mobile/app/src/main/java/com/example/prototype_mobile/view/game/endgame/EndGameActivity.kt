@@ -2,24 +2,34 @@ package com.example.prototype_mobile.view.game.endgame
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.prototype_mobile.DrawingData
+import com.example.prototype_mobile.EndGameResult
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticEndGameInfo
 import com.example.prototype_mobile.databinding.ActivityStaticEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
+import nl.dionsegijn.konfetti.KonfettiView
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
-class StaticEndGame: AppCompatActivity() {
+class EndGameActivity: AppCompatActivity() {
 
     var pageIndex = 1
     var numberOfPage = 0
@@ -35,7 +45,7 @@ class StaticEndGame: AppCompatActivity() {
         // Creating view
         binding = ActivityStaticEndGameBinding.inflate(layoutInflater)
         endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
-        setContentView(R.layout.activity_static_end_game)
+        setContentView(R.layout.activity_end_game)
         val view = binding.root
         setContentView(view)
 
@@ -43,17 +53,15 @@ class StaticEndGame: AppCompatActivity() {
         createContentView()
 
         // Binding
-        bindHint()
+        bindButton()
         bindNavigation()
 
         // Display hint
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
         recyclerView.layoutManager = layoutManager
-
         hintListAdapter = HintListAdapter(view.context, hintList, endGameViewModel);
         recyclerView.adapter = hintListAdapter
-
         endGameViewModel.hints.observe(this, Observer {
             hintList = it
             hintListAdapter.hintList = hintList
@@ -68,7 +76,7 @@ class StaticEndGame: AppCompatActivity() {
     private fun createContentView() {
         // Result
         numberOfPage = 1
-        contentMap[numberOfPage] = StaticEndGameInfo("Partie terminé","Équipe 1 a gagné", EndGamePageType.RESULT, null)
+        contentMap[numberOfPage] = endGameViewModel.getGameResult()
 
         // Vote drawing from virtual player
         for (vDrawing in endGameViewModel.getVPlayerDrawing()) {
@@ -89,12 +97,23 @@ class StaticEndGame: AppCompatActivity() {
 
     }
 
-    private fun bindHint() {
-        // Button
+    private fun bindButton() {
+        // Add Hint
         binding.buttonAddHint.setOnClickListener {
             if (binding.hintInput.text.toString() != "") {
                 endGameViewModel.addHint(binding.hintInput.text.toString())
                 binding.hintInput.text.clear()
+            }
+        }
+        // upload
+        binding.buttonUpload.setOnClickListener {
+            if(endGameViewModel.hints.value!!.size != 0) {
+                contentMap[pageIndex]?.data?.let { it1 -> endGameViewModel.upload(it1 as DrawingData) }
+                nextPage()
+            } else {
+                val message = "Veuiller entrer au minimum un indice."
+                val toast = Toast.makeText(applicationContext, message , Toast.LENGTH_LONG)
+                toast.show()
             }
         }
     }
@@ -113,41 +132,56 @@ class StaticEndGame: AppCompatActivity() {
             if(pageIndex == 1) {
                 println("Can't decrement 0")
             } else {
-                pageIndex--
-                setPageContent()
-                progressDot(pageIndex)
+                previousPage()
             }
         }
         binding.next.setOnClickListener {
             println("next button click ")
             if(pageIndex < contentMap.size) {
-                pageIndex++
-                setPageContent()
-                progressDot(pageIndex)
+                nextPage()
             } else if(pageIndex == contentMap.size) {
-                val intent = Intent(this, MainMenuActivity::class.java)
+                val intent =  Intent(this@EndGameActivity, MainMenuActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
                 startActivity(intent)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                this.finish()
             }
         }
+    }
+
+    private fun previousPage() {
+        pageIndex--
+        setPageContent()
+        progressDot(pageIndex)
+    }
+
+    private fun nextPage() {
+        pageIndex++
+        setPageContent()
+        progressDot(pageIndex)
     }
 
     @SuppressLint("SetTextI18n")
     private fun setPageContent() {
         val pageData = contentMap[pageIndex]!!
-        if (pageData.data != null) {
-            pageData.data.image?.let { binding.image.setImageResource(it) }
+        val imgHolder = findViewById<ImageView>(R.id.image)
+        Log.e("Image", pageData.data?.image.toString())
+        if (pageData.data?.image != null) {
+            imgHolder.visibility = View.VISIBLE
+            Log.e("Image", "Is visible")
+            val imageBytes = Base64.decode(pageData.data.image, Base64.DEFAULT)
+            val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            binding.image.setImageBitmap(decodedImage)
         } else {
-            // Add end game image
+            imgHolder.visibility = View.INVISIBLE
         }
         binding.description.text = pageData.description
         binding.title.text = pageData.title
         if(pageIndex == contentMap.size) {
             val nextText = findViewById<TextView>(R.id.next_text)
-            nextText.text = "Finish"
+            nextText.text = "Retour au menu"
         } else {
             val nextText = findViewById<TextView>(R.id.next_text)
-            nextText.text = "Next"
+            nextText.text = "Suivant"
         }
         // Hide back button
         if(pageIndex == 1) {
@@ -167,6 +201,11 @@ class StaticEndGame: AppCompatActivity() {
                 upvoteButton.visibility = View.INVISIBLE
                 downvoteButton.visibility = View.INVISIBLE
                 uploadLayout.visibility = View.INVISIBLE
+                if (pageData.data != null) {
+                    val result = pageData.data as EndGameResult
+                    if (result.win)
+                        burstKonfetti()
+                }
             }
             EndGamePageType.VOTE -> {
                 upvoteButton.visibility = View.VISIBLE
@@ -183,7 +222,7 @@ class StaticEndGame: AppCompatActivity() {
 
     private fun progressDot(tutorialIndex: Int) {
         val dotsLayout = findViewById<LinearLayout>(R.id.dots)
-        val dots: Array<ImageView> = Array<ImageView>(contentMap.size) { i -> ImageView(this) }
+        val dots: Array<ImageView> = Array<ImageView>(contentMap.size) { _ -> ImageView(this) }
         dotsLayout.removeAllViews()
         for (i in dots.indices) {
             dots[i] = ImageView(this)
@@ -198,6 +237,26 @@ class StaticEndGame: AppCompatActivity() {
             dots[tutorialIndex-1].setImageResource(R.drawable.circle)
             dots[tutorialIndex-1].setColorFilter(getColor(R.color.poly_blue), PorterDuff.Mode.SRC_IN)
         }
+    }
+
+    private fun burstKonfetti() {
+        val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
+
+        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart)
+        val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
+        konfettiView.build()
+            .addColors(Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA)
+            .setDirection(0.0, 359.0)
+            .setSpeed(1f, 5f)
+            .setFadeOutEnabled(true)
+            .setTimeToLive(2000L)
+            .addShapes(Shape.Square, Shape.Circle, drawableShape!!)
+            .addSizes(Size(12, 5f))
+            .setPosition(
+                konfettiView.x + 950,
+                konfettiView.y + 380
+            )
+            .burst(100)
     }
 
 }

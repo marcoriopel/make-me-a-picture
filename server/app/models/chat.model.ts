@@ -56,8 +56,8 @@ export class ChatModel {
 
     async deleteChat(chatRoomId: string) {
         try {
-            await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
             await this.databaseModel.client.db("database").collection("chats").deleteOne({ "chatId": chatRoomId });
+            await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
         } catch (e) {
             throw e;
         }

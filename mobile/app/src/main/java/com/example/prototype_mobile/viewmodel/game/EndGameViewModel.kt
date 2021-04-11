@@ -1,10 +1,11 @@
 package com.example.prototype_mobile.viewmodel.game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.DrawingData
+import com.example.prototype_mobile.EndGameData
+import com.example.prototype_mobile.StaticEndGameInfo
 import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.vDrawingData
 
@@ -21,8 +22,8 @@ class EndGameViewModel(): ViewModel() {
         }
     }
 
-    fun upload() {
-        endGameRepo.upload()
+    fun upload(drawingData: DrawingData) {
+        endGameRepo.upload(drawingData)
     }
 
     fun vote(drawingId: String, upvote: Boolean) {
@@ -43,5 +44,9 @@ class EndGameViewModel(): ViewModel() {
 
     fun getVPlayerDrawing(): List<vDrawingData> {
         return listOf()
+    }
+
+    fun getGameResult(): StaticEndGameInfo {
+        return endGameRepo.getGameResult()
     }
 }
