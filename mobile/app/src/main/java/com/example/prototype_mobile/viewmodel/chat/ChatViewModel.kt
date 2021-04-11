@@ -64,26 +64,33 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun createChannel(channelName: String) {
-        viewModelScope.launch()
+        viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<String> = try {
-                chatRepository.createChannel(channelName)
-            } catch (e: Exception) {
-                Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
+            getChannelWithinThread()
+            val channelFiltered = chatRepository.channelList.find { it.chatName == channelName }
 
-            if (result is Result.Success) {
-                joinChannel(result.data)
-            }
+            if (channelFiltered != null) {
+                joinLobbyChannel(channelFiltered.chatId)
+            } else {
+                val result: Result<String> = try {
+                    chatRepository.createChannel(channelName)
+                } catch (e: Exception) {
+                    Result.Error(ResponseCode.BAD_REQUEST.code)
+                }
 
-            if(result is Result.Error){
-                when(result.exception) {
-                    ResponseCode.CONFLICT.code -> _createChannelResult.value = R.string.channel_name_used
-                    ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
+                if (result is Result.Success) {
+                    joinChannel(result.data)
+                }
+
+                if (result is Result.Error) {
+                    when (result.exception) {
+                        ResponseCode.CONFLICT.code -> _createChannelResult.value = R.string.channel_name_used
+                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
+                    }
                 }
             }
+            getChannelWithinThread()
         }
-        getChannels()
     }
 
     var joinLimit = 4
@@ -123,25 +130,28 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
+    suspend fun getChannelWithinThread(isInit: Boolean = false) {
+        val result: Result<Boolean> = try {
+            chatRepository.getChannels(isInit)
+        } catch (e: Exception) {
+            Result.Error(ResponseCode.BAD_REQUEST.code)
+        }
+
+        if (result is Result.Success) {
+            _getChannelResult.postValue(-1)
+        }
+
+        if(result is Result.Error){
+            when(result.exception) {
+                ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+            }
+        }
+    }
     fun getChannels(isInit: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<Boolean> = try {
-                chatRepository.getChannels(isInit)
-            } catch (e: Exception) {
-                Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
-
-            if (result is Result.Success) {
-                _getChannelResult.postValue(-1)
-            }
-
-            if(result is Result.Error){
-                when(result.exception) {
-                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
-                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
-                }
-            }
+            getChannelWithinThread(isInit)
         }
     }
 
