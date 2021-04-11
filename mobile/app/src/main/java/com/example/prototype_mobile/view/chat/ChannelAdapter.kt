@@ -70,6 +70,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_shown)
                 holder.joinButton.visibility = View.GONE
                 holder.leaveButton.visibility = View.GONE
+                holder.background.setOnClickListener(null)
             }
         }
     }
