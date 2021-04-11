@@ -4,21 +4,21 @@
         <ng-template matStepLabel>Résultat</ng-template>
         <div id="content">
             <h1 id="title">{{result}}</h1>
-            <div id="draw">
+            <!-- <div id="draw">
                 <div id="results" class="draw-game">
                     <div class="team">
-                        <p id="score">3</p>
-                        <p class="player">Marc-Alain</p>
-                        <p class="player">Guillaume</p>
+                        <p id="score">{{winningTeam.score}}</p>
+                        <p class="player">{{winningTeam.players[0]}}</p>
+                        <p class="player">{{winningTeam.players[1]}}</p>
                     </div>
                     <div class="team">
-                        <p id="score">1</p>
-                        <p class="player">Marc-Olivier</p>
-                        <p class="player">Samuel</p>
+                        <p id="score">{{loosingTeam.score}}</p>
+                        <p class="player">{{loosingTeam.players[0]}}</p>
+                        <p class="player">{{loosingTeam.players[1]}}</p>
                     </div>
                 </div>
-            </div>
-            <div *ngIf="result != 'Partie nulle'" id="not-draw">
+            </div> -->
+            <div  id="not-draw">
                 <div id="results">
                     <div id="winning-team" class="team winning">
                         <p>3</p>
