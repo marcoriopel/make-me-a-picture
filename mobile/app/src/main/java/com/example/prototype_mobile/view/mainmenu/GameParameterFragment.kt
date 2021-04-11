@@ -145,7 +145,7 @@ class GameParameterFragment : Fragment() {
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"
-                binding.gameLogo.setImageResource(R.drawable.icon_solo)
+                binding.gameLogo.setImageResource(R.drawable.ic_hands_helping_solid)
             }
         }
     }
