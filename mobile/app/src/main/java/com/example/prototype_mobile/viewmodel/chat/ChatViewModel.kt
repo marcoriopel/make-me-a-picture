@@ -84,8 +84,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
                 if (result is Result.Error) {
                     when (result.exception) {
-                        ResponseCode.CONFLICT.code -> _createChannelResult.value = R.string.channel_name_used
-                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
+                        ResponseCode.CONFLICT.code -> _createChannelResult.postValue(R.string.channel_name_used)
+                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.postValue(R.string.bad_request)
                     }
                 }
             }

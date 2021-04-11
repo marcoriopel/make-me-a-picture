@@ -231,8 +231,12 @@ class ChatRepository {
                 } else {
                     channelMap[channelShown]!!.removeAt(1)
                 }
-
-                val firstMessageTimestamp = if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
+                var firstMessageTimestamp: Long
+                if (channelShown == "General") {
+                    firstMessageTimestamp = if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
+                } else {
+                    firstMessageTimestamp = if (channelMap[channelShown]!!.size > 1) channelMap[channelShown]!![1].timestamp else Long.MAX_VALUE
+                }
                 for (message in historyMessage.asReversed()) {
                     if (message.timestamp < firstMessageTimestamp) {
                         channelMap[channelShown]!!.asReversed().add(message)
