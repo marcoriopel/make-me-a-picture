@@ -229,8 +229,8 @@ class ChatRepository {
                 if (channelShown == "General") {
                     channelMap[channelShown]!!.removeAt(0)
                 } else {
-                    channelMap[channelShown]!!.removeAt(0)
                     channelMap[channelShown]!!.removeAt(1)
+                    channelMap[channelShown]!!.removeAt(0)
                 }
                 var firstMessageTimestamp: Long
                 if (channelShown == "General") {

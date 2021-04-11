@@ -184,11 +184,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO)
         {
             val result: Result<Boolean> =
-                try {
-                chatRepository.getHistory()
+                /*try {
+                    chatRepository.getHistory()
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
+            }*/
+                    chatRepository.getHistory()
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
