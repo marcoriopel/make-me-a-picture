@@ -2,6 +2,8 @@ package com.example.prototype_mobile
 
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
@@ -71,3 +73,6 @@ data class GameLog(val _id: String, val gameName: String, val gameType: Int, val
 data class Connection(val date: String, val action: String)
 data class GameHistoric(val date: String, val name: String, val mode: String, val team1: String, val team2: String, val score: String)
 
+
+
+data class StaticTutorialInfo(val title:String, @DrawableRes val image: Int, val description: String?)

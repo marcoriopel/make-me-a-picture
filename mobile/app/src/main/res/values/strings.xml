@@ -6,6 +6,7 @@
     <string name="bad_request">"Mauvaise requête"</string>
     <string name="not_authorized">"Vous n'êtes pas autorisés à faire cette requête"</string>
     <string name="mandatory_field">"Champ requis"</string>
+    <string name= "tutorial">Tutoriel</string>
 
     <!-- Strings related to login and sign up -->
     <string name="sign_up">Inscription</string>
@@ -54,4 +55,41 @@
 
     <!-- Strings related to the chat -->
     <string name="channel_name_used">Le nom de ce canal est déjà utilisé.</string>
+    <string name="title_activity_static_tutorial">StaticTutorial</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="main_menu_description">
+        Voici la description du main menu. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+    <string name="lobby_description">
+        Voici la description du lobby. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+    <string name="game_description">
+        Voici la description d\'une game. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+
+    <string name = "title_mainmenu">Menu principal </string>
+    <string name = "title_lobby">Lobby </string>
+    <string name = "title_game">Game guessing </string>
+
+
+
 </resources>
