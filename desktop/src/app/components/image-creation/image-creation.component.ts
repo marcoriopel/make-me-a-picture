@@ -8,7 +8,6 @@ import { Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
 import { Difficulty } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ACCESS } from '@app/classes/acces';
 
 @Component({
   selector: 'app-image-creation',
@@ -55,11 +54,12 @@ export class ImageCreationComponent implements OnInit {
   }
 
   async processForm() {
-    const drawing: Drawing = {
+    const drawing: any = {
       drawingName: this.imageCreationForm.value.drawingName,
       difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
       strokes: this.drawingService.strokeStack,
       hints: this.hints,
+      imageUrl: this.drawingService.canvas.toDataURL()
     }
     this.sendDrawing(drawing).subscribe(
       res => {
@@ -68,30 +68,6 @@ export class ImageCreationComponent implements OnInit {
         });
         this.drawingService.strokeStack = [];
         this.drawingService.redoStack = []
-
-
-
-
-        let dataUrl = this.drawingService.canvas.toDataURL();
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'authorization': localStorage.getItem(ACCESS.TOKEN)!
-        });
-        const options = { headers: headers, responseType: 'text' as 'json' };
-        const body = { id: 'test', image: dataUrl }
-        this.http.post<any>(environment.socket_url + 'api/drawings/upload', body, options).subscribe(
-          res => {
-            console.log(res);
-          },
-          err => {
-            console.log(err);
-          }
-        )
-
-
-
-
-
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.hintForm.reset();
         this.imageCreationForm.reset();
@@ -146,7 +122,7 @@ export class ImageCreationComponent implements OnInit {
     return Difficulty.EASY // Default
   }
 
-  sendDrawing(drawing: Drawing) {
+  sendDrawing(drawing: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!
