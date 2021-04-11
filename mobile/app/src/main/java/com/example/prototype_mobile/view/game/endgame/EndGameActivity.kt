@@ -21,7 +21,7 @@ import com.example.prototype_mobile.DrawingData
 import com.example.prototype_mobile.EndGameResult
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticEndGameInfo
-import com.example.prototype_mobile.databinding.ActivityStaticEndGameBinding
+import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
@@ -36,14 +36,14 @@ class EndGameActivity: AppCompatActivity() {
     var hintList: MutableList<String> = mutableListOf()
     var contentMap = mutableMapOf<Int, StaticEndGameInfo>()
     lateinit var hintListAdapter: HintListAdapter
-    lateinit var binding: ActivityStaticEndGameBinding
+    lateinit var binding: ActivityEndGameBinding
     private lateinit var endGameViewModel: EndGameViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Creating view
-        binding = ActivityStaticEndGameBinding.inflate(layoutInflater)
+        binding = ActivityEndGameBinding.inflate(layoutInflater)
         endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
         setContentView(R.layout.activity_end_game)
         val view = binding.root
