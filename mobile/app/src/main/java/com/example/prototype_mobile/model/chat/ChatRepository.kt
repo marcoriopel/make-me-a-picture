@@ -111,12 +111,12 @@ class ChatRepository {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
+                    newMessageList.add(Message("", "", "", 3, 0))
                     newMessageList.add(Message("", "", "", 2, 0))
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
                         channelList.removeIf { c -> c.chatId == channel.chatId}
-
                         channelNotJoinedSet.remove(channel)
                     }
                     if (channel.chatId == channelShown) {
@@ -226,7 +226,11 @@ class ChatRepository {
                 historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp))
             }
             if (channelMap.containsKey(channelShown)) {
-                channelMap[channelShown]!!.removeAt(0)
+                if (channelShown == "General") {
+                    channelMap[channelShown]!!.removeAt(0)
+                } else {
+                    channelMap[channelShown]!!.removeAt(1)
+                }
 
                 val firstMessageTimestamp = if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
                 for (message in historyMessage.asReversed()) {
@@ -274,6 +278,21 @@ class ChatRepository {
         val year = if(cal.get(Calendar.YEAR).toString().length == 1) "0" + cal.get(Calendar.YEAR).toString() else cal.get(
             Calendar.YEAR).toString()
         return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds
+    }
+
+    suspend fun deleteChannel(): Result<Boolean> {
+        val mapChannel = HashMap<String, String>()
+        mapChannel["chatId"] = channelShown
+        val response = HttpRequestDrawGuess.httpRequestDelete("/api/chat/delete", mapChannel, true)
+        return analyseDeleteChannelAnswer(response)
+    }
+
+    private fun analyseDeleteChannelAnswer(response: Response): Result<Boolean> {
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success(true)
+        } else {
+            Result.Error(response.code())
+        }
     }
 
 }
