@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.game
 
+import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
@@ -18,6 +20,8 @@ import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.view.mainmenu.ProfilFragment
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
@@ -40,7 +44,15 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         inflater.inflate(R.menu.gamemenu, menu)
         return true
     }
-
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_logout -> {
+            gameViewModel.logout()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,6 +171,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     if(!gameViewModel.countDownSound.value!!)
                         mediaPlayer?.stop()
             }
+        })
+
+        gameViewModel.logout.observe(this, {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         })
     }
 

@@ -51,6 +51,8 @@ class GameViewModel():ViewModel() {
     private val _suggestions = MutableLiveData<Suggestions>()
     var suggestions: LiveData<Suggestions> = _suggestions
 
+    private val _logout = MutableLiveData<Boolean>()
+    val logout: LiveData<Boolean> = _logout
 
     val gameRepository = GameRepository.getInstance()!!
 
@@ -134,6 +136,22 @@ class GameViewModel():ViewModel() {
         gameRepository.refreshSuggestions()
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            val result: Result<Boolean> = try {
+                LoginRepository.getInstance()!!.logout()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+
+            if (result is Result.Success) {
+                _logout.postValue(true)
+            }
+            if (result is Result.Error) {
+                println("Bad request")
+            }
+        }
+    }
 }
 
 
