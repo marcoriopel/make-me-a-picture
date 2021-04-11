@@ -39,6 +39,7 @@ class CanvasRepository {
     var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
     private val gson: Gson = Gson()
     private val gameRepo = GameRepository.getInstance()!!
+    var endGameRepos = EndGameRepository.getInstance()!!
 
     // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
@@ -78,6 +79,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_UNDO, null, ""))
     }
 
     fun redoEvent() {
@@ -86,6 +89,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_REDO, null, ""))
     }
 
     fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String) {
@@ -95,7 +100,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
-
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_DOWN, touchDown, ""))
     }
 
     fun touchMoveEvent(coord: Vec2) {
@@ -104,7 +110,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
-
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_MOVE, coord, ""))
     }
 
     fun touchUpEvent(coord: Vec2) {
@@ -113,6 +120,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_UP, coord, ""))
 
     }
 

@@ -82,15 +82,20 @@ class GameRepository {
     var drawingPlayer: String? = null
     var guessesLeftByTeam: GuessesLeft = GuessesLeft(arrayOf(0,0))
 
-    private val _isGameEnded=  MutableLiveData<String>()
+    private val _isGameEnded = MutableLiveData<String>()
     val isGameEnded: LiveData<String> = _isGameEnded
+
+    private val _saveDrawingImage =  MutableLiveData<Boolean>()
+    val saveDrawingImage: LiveData<Boolean> = _saveDrawingImage
 
     // Listener
     var team = 0
     var suggestion = Suggestions(arrayOf())
 
     private var onDrawingNameEvent = Emitter.Listener {
-        _drawingName.postValue(JSONObject(it[0].toString()).getString("drawingName"))
+        val name = JSONObject(it[0].toString()).getString("drawingName")
+        _drawingName.postValue(name)
+        EndGameRepository.getInstance()!!.addNewDrawing(name)
     }
 
     private  var onScoreEvent = Emitter.Listener {
@@ -112,12 +117,17 @@ class GameRepository {
 
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
+            if (_isPlayerDrawing.value!!)
+                _saveDrawingImage.postValue(true)
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
             _isPlayerDrawing.postValue(false)
             _drawingName.postValue(null)
+        } else {
+            EndGameRepository.getInstance()!!.initializeData()
         }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
+
     private var onEndGameEvent = Emitter.Listener {
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)

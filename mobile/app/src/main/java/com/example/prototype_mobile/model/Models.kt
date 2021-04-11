@@ -1,13 +1,15 @@
 package com.example.prototype_mobile
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import java.io.FileOutputStream
+import java.util.*
 
 // Data class for the chat
 data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long)
@@ -62,4 +64,9 @@ data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
 
 data class StaticTutorialInfo(val title:String, @DrawableRes val image: Int, val description: String?)
-data class StaticEndGameInfo(val title:String, @DrawableRes val image: Int, val description: String?, val type: EndGamePageType, val drawingName: String?)
+data class StaticEndGameInfo(val title:String, val description: String, val type: EndGamePageType, val data: EndGameData?)
+abstract class EndGameData() {
+    abstract val image: Int?
+}
+data class vDrawingData(val drawingName: String, @DrawableRes override var image: Int?, val id: String): EndGameData()
+data class DrawingData(val drawingName: String, @DrawableRes override var image: Int?, val drawingEventList: LinkedList<String>, val hint: MutableList<String>): EndGameData()

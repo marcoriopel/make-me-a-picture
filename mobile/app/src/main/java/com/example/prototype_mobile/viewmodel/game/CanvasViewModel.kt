@@ -1,16 +1,16 @@
 package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
-import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.*
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
 import com.example.prototype_mobile.model.game.*
 import org.json.JSONObject
+import java.io.FileOutputStream
 import java.util.*
+import kotlin.Exception
 import kotlin.math.abs
 
 const val GRID_WIDTH = 2f // has to be float
@@ -270,6 +270,37 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
            }
        }
    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Get an image of the drawing
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun getDrawingImage(): FileOutputStream? {
+        // Draw all path
+        val bitmap = Bitmap.createBitmap(1200, 820, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        for (paintedPath in pathStack)
+            canvas.drawPath(paintedPath.path, paintedPath.paint)
+        canvas.drawPath(curPath, getPaint())
+        // Create drawing image
+        val fos: FileOutputStream? = null
+        val isCompress = bitmap.compress(Bitmap.CompressFormat.PNG, 95, fos);
+        if (isCompress)
+            return fos
+        else
+            throw Exception("Not able to compress image")
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Save the image to the end game repo
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    fun saveDrawingImage() {
+        val image = getDrawingImage()
+        if (image != null)
+            EndGameRepository.getInstance()!!.addDrawingImage(image)
+        else
+            throw Exception("Image is null")
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Bind observer
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -292,7 +323,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         GameRepository.getInstance()!!.drawingName.observeForever {
             _drawingName.postValue(it)
         }
+        GameRepository.getInstance()!!.saveDrawingImage.observeForever {
+            saveDrawingImage()
+        }
     }
-
-
 }

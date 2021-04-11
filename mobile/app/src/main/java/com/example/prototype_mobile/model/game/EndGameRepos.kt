@@ -3,7 +3,11 @@ package com.example.prototype_mobile.model.game
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.prototype_mobile.DrawingData
 import com.example.prototype_mobile.DrawingEvent
+import com.google.gson.Gson
+import java.io.FileOutputStream
+import java.util.*
 
 class EndGameRepository {
     companion object {
@@ -21,10 +25,12 @@ class EndGameRepository {
         }
     }
 
-    val myDrawing: Array<DrawingEvent> = arrayOf()
-    val eraser: Array<DrawingEvent> = arrayOf()
-    lateinit var name: String
+    private val gson: Gson = Gson()
 
+    // Drawing Data
+    private lateinit var drawingList: MutableList<DrawingData>
+
+    // Current hint
     private val _hints = MutableLiveData<MutableList<String>>()
     val hints: LiveData<MutableList<String>> = _hints
 
@@ -34,6 +40,7 @@ class EndGameRepository {
 
     fun initializeData() {
         _hints.value = mutableListOf()
+        drawingList = mutableListOf()
     }
 
     fun addHint(hint: String) {
@@ -46,8 +53,28 @@ class EndGameRepository {
         _hints.postValue(_hints.value)
     }
 
-    fun addDrawing(drawing: Array<DrawingEvent>) {
-        // Check with server how they want the drawing list and eraser
+    fun removeAllHint() {
+        _hints.postValue(mutableListOf())
+    }
+
+    fun addNewDrawing(drawingName: String) {
+        drawingList.add(DrawingData(drawingName, null, LinkedList<String>(), mutableListOf()))
+    }
+
+    fun getDrawings(): MutableList<DrawingData> {
+        return drawingList
+    }
+
+    fun addDrawingImage(fos: FileOutputStream) {
+        TODO()
+//        drawingList[drawingList.lastIndex].image = fos
+    }
+
+    fun addDrawingEvent(event: DrawingEvent) {
+        drawingList[drawingList.lastIndex].drawingEventList.add(gson.toJson(event))
+    }
+
+    fun getVPlayerDrawing() {
         TODO()
     }
 

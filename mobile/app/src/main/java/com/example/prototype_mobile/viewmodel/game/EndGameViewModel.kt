@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.prototype_mobile.DrawingData
 import com.example.prototype_mobile.model.game.EndGameRepository
+import com.example.prototype_mobile.vDrawingData
 
 class EndGameViewModel(): ViewModel() {
 
@@ -35,4 +37,11 @@ class EndGameViewModel(): ViewModel() {
         endGameRepo.removeHint(hint)
     }
 
+    fun getDrawings(): MutableList<DrawingData> {
+        return endGameRepo.getDrawings()
+    }
+
+    fun getVPlayerDrawing(): List<vDrawingData> {
+        return listOf()
+    }
 }

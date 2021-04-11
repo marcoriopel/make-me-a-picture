@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.game
 
+import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.view.game.endgame.StaticEndGame
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
@@ -186,6 +188,9 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
                 }
                 mediaPlayer?.start()
+                val intent = Intent(this, StaticEndGame::class.java)
+                //val intent = Intent(this,   MainMenuActivity::class.java);
+                startActivity(intent)
             }
         }
     }

@@ -1,14 +1,9 @@
 package com.example.prototype_mobile.view.game.endgame
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -21,14 +16,13 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.StaticEndGameInfo
 import com.example.prototype_mobile.databinding.ActivityStaticEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
-import com.example.prototype_mobile.view.mainmenu.GameListAdapter
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
-import com.google.android.material.chip.ChipDrawable
 
 class StaticEndGame: AppCompatActivity() {
 
     var pageIndex = 1
+    var numberOfPage = 0
     var hintList: MutableList<String> = mutableListOf()
     var contentMap = mutableMapOf<Int, StaticEndGameInfo>()
     lateinit var hintListAdapter: HintListAdapter
@@ -73,13 +67,22 @@ class StaticEndGame: AppCompatActivity() {
 
     private fun createContentView() {
         // Result
-        contentMap[1] = StaticEndGameInfo("Partie terminé", R.drawable.menu, "Équipe 1 a gagné", EndGamePageType.RESULT, null)
+        numberOfPage = 1
+        contentMap[numberOfPage] = StaticEndGameInfo("Partie terminé","Équipe 1 a gagné", EndGamePageType.RESULT, null)
 
         // Vote drawing from virtual player
-        contentMap[2] = StaticEndGameInfo("Vote du dessing Singe", R.drawable.menu, "Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, "singe")
+        for (vDrawing in endGameViewModel.getVPlayerDrawing()) {
+            contentMap[numberOfPage++] = StaticEndGameInfo("Vote du dessin ${vDrawing.drawingName}","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, vDrawing)
+        }
+
+        contentMap[2] = StaticEndGameInfo("Vote du dessing Singe","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, null)
+        numberOfPage++
 
         // Upload
-        contentMap[3] = StaticEndGameInfo("Téléverser votre dessin", R.drawable.menu, "Voulez vous envoyer votre dessin pour qu'il soit utilitsé dans le futur ?", EndGamePageType.UPLOAD, "biscuit")
+        for (drawing in endGameViewModel.getDrawings()) {
+            val description = "Voulez vous envoyer votre dessin de ${drawing.drawingName} pour qu'il soit utilitsé dans le futur ?"
+            contentMap[numberOfPage++] = StaticEndGameInfo("Téléverser votre dessin", description, EndGamePageType.UPLOAD, drawing)
+        }
 
         // Set progress bar
         progressDot(pageIndex)
@@ -131,8 +134,12 @@ class StaticEndGame: AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun setPageContent() {
-        val pageData = contentMap[pageIndex]
-        binding.image.setImageResource(pageData!!.image)
+        val pageData = contentMap[pageIndex]!!
+        if (pageData.data != null) {
+            pageData.data.image?.let { binding.image.setImageResource(it) }
+        } else {
+            // Add end game image
+        }
         binding.description.text = pageData.description
         binding.title.text = pageData.title
         if(pageIndex == contentMap.size) {
@@ -186,7 +193,6 @@ class StaticEndGame: AppCompatActivity() {
             dots[i].setImageResource(R.drawable.circle)
             dots[i].setColorFilter(getColor(R.color.grey), PorterDuff.Mode.SRC_IN)
             dotsLayout.addView(dots[i])
-
         }
         if(dots.isNotEmpty()) {
             dots[tutorialIndex-1].setImageResource(R.drawable.circle)
