@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
@@ -15,6 +16,8 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
 import com.example.prototype_mobile.view.game.*
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
@@ -44,6 +47,10 @@ class MainMenuActivity : AppCompatActivity() {
             }
             true
 
+        }
+        R.id.action_logout -> {
+            mainMenuViewModel.logout()
+            true
         }
         else -> {
             super.onOptionsItemSelected(item)
@@ -102,6 +109,11 @@ class MainMenuActivity : AppCompatActivity() {
                 .commit()
         })
 
+        mainMenuViewModel.logout.observe(this@MainMenuActivity, {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        })
     }
 
     override fun onRestart() {

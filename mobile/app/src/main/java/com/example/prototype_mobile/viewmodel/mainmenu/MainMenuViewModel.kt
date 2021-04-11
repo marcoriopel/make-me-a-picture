@@ -9,7 +9,9 @@ import com.example.prototype_mobile.model.mainmenu.MainMenuRepository
 import kotlinx.coroutines.launch
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
+import java.lang.Exception
 
 //This class is a sharedViewModel that will allow us to send information to the server
 //Join information between fragments
@@ -28,8 +30,12 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     private val _lobbyJoined = MutableLiveData<Game>()
     val lobbyJoined: LiveData<Game> = _lobbyJoined
 
+    private val _logout = MutableLiveData<Boolean>()
+    val logout: LiveData<Boolean> = _logout
+
     val lobbyRepository: LobbyRepository
     val avatar = LoginRepository.getInstance()!!.user!!.avatar
+
     init {
         liveDataMerger= fetchData()
         lobbyRepository = LobbyRepository.getInstance()!!
@@ -111,5 +117,20 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         }
     }
 
+    fun logout() {
+        viewModelScope.launch {
+            val result: Result<Boolean> = try {
+                LoginRepository.getInstance()!!.logout()
+            } catch (e: Exception) {
+            Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
 
+            if (result is Result.Success) {
+                _logout.postValue(true)
+            }
+            if (result is Result.Error) {
+                println("Bad request")
+            }
+        }
+    }
 }

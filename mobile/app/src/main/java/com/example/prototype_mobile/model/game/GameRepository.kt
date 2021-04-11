@@ -177,18 +177,10 @@ class GameRepository {
         val guessEvent = GuessEvent(this.gameId!!, guess)
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
-//    private var onRequestHint =  Emitter.Listener {
-//        println("Request hint receive")
-//        val hintValue = gson.fromJson(it[0].toString(), HintRequest::class.java)
-//        _hint.postValue(hintValue)
-//    }
+
     fun sendHintRequest(user: BasicUser) {
         val hintRequest = HintRequest(this.gameId!!, user)
         socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
-    }
-
-    fun getTransition (): MutableLiveData<Transition>{
-        return _transition
     }
 
     suspend fun postWordChose(word: String) {

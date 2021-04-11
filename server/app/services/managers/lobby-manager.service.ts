@@ -38,15 +38,15 @@ export class LobbyManagerService {
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             case GameType.SOLO:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             case GameType.COOP:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
