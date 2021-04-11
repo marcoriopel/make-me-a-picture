@@ -2,10 +2,7 @@ package com.example.prototype_mobile.view.chat
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
@@ -17,6 +14,7 @@ import com.example.prototype_mobile.Channel
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChatBinding
+import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -59,7 +57,7 @@ class ChatFragment : Fragment() {
         if (chatViewModel.chatRepository.channelMap.containsKey("General")) {
             chatList = chatViewModel.chatRepository.channelMap["General"]!!
         }
-        chatRoomAdapter = ChatRoomAdapter(view.context, chatList, chatViewModel);
+        chatRoomAdapter = ChatRoomAdapter(view.context, chatList, chatViewModel)
         recyclerView.adapter = chatRoomAdapter
         binding = FragmentChatBinding.bind(view)
         binding.send.setOnClickListener { sendMessage() }
@@ -75,7 +73,7 @@ class ChatFragment : Fragment() {
         })
 
         // define an adapter for chat channels
-        channelAdapter = ChannelAdapter(chatViewModel.channelList, chatViewModel);
+        channelAdapter = ChannelAdapter(chatViewModel.channelList, chatViewModel)
         recyclerViewChannel.adapter = channelAdapter
         binding.addButton.setOnClickListener { addChannel() }
         binding.refreshButton.setOnClickListener { chatViewModel.getChannels() }
@@ -97,6 +95,8 @@ class ChatFragment : Fragment() {
                 refreshChannels()
             }
         })
+
+        chatViewModel.getChannels(true)
     }
 
     private fun sendMessage() {
@@ -145,5 +145,9 @@ class ChatFragment : Fragment() {
 
     companion object {
         fun newInstance() = ChatFragment()
+    }
+
+    fun onKeyEnter() {
+        sendMessage()
     }
 }

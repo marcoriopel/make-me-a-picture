@@ -4,30 +4,43 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.Menu
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.SignUpInfo
 import com.example.prototype_mobile.databinding.ActivitySignUpBinding
 import com.example.prototype_mobile.util.StringUtil
-import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
+import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.view.tutorial.StaticTutorialActivity
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModel
 import com.example.prototype_mobile.viewmodel.connection.sign_up.SignUpViewModelFactory
-import java.util.regex.Matcher.*
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var binding: ActivitySignUpBinding
     private var avatar = 0
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.loginmenu, menu)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+        return true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+        setSupportActionBar(toolbar)
         setAvatar()
 
         signUpViewModel = ViewModelProvider(this, SignUpViewModelFactory())
@@ -85,6 +98,11 @@ class SignUpActivity : AppCompatActivity() {
                 signUpViewModel.signUp(formData)
             }
         }
+        binding.signIn.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun setAvatar() {
@@ -104,11 +122,12 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun updateUiWithUser(username: String) {
         // initiate successful logged in experience
-        val intent = Intent(this,   MainMenuActivity::class.java);
+        val intent = Intent(this, StaticTutorialActivity::class.java)
+        //val intent = Intent(this,   MainMenuActivity::class.java);
         startActivity(intent)
         Toast.makeText(
             applicationContext,
-            "Bienvenue $username",
+            "Bienvenue $username ! Veillez bien lire les intructions de ce tutoriel ",
             Toast.LENGTH_LONG
         ).show()
     }

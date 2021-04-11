@@ -3,8 +3,10 @@ import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
+import { ChatManagerService } from '@app/services/managers/chat-manager.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { StatsService } from '@app/services/stats.service';
+import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
 import { ClassicLobby } from '../lobby/classic-lobby';
 import { Lobby } from '../lobby/lobby';
@@ -33,7 +35,13 @@ export class ClassicGame extends Game {
     private endDate: number;
     private gameImagesUrl: FeedImage[] = [];
 
-    constructor(lobby: ClassicLobby, socketService: SocketService, private drawingsService: DrawingsService, private statsService: StatsService) {
+    constructor(
+        lobby: ClassicLobby, 
+        socketService: SocketService, 
+        private drawingsService: DrawingsService, 
+        private statsService: StatsService, 
+        private userService: UserService, 
+        private chatManagerService: ChatManagerService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
         this.vPlayers = lobby.getVPlayers();
@@ -47,11 +55,10 @@ export class ClassicGame extends Game {
         this.round = 1;
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
-        for (let vPlayer of this.vPlayers) {
-            if (vPlayer != undefined) {
-                vPlayer.setServices(this.drawingsService, this.socketService);
-                vPlayer.setTeammate(this.getPlayers());
-                vPlayer.sayHello();
+        await this.setupVPlayers();
+        for(const vPlayer of this.vPlayers){
+            if(vPlayer){
+               vPlayer.sayHello(); 
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
@@ -60,7 +67,6 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
         this.gameTransition(transitionType.GAMESTART);
-
     }
 
     gameTransition(type: number) {
@@ -287,6 +293,7 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
+        this.chatManagerService.deleteChat(this.id);
     }
 
     private getOpposingTeam(): number {
@@ -409,6 +416,19 @@ export class ClassicGame extends Game {
             }
             if (this.vPlayers[minScoreIndex]) {
                 this.vPlayers[minScoreIndex].sayWeLost();
+            }
+        }
+    }
+
+    async setupVPlayers(){
+        for (let i = 0; i < this.vPlayers.length; ++i) {
+            if (this.vPlayers[i]) {
+                this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
+                for(let player of this.teams[i].values()){
+                    if(player.username != this.vPlayers[i].getBasicUser().username){
+                        await this.vPlayers[i].setTeammates(player);
+                    }
+                }
             }
         }
     }

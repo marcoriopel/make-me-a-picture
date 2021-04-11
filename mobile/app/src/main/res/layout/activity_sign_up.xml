@@ -6,11 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".view.connection.sign_up.SignUpActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <TextView
         android:id="@+id/signUpPageTitle"
-        android:layout_width="334dp"
+        android:layout_width="wrap_content"
         android:layout_height="46dp"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="100dp"
         android:text="@string/sign_up"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +29,7 @@
         android:id="@+id/passwordSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="300dp"
         android:ems="10"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
@@ -34,7 +42,7 @@
         android:id="@+id/lastNameSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="171dp"
+        android:layout_marginTop="200dp"
         android:ems="10"
         android:hint="@string/prompt_lastname"
         android:inputType="textPersonName"
@@ -47,7 +55,7 @@
         android:id="@+id/firstNameSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="117dp"
+        android:layout_marginTop="150dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/prompt_firstname"
@@ -60,7 +68,7 @@
         android:id="@+id/usernameSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="225dp"
+        android:layout_marginTop="250dp"
         android:ems="10"
         android:hint="@string/prompt_username"
         android:inputType="textPersonName"
@@ -73,7 +81,7 @@
         android:id="@+id/passwordConfirmSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="348dp"
+        android:layout_marginTop="350dp"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/prompt_password_confirm"
@@ -155,6 +163,37 @@
         app:layout_constraintStart_toEndOf="@+id/avatar4"
         app:layout_constraintTop_toBottomOf="@+id/passwordConfirmSignUp"
         />
+
+    <LinearLayout
+        android:id="@+id/container2"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toTopOf="@+id/sendSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/no_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:text="Vous avez déjà de compte?" />
+
+        <TextView
+            android:id="@+id/signIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/no_account"
+            android:layout_toRightOf="@+id/no_account"
+            android:text="Connextion"
+            android:textColor="@color/purple_700" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/sendSignUp"

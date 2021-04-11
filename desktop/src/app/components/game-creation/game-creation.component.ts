@@ -57,7 +57,7 @@ export class GameCreationComponent implements OnInit {
       difficulty: [ '', [
         Validators.required,
       ]],
-      privacy: [ '', [
+      privacy: [ 'public', [
         Validators.required,
       ]]
     })

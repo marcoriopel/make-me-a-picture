@@ -36,14 +36,21 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
+                if(chatInfo == null){
+                    await this.usersModel.removeUserFromChat(username, chatId);
+                }
+                else{
+                    chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
+                }
             }
             next(chatNames);
         }
         catch (e) {
+            console.error(e)
             return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }
+
     async getAllUserChatsHistory(username: string, res: Response, next: NextFunction) {
         var chatsHistory = [];
         try {
@@ -94,7 +101,7 @@ export class ChatManagerService {
     async createChat(chatName: string, res: Response, next: NextFunction) {
         try {
             const chatId = uuid();
-            await this.chatModel.createChat(chatId, chatName);
+            await this.chatModel.createChat(chatId, chatName, false);
             next(chatId);
         }
         catch (e) {
@@ -111,12 +118,52 @@ export class ChatManagerService {
         try {
             await this.chatModel.removeUserFromChat(username, chatId);
             const response = await this.chatModel.getUsersInChat(chatId);
-            if (!response) {
+            if(!response){
+                throw new Error("Chat does not exist");
+            }
+            else if(response.users.length == 0) {
                 this.chatModel.deleteChat(chatId);
             }
         }
         catch (e) {
             console.error(e);
+        }
+    }
+
+    async deleteChatRequest(chatId: string, res: Response, next: NextFunction) {
+        try {
+            const success = await this.deleteChat(chatId);
+            if(success){
+                next();
+            }
+            else{
+                throw new Error("chat does not exist")
+            }
+        }
+        catch (e) {
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+    }
+
+    async deleteChat(chatId: string): Promise<boolean> {
+        try {
+            const chatInfo = await this.chatModel.getChatInfo(chatId);
+            console.log(chatInfo)
+            if(!chatInfo){
+                throw new Error("Tried to delete chat that does not exist")
+            }
+            else{
+                for(let username of chatInfo.users){
+                    await this.usersModel.removeUserFromChat(username, chatId);
+                }
+                await this.chatModel.deleteChat(chatId);
+                this.socketService.getSocket().to(chatId).emit('message', { "user": { username: "System" }, "text": "Ce canal a été supprimé", "timestamp": 0, "textColor": "#2065d4", chatId: chatId });
+                return true; 
+            } 
+        }
+        catch (e) {
+            console.error(e);
+            return false
         }
     }
 

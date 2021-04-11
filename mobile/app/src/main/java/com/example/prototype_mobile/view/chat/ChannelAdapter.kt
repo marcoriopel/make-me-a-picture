@@ -28,7 +28,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val channel = values[position]
-        holder.channelName.setText(channel.chatName)
+        holder.channelName.text = channel.chatName
         when(channel.channelState) {
             ChannelState.JOINED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel)
@@ -36,7 +36,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setOnClickListener {
                     viewModel.switchChannel(channel.chatId)
                 }
-                if (channel.chatId != "General") {
+                if (channel.chatId != "General" && channel.chatId != viewModel.gameId) {
                     holder.leaveButton.visibility = View.VISIBLE
                     holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
                 } else {
@@ -48,7 +48,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)
                 holder.joinButton.visibility = View.GONE
 
-                if (channel.chatId != "General") {
+                if (channel.chatId != "General" && channel.chatId != viewModel.gameId) {
                     holder.leaveButton.visibility = View.VISIBLE
                     holder.leaveButton.setOnClickListener { viewModel.leaveChannel(channel.chatId) }
                 } else {
@@ -70,6 +70,7 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_shown)
                 holder.joinButton.visibility = View.GONE
                 holder.leaveButton.visibility = View.GONE
+                holder.background.setOnClickListener(null)
             }
         }
     }

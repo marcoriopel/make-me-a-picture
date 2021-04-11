@@ -28,6 +28,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     val getChannelResult: LiveData<Int> = _getChannelResult
     var channelList: MutableList<Channel>
 
+    var gameId: String? = null
+
     init {
         chatRepository.messageReceived.observeForever(Observer {
             _messageReceived.value = it ?: return@Observer
@@ -37,15 +39,17 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             getChannels()
         } )
 
-        getChannels(true)
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
-            if(it != null)
+            if(it != null) {
+                gameId = it.gameID
                 joinLobbyChannel(it.gameID)
+            }
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
             if(it != null)
+                switchChannel("General")
                 leaveChannel(it)
         }
     }
@@ -60,28 +64,42 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun createChannel(channelName: String) {
-        viewModelScope.launch()
+        viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<Boolean> = try {
-                chatRepository.createChannel(channelName)
-            } catch (e: Exception) {
-                Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
+            getChannelWithinThread()
+            val channelFiltered = chatRepository.channelList.find { it.chatName == channelName }
 
-            if (result is Result.Success) {
-            }
+            if (channelFiltered != null) {
+                joinLobbyChannel(channelFiltered.chatId)
+            } else {
+                val result: Result<String> = try {
+                    chatRepository.createChannel(channelName)
+                } catch (e: Exception) {
+                    Result.Error(ResponseCode.BAD_REQUEST.code)
+                }
 
-            if(result is Result.Error){
-                when(result.exception) {
-                    ResponseCode.CONFLICT.code -> _createChannelResult.value = R.string.channel_name_used
-                    ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
+                if (result is Result.Success) {
+                    joinChannel(result.data)
+                }
+
+                if (result is Result.Error) {
+                    when (result.exception) {
+                        ResponseCode.CONFLICT.code -> _createChannelResult.postValue(R.string.channel_name_used)
+                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.postValue(R.string.bad_request)
+                    }
                 }
             }
+            getChannelWithinThread()
         }
-        getChannels()
     }
 
+    var joinLimit = 4
+    var chatTryingToBeJoined = ""
     fun joinLobbyChannel(chatId: String) {
+        if (chatTryingToBeJoined != chatId) {
+            joinLimit = 4
+            chatTryingToBeJoined = chatId
+        }
         viewModelScope.launch(Dispatchers.IO)
         {
             chatRepository.joinChannel(chatId)
@@ -93,37 +111,50 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
             if (result is Result.Success) {
                 _getChannelResult.postValue(-1)
+                if (chatRepository.channelMap.containsKey(chatId)) {
+                    switchChannel(chatId)
+                } else {
+                    if (joinLimit-- > 0) {
+                        joinLobbyChannel(chatId)
+                    }
+                }
             }
 
-            if(result is Result.Error){
+            if(result is Result.Error && joinLimit == 0){
                 when(result.exception) {
                     ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
                     ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
                 }
             }
-            switchChannel(chatId)
+
         }
     }
 
+    suspend fun getChannelWithinThread(isInit: Boolean = false) {
+        val result: Result<Boolean> = try {
+            chatRepository.getChannels(isInit)
+        } catch (e: Exception) {
+            Result.Error(ResponseCode.BAD_REQUEST.code)
+        }
+
+        if (result is Result.Success) {
+            if(!chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
+                switchChannel("General")
+            }
+            _getChannelResult.postValue(-1)
+        }
+
+        if(result is Result.Error){
+            when(result.exception) {
+                ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+            }
+        }
+    }
     fun getChannels(isInit: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<Boolean> = try {
-                chatRepository.getChannels(isInit)
-            } catch (e: Exception) {
-                Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
-
-            if (result is Result.Success) {
-                _getChannelResult.postValue(-1)
-            }
-
-            if(result is Result.Error){
-                when(result.exception) {
-                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
-                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
-                }
-            }
+            getChannelWithinThread(isInit)
         }
     }
 
@@ -138,11 +169,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun switchChannel(chatId: String) {
-        if (chatRepository.channelMap.containsKey(chatId)) {
-            _messageList.postValue(chatRepository.channelMap[chatId]!!)
-        } else {
-            _messageList.postValue(mutableListOf())
-        }
+
+        _messageList.postValue(chatRepository.channelMap[chatId]!!)
+
         viewModelScope.launch(Dispatchers.IO){
             channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
             channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN
@@ -155,11 +184,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO)
         {
             val result: Result<Boolean> =
-                try {
-                chatRepository.getHistory()
+                /*try {
+                    chatRepository.getHistory()
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
+            }*/
+                    chatRepository.getHistory()
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
@@ -167,6 +197,29 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 } else {
                     _messageList.postValue(mutableListOf())
                 }
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+                }
+            }
+        }
+    }
+
+    fun deleteChannel() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val result: Result<Boolean> =
+                    try {
+                        chatRepository.deleteChannel()
+                    } catch (e: Exception) {
+                        Result.Error(ResponseCode.BAD_REQUEST.code)
+                    }
+
+            if (result is Result.Success) {
+                switchChannel("General")
             }
 
             if(result is Result.Error){

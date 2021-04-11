@@ -45,10 +45,10 @@ export class ChatModel {
         }
     }
 
-    async createChat(chatRoomId: string, chatName) {
+    async createChat(chatRoomId: string, chatName, isGameChat: boolean) {
         try {
             await this.databaseModel.client.db("chats").createCollection(chatRoomId);
-            await this.databaseModel.client.db("database").collection("chats").insertOne({ "chatId": chatRoomId, "chatName": chatName, "users": [] });
+            await this.databaseModel.client.db("database").collection("chats").insertOne({ "chatId": chatRoomId, "chatName": chatName, "isGameChat": isGameChat, "users": [] });
         } catch (e) {
             throw e;
         }
@@ -56,8 +56,8 @@ export class ChatModel {
 
     async deleteChat(chatRoomId: string) {
         try {
-            await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
             await this.databaseModel.client.db("database").collection("chats").deleteOne({ "chatId": chatRoomId });
+            await this.databaseModel.client.db("chats").collection(chatRoomId).drop();
         } catch (e) {
             throw e;
         }

@@ -152,24 +152,32 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                socket.join(request.chatId);
-                await this.userService.addUserToChat(user.username, request.chatId)
-                await this.chatManagerService.addUserToChat(user.username, request.chatId)
-                this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
-                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                try{
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                    socket.join(request.chatId);
+                    await this.userService.addUserToChat(user.username, request.chatId)
+                    await this.chatManagerService.addUserToChat(user.username, request.chatId)
+                    this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
+                }
+                catch(e){
+                    console.error(e);
+                }
             });
 
             socket.on('leaveChatRoom', async (request: any) => {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                socket.leave(request.chatId);
-                await this.userService.removeUserFromChat(user.username, request.chatId)
-                await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
-                this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');
-                // console.log(this.socketService.getSocket().sockets.adapter.rooms.get(request.chatId));
+                try{
+                   const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                    socket.leave(request.chatId);
+                    await this.userService.removeUserFromChat(user.username, request.chatId)
+                    await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
+                    this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback'); 
+                }
+                catch(e){
+                    console.error(e);
+                }
             });
 
             socket.on('disconnect', () => {

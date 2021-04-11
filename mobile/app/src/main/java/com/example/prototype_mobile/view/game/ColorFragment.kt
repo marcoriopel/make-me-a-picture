@@ -30,7 +30,7 @@ class ColorFragment : Fragment() {
         Color.rgb(47, 128, 237),
         Color.rgb(86, 204, 242),
         Color.rgb(155, 81, 224),
-        Color.rgb(0, 0, 0),
+        Color.rgb(0, 0, 0)
     )
     var secondaryButtons: Vector<ImageView> = Vector<ImageView>()
 

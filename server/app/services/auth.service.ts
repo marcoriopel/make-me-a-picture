@@ -73,7 +73,7 @@ export class AuthService {
             if (!userInfo.avatar || !userInfo.surname || !userInfo.name || !userInfo.username || !userInfo.password || userInfo.avatar > 5 || userInfo.avatar < 0) {
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }
-            if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Kevin" || userInfo.username == "Émilio") {
+            if (userInfo.username == "Bernard" || userInfo.username == "Ginette" || userInfo.username == "Bernard" || userInfo.username == "Émilio") {
                 return res.sendStatus(StatusCodes.CONFLICT);
             }
             const userDB: DetailedUser = await this.usersModel.getUserInfo(userInfo.username);
