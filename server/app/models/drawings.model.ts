@@ -98,7 +98,7 @@ export class DrawingsModel {
         });
     }
 
-    async getDrawing(id: string) {
+    async getDrawing(drawingId: string) {
         try {
             return await this.databaseModel.client.db("database").collection("drawings").findOne({ 'drawingId': drawingId });
         } catch (e) {
@@ -109,7 +109,7 @@ export class DrawingsModel {
 
     async getWordsOfDifficulty(difficulty: number) {
         try {
-            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty }, { projection: { "drawingName": 1, "drawingId": 1, "_id":0 }}).toArray();
+            return await this.databaseModel.client.db("database").collection("drawings").find({ "difficulty": difficulty }, { projection: { "drawingName": 1, "drawingId": 1, "_id": 0 } }).toArray();
         } catch (e) {
             console.error(e);
             throw e;
@@ -119,8 +119,8 @@ export class DrawingsModel {
     async vote(drawingId: string, isUpvote: boolean) {
         try {
             const vote = isUpvote ? 1 : -1;
-            const voteResponse = await this.databaseModel.client.db("database").collection("drawings").updateOne({ "drawingId": drawingId }, { $inc: { "drawingVotes": vote }});
-            if(!voteResponse.modifiedCount){
+            const voteResponse = await this.databaseModel.client.db("database").collection("drawings").updateOne({ "drawingId": drawingId }, { $inc: { "drawingVotes": vote } });
+            if (!voteResponse.modifiedCount) {
                 throw new Error('Could not vote on drawing because no such drawing exists');
             }
         } catch (e) {
@@ -131,8 +131,8 @@ export class DrawingsModel {
 
     async removeBadDrawing(drawingId: string) {
         try {
-            const response = await this.databaseModel.client.db("database").collection("drawings").deleteOne( { "drawingId": drawingId, "drawingVotes": { $lt: -10 } } );
-            if(response.deletedCount){
+            const response = await this.databaseModel.client.db("database").collection("drawings").deleteOne({ "drawingId": drawingId, "drawingVotes": { $lt: -10 } });
+            if (response.deletedCount) {
                 console.log("deleted drawing " + drawingId + " from database because it recieved too many down votes")
             }
         } catch (e) {
