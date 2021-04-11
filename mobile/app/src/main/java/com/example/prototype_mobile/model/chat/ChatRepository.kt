@@ -229,6 +229,7 @@ class ChatRepository {
                 if (channelShown == "General") {
                     channelMap[channelShown]!!.removeAt(0)
                 } else {
+                    channelMap[channelShown]!!.removeAt(0)
                     channelMap[channelShown]!!.removeAt(1)
                 }
                 var firstMessageTimestamp: Long
@@ -243,6 +244,9 @@ class ChatRepository {
                     } else {
                         break
                     }
+                }
+                if (channelShown != "General") {
+                    channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0))
                 }
             }
         }
