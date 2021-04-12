@@ -46,12 +46,9 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_round"
             app:backgroundTint="@color/orange_to_lightorange"
-            android:drawableTop="@drawable/icon_solo"
-            android:paddingTop="-30dip"
+            android:drawableTop="@drawable/ic_hands_helping_solid"
+            android:paddingTop="5dp"
             android:enabled="true" />
-            android:enabled="true"
-            app:backgroundTint = "@null"
-            />
         <Space
             android:layout_width="0dp"
             android:layout_height="1dp"
