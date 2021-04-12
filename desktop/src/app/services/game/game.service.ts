@@ -12,6 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
+import { Drawing } from '@app/classes/drawing';
 
 interface Player {
   username: string;
@@ -162,6 +163,14 @@ export class GameService {
     this.socketService.bind('newRound', (data: any) => {
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
+
+        const drawing = {
+          url: dataUrl,
+          drawingName: this.drawingName,
+        }
+
+        this.realPlayerDrawings.push(drawing);
+
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'authorization': localStorage.getItem(ACCESS.TOKEN)!

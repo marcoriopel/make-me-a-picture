@@ -42,6 +42,7 @@
     <mat-step [editable]="false" *ngFor="let vdrawing of virtualPlayerDrawings">
         <ng-template matStepLabel>Dessin - virtuel</ng-template>
         <div id="content">
+            <p>{{vdrawing.name}}</p>
             <img src={{vdrawing.url}}>
             <div>
                 <p>Avez-vous apprécié ce dessin?</p>
@@ -55,11 +56,21 @@
     <mat-step [editable]="false" *ngFor="let drawing of realPlayerDrawings">
         <ng-template matStepLabel>Dessin - joueur</ng-template>
         <div id="content">
-            <img src=drawing.url>
+            <p>{{drawing.drawingName}}</p>
+            <img src={{drawing.url}}>
             <div>
                 <p>Voulez-vous ajouter votre dessin à la banque de dessins?</p>
-                <button mat-button>Oui</button>
-                <button mat-button mat-dialog-close (click)="quit()">Non</button>
+                <button mat-button matStepperNext>Oui</button>
+                <button mat-button matStepperNext>Non</button>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step [editable]="false">
+        <ng-template matStepLabel>Terminer</ng-template>
+        <div id="content">
+            <div>
+                <p>Vous pouvez maintenant retourner au menu principal</p>
+                <button mat-button mat-dialog-close (click)="quit()">Retourner au menu principal</button>
             </div>
         </div>
     </mat-step>

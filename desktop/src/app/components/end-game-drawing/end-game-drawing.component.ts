@@ -4,6 +4,8 @@ import { ACCESS } from '@app/classes/acces';
 import { GameService } from '@app/services/game/game.service';
 import * as confetti from 'canvas-confetti';
 import { environment } from 'src/environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-end-game-drawing',
@@ -23,9 +25,9 @@ export class EndGameDrawingComponent implements OnInit {
   drawTeam1: any;
   drawTeam2: any;
 
-  constructor(private gameService: GameService, private http: HttpClient) {
+  constructor(private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar, private router: Router) {
     this.virtualPlayerDrawings = this.gameService.virtualPlayerDrawings;
-    this.realPlayerDrawings = this.realPlayerDrawings;
+    this.realPlayerDrawings = this.gameService.realPlayerDrawings;
    }
 
   ngOnInit(): void {
@@ -34,7 +36,7 @@ export class EndGameDrawingComponent implements OnInit {
       if(this.gameService.teams.team1.includes(this.gameService.username as string)){
         this.result = 'Victoire';
       } else {
-        this.result = 'Défate';
+        this.result = 'Défaite';
       }
 
       this.winningTeam = {
@@ -59,6 +61,12 @@ export class EndGameDrawingComponent implements OnInit {
       });  
 
     } else if(this.gameService.score[1] > this.gameService.score[0]){
+      if(this.gameService.teams.team1.includes(this.gameService.username as string)){
+        this.result = 'Défaite';
+      } else {
+        this.result = 'Victoire';
+      }
+
       this.winningTeam = {
         score: this.gameService.score[1],
         players: this.gameService.teams.team2,
@@ -100,10 +108,14 @@ export class EndGameDrawingComponent implements OnInit {
         console.log(err);
       }
     );
+    this.snackBar.open("Votre vote est enregistré, merci!", "", {
+      duration: 2000,
+    });
   }
 
   quit(): void {
     console.log('quit')
+    this.router.navigate(['/home']);
   }
 
 }
