@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
-import org.jetbrains.anko.image
 
 // This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
 
@@ -29,6 +28,10 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
         Pair(4, R.drawable.avatar4),
         Pair(5, R.drawable.avatar5),
         Pair(6, R.drawable.avatar6),
+        Pair(7, R.drawable.avatar_v_p_v_player1),
+        Pair(8, R.drawable.avatar_v_player2),
+        Pair(9, R.drawable.avatar_v_player3),
+        Pair(10, R.drawable.avatar_v_player4),
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -90,10 +93,6 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
             CHAT_DELETE -> {
                 holder.history.setOnClickListener { viewModel.deleteChannel()}
             }
-        }
-
-        when(avatar) {
-            0 -> holder.avatar.setImageResource(R.drawable.avatar0)
         }
 
     }
