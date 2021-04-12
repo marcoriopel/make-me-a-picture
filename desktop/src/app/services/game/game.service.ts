@@ -229,6 +229,10 @@ export class GameService {
       this.router.navigate(['/game/sprint']);
     });
 
+    this.socketService.bind('eraserStrokes', (data: any) => {
+      this.drawingService.strokes = Array.from(data.eraserStrokes);
+    })
+
     this.socketService.bind('score', (data: any) => {
       this.score[0] = data.score;
     })
@@ -250,6 +254,8 @@ export class GameService {
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
+      // this.pencilService.strokes = [];
+      // this.pencilService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
     })

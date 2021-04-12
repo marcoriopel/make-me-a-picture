@@ -56,11 +56,13 @@ export class VirtualPlayer {
         this.nextHintIndex = 0;
         this.isVPlayerTurn = true;
         await this.wait(500)
-        for (let stroke of this.currentDrawing.strokes) {
+        this.socketService.getSocket().to(this.gameId).emit('eraserStrokes', { "eraserStrokes": this.currentDrawing.eraserStrokes });
+        for (let stroke of this.currentDrawing.pencilStrokes) {
             const mouseDown: MouseDown = {
                 coords: stroke.path[0],
                 lineColor: stroke.lineColor,
                 lineWidth: stroke.lineWidth,
+                strokeNumber: stroke.strokeNumber,
             }
             const drawingEvent: DrawingEvent = {
                 eventType: drawingEventType.MOUSEDOWN,
@@ -122,7 +124,7 @@ export class VirtualPlayer {
 
     private calculatePointsInDrawing(): number {
         let pointsNumber = 0;
-        for (let stroke of this.currentDrawing.strokes) {
+        for (let stroke of this.currentDrawing.pencilStrokes) {
             for (let { } of stroke.path) {
                 ++pointsNumber;
             }

@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BLACK, POLY_RED, WHITE } from '@app/ressources/global-variables/global-variables';
 import { DrawingService } from '@app/services/drawing/drawing.service';
+import { PencilService } from '@app/services/tools/pencil.service';
 import { UndoRedoService } from '@app/services/undo-redo/undo-redo.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class ToolsComponent implements OnInit {
   @ViewChild('pencil', { static: false }) pencilRef: ElementRef<HTMLButtonElement>;
   @ViewChild('eraser', { static: false }) eraserRef: ElementRef<HTMLButtonElement>;
   
-  constructor(private drawingService: DrawingService, public undoRedoService: UndoRedoService) {
+  constructor(private drawingService: DrawingService, public undoRedoService: UndoRedoService, public pencilService: PencilService) {
     this.drawingService.color = BLACK;
   }
 
@@ -33,15 +34,21 @@ export class ToolsComponent implements OnInit {
 
   setEraser(): void {
     this.pencilColor = this.drawingService.color;
+    this.pencilService.isCurrentToolEraser = true;
     this.drawingService.color = WHITE;
     this.pencilRef.nativeElement.style.backgroundColor = WHITE;
     this.eraserRef.nativeElement.style.backgroundColor = POLY_RED;
   }
 
+  resetPencil(){
+    this.drawingService.color = this.pencilColor;
+    this.setPencil();
+  }
+
   setPencil(): void {
-      this.drawingService.color = this.pencilColor;
-      this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
-      this.eraserRef.nativeElement.style.backgroundColor = WHITE;
+    this.pencilService.isCurrentToolEraser = false;
+    this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
+    this.eraserRef.nativeElement.style.backgroundColor = WHITE;
   }
 
 }

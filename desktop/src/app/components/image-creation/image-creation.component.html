@@ -43,10 +43,10 @@
         </div>
         <div id="editor-column">
             <div id="editor">
-                <app-editor [isInGame]="false"></app-editor>
+                <app-editor (colorChange)="toolsComponent.setPencil()" [isInGame]="false"></app-editor>
             </div>
             <div id="tools">
-                <app-tools></app-tools>
+                <app-tools #toolsComponent></app-tools>
             </div>
         </div>
         <div id="chat-column">

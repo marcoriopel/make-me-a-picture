@@ -70,7 +70,7 @@ export class AuthService {
                 'password': req.body.password,
                 'avatar': req.body.avatar
             }
-            if (!userInfo.avatar || !userInfo.surname || !userInfo.name || !userInfo.username || !userInfo.password || userInfo.avatar > 5 || userInfo.avatar < 0) {
+            if (userInfo.avatar == undefined || !userInfo.surname || !userInfo.name || !userInfo.username || !userInfo.password || userInfo.avatar > 5 || userInfo.avatar < 0) {
                 console.log(userInfo)
                 return res.sendStatus(StatusCodes.BAD_REQUEST)
             }

@@ -1,6 +1,7 @@
 export interface Drawing {
     drawingId: string;
-    strokes: Stroke[];
+    eraserStrokes: Stroke[];
+    pencilStrokes: Stroke[];
     drawingVotes: number;
     difficulty: number;
     hints: string[];
@@ -11,6 +12,7 @@ export interface Stroke {
     path: Vec2[],
     lineWidth: number,
     lineColor: string,
+    strokeNumber: number,
 }
 
 export interface Vec2 {
