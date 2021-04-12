@@ -225,7 +225,7 @@ class ChatRepository {
                     messageType = 0
                 }
                 val username = message.username ?: "Unavailable"
-                historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp, myAvatar))
+                historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp, message.avatar))
             }
             if (channelMap.containsKey(channelShown)) {
                 if (channelShown == "General") {
