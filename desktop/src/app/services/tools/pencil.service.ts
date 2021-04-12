@@ -29,7 +29,6 @@ export class PencilService extends Tool {
 
     onMouseLeave(): void {
         this.updatePencilData();
-        this.drawingService.clearCanvas(this.drawingService.previewCtx);
         this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
         this.clearPath();
         let mouseEvent = {
@@ -40,7 +39,7 @@ export class PencilService extends Tool {
 
     onMouseDown(event: MouseEvent): void {
         this.drawingService.baseCtx.filter = 'none';
-        this.drawingService.previewCtx.filter = 'none';
+        this.drawingService.baseCtx.filter = 'none';
         if (event.button !== MouseButton.LEFT) {
             return;
         } else {
@@ -63,7 +62,7 @@ export class PencilService extends Tool {
             this.drawingService.strokes.push(stroke);
             this.drawingService.strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
             
-            this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
+            this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.setIsToolInUse(true);
         }
         if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -89,7 +88,6 @@ export class PencilService extends Tool {
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
             this.drawingService.setIsToolInUse(false);
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
@@ -111,9 +109,12 @@ export class PencilService extends Tool {
             if(this.gameService.isInGame) {
                 this.drawingService.strokes[this.strokeNumber - 1].path.push(mousePosition);
             }
-            this.drawingService.clearCanvas(this.drawingService.previewCtx);
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
+            this.drawingService.strokeStack.forEach((stroke: any) => {
+                this.drawPencilStroke(this.drawingService.baseCtx, stroke);
+            });
             this.updatePencilData();
-            this.drawPencilStroke(this.drawingService.previewCtx, this.pencilData);
+            this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
                     eventType: drawingEventType.MOUSEMOVE,

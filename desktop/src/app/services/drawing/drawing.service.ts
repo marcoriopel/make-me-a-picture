@@ -60,7 +60,6 @@ export class DrawingService {
         if (this.redoStack.length) {
             this.redoStack = [];
         }
-        console.log(this.strokeStack);
     }
 
     resetStack(): void {
