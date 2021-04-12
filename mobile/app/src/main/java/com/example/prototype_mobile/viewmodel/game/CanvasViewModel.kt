@@ -292,14 +292,13 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         val bitmap = Bitmap.createBitmap(1200, 820, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         for (paintedPath in pathStack)
-            canvas.drawPath(paintedPath.path, paintedPath.paint)
+            canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
         canvas.drawPath(curPath, getPaint())
         // Create drawing image
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
         val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        return encoded
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *

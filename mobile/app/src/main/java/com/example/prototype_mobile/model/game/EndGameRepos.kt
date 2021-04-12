@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
+import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.google.gson.Gson
 import java.lang.Exception
 import java.util.*
@@ -29,19 +30,22 @@ class EndGameRepository {
     private val gson: Gson = Gson()
 
     // Drawing Data
+    private lateinit var gameDifficulty: Difficulty
     private lateinit var drawingList: MutableList<DrawingData>
     private lateinit var gameResult: StaticEndGameInfo
     private lateinit var vPlayerDrawings: MutableList<VDrawingData>
+    private var undoStack = Stack<DrawingEvent>()
     // Current hint
     private val _hints = MutableLiveData<MutableList<String>>()
     val hints: LiveData<MutableList<String>> = _hints
 
     init {
-        initializeData()
+        initializeData(GameDifficulty.NONE)
     }
 
-    fun initializeData() {
-        _hints.value = mutableListOf()
+    fun initializeData(difficulty: GameDifficulty) {
+        gameDifficulty = Difficulty(difficulty)
+        _hints.postValue(mutableListOf())
         drawingList = mutableListOf()
         gameResult = StaticEndGameInfo("No Result", "", EndGamePageType.RESULT, null)
         vPlayerDrawings = mutableListOf()
@@ -70,19 +74,33 @@ class EndGameRepository {
     }
 
     fun addNewDrawing(drawingName: String) {
-        drawingList.add(DrawingData(drawingName, null, LinkedList<String>(), mutableListOf()))
+        drawingList.add(DrawingData(drawingName, null, LinkedList<DrawingEvent>(), mutableListOf()))
+        undoStack = Stack()
     }
 
     fun getDrawings(): MutableList<DrawingData> {
         return drawingList
     }
 
+
     fun addDrawingImage(encodedImg: String) {
         drawingList[drawingList.lastIndex].image = encodedImg
     }
 
     fun addDrawingEvent(event: DrawingEvent) {
-        drawingList[drawingList.lastIndex].drawingEventList.add(gson.toJson(event))
+        when(event.eventType) {
+            EVENT_UNDO -> {
+                if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
+                    undoStack.push(drawingList[drawingList.lastIndex].drawingEventList.removeLast())
+            }
+            EVENT_REDO -> {
+                if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
+                    drawingList[drawingList.lastIndex].drawingEventList.add(undoStack.pop())
+            }
+            else -> {
+                drawingList[drawingList.lastIndex].drawingEventList.add(event)
+            }
+        }
     }
 
     fun addVPlayerDrawing(drawingName: String, id: String) {
@@ -94,19 +112,72 @@ class EndGameRepository {
         return vPlayerDrawings
     }
 
-    fun upload(drawingData: DrawingData) {
-        if(_hints.value!!.size <= 0 || _hints.value == null)
-            throw Exception("Uplaod image: Must have at least one hint")
-        drawingData.hint.addAll(_hints.value!!)
-        // TODO: Upload drawing
-    }
-
     suspend fun vote(isUpvote: Boolean, vDrawing: VDrawingData) {
         val body = HashMap<String, String>()
         body["isUpvote"] = isUpvote.toString()
         body["drawingId"] = vDrawing.id
-        val response = HttpRequestDrawGuess.httpRequestPatch("/api/drawings/vote", body, true)
+        HttpRequestDrawGuess.httpRequestPatch("/api/drawings/vote", body, true)
+    }
 
+    suspend fun upload(drawingData: DrawingData) {
+        // Check if thse at least one hint
+        if(_hints.value!!.size < 1 || _hints.value == null)
+            throw Exception("Uplaod image: Must have at least one hint")
+        drawingData.hint.addAll(_hints.value!!)
+
+        val body = HashMap<String, String>()
+        val drawing = convertDrawing(drawingData)
+        body["difficulty"] = gson.toJson(drawing.difficulty)
+        body["hints"] = gson.toJson(drawing.hints)
+        body["eraserStrokes"] = gson.toJson(drawing.eraserStrokes)
+        body["pencilStrokes"] = gson.toJson(drawing.pencilStrokes)
+        body["drawingName"] = gson.toJson(drawing.drawingName)
+        body["imageUrl"] = drawingData.image!!
+        val res = HttpRequestDrawGuess.httpRequestPost("/api/drawings/create", body, true)
+
+        Log.e("Upload", res.toString())
+    }
+
+    private fun convertDrawing(drawingData: DrawingData): Drawing {
+        // Construct drawing
+        val drawing = Drawing(
+            gameDifficulty,
+            mutableListOf(),
+            mutableListOf(),
+            drawingData.hint,
+            drawingData.drawingName
+        )
+        var eventNumber = 0
+        var stroke: Stroke? = null
+        // Convert drawing event to
+        for(event in drawingData.drawingEventList) {
+            when(event.eventType) {
+                EVENT_TOUCH_DOWN -> {
+                    // Push stroke
+                    if(stroke != null) {
+                        if (stroke.isEraser) drawing.eraserStrokes.add(stroke)
+                        else drawing.pencilStrokes.add(stroke)
+                    }
+                    // Create the next one
+                    val mouseDown = event.event as MouseDown
+                    stroke = Stroke(
+                        mutableListOf(),
+                        eventNumber++,
+                        mouseDown.isEraser,
+                        mouseDown.lineWidth,
+                        mouseDown.lineColor
+                    )
+                }
+                EVENT_TOUCH_MOVE -> {
+                    stroke?.path?.add(event.event as Vec2)
+                }
+                EVENT_TOUCH_UP -> {
+                    stroke?.path?.add(event.event as Vec2)
+                }
+                else -> { throw Exception("Event: ${event.eventType} is not supported")}
+            }
+        }
+        return drawing
     }
 
 }

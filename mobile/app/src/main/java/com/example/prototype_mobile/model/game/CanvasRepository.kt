@@ -1,14 +1,12 @@
 package com.example.prototype_mobile.model.game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
+import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
-import org.json.JSONObject
 import java.util.*
 
 const val DRAWING_EVENT = "drawingEvent"
@@ -41,6 +39,7 @@ class CanvasRepository {
     private val gson: Gson = Gson()
     private val gameRepo = GameRepository.getInstance()!!
     var endGameRepos = EndGameRepository.getInstance()!!
+    private val toolRepository = ToolRepository.getInstance()!!
 
     // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
@@ -115,7 +114,8 @@ class CanvasRepository {
 
     fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String, strokeNumber: Int) {
         // Create Event
-        val touchDown = MouseDown(lineColor, lineWith, coord, strokeNumber)
+        val isEraser = toolRepository.selectedTool.value == Tool.ERASER
+        val touchDown = MouseDown(lineColor, lineWith, coord, strokeNumber, isEraser)
         val event = DrawingEvent(EVENT_TOUCH_DOWN, touchDown, gameRepo.gameId.toString())
         _drawingEvent.value = event
         // Send to other players

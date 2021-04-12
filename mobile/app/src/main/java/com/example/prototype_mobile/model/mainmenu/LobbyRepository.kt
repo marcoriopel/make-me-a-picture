@@ -59,7 +59,7 @@ class LobbyRepository {
     }
 
     var onStart = Emitter.Listener {
-        EndGameRepository.getInstance()!!.initializeData()
+        EndGameRepository.getInstance()!!.initializeData(_lobbyJoined.value!!.difficulty)
         gameStarted = true
         val gameRepo = GameRepository.getInstance()!!
         if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {

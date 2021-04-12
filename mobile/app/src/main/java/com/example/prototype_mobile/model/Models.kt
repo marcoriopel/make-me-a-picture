@@ -56,7 +56,7 @@ data class Transition(val timer: Int, val state: Int)
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event
-data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2, val strokeNumber: Int): Event()
+data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2, val strokeNumber: Int, val isEraser: Boolean = false): Event()
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
@@ -83,7 +83,10 @@ abstract class EndGameData() {
     abstract val image: String?
 }
 data class VDrawingData(val drawingName: String, override var image: String, val id: String): EndGameData()
-data class DrawingData(val drawingName: String, override var image: String?, val drawingEventList: LinkedList<String>, val hint: MutableList<String>): EndGameData()
+data class DrawingData(val drawingName: String, override var image: String?, val drawingEventList: LinkedList<DrawingEvent>, val hint: MutableList<String>): EndGameData()
 data class EndGameResult(val win: Boolean, override var image: String?): EndGameData()
 data class VPlayerDrawingEndGame(val virtualPlayerDrawings: List<String>, val virtualPlayerIds: List<String>)
 
+// Export drawing
+data class Drawing(val difficulty: Difficulty, val pencilStrokes: MutableList<Stroke>, val eraserStrokes: MutableList<Stroke>, val hints: MutableList<String>, val drawingName : String)
+data class Stroke(val path: MutableList<Vec2>, val strokeNumber: Int, val isEraser: Boolean, val lineWidth: Int, val lineColor: String)

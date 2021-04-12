@@ -134,6 +134,7 @@ class GameRepository {
 
     private var onEndGameEvent = Emitter.Listener {
         val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
+        Log.e("drawing",it[0].toString())
         val endGameRepos = EndGameRepository.getInstance()!!
         for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
             val index = vPlayersDrawing.virtualPlayerDrawings.indexOf(vDrawingName)

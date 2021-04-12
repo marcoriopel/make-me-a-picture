@@ -120,18 +120,12 @@ class EndGameActivity: AppCompatActivity() {
         // Upvote
         binding.buttonUpVote.setOnClickListener {
             contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(true, it1) }
-            if(pageIndex == contentMap.size)
-                goToMenu()
-            else
-                nextPage()
+            nextPage()
         }
         // Downvote
         binding.buttonDownVote.setOnClickListener {
             contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(false, it1) }
-            if(pageIndex == contentMap.size)
-                goToMenu()
-            else
-                nextPage()
+            nextPage()
         }
     }
 
@@ -176,9 +170,13 @@ class EndGameActivity: AppCompatActivity() {
     }
 
     private fun nextPage() {
-        pageIndex++
-        setPageContent()
-        progressDot(pageIndex)
+        if(pageIndex == contentMap.size) {
+            goToMenu()
+        } else {
+            pageIndex++
+            setPageContent()
+            progressDot(pageIndex)
+        }
     }
 
     private fun setImage(pageData: StaticEndGameInfo) {
@@ -226,13 +224,8 @@ class EndGameActivity: AppCompatActivity() {
         }
 
         // Hide back button
-//        if(pageIndex == 1) {
         val backButton = findViewById<LinearLayout>(R.id.back)
         backButton.visibility = View.INVISIBLE
-//        } else {
-//            val backButton = findViewById<LinearLayout>(R.id.back)
-//            backButton.visibility = View.VISIBLE
-//        }
 
         // Display the data according to the page type
         val upvoteButton = findViewById<Button>(R.id.buttonUpVote)

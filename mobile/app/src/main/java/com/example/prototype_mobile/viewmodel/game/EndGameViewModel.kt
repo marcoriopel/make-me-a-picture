@@ -1,14 +1,12 @@
 package com.example.prototype_mobile.viewmodel.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.prototype_mobile.DrawingData
-import com.example.prototype_mobile.EndGameData
-import com.example.prototype_mobile.StaticEndGameInfo
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.game.EndGameRepository
-import com.example.prototype_mobile.VDrawingData
 import kotlinx.coroutines.launch
 
 class EndGameViewModel(): ViewModel() {
@@ -25,6 +23,7 @@ class EndGameViewModel(): ViewModel() {
     }
 
     fun upload(drawingData: DrawingData) {
+        Log.e("uplaod", "Starting upload")
         viewModelScope.launch {
             endGameRepo.upload(drawingData)
         }
