@@ -131,10 +131,13 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
 
          viewModelScope.launch {
              var result = lobbyRepository.joinPrivate(code)
+             println("joinPrivate done")
 
              if(result is Result.Success) {
                  val game = GameListRepository.getInstance()!!.findGame(result.data.lobbyId)
                  if(game is Result.Success){
+                     println("Join public game from join private game")
+                     lobbyRepository.listenLobby(game.data.gameID)
                      lobbyRepository.joinLobby(game.data)
                  }
 
