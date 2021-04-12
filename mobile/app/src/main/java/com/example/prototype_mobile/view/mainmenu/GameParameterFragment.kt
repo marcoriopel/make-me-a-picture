@@ -172,6 +172,12 @@ class GameParameterFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("Game parameter Fragment on resume")
+        mainMenuViewModel._gameInviteID.value = null
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = GameParameterFragment()

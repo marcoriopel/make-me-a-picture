@@ -34,9 +34,11 @@ class GameListRepository {
                     gameJson.getString("id"),
                     gameJson.getString("gameName"),
                     GameDifficulty.values()[gameJson.getInt("difficulty")],
-                    GameType.values()[gameJson.getInt("gameType")], null
+                    GameType.values()[gameJson.getInt("gameType")],
+                        gameJson.getString("lobbyInviteId")
                 )
-                gameList.add(game)
+                if(game.lobbyInvited == null)
+                    gameList.add(game)
             }
             val filteredGameList = gameList.filter{ filterGame(it) } as MutableList<Game>
             return Result.Success(filteredGameList)
@@ -65,7 +67,7 @@ class GameListRepository {
             return false
         }
         if(game.lobbyInvited != null)
-            return false
+            return true
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }

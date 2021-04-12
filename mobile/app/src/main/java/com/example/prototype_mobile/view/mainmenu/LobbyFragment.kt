@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.LobbyPlayers
@@ -25,11 +25,13 @@ import com.example.prototype_mobile.viewmodel.mainmenu.LobbyViewModelFactory
 // the fragment initialization parameters
 private const val GAME_NAME = "param1"
 private const val GAME_TYPE = "param2"
+private const val GAME_INVITE = "param3"
 
 class LobbyFragment : Fragment() {
 
     private var game_name: String? = null
     private var game_type: GameType? = null
+    private var gameInviteId: String? = null
     private lateinit var binding: FragmentLobbyBinding
     private lateinit var lobbyViewModel: LobbyViewModel
     private lateinit var avatarList: Array<ImageView>
@@ -43,6 +45,7 @@ class LobbyFragment : Fragment() {
         arguments?.let {
             game_name = it.getString(GAME_NAME)
             game_type = GameType.values()[(it.getInt(GAME_TYPE))]
+            gameInviteId = it.getString(GAME_INVITE)
         }
         lobbyViewModel = ViewModelProvider(this, LobbyViewModelFactory()).get(LobbyViewModel::class.java)
     }
@@ -67,11 +70,18 @@ class LobbyFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_lobby, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, @Nullable savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLobbyBinding.bind(view)
         binding.lobbyGameName.text = game_name
+
+        if(gameInviteId.equals("")){
+            binding.inviteId.text = gameInviteId
+        } else {
+            binding.inviteId.text = "code: " + gameInviteId
+        }
 
         binding.lobbyGameLogo.setImageResource(Drawable.gameTypeDrawable[game_type!!.type])
 
@@ -252,11 +262,16 @@ class LobbyFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(param1: String, param2: Int) =
+        fun newInstance(param1: String, param2: Int, lobbyInvited: String?) =
                 LobbyFragment().apply {
                     arguments = Bundle().apply {
                         putString(GAME_NAME, param1)
                         putInt(GAME_TYPE, param2)
+                        if(lobbyInvited == null)
+                            putString(GAME_INVITE, "")
+                        else {
+                            putString(GAME_INVITE, lobbyInvited)
+                        }
                     }
                 }
     }

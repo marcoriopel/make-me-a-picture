@@ -25,7 +25,11 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     val _isPrivate = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
-    private val _gameInviteID = MutableLiveData<String?>()
+
+
+    var _gameInviteID = MutableLiveData<String?>()
+
+
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
     private val _lobbyJoined = MutableLiveData<Game>()
