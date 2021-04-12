@@ -9,7 +9,7 @@ import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import org.json.JSONObject
 
 
-class MainMenuRepository() {
+class MainMenuRepository {
 
 
 
@@ -21,7 +21,7 @@ class MainMenuRepository() {
         mapCreateGame["difficulty"] = game.gameDifficulty!!.difficulty.toString()
 
         println(mapCreateGame)
-        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create", mapCreateGame,true)
+        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create/public", mapCreateGame,true)
         val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
 
         return result

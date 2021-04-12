@@ -1,15 +1,13 @@
 package com.example.prototype_mobile.view.game
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
-import com.example.prototype_mobile.databinding.FragmentChatBinding
 import com.example.prototype_mobile.databinding.FragmentGuessBinding
-import com.example.prototype_mobile.model.game.GameRepository
 import com.example.prototype_mobile.viewmodel.game.GuessViewModel
 
 class GuessFragment : Fragment() {
@@ -40,10 +38,13 @@ class GuessFragment : Fragment() {
     }
 
     private fun guess() {
-        if (binding.guess.text.toString().length > 0) {
+        if (binding.guess.text.toString().isNotEmpty()) {
             viewModel.guessDrawing(binding.guess.text.toString())
             binding.guess.setText("")
         }
     }
 
+    fun onKeyEnter() {
+        guess()
+    }
 }

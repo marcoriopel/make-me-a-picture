@@ -18,6 +18,7 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
     val CHAT_MINE = 0
     val CHAT_PARTNER = 1
     val CHAT_HISTORY = 2
+    val CHAT_DELETE = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view : View? = null
@@ -38,6 +39,10 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
             {
                 view = LayoutInflater.from(context).inflate(R.layout.row_channel_history,parent,false)
             }
+
+            3 -> {
+                view = LayoutInflater.from(context).inflate(R.layout.row_channel_delete,parent,false)
+            }
         }
 
         return ViewHolder(view!!)
@@ -53,21 +58,24 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val messageData  = chatList[position]
-        val userName = messageData.username + "-" + messageData.time;
-        val content = messageData.text;
-        val viewType = messageData.messageType;
+        val userName = messageData.username + "-" + messageData.time
+        val content = messageData.text
+        val viewType = messageData.messageType
 
         when(viewType) {
             CHAT_MINE -> {
-                holder.message.setText(content)
-                holder.userName.setText(userName)
+                holder.message.text = content
+                holder.userName.text = userName
             }
             CHAT_PARTNER ->{
-                holder.userName.setText(userName)
-                holder.message.setText(content)
+                holder.userName.text = userName
+                holder.message.text = content
             }
             CHAT_HISTORY ->{
                 holder.history.setOnClickListener { viewModel.showHistory() }
+            }
+            CHAT_DELETE -> {
+                holder.history.setOnClickListener { viewModel.deleteChannel()}
             }
         }
 

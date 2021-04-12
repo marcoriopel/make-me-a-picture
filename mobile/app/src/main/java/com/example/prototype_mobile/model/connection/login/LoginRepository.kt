@@ -14,7 +14,7 @@ import org.json.JSONObject
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository() {
+class LoginRepository {
     companion object {
         private var instance: LoginRepository? = null
 
@@ -43,12 +43,6 @@ class LoginRepository() {
         user = null
     }
 
-    fun logout() {
-        // TODO: To fix when logout is made
-        user = null
-
-    }
-
      suspend fun login(username: String, password: String): Result<LoggedInUser> {
         // handle login
          val mapLogin = HashMap<String, String>()
@@ -64,11 +58,10 @@ class LoginRepository() {
              Log.d("token", result.data.token)
          }
 
-         return result;
+         return result
+     }
 
-    }
-
-    fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    fun setLoggedInUser(loggedInUser: LoggedInUser?) {
         this.user = loggedInUser
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
@@ -79,8 +72,30 @@ class LoginRepository() {
         if(response.code() == ResponseCode.OK.code) {
             val Jobject = JSONObject(jsonData)
             val Jarray = Jobject.getString("token")
-            val user = LoggedInUser(Jarray.toString(), username)
+            val avatar = Jobject.getString("avatar")
+            val user = LoggedInUser(Jarray.toString(), username, avatar.toInt())
             return Result.Success(user)
+        } else {
+            return Result.Error(response.code())
+        }
+    }
+
+    suspend fun logout(): Result<Boolean> {
+        // handle logout
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/authenticate/logout", HashMap(), true)
+
+        val result = analyseLogoutAnswer(response)
+
+        if (result is Result.Success) {
+            setLoggedInUser(null)
+        }
+
+        return result
+    }
+
+    fun analyseLogoutAnswer(response: Response): Result<Boolean> {
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success(true)
         } else {
             return Result.Error(response.code())
         }

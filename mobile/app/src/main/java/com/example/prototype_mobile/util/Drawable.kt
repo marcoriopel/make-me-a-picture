@@ -8,5 +8,6 @@ class Drawable {
         val gameTypeDrawable = arrayOf(R.drawable.icon_classic, R.drawable.icon_solo, R.drawable.icon_solo)
         val gameTypeDrawableWhite = arrayOf(R.drawable.icon_classic_white, R.drawable.icon_solo, R.drawable.icon_solo)
         val difficulty = arrayOf(R.drawable.icon_easy_white, R.drawable.icon_medium_white, R.drawable.icon_hard_white)
+        val tutorialInfo = arrayOf(R.drawable.menu, R.drawable.lobby, R.drawable.guessing)
     }
 }

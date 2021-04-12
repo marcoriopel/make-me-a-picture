@@ -1,5 +1,7 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,7 +13,10 @@ import androidx.fragment.app.activityViewModels
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameCreationBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
+import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
+import com.example.prototype_mobile.view.tutorial.StaticTutorialActivity
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
+import org.jetbrains.anko.support.v4.act
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -97,6 +102,13 @@ class GameCreationFragment : Fragment() {
             binding.coopSprint.isActivated = !binding.coopSprint.isActivated
             setSelectedButton(binding.coopSprint, SelectedButton.COOP)
             disableOtherButtons(binding.coopSprint, _createGameButtons)
+        }
+
+        binding.tutorial.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.red_to_lightred)
+
+        binding.tutorial.setOnClickListener {
+            val intent = Intent(activity, StaticTutorialActivity::class.java)
+            startActivity(intent)
         }
 
         //Observers in fragment

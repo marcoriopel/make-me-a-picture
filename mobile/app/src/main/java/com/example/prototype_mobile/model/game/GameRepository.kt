@@ -23,6 +23,7 @@ const val NEW_ROUND_EVENT = "newRound"
 const val GUESSES_LEFT_EVENT = "guessesLeft"
 const val TIMER_EVENT = "timer"
 const val TRANSITION_EVENT = "transitionTimer"
+const val REQUEST_HINT = "hintRequest"
 const val DRAWING_SUGGESTIONS_EVENT = "drawingSuggestions"
 const val DRAWING_TIMER_EVENT = "drawingTimer"
 const val GAME_TIMER_EVENT = "gameTimer"
@@ -52,6 +53,9 @@ class GameRepository {
     var team1: MutableList<Players> = mutableListOf()
     var team2: MutableList<Players> = mutableListOf()
 
+    private val _gameTypeLiveData= MutableLiveData<GameType>()
+    val gameTypeLiveData: LiveData<GameType> = _gameTypeLiveData
+
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -80,7 +84,7 @@ class GameRepository {
     var drawingName: LiveData<String?> = _drawingName
 
     var drawingPlayer: String? = null
-    lateinit var guessesLeftByTeam: GuessesLeft
+    var guessesLeftByTeam: GuessesLeft = GuessesLeft(arrayOf(0,0))
 
     private val _isGameEnded=  MutableLiveData<String>()
     val isGameEnded: LiveData<String> = _isGameEnded
@@ -113,6 +117,7 @@ class GameRepository {
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
+            _isPlayerDrawing.postValue(false)
             _drawingName.postValue(null)
         }
         CanvasRepository.getInstance()!!.resetCanvas()
@@ -125,8 +130,8 @@ class GameRepository {
     private var onGuessesLeft = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
             guessesLeftByTeam = gson.fromJson(it[0].toString(), GuessesLeft::class.java)
-            if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
-                _isPlayerDrawing.postValue(true)
+            if (!drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
+                _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
             }
         } else {
             val numberGuessesLeft = JSONObject(it[0].toString()).getString("guessesLeft").toInt()
@@ -141,8 +146,8 @@ class GameRepository {
 
     private var onTransition = Emitter.Listener {
         val transitionTemp = gson.fromJson(it[0].toString(), Transition::class.java)
-        _transition.postValue(transitionTemp)
         _roundTimer.postValue(Timer(transitionTemp.timer))
+        _transition.postValue(transitionTemp)
         if(Timer(transitionTemp.timer).timer == 0) {
             if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
                 _isPlayerDrawing.postValue(true)
@@ -173,6 +178,11 @@ class GameRepository {
         socket.emit(GUESS_DRAWING_EVENT, gson.toJson(guessEvent), opts)
     }
 
+    fun sendHintRequest(user: BasicUser) {
+        val hintRequest = HintRequest(this.gameId!!, user)
+        socket.emit(REQUEST_HINT, gson.toJson(hintRequest))
+    }
+
     suspend fun postWordChose(word: String) {
         val body = HashMap<String, String>()
         body["drawingName"] = word
@@ -192,6 +202,7 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
+
         _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
@@ -206,4 +217,9 @@ class GameRepository {
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
         socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
     }
+
+    fun getGameTypeLiveData() : MutableLiveData<GameType> {
+        return _gameTypeLiveData
+    }
 }
+

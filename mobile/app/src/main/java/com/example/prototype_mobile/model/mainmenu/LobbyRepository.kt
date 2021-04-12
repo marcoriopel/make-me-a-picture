@@ -1,7 +1,6 @@
 package com.example.prototype_mobile.model.mainmenu
 
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -17,7 +16,7 @@ import io.socket.emitter.Emitter
 import okhttp3.Response
 import org.json.JSONObject
 
-class LobbyRepository() {
+class LobbyRepository {
     companion object {
         private var instance: LobbyRepository? = null
 
@@ -50,6 +49,8 @@ class LobbyRepository() {
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
     val gson: Gson = Gson()
 
+    var gameStarted = false
+
     var onTeamsUpdate = Emitter.Listener {
         val gson: Gson = Gson()
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
@@ -57,12 +58,15 @@ class LobbyRepository() {
     }
 
     var onStart = Emitter.Listener {
+        gameStarted = true
         val gameRepo = GameRepository.getInstance()!!
         if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {
             val Jobject = JSONObject(it[0].toString())
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+            //To access gameType inside game View model later with a liveData
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
             _lobbyPlayers.value!!.players.forEach { player ->
                 run {
                     when (player.team) {
@@ -75,9 +79,11 @@ class LobbyRepository() {
             _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
         } else {
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+
+            gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
+            //gameRepo.getTransition().postValue(Transition(gameRepo.gameTimer.value!!.timer, 1))
             _isPlayerDrawing.postValue(false)
         }
-
     }
 
     init {
@@ -87,6 +93,8 @@ class LobbyRepository() {
     }
 
     fun listenLobby(lobbyID: String) {
+        if (!socket.hasListeners("dispatchTeams"))
+            socket.on("dispatchTeams", onTeamsUpdate)
         val gson: Gson = Gson()
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, lobbyID)))
         currentListenLobby = lobbyID
@@ -96,7 +104,7 @@ class LobbyRepository() {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
-        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join", map, true)
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
 
         if (result is Result.Success) {
@@ -104,10 +112,10 @@ class LobbyRepository() {
             socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
         }
 
-        return result;
+        return result
     }
 
-    fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
+    private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {
@@ -120,9 +128,8 @@ class LobbyRepository() {
         map["lobbyId"] = currentListenLobby
         map["teamNumber"] = team.toString()
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/add/virtual/player", map, true)
-        val result = analyseGeneralAnswer(response)
 
-        return result;
+        return analyseGeneralAnswer(response)
     }
 
     suspend fun removeVirtualPlayer(team: Int, username: String): Result<String> {
@@ -131,27 +138,39 @@ class LobbyRepository() {
         map["teamNumber"] = team.toString()
         map["username"] = username
         val response = HttpRequestDrawGuess.httpRequestDelete("/api/games/remove/virtual/player", map, true)
-        val result = analyseGeneralAnswer(response)
 
-        return result;
+        return analyseGeneralAnswer(response)
     }
 
     suspend fun startGame(): Result<String> {
+        gameStarted = true
         val map = HashMap<String, String>()
         map["lobbyId"] = currentListenLobby
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/start", map, true)
-        val result = analyseGeneralAnswer(response)
 
-        return result;
+        return analyseGeneralAnswer(response)
     }
 
-    fun analyseGeneralAnswer(response: Response): Result<String> {
-        if(response.code() == ResponseCode.OK.code) {
-            return Result.Success("Ok")
+    suspend fun quitLobby(): Result<String> {
+        socket.emit("leaveLobby",gson.toJson(LobbyId(_lobbyJoined.value!!.gameID)))
+        socket.off("dispatchTeams")
+        gameStarted = false
+        socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, "")))
+        val map = HashMap<String, String>()
+        map["lobbyId"] = currentListenLobby
+        val response = HttpRequestDrawGuess.httpRequestDelete("/api/games/leave", map, true)
+
+        return  analyseGeneralAnswer(response)
+    }
+
+    private fun analyseGeneralAnswer(response: Response): Result<String> {
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success("Ok")
         } else {
-            return Result.Error(response.code())
+            Result.Error(response.code())
         }
     }
+
     fun resetData() {
         println("reset data called")
         _lobbyPlayers.value = null
