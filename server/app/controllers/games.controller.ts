@@ -100,6 +100,15 @@ export class GamesController {
       });
     });
 
+    this.router.post('/upload', (req, res) => {
+      this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+        this.gameManagerService.addGameImageURL(user, req, res, () => {
+          res.sendStatus(StatusCodes.OK);
+        });
+      });
+    });
+
+
     this.router.post('/word/selection', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
         this.gameManagerService.chooseDrawingWord(user.username, req, res, () => {

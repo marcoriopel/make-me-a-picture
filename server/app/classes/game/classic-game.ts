@@ -1,3 +1,4 @@
+import { FeedImage } from '@app/ressources/interfaces/drawings.interface';
 import { DrawingEvent } from '@app/ressources/interfaces/game-events';
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime, transitionType } from '@app/ressources/variables/game-variables';
@@ -23,6 +24,7 @@ export class ClassicGame extends Game {
     private round: number = 0;
     private currentDrawingName: string;
     private pastVirtualDrawings: string[] = [];
+    private pastVirtualDrawingsId: string[] = [];
     private timerCount: number = 0;
     private timerInterval: NodeJS.Timeout;
     private transitionInterval: NodeJS.Timeout;
@@ -31,6 +33,7 @@ export class ClassicGame extends Game {
     private opposingTeamGuessingTime = 0;
     private startDate: number;
     private endDate: number;
+    private gameImagesUrl: FeedImage[] = [];
 
     constructor(
         lobby: ClassicLobby, 
@@ -93,8 +96,10 @@ export class ClassicGame extends Game {
         this.transitionTimerCount = 5;
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-            this.pastVirtualDrawings.push(this.currentDrawingName);
+            const drawing = await (await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+            this.currentDrawingName = drawing.drawingName;
+            this.pastVirtualDrawingsId.push(drawing.drawingId);
+            this.pastVirtualDrawings.push(drawing.drawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -137,7 +142,7 @@ export class ClassicGame extends Game {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            if(this.vPlayers[this.drawingTeam]){
+            if (this.vPlayers[this.drawingTeam]) {
                 this.vPlayers[this.drawingTeam].sayRightGuess();
             }
             const drawingEvent: DrawingEvent = {
@@ -155,7 +160,7 @@ export class ClassicGame extends Game {
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username })
-            if(this.vPlayers[this.drawingTeam]){
+            if (this.vPlayers[this.drawingTeam]) {
                 this.vPlayers[this.drawingTeam].sayWrongGuess();
             }
             --this.guessesLeft[this.drawingTeam];
@@ -176,14 +181,14 @@ export class ClassicGame extends Game {
             console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
-            if(this.vPlayers[this.getOpposingTeam()]){
+            if (this.vPlayers[this.getOpposingTeam()]) {
                 this.vPlayers[this.getOpposingTeam()].sayRightGuess();
             }
             this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         }
         else {
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": false, "guessingPlayer": username });
-            if(this.vPlayers[this.getOpposingTeam()]){
+            if (this.vPlayers[this.getOpposingTeam()]) {
                 this.vPlayers[this.getOpposingTeam()].sayWrongGuess();
             }
         }
@@ -268,8 +273,10 @@ export class ClassicGame extends Game {
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
-            this.currentDrawingName = await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-            this.pastVirtualDrawings.push(this.currentDrawingName);
+            const drawing = await (await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+            this.currentDrawingName = drawing.drawingName;
+            this.pastVirtualDrawingsId.push(drawing.drawingId);
+            this.pastVirtualDrawings.push(drawing.drawingName);
             this.vPlayers[this.drawingTeam].startDrawing();
         }
         else {
@@ -282,7 +289,8 @@ export class ClassicGame extends Game {
         clearInterval(this.timerInterval);
         this.guessesLeft = [0, 0];
         this.sendVPlayerEndGameMessage();
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.uploadRandomFeedImage();
+        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
         this.chatManagerService.deleteChat(this.id);
@@ -381,32 +389,32 @@ export class ClassicGame extends Game {
         }
     }
 
-    disconnectGame(username: string){
-        if(this.teams[0].has(username)){
+    disconnectGame(username: string) {
+        if (this.teams[0].has(username)) {
             this.score[0] = 0;
         }
-        else if(this.teams[1].has(username)){
+        else if (this.teams[1].has(username)) {
             this.score[1] = 0;
         }
         this.socketService.getSocket().to(this.id).emit('userDisconnect', { "username": username });
         this.endGame();
     }
-    
-    sendVPlayerEndGameMessage(){
+
+    sendVPlayerEndGameMessage() {
         const maxScoreIndex = this.score.indexOf(Math.max(...this.score));
         const minScoreIndex = this.score.indexOf(Math.min(...this.score));
-        if(maxScoreIndex == minScoreIndex){
-            if(this.vPlayers[maxScoreIndex]){
+        if (maxScoreIndex == minScoreIndex) {
+            if (this.vPlayers[maxScoreIndex]) {
                 this.vPlayers[maxScoreIndex].sayWeTied();
             }
-            if(this.vPlayers[minScoreIndex]){
+            if (this.vPlayers[minScoreIndex]) {
                 this.vPlayers[minScoreIndex].sayWeTied();
             }
-        }else{
-            if(this.vPlayers[maxScoreIndex]){
+        } else {
+            if (this.vPlayers[maxScoreIndex]) {
                 this.vPlayers[maxScoreIndex].sayWeWon();
             }
-            if(this.vPlayers[minScoreIndex]){
+            if (this.vPlayers[minScoreIndex]) {
                 this.vPlayers[minScoreIndex].sayWeLost();
             }
         }
@@ -422,6 +430,22 @@ export class ClassicGame extends Game {
                     }
                 }
             }
+        }
+    }
+
+    addGameImageUrl(user: BasicUser, imageUrl: string) {
+        const feedImage: FeedImage = {
+            imageURL: imageUrl,
+            timestamp: new Date().getTime(),
+            user: user,
+        };
+        this.gameImagesUrl.push(feedImage);
+    }
+
+    uploadRandomFeedImage() {
+        if (this.gameImagesUrl.length) {
+            const image = this.gameImagesUrl[Math.floor(Math.random() * (this.gameImagesUrl.length - 1))]
+            this.drawingsService.uploadImage(image);
         }
     }
 }

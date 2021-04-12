@@ -84,8 +84,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
                 if (result is Result.Error) {
                     when (result.exception) {
-                        ResponseCode.CONFLICT.code -> _createChannelResult.value = R.string.channel_name_used
-                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.value = R.string.bad_request
+                        ResponseCode.CONFLICT.code -> _createChannelResult.postValue(R.string.channel_name_used)
+                        ResponseCode.BAD_REQUEST.code -> _createChannelResult.postValue(R.string.bad_request)
                     }
                 }
             }
@@ -138,6 +138,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
 
         if (result is Result.Success) {
+            if(!chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
+                switchChannel("General")
+            }
             _getChannelResult.postValue(-1)
         }
 
@@ -181,11 +184,12 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO)
         {
             val result: Result<Boolean> =
-                try {
-                chatRepository.getHistory()
+                /*try {
+                    chatRepository.getHistory()
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
-            }
+            }*/
+                    chatRepository.getHistory()
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {
@@ -193,6 +197,29 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 } else {
                     _messageList.postValue(mutableListOf())
                 }
+            }
+
+            if(result is Result.Error){
+                when(result.exception) {
+                    ResponseCode.NOT_AUTHORIZED.code -> _getChannelResult.postValue(R.string.not_authorized)
+                    ResponseCode.BAD_REQUEST.code -> _getChannelResult.postValue(R.string.bad_request)
+                }
+            }
+        }
+    }
+
+    fun deleteChannel() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            val result: Result<Boolean> =
+                    try {
+                        chatRepository.deleteChannel()
+                    } catch (e: Exception) {
+                        Result.Error(ResponseCode.BAD_REQUEST.code)
+                    }
+
+            if (result is Result.Success) {
+                switchChannel("General")
             }
 
             if(result is Result.Error){

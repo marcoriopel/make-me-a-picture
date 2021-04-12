@@ -34,7 +34,7 @@ export class ImageCreationComponent implements OnInit {
   constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private pencilService: PencilService) {
     this.drawingService.strokeStack = [];
     this.drawingService.redoStack = []
-  }  
+  }
 
   ngOnInit(): void {
     this.imageCreationForm = this.fb.group({
@@ -57,13 +57,21 @@ export class ImageCreationComponent implements OnInit {
   }
 
   async processForm() {
+<<<<<<< HEAD
     const strokes = this.pencilService.formatDrawing();
     const drawing: Drawing = {
       eraserStrokes: strokes.eraserStrokes,
       pencilStrokes: strokes.pencilStrokes,
+=======
+    const drawing: any = {
+>>>>>>> dev
       drawingName: this.imageCreationForm.value.drawingName,
       hints: this.hints,
+<<<<<<< HEAD
       difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
+=======
+      imageUrl: this.drawingService.canvas.toDataURL()
+>>>>>>> dev
     }
     this.sendDrawing(drawing).subscribe(
       res => {
@@ -131,7 +139,7 @@ export class ImageCreationComponent implements OnInit {
     return Difficulty.EASY // Default
   }
 
-  sendDrawing(drawing: Drawing) {
+  sendDrawing(drawing: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!

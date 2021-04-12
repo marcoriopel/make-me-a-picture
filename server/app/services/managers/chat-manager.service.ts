@@ -101,7 +101,7 @@ export class ChatManagerService {
     async createChat(chatName: string, res: Response, next: NextFunction) {
         try {
             const chatId = uuid();
-            await this.chatModel.createChat(chatId, chatName);
+            await this.chatModel.createChat(chatId, chatName, false);
             next(chatId);
         }
         catch (e) {
@@ -115,7 +115,7 @@ export class ChatManagerService {
     }
 
     async removeUserFromChat(username: string, chatId: string) {
-        try{
+        try {
             await this.chatModel.removeUserFromChat(username, chatId);
             const response = await this.chatModel.getUsersInChat(chatId);
             if(!response){
@@ -125,7 +125,7 @@ export class ChatManagerService {
                 this.chatModel.deleteChat(chatId);
             }
         }
-        catch(e){
+        catch (e) {
             console.error(e);
         }
     }
@@ -157,7 +157,7 @@ export class ChatManagerService {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
                 await this.chatModel.deleteChat(chatId);
-                this.socketService.getSocket().to(chatId).emit('deleteChat');
+                this.socketService.getSocket().to(chatId).emit('message', { "user": { username: "System" }, "text": "Ce canal a été supprimé", "timestamp": 0, "textColor": "#2065d4", chatId: chatId });
                 return true; 
             } 
         }

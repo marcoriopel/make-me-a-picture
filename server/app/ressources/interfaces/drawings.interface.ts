@@ -1,3 +1,5 @@
+import { BasicUser } from "./user.interface";
+
 export interface Drawing {
     drawingId: string;
     eraserStrokes: Stroke[];
@@ -18,4 +20,10 @@ export interface Stroke {
 export interface Vec2 {
     x: number;
     y: number;
+}
+
+export interface FeedImage {
+    imageURL: string;
+    timestamp: number;
+    user: BasicUser;
 }

@@ -38,15 +38,15 @@ export class LobbyManagerService {
         switch (lobbyInfo.gameType) {
             case GameType.CLASSIC:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new ClassicLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             case GameType.SOLO:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new SoloLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             case GameType.COOP:
                 LobbyManagerService.lobbies.set(lobbyInfo.id, new CoopLobby(lobbyInfo.difficulty, lobbyInfo.gameName, lobbyInfo.id, lobbyInfo.isPrivate));
-                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName);
+                this.chatModel.createChat(lobbyInfo.id, lobbyInfo.gameName, true);
                 break;
             default:
                 return res.status(StatusCodes.BAD_REQUEST).send("Lobby game type is invalid");
@@ -71,8 +71,6 @@ export class LobbyManagerService {
     joinPublic(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (this.lobbyExist(req.body.lobbyId)) {
             try {
-                console.log(user)
-                console.log(req.body.socketId)
                 const lobby: Lobby = LobbyManagerService.lobbies.get(req.body.lobbyId);
                 lobby.addPlayer(user, req.body.socketId);
                 this.dispatchTeams(req.body.lobbyId);
