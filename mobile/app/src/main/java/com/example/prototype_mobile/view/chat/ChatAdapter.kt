@@ -5,11 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
+import org.jetbrains.anko.image
 
 // This code is an adaptation of the tutorial found at this address : https://medium.com/@joycehong0524/simple-android-chatting-app-using-socket-io-all-source-code-provided-7b06bc7b5aff
 
@@ -19,6 +21,15 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
     val CHAT_PARTNER = 1
     val CHAT_HISTORY = 2
     val CHAT_DELETE = 3
+    val avatarIconMap: Map<Int, Int> = mapOf(
+        Pair(0, R.drawable.avatar0),
+        Pair(1, R.drawable.avatar1),
+        Pair(2, R.drawable.avatar2),
+        Pair(3, R.drawable.avatar3),
+        Pair(4, R.drawable.avatar4),
+        Pair(5, R.drawable.avatar5),
+        Pair(6, R.drawable.avatar6),
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view : View? = null
@@ -29,14 +40,12 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
                 Log.d("user inflating","viewType : ${viewType}")
             }
 
-            1 ->
-            {
+            1 -> {
                 view = LayoutInflater.from(context).inflate(R.layout.row_chat_partner,parent,false)
                 Log.d("partner inflating","viewType : ${viewType}")
             }
 
-            2 ->
-            {
+            2 -> {
                 view = LayoutInflater.from(context).inflate(R.layout.row_channel_history,parent,false)
             }
 
@@ -61,15 +70,19 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
         val userName = messageData.username + "-" + messageData.time
         val content = messageData.text
         val viewType = messageData.messageType
+        val avatar = messageData.avatar
 
         when(viewType) {
             CHAT_MINE -> {
                 holder.message.text = content
                 holder.userName.text = userName
+                avatarIconMap[avatar]?.let { holder.avatar.setImageResource(it) }
             }
             CHAT_PARTNER ->{
                 holder.userName.text = userName
                 holder.message.text = content
+                Log.e("Avatar", avatar.toString())
+                avatarIconMap[avatar]?.let { holder.avatar.setImageResource(it) }
             }
             CHAT_HISTORY ->{
                 holder.history.setOnClickListener { viewModel.showHistory() }
@@ -79,11 +92,16 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
             }
         }
 
+        when(avatar) {
+            0 -> holder.avatar.setImageResource(R.drawable.avatar0)
+        }
+
     }
     inner class ViewHolder(itemView : View):  RecyclerView.ViewHolder(itemView) {
         val userName = itemView.findViewById<TextView>(R.id.username)
         val message = itemView.findViewById<TextView>(R.id.message)
-        val history =itemView.findViewById<TextView>(R.id.channel_history)
+        val history = itemView.findViewById<TextView>(R.id.channel_history)
+        val avatar = itemView.findViewById<ImageView>(R.id.avatar)
     }
 
 }

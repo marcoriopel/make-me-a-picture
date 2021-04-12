@@ -13,7 +13,7 @@
         android:textColor="@color/poly_blue"
         android:visibility="gone"/>
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/avatar"
         android:layout_width="38dp"
         android:layout_height="41dp"
         app:srcCompat="@drawable/profile_icon"
