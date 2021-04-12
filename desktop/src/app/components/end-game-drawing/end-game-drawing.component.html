@@ -4,7 +4,7 @@
         <ng-template matStepLabel>Résultat</ng-template>
         <div id="content">
             <h1 id="title">{{result}}</h1>
-            <!-- <div id="draw">
+            <div id="draw" *ngIf="result == Partie nulle">
                 <div id="results" class="draw-game">
                     <div class="team">
                         <p id="score">{{winningTeam.score}}</p>
@@ -17,8 +17,8 @@
                         <p class="player">{{loosingTeam.players[1]}}</p>
                     </div>
                 </div>
-            </div> -->
-            <div  id="not-draw">
+            </div>
+            <div id="not-draw" *ngIf="result != Partie nulle">
                 <div id="results">
                     <div id="winning-team" class="team winning">
                         <p>3</p>
@@ -39,10 +39,10 @@
         </div>
     </mat-step>
 
-    <mat-step [editable]="false">
+    <mat-step [editable]="false" *ngFor="let vdrawing of virtualPlayerDrawings">
         <ng-template matStepLabel>Dessin - virtuel</ng-template>
         <div id="content">
-            <img src="./assets/img/placeholder.png">
+            <img src=vdrawing.url>
             <div>
                 <p>Avez-vous apprécié ce dessin?</p>
                 <button mat-button matStepperNext (click)="upVote()"><span class="material-icons">thumb_up</span></button>
@@ -52,10 +52,10 @@
         </div>
     </mat-step>
 
-    <mat-step [editable]="false">
+    <mat-step [editable]="false" *ngFor="let drawing of realPlayerDrawings">
         <ng-template matStepLabel>Dessin - joueur</ng-template>
         <div id="content">
-            <img src="./assets/img/placeholder.png">
+            <img src=drawing.url>
             <div>
                 <p>Voulez-vous ajouter votre dessin à la banque de dessins?</p>
                 <button mat-button>Oui</button>

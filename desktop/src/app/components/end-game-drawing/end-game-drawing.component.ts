@@ -8,8 +8,8 @@ import { GameService } from '@app/services/game/game.service';
 })
 export class EndGameDrawingComponent implements OnInit {
 
-  virtualPlayerDrawings: string[] = [];
-  realPlayerDrawings: string[] = [];
+  virtualPlayerDrawings: any[] = [];
+  realPlayerDrawings: any[] = [];
 
   result: string = "";
   winningTeam: any;
@@ -20,7 +20,6 @@ export class EndGameDrawingComponent implements OnInit {
   constructor(private gameService: GameService) {
     this.virtualPlayerDrawings = this.gameService.virtualPlayerDrawings;
     this.realPlayerDrawings = this.realPlayerDrawings;
-    console.log(this.virtualPlayerDrawings);
    }
 
   ngOnInit(): void {
