@@ -1,34 +1,35 @@
+<canvas id="confetti-canvas"></canvas>
 <mat-horizontal-stepper linear #stepper>
     <mat-step [editable]="false">
         <ng-template matStepLabel>Résultat</ng-template>
         <div id="content">
             <h1 id="title">{{result}}</h1>
-            <div id="draw" *ngIf="result == Partie nulle">
+            <div id="draw" *ngIf="result == 'Partie nulle'">
                 <div id="results" class="draw-game">
                     <div class="team">
-                        <p id="score">{{winningTeam.score}}</p>
-                        <p class="player">{{winningTeam.players[0]}}</p>
-                        <p class="player">{{winningTeam.players[1]}}</p>
+                        <p id="score">{{drawTeam1.score}}</p>
+                        <p class="player">{{drawTeam1.players[0]}}</p>
+                        <p class="player">{{drawTeam1.players[1]}}</p>
                     </div>
                     <div class="team">
-                        <p id="score">{{loosingTeam.score}}</p>
-                        <p class="player">{{loosingTeam.players[0]}}</p>
-                        <p class="player">{{loosingTeam.players[1]}}</p>
+                        <p id="score">{{drawTeam2.score}}</p>
+                        <p class="player">{{drawTeam2.players[0]}}</p>
+                        <p class="player">{{drawTeam2.players[1]}}</p>
                     </div>
                 </div>
             </div>
-            <div id="not-draw" *ngIf="result != Partie nulle">
+            <div id="not-draw" *ngIf="result != 'Partie nulle'">
                 <div id="results">
                     <div id="winning-team" class="team winning">
-                        <p>3</p>
+                        <p>{{winningTeam.score}}</p>
                         <img id="crown" src="./assets/img/couronner.png">
-                        <p class="player winning-player">Marc-Alain</p>
-                        <p class="player winning-player">Guillaume</p>
+                        <p class="player winning-player">{{winningTeam.players[0]}}</p>
+                        <p class="player winning-player">{{winningTeam.players[1]}}</p>
                     </div>
                     <div class="team loosing">
-                        <p id="loosing-team-score">1</p>
-                        <p class="player loosing-player">Marc-Olivier</p>
-                        <p class="player loosing-player">Samuel</p>
+                        <p id="loosing-team-score">{{loosingTeam.score}}</p>
+                        <p class="player loosing-player">{{loosingTeam.players[0]}}</p>
+                        <p class="player loosing-player">{{loosingTeam.players[1]}}</p>
                     </div>
                 </div>
             </div>
@@ -41,11 +42,11 @@
     <mat-step [editable]="false" *ngFor="let vdrawing of virtualPlayerDrawings">
         <ng-template matStepLabel>Dessin - virtuel</ng-template>
         <div id="content">
-            <img src=vdrawing.url>
+            <img src={{vdrawing.url}}>
             <div>
                 <p>Avez-vous apprécié ce dessin?</p>
-                <button mat-button matStepperNext (click)="upVote()"><span class="material-icons">thumb_up</span></button>
-                <button mat-button matStepperNext (click)="downVote()"><span class="material-icons">thumb_down</span></button>
+                <button mat-button matStepperNext (click)="vote(vdrawing.id, true)"><span class="material-icons">thumb_up</span></button>
+                <button mat-button matStepperNext (click)="vote(vdrawing.id, false)"><span class="material-icons">thumb_down</span></button>
                 <button mat-button matStepperNext>Sauter cette étape</button>
             </div>
         </div>

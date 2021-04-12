@@ -11,7 +11,6 @@ import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
-import * as confetti from 'canvas-confetti';
 import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
 
 interface Player {
@@ -195,12 +194,11 @@ export class GameService {
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
-          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.virtualPlayerIds[i] + '.png',
+          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + '0fb3f245-cc29-4d6d-bf38-ee33038cce68' + '.png',
           id: data.virtualPlayerIds[i],
         }
         this.virtualPlayerDrawings.push(vdrawing);
       }
-      console.log(this.virtualPlayerDrawings)
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
@@ -210,19 +208,6 @@ export class GameService {
 
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
-
-      if(this.score[this.currentUserTeam] > this.score[oppositeTeam]){
-        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
-        var myConfetti = confetti.create(canvasEl, { 
-          resize: true, 
-          useWorker: true, 
-        });
-    
-        myConfetti({
-          spread: 180,
-          particleCount: 200,
-        });         
-      }
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
     })
 
