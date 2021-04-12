@@ -34,5 +34,13 @@ export class DrawingsController {
                 this.drawingsService.vote(req, res, user);
             });
         });
+        this.router.get('/feed/info', (req, res) => {
+            this.tokenService.authenticateToken(req, res, (user: BasicUser) => {
+                this.drawingsService.getFeedInfo(res, (feedInfo: any) => {
+                    res.status(StatusCodes.OK).send({ feedInfo });
+                });
+            });
+        });
+
     }
 }

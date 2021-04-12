@@ -37,11 +37,11 @@ export class VirtualPlayer {
         this.userService = userService;
     }
 
-    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<string> {
+    async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<Drawing> {
         try {
             this.currentDrawing = await this.drawingsService.getRandomDrawing(difficulty, pastDrawingNames);
             this.drawingSpeed = this.calculateDrawingSpeed();
-            return this.currentDrawing.drawingName;
+            return this.currentDrawing;
         }
         catch (err) {
             throw err;
@@ -180,13 +180,13 @@ export class VirtualPlayer {
 
     sayRightGuess(){}
 
-    sayWrongGuess(){}
+    sayWrongGuess() { }
 
     sayWrongTry(){}
 
     sayWeWon(){}
 
-    sayWeLost(){}
+    sayWeLost() { }
 
     sayWeTied(){}
 

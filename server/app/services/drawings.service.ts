@@ -1,9 +1,9 @@
 import { DrawingsModel } from '@app/models/drawings.model';
 import { TYPES } from '@app/types';
 import { inject, injectable } from 'inversify';
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { BasicUser } from '@app/ressources/interfaces/user.interface';
-import { Drawing } from '@app/ressources/interfaces/drawings.interface';
+import { Drawing, FeedImage } from '@app/ressources/interfaces/drawings.interface';
 import { StatusCodes } from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 import { UsersModel } from '@app/models/users.model';
@@ -27,10 +27,11 @@ export class DrawingsService {
                 "drawingName": req.body.drawingName
             };
 
-            if (!drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
+            if (!req.body.imageUrl || !drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
 
             await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {
@@ -85,6 +86,27 @@ export class DrawingsService {
         }
         catch (e) {
             console.log(e);
+            return res.status(StatusCodes.BAD_REQUEST).send(e.message);
+        }
+    }
+
+    async uploadImage(image: FeedImage): Promise<any> {
+        const id = uuid();
+        try {
+            await this.drawingsModel.uploadImageToS3(id, image.imageURL);
+            await this.drawingsModel.addImageToFeed(id, image.user, image.timestamp);
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getFeedInfo(res: Response, next: NextFunction) {
+        try {
+            const drawingInfo = await this.drawingsModel.getFeedInfo();
+            next(drawingInfo);
+        }
+        catch (e) {
             return res.status(StatusCodes.BAD_REQUEST).send(e.message);
         }
     }

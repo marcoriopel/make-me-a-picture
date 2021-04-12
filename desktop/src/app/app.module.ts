@@ -59,6 +59,7 @@ import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
+import { FeedComponent } from './components/feed/feed.component';
 
 @NgModule({
     declarations: [
@@ -91,6 +92,7 @@ import { JoinPrivateGameComponent } from './components/join-private-game/join-pr
         DrawingSuggestionsComponent,
         TutorialComponent,
         JoinPrivateGameComponent,
+        FeedComponent,
     ],
     imports: [
         BrowserModule,
