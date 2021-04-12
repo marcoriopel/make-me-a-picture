@@ -129,6 +129,10 @@ export class GameService {
       this.router.navigate(['/game/classic']);
     })
 
+    this.socketService.bind('eraserStrokes', (data: any) => {
+      this.drawingService.strokes = Array.from(data.eraserStrokes);
+    })
+
     this.socketService.bind('score', (data: any) => {
       this.score = data.score;
     })
@@ -184,6 +188,7 @@ export class GameService {
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
+      this.drawingService.strokes = [];
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
       this.updateGuessingStatus();
@@ -205,7 +210,6 @@ export class GameService {
       this.socketService.unbind('guessCallBack');
       this.socketService.unbind('guessesLeft');
       this.socketService.unbind('score');
-
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
@@ -259,6 +263,10 @@ export class GameService {
       this.router.navigate(['/game/sprint']);
     });
 
+    this.socketService.bind('eraserStrokes', (data: any) => {
+      this.drawingService.strokes = Array.from(data.eraserStrokes);
+    })
+
     this.socketService.bind('score', (data: any) => {
       this.score[0] = data.score;
     })
@@ -280,6 +288,7 @@ export class GameService {
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
+      this.drawingService.strokes = [];
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
     })

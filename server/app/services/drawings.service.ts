@@ -23,11 +23,12 @@ export class DrawingsService {
                 "difficulty": req.body.difficulty,
                 "hints": req.body.hints,
                 "drawingVotes": 0,
-                "strokes": req.body.strokes,
+                "eraserStrokes": req.body.eraserStrokes,
+                "pencilStrokes": req.body.pencilStrokes,
                 "drawingName": req.body.drawingName
             };
 
-            if (!req.body.imageUrl || !drawing.strokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
+            if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
 
             await this.drawingsModel.addDrawing(user.username, drawing);
