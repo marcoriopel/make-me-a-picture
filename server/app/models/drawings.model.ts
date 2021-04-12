@@ -20,7 +20,7 @@ export class DrawingsModel {
 
     async addDrawing(username: string, drawing: Drawing) {
         try {
-            await this.databaseModel.client.db("database").collection("drawings").insertOne({ 'drawingId': drawing.drawingId, 'username': username, "strokes": drawing.strokes, "drawingVotes": drawing.drawingVotes, "drawingName": drawing.drawingName, "difficulty": drawing.difficulty, "hints": drawing.hints });
+            await this.databaseModel.client.db("database").collection("drawings").insertOne({ 'drawingId': drawing.drawingId, 'username': username, "eraserStrokes": drawing.eraserStrokes, "pencilStrokes": drawing.pencilStrokes, "drawingVotes": drawing.drawingVotes, "drawingName": drawing.drawingName, "difficulty": drawing.difficulty, "hints": drawing.hints });
         } catch (e) {
             console.error(e);
             throw e;
@@ -82,20 +82,6 @@ export class DrawingsModel {
             throw e;
         }
 
-    }
-
-    async getImage(imageId: string) {
-        var params = { Bucket: "drawingimages", Key: imageId };
-        await this.s3.getObject(params, (err, data) => {
-            if (err) {
-                console.log("Error", err);
-            }
-            if (data) {
-                console.log("Success in retrieval");
-                return data.Body;
-            }
-
-        });
     }
 
     async getDrawing(drawingId: string) {

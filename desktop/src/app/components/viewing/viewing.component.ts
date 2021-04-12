@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MINIMUM_CANVAS_HEIGHT, MINIMUM_CANVAS_WIDTH } from '@app/ressources/global-variables/global-variables';
-import { Drawing } from '@app/classes/drawing';
+import { Drawing, Stroke } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
 import { Difficulty } from '@app/classes/game';
 @Component({
@@ -33,21 +33,43 @@ export class ViewingComponent implements AfterViewInit {
 
     this.drawingSpeed = this.calculateDrawingSpeed();
 
-    for(let i = 0; i < this.drawing.strokes.length; i++){
-      this.baseCtx.lineWidth = this.drawing.strokes[i].lineWidth;
-      this.baseCtx.strokeStyle = this.drawing.strokes[i].lineColor;
-      await this.drawStroke(this.drawing.strokes[i].path);
+    let strokes: Stroke[] = Array.from(this.drawing.eraserStrokes);
+
+    for(let i = 0; i < this.drawing.pencilStrokes.length; i++){
+      let stroke: Stroke = this.drawing.pencilStrokes[i];
+      stroke = {
+        lineColor: stroke.lineColor,
+        lineWidth: stroke.lineWidth,
+        strokeNumber: stroke.strokeNumber,
+        path: [],
+        isEraser: stroke.isEraser,
+      }
+      strokes.push(stroke);
+      strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
+      for(let point of this.drawing.pencilStrokes[i].path){
+        stroke.path.push(point);
+        this.drawStrokes(strokes);
+        await this.delay();
+      }
     }
+    
     this.isPlayButtonAvailable = true;
   }
 
-  async drawStroke(path: Vec2[]) {
+  drawStrokes(strokes: Stroke[]){
+    for(let i = 0; i < strokes.length; i++){
+      this.baseCtx.lineWidth = strokes[i].lineWidth;
+      this.baseCtx.strokeStyle = strokes[i].lineColor;
+      this.drawStroke(strokes[i].path);
+    }
+  }
+
+  drawStroke(path: Vec2[]) {
     for(let i = 0; i < path.length - 1; i++){
       this.baseCtx.beginPath();
       this.baseCtx.lineTo(path[i].x, path[i].y);
       this.baseCtx.lineTo(path[i + 1].x, path[i + 1].y);
       this.baseCtx.stroke();
-      await this.delay();
     }
   }
 
@@ -72,12 +94,17 @@ export class ViewingComponent implements AfterViewInit {
   }  
 
   private calculatePointsInDrawing(): number {
-      let pointsNumber = 0;
-      for(let stroke of this.drawing.strokes){
-          for(let {} of stroke.path){
-              ++pointsNumber;
-          }
+    let pointsNumber = 0;
+    for(let stroke of this.drawing.eraserStrokes){
+        for(let {} of stroke.path){
+            ++pointsNumber;
+        }
+    }
+    for(let stroke of this.drawing.pencilStrokes){
+      for(let {} of stroke.path){
+          ++pointsNumber;
       }
-      return pointsNumber;
+    }
+    return pointsNumber;
   } 
 }

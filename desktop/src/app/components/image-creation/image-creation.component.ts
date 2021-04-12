@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,6 +8,8 @@ import { Drawing } from '@app/classes/drawing';
 import { environment } from 'src/environments/environment';
 import { Difficulty } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PencilService } from '@app/services/tools/pencil.service';
+import { ToolsComponent } from '../tools/tools.component';
 
 @Component({
   selector: 'app-image-creation',
@@ -15,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./image-creation.component.scss']
 })
 export class ImageCreationComponent implements OnInit {
+  @ViewChild('toolsComponent', { static: false }) toolsComponent: ToolsComponent;
   imageCreationForm: FormGroup;
   hintForm: FormGroup;
   difficulty = ['Facile', 'Normale', 'Difficile'];
@@ -28,7 +31,7 @@ export class ImageCreationComponent implements OnInit {
     text: "Entre 1 et 30 caractères",
   };
 
-  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private pencilService: PencilService) {
     this.drawingService.strokeStack = [];
     this.drawingService.redoStack = []
   }
@@ -54,11 +57,13 @@ export class ImageCreationComponent implements OnInit {
   }
 
   async processForm() {
+    const strokes = this.pencilService.formatDrawing();
     const drawing: any = {
+      eraserStrokes: strokes.eraserStrokes,
+      pencilStrokes: strokes.pencilStrokes,
       drawingName: this.imageCreationForm.value.drawingName,
-      difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
-      strokes: this.drawingService.strokeStack,
       hints: this.hints,
+      difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
       imageUrl: this.drawingService.canvas.toDataURL()
     }
     this.sendDrawing(drawing).subscribe(
@@ -67,7 +72,8 @@ export class ImageCreationComponent implements OnInit {
           duration: 2000,
         });
         this.drawingService.strokeStack = [];
-        this.drawingService.redoStack = []
+        this.drawingService.redoStack = [];
+        this.pencilService.strokeNumber = 0;
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.hintForm.reset();
         this.imageCreationForm.reset();
@@ -97,10 +103,14 @@ export class ImageCreationComponent implements OnInit {
   }
 
   openPreview(): void {
+
+    const strokes = this.pencilService.formatDrawing();
+
     const drawing: Drawing = {
       drawingName: this.imageCreationForm.value.drawingName,
       difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
-      strokes: this.drawingService.strokeStack,
+      eraserStrokes: strokes.eraserStrokes,
+      pencilStrokes: strokes.pencilStrokes,
       hints: this.hints,
     }
 
