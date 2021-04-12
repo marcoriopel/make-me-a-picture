@@ -84,20 +84,6 @@ export class DrawingsModel {
 
     }
 
-    async getImage(imageId: string) {
-        var params = { Bucket: "drawingimages", Key: imageId };
-        await this.s3.getObject(params, (err, data) => {
-            if (err) {
-                console.log("Error", err);
-            }
-            if (data) {
-                console.log("Success in retrieval");
-                return data.Body;
-            }
-
-        });
-    }
-
     async getDrawing(drawingId: string) {
         try {
             return await this.databaseModel.client.db("database").collection("drawings").findOne({ 'drawingId': drawingId });

@@ -90,10 +90,6 @@ export class DrawingsService {
         }
     }
 
-    async getGameVirtualPlayerImage(id: string): Promise<any> {
-        return await this.drawingsModel.getImage(id);
-    }
-
     async uploadImage(image: FeedImage): Promise<any> {
         const id = uuid();
         try {
