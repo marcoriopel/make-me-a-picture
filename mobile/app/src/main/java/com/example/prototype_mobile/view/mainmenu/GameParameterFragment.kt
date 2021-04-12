@@ -27,6 +27,7 @@ class GameParameterFragment : Fragment() {
     private val mainMenuViewModel: MainMenuViewModel by activityViewModels()
 
     private var isPrivate = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -82,10 +83,12 @@ class GameParameterFragment : Fragment() {
             binding.incognito.isActivated = ! binding.incognito.isActivated
             if(binding.incognito.isActivated) {
                 binding.passwordPrivateGame.visibility = View.VISIBLE
+                mainMenuViewModel._isPrivate.value = true
                 isPrivate = true
             } else {
                 binding.passwordPrivateGame.visibility = View.INVISIBLE
                 isPrivate = false
+                mainMenuViewModel._isPrivate.value = false
             }
 
             mainMenuViewModel.setIncognitoMode(binding.incognito.isActivated)
@@ -117,7 +120,6 @@ class GameParameterFragment : Fragment() {
 
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
-                if(isPrivate)
                 mainMenuViewModel.createGame()
 
             }
@@ -141,20 +143,30 @@ class GameParameterFragment : Fragment() {
         binding.StartGame.isActivated =false
         when(type)
         {
+
             SelectedButton.SEARCH -> {
                 //close popUp
             }
             SelectedButton.CLASSIC -> {
                 binding.GameCreation.text = "Création d'une partie classique"
                 binding.gameLogo.setImageResource(R.drawable.icon_classic)
+                if(isPrivate) {
+                    println("Private ")
+                }
             }
             SelectedButton.SPRINT -> {
                 binding.GameCreation.text = "Création d'une partie sprint solo"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
+                if(isPrivate) {
+                    println("Private ")
+                }
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
+                if(isPrivate) {
+                    println("Private ")
+                }
             }
             else -> throw(Exception("Unknown state exception"))
         }

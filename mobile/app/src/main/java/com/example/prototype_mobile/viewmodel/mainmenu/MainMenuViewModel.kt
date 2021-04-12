@@ -22,7 +22,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     val creationGameButtonType: LiveData<SelectedButton> = _creationGameButtonType
 
     private val _gameName = MutableLiveData<String>()
-    val _incognitoModeActivated = MutableLiveData<Boolean>()
+    val _isPrivate = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
@@ -40,6 +40,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         liveDataMerger= fetchData()
         lobbyRepository = LobbyRepository.getInstance()!!
 
+        _isPrivate.value = false
         lobbyRepository.lobbyJoined.observeForever(Observer {
             _lobbyJoined.value = it ?: return@Observer
         })
@@ -58,7 +59,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
 
     fun setIncognitoMode(mode:Boolean) {
-        _incognitoModeActivated.value = mode
+        _isPrivate.value = mode
     }
 
     fun setGameDifficulty(difficulty: GameDifficulty) {
@@ -105,10 +106,11 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                 }
                 else -> println("Somethings wrong with game data")
             }
-            val result: Result<Game> = mainMenuRepository.createGame(gameData)
+            val result: Result<Game> = mainMenuRepository.createGame(gameData, _isPrivate.value!! )
 
             if (result is Result.Success) {
                 lobbyRepository.listenLobby(result.data.gameID)
+                println("Join lobby in create game function " + _isPrivate.value)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {

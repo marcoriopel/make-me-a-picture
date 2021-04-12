@@ -14,17 +14,25 @@ class MainMenuRepository {
 
 
 
-    suspend fun createGame(game: CreateGame): Result<Game> {
+    suspend fun createGame(game: CreateGame, isPrivate:Boolean): Result<Game> {
         val mapCreateGame = HashMap<String, String>()
         mapCreateGame["gameType"] = game.gameType!!.type.toString()
         mapCreateGame["gameName"] = game.gameName!!.toString()
         mapCreateGame["difficulty"] = game.gameDifficulty!!.difficulty.toString()
 
         println(mapCreateGame)
-        val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create/public", mapCreateGame,true)
-        val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
-
-        return result
+        when(isPrivate){
+            true -> {
+                val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create/private", mapCreateGame,true)
+                val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
+                return result
+            }
+            false -> {
+                val reponse = HttpRequestDrawGuess.httpRequestPost("/api/games/create/public", mapCreateGame,true)
+                val result:Result<Game> = analyseCreateGameAwnser(reponse, game)
+                return result
+            }
+        }
     }
 
     fun analyseCreateGameAwnser(response: okhttp3.Response, game: CreateGame):Result<Game> {
