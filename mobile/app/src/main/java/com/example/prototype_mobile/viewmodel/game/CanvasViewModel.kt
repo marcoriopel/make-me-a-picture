@@ -143,9 +143,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
         currentX = motionTouchEventX
         currentY = motionTouchEventY
-
-        // Call the onDraw() method to update the view
-        //_newCurPath.postValue(curPath)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -175,9 +172,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private fun touchUp() {
         // Undo Redo Feature
         redoStack = Stack<Pair<Int,PaintedPath>>()
-
-        // Call the onDraw() method to update the view
-        //_newCurPath.postValue(curPath)
     }
     
     // Grid attribute

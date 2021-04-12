@@ -76,7 +76,6 @@ class CanvasRepository {
 
             val eventUp = DrawingEvent(EVENT_TOUCH_UP, eraseStroke.path[eraseStroke.path.size-1], gameRepo.gameId.toString())
             eraserStrokesList.add(eventUp)
-            Log.d("number of drawing event added", eraserStrokesList.size.toString())
         }
     }
 
