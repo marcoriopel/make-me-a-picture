@@ -128,8 +128,8 @@ class GameParameterFragment : Fragment() {
     }
 
     fun updateFragmentView(type: SelectedButton) {
-        mainMenuViewModel.updateData(GameDifficulty.NONE, "")
-        binding.StartGame.isActivated =false
+        mainMenuViewModel.setGameName("")
+        mainMenuViewModel.setGameDifficulty(GameDifficulty.NONE)
         when(type)
         {
             SelectedButton.SEARCH -> {
