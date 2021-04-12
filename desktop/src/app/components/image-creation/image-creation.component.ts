@@ -57,21 +57,14 @@ export class ImageCreationComponent implements OnInit {
   }
 
   async processForm() {
-<<<<<<< HEAD
     const strokes = this.pencilService.formatDrawing();
-    const drawing: Drawing = {
+    const drawing: any = {
       eraserStrokes: strokes.eraserStrokes,
       pencilStrokes: strokes.pencilStrokes,
-=======
-    const drawing: any = {
->>>>>>> dev
       drawingName: this.imageCreationForm.value.drawingName,
       hints: this.hints,
-<<<<<<< HEAD
       difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
-=======
       imageUrl: this.drawingService.canvas.toDataURL()
->>>>>>> dev
     }
     this.sendDrawing(drawing).subscribe(
       res => {
