@@ -34,8 +34,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     var drawingName: LiveData<String?> = _drawingName
 
     // Undo-Redo
-    val pathStack = Stack<PaintedPath>()
-    private var redoStack = Stack<PaintedPath>()
+    val pathStack = Stack<Pair<Int,PaintedPath>>()
+    private var redoStack = Stack<Pair<Int,PaintedPath>>()
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
@@ -81,7 +81,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
                 }
             }
         }
@@ -96,10 +96,10 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             EVENT_TOUCH_DOWN -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
-                toolRepo.setStrokeWidth(touchDown.lineWidth.toFloat())
+                toolRepo.setStrokeWidth((touchDown.lineWidth.toFloat() * 1.5).toFloat())
                 motionTouchEventX = (touchDown.coords.x.toFloat() * 1.5).toFloat()
                 motionTouchEventY = (touchDown.coords.y.toFloat() * 1.5).toFloat()
-                touchStart()
+                touchStart(touchDown.strokeNumber)
             }
             EVENT_TOUCH_MOVE -> {
                 val touchMove: Vec2 = drawingEvent.event as Vec2
@@ -120,6 +120,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 redo()
             }
             EVENT_CLEAR ->{
+                Log.d("clear", "pathStack")
                 pathStack.clear()
                 redoStack.clear()
                 curPath.reset()
@@ -132,17 +133,19 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Handle user event touch down and send data to
      *  the server in live
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    private fun touchStart() {
-        curPath.reset()
+    private fun touchStart(strokeNumber: Int) {
+        Log.d("stroke received", strokeNumber.toString())
+        curPath = Path()
+        pathStack.push(Pair(strokeNumber, PaintedPath(curPath, toolRepo!!.getPaintCopy())))
+        pathStack.sortBy { it.first }
         curPath.moveTo(motionTouchEventX, motionTouchEventY)
         // Add dot for touch feedback
         curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
-
         currentX = motionTouchEventX
         currentY = motionTouchEventY
 
         // Call the onDraw() method to update the view
-        _newCurPath.postValue(curPath)
+        //_newCurPath.postValue(curPath)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -171,14 +174,10 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun touchUp() {
         // Undo Redo Feature
-        redoStack = Stack<PaintedPath>()
-        pathStack.push(PaintedPath(curPath, toolRepo!!.getPaintCopy()))
-
-        // Rewind the current path for the next touch
-        curPath = Path()
+        redoStack = Stack<Pair<Int,PaintedPath>>()
 
         // Call the onDraw() method to update the view
-        _newCurPath.postValue(curPath)
+        //_newCurPath.postValue(curPath)
     }
     
     // Grid attribute
@@ -249,6 +248,10 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
        if (canStartNewThread) {
            canStartNewThread = false
            viewModelScope.launch(Dispatchers.IO) {
+               while (!canvasRepository.eraserStrokesList.isEmpty()) {
+                   val eraser = canvasRepository.eraserStrokesList.poll()
+                   onDrawingEvent(eraser)
+               }
                while (!canvasRepository.drawingEventList.isEmpty()) {
                    val json = canvasRepository.drawingEventList.poll()
                    if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
@@ -259,7 +262,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                            EVENT_TOUCH_DOWN -> {
                                val Jevent = JSONObject(objectJson.getString("event"))
                                val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
                                DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
                            }
                            EVENT_TOUCH_MOVE -> {

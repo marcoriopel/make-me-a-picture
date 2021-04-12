@@ -39,11 +39,11 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
             return
         }
         // Draw the drawing so far
-        for (paintedPath in canvasViewModel.pathStack)
-            canvas.drawPath(paintedPath.path, paintedPath.paint)
-
+        for (paintedPath in canvasViewModel.pathStack) {
+            canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
+        }
         // Draw any current squiggle
-        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
+       // canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
 
 
     }
