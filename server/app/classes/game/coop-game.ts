@@ -19,9 +19,12 @@ export class CoopGame extends Game {
     private score: number = 0;
     private guessesLeft: number = 0;
     private pastVirtualDrawings: string[] = [];
+    private pastVirtualDrawingsId: string[] = [];
     private gameTimerCount: number = 0;
+    private transitionInterval: NodeJS.Timeout;
     private gameTimerInterval: NodeJS.Timeout;
     private drawingTimerCount: number = 0;
+    private transitionTimerCount: number = 5;
     private drawingTimerInterval: NodeJS.Timeout;
     private currentDrawingName: string;
     private startDate: number;
@@ -51,11 +54,26 @@ export class CoopGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
-        this.pastVirtualDrawings.push(this.currentDrawingName);
-        this.startGameTimer();
-        this.startDrawingTimer();
-        this.vPlayer.startDrawing();
+        const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+        this.currentDrawingName = drawing.drawingName;
+        this.pastVirtualDrawingsId.push(drawing.drawingId);
+        this.pastVirtualDrawings.push(drawing.drawingName);
+        this.startGameTransition();
+    }
+
+    startGameTransition() {
+        this.transitionInterval = setInterval(() => {
+            this.socketService.getSocket().to(this.id).emit('transitionTimer', { "timer": this.transitionTimerCount });
+            if (!this.transitionTimerCount) {
+                this.startGameTimer();
+                this.startDrawingTimer();
+                this.vPlayer.startDrawing();
+            }
+            else {
+                --this.transitionTimerCount;
+            }
+        }, 1000);
+
     }
 
     guessDrawing(username: string, guess: string): void {
@@ -90,8 +108,9 @@ export class CoopGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
+        let drawing;
         try {
-            this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
         } catch (err) {
             if (err.message == "Max drawings") {
                 this.socketService.getSocket().to(this.id).emit('maxScore', {});
@@ -99,7 +118,9 @@ export class CoopGame extends Game {
                 return;
             }
         }
-        this.pastVirtualDrawings.push(this.currentDrawingName);
+        this.currentDrawingName = drawing.drawingName;
+        this.pastVirtualDrawingsId.push(drawing.drawingId);
+        this.pastVirtualDrawings.push(drawing.drawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         await this.delay();
         this.vPlayer.startDrawing();
@@ -115,7 +136,7 @@ export class CoopGame extends Game {
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
         this.vPlayer.sayEndCoopGame(this.score);
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
         this.chatManagerService.deleteChat(this.id);
@@ -159,6 +180,7 @@ export class CoopGame extends Game {
     }
 
     startGameTimer() {
+        clearInterval(this.transitionInterval);
         this.gameTimerCount = 120;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "timer": this.gameTimerCount });
@@ -195,7 +217,7 @@ export class CoopGame extends Game {
     }
 
 
-    disconnectGame(username: string){
+    disconnectGame(username: string) {
         const message: string = username + " s'est déconnecté";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": message, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
 

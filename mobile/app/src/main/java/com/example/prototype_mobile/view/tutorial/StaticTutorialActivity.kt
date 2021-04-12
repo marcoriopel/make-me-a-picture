@@ -81,8 +81,8 @@ class StaticTutorialActivity : AppCompatActivity() {
     fun setNewPageContent() {
         var info = contentMap[tutorialPageIndex]
         binding.image.setImageResource(info!!.image)
-        binding.description.text = getString(resources.getIdentifier(info!!.description, "string", getPackageName()));
-        binding.title.text = getString(resources.getIdentifier(info!!.title, "string", getPackageName()));
+        binding.description.text = getString(resources.getIdentifier(info.description, "string", packageName))
+        binding.title.text = getString(resources.getIdentifier(info.title, "string", packageName))
         if(tutorialPageIndex == contentMap.size) {
             val nextText = findViewById<TextView>(R.id.next_text)
             nextText.text = "Finish"

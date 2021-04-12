@@ -119,7 +119,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             } else if(!it){
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is GuessFragment || fragment is HintFragment) {
-                        supportFragmentManager.beginTransaction().remove(fragment).commit();
+                        supportFragmentManager.beginTransaction().remove(fragment).commit()
                     }
                 }
             }

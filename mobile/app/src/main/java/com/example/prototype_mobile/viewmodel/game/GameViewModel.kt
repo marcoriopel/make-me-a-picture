@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class GameViewModel():ViewModel() {
+class GameViewModel :ViewModel() {
 
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
