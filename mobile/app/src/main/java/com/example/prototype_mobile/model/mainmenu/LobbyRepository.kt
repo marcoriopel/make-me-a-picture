@@ -52,6 +52,7 @@ class LobbyRepository {
     var gameStarted = false
 
     var onTeamsUpdate = Emitter.Listener {
+        println("On teams Update called")
         val gson: Gson = Gson()
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
@@ -104,7 +105,22 @@ class LobbyRepository {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
-        if(game.lobbyInvited != null) {
+        println("We are in public section of the request")
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
+        val result = analyseJoinLobbyAnswer(response, game)
+        if (result is Result.Success) {
+            _lobbyJoined.postValue(game)
+            socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
+        }
+        return result
+
+    }
+
+    suspend fun joinPrivate(game: Game): Result<Game> {
+        val map = HashMap<String, String>()
+        map["lobbyId"] = game.gameID
+        map["socketId"] = socket.id()
+        if (game.lobbyInvited != null) {
             map["lobbyInviteId"] = game.lobbyInvited
             println("We are in private section of the request" + game)
             val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
@@ -115,19 +131,17 @@ class LobbyRepository {
             }
             return result
         } else {
-            println("We are in public section of the request")
-            val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
+            val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
             val result = analyseJoinLobbyAnswer(response, game)
-            if (result is Result.Success) {
-                _lobbyJoined.postValue(game)
-                socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
-            }
             return result
         }
+
+
     }
 
 
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
+        println("analyseJoinLobbyAnswer: "+ response)
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {

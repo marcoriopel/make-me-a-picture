@@ -25,6 +25,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     val _isPrivate = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
+    private val _gameInviteID = MutableLiveData<String?>()
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
     private val _lobbyJoined = MutableLiveData<Game>()
@@ -107,10 +108,12 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                 else -> println("Somethings wrong with game data")
             }
             val result: Result<Game> = mainMenuRepository.createGame(gameData, _isPrivate.value!! )
-
             if (result is Result.Success) {
-                if(!_isPrivate.value!!)
-                    lobbyRepository.listenLobby(result.data.gameID)
+                println(result.data.lobbyInvited)
+                if(result.data.lobbyInvited != null) {
+                    _gameInviteID.value = result.data.lobbyInvited
+                }
+                lobbyRepository.listenLobby(result.data.gameID)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {

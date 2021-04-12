@@ -64,6 +64,8 @@ class GameListRepository {
         if (!filters[GameFilter.HARD.filter] && game.difficulty == GameDifficulty.HARD) {
             return false
         }
+        if(game.lobbyInvited != null)
+            return false
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }
