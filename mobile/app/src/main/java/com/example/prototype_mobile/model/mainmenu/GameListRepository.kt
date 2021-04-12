@@ -13,9 +13,25 @@ import org.json.JSONObject
 
 class GameListRepository {
 
+
+    companion object {
+        private var instance: GameListRepository? = null
+
+        fun getInstance(): GameListRepository? {
+            if (instance == null) {
+                synchronized(GameListRepository::class.java) {
+                    if (instance == null) {
+                        instance = GameListRepository()
+                    }
+                }
+            }
+            return instance
+        }
+    }
     var lobbyRepository = LobbyRepository.getInstance()!!
     val filters = arrayOf(true, true, true, true, true)
     var filterGameName: String = ""
+    var allGames: MutableList<Game> = mutableListOf()
 
     suspend fun getGameList(): Result<MutableList<Game>> {
         val response = HttpRequestDrawGuess.httpRequestGet("/api/games/list")
@@ -24,6 +40,7 @@ class GameListRepository {
 
     fun analyseGameListAnswer(response: Response): Result<MutableList<Game>> {
         val jsonData: String = response.body()!!.string()
+        allGames  = mutableListOf()
         if(response.code() == ResponseCode.OK.code) {
             var gameList: MutableList<Game> = mutableListOf()
             val jObject = JSONObject(jsonData)
@@ -37,8 +54,12 @@ class GameListRepository {
                     GameType.values()[gameJson.getInt("gameType")],
                         gameJson.getString("lobbyInviteId")
                 )
-                if(game.lobbyInvited == null)
+                if(game.lobbyInvited == null){
                     gameList.add(game)
+                }
+                allGames.add(game)
+
+
             }
             val filteredGameList = gameList.filter{ filterGame(it) } as MutableList<Game>
             return Result.Success(filteredGameList)
@@ -67,9 +88,16 @@ class GameListRepository {
             return false
         }
         if(game.lobbyInvited != null)
-            return true
+            return false
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
+    }
+    fun findGame(id: String): Result<Game> {
+        for (game in allGames) {
+            if(game.gameID.equals(id))
+                return Result.Success(game)
+        }
+        return Result.Error(1)
     }
 
     fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {

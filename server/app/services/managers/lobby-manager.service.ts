@@ -92,7 +92,6 @@ export class LobbyManagerService {
             if (lobby.getId().substr(0, 5) == req.body.lobbyInviteId) {
                 next(lobby.getId());
                 lobbyFound = true;
-
                 return;
             }
         })

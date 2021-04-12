@@ -122,9 +122,6 @@ class LobbyRepository {
             val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
             println(response)
             val result = analyseJoinPrivateLobbyAnswer(response, id)
-            if (result is Result.Success) {
-                socket.emit("joinLobby", gson.toJson(LobbyId(result.data.lobbyId)))
-            }
             return result
     }
 

@@ -11,6 +11,7 @@ import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
+import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import java.lang.Exception
 
 //This class is a sharedViewModel that will allow us to send information to the server
@@ -127,8 +128,18 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
 
      fun joinPrivateGame(code: String) {
+
          viewModelScope.launch {
-             lobbyRepository.joinPrivate(code)
+             var result = lobbyRepository.joinPrivate(code)
+
+             if(result is Result.Success) {
+                 val game = GameListRepository.getInstance()!!.findGame(result.data.lobbyId)
+                 if(game is Result.Success){
+                     lobbyRepository.joinLobby(game.data)
+                 }
+
+             }
+
          }
     }
 
