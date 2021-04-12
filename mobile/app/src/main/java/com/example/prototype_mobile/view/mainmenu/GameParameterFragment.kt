@@ -82,11 +82,9 @@ class GameParameterFragment : Fragment() {
         binding.incognito.setOnClickListener{
             binding.incognito.isActivated = ! binding.incognito.isActivated
             if(binding.incognito.isActivated) {
-                binding.passwordPrivateGame.visibility = View.VISIBLE
                 mainMenuViewModel._isPrivate.value = true
                 isPrivate = true
             } else {
-                binding.passwordPrivateGame.visibility = View.INVISIBLE
                 isPrivate = false
                 mainMenuViewModel._isPrivate.value = false
             }
@@ -94,10 +92,7 @@ class GameParameterFragment : Fragment() {
             mainMenuViewModel.setIncognitoMode(binding.incognito.isActivated)
         }
 
-        binding.passwordPrivateGame.afterTextChanged {
-            updateIncognitoPassword(binding.passwordPrivateGame.text.toString())
-            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
-        }
+
         updateFragmentView(mainMenuViewModel.creationGameButtonType.value!!)
 
         // Set parameter to game
@@ -157,9 +152,9 @@ class GameParameterFragment : Fragment() {
             SelectedButton.SPRINT -> {
                 binding.GameCreation.text = "Création d'une partie sprint solo"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
-                if(isPrivate) {
-                    println("Private ")
-                }
+                binding.incognito.visibility = View.INVISIBLE
+                binding.gameCreationPrivate.visibility = View.INVISIBLE
+
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"

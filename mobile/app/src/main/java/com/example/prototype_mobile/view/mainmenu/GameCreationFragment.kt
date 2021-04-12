@@ -110,10 +110,11 @@ class GameCreationFragment : Fragment() {
             val intent = Intent(activity, StaticTutorialActivity::class.java)
             startActivity(intent)
         }
+        binding.joinGame.setOnClickListener {
 
-        //Observers in fragment
+            sharedViewModel.joinPrivateGame(binding.inviteIdCode.text.toString())
+        }
 
-        //sharedViewModel.creationGameButtonType.observe(this@)
 
 
 

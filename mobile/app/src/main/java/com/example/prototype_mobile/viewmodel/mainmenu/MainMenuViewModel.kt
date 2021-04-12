@@ -126,6 +126,12 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         }
     }
 
+     fun joinPrivateGame(code: String) {
+         viewModelScope.launch {
+             lobbyRepository.joinPrivate(code)
+         }
+    }
+
     fun logout() {
         viewModelScope.launch {
             val result: Result<Boolean> = try {
