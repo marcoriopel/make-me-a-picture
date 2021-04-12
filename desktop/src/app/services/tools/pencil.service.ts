@@ -49,7 +49,10 @@ export class PencilService extends Tool {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.pathData.push(this.mouseDownCoord);
             this.updatePencilData();
-    
+            if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+                this.strokeNumber++;
+            }
+
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
                 lineWidth: this.pencilData.lineWidth,
@@ -123,29 +126,31 @@ export class PencilService extends Tool {
     }
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
-        for(let i = 0; i < this.drawingService.strokes.length; i++){
-            ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
-            ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
+
+        if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+            ctx.lineWidth = pencil.lineWidth;
+            ctx.strokeStyle = pencil.lineColor;
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
             ctx.beginPath();
-            for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
-                ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
+    
+            for(let i = 0; i < pencil.path.length - 1; i++){
+                ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
             }
             ctx.stroke();
+        } else {
+            for(let i = 0; i < this.drawingService.strokes.length; i++){
+                ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
+                ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
+                    ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
+                }
+                ctx.stroke();
+            }
         }
-
-
-        // ctx.lineWidth = pencil.lineWidth;
-        // ctx.strokeStyle = pencil.lineColor;
-        // ctx.lineJoin = 'round';
-        // ctx.lineCap = 'round';
-        // ctx.beginPath();
-
-        // for(let i = 0; i < pencil.path.length - 1; i++){
-        //     ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
-        // }
-        // ctx.stroke();
     }
 
     changeWidth(newWidth: number): void {
