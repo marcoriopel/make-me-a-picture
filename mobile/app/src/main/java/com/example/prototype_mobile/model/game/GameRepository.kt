@@ -128,14 +128,11 @@ class GameRepository {
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
             _isPlayerDrawing.postValue(false)
             _drawingName.postValue(null)
-        } else {
-            EndGameRepository.getInstance()!!.initializeData()
         }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
 
     private var onEndGameEvent = Emitter.Listener {
-        Log.e("V player drawing", it[0].toString())
         val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
         val endGameRepos = EndGameRepository.getInstance()!!
         for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
@@ -144,7 +141,6 @@ class GameRepository {
         }
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)
-
     }
 
     private var onGuessesLeft = Emitter.Listener {

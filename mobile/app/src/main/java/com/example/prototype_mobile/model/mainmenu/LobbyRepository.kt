@@ -10,6 +10,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.model.game.GameRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
@@ -58,6 +59,7 @@ class LobbyRepository {
     }
 
     var onStart = Emitter.Listener {
+        EndGameRepository.getInstance()!!.initializeData()
         gameStarted = true
         val gameRepo = GameRepository.getInstance()!!
         if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {
