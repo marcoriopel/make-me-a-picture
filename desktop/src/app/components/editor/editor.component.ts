@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Vec2 } from '@app/classes/vec2';
 import { DrawingComponent } from '@app/components/drawing/drawing.component';
 import {
@@ -38,7 +38,7 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('workSpace', { static: false }) workSpaceRef: ElementRef<HTMLDivElement>;
     @ViewChild('pencil', { static: false }) pencilRef: ElementRef<HTMLButtonElement>;
     @ViewChild('eraser', { static: false }) eraserRef: ElementRef<HTMLButtonElement>;
-
+    @Output() colorChange = new EventEmitter<any>();
     @Input() isInGame: boolean;
 
     lineWidthMin: number = MIN_LINE_WIDTH;
@@ -93,7 +93,7 @@ export class EditorComponent implements AfterViewInit {
     setColor(color: string){
         this.drawingService.color = color;
         this.pencilColor = color;
-        // this.setPencil();
+        this.colorChange.emit();
     }
 
     changeLineWidth(): void {

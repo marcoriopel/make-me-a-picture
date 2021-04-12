@@ -21,6 +21,7 @@ export class DrawingService {
     isToolInUse: Subject<boolean> = new Subject<boolean>();
     color: string;
     lineWidth: number;
+    strokes: Stroke[] = [];
     
     setGrid(): void {
         this.clearCanvas(this.gridCtx);
