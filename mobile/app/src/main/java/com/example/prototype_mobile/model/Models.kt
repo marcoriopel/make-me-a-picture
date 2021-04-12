@@ -80,7 +80,8 @@ data class StaticEndGameInfo(val title:String, val description: String, val type
 abstract class EndGameData() {
     abstract val image: String?
 }
-data class vDrawingData(val drawingName: String, override var image: String, val id: String): EndGameData()
+data class VDrawingData(val drawingName: String, override var image: String, val id: String): EndGameData()
 data class DrawingData(val drawingName: String, override var image: String?, val drawingEventList: LinkedList<String>, val hint: MutableList<String>): EndGameData()
 data class EndGameResult(val win: Boolean, override var image: String?): EndGameData()
+data class VPlayerDrawingEndGame(val virtualPlayerDrawings: List<String>, val virtualPlayerIds: List<String>)
 

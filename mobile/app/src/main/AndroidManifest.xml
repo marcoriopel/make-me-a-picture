@@ -19,7 +19,7 @@
             android:label="@string/title_activity_static_tutorial"
             android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
         <activity
-            android:name=".view.game.endgame.StaticEndGame"
+            android:name=".view.game.endgame.EndGameActivity"
             android:screenOrientation="landscape"
             android:label="StaticEndGame"
             android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>

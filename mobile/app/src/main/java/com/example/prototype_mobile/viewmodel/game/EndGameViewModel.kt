@@ -3,11 +3,13 @@ package com.example.prototype_mobile.viewmodel.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.DrawingData
 import com.example.prototype_mobile.EndGameData
 import com.example.prototype_mobile.StaticEndGameInfo
 import com.example.prototype_mobile.model.game.EndGameRepository
-import com.example.prototype_mobile.vDrawingData
+import com.example.prototype_mobile.VDrawingData
+import kotlinx.coroutines.launch
 
 class EndGameViewModel(): ViewModel() {
 
@@ -23,11 +25,15 @@ class EndGameViewModel(): ViewModel() {
     }
 
     fun upload(drawingData: DrawingData) {
-        endGameRepo.upload(drawingData)
+        viewModelScope.launch {
+            endGameRepo.upload(drawingData)
+        }
     }
 
-    fun vote(drawingId: String, upvote: Boolean) {
-        endGameRepo.vote(drawingId, upvote)
+    fun vote(isUpvote: Boolean, vDrawing: EndGameData) {
+        viewModelScope.launch {
+            endGameRepo.vote(isUpvote, vDrawing as VDrawingData)
+        }
     }
 
     fun addHint(hint: String) {
@@ -42,8 +48,8 @@ class EndGameViewModel(): ViewModel() {
         return endGameRepo.getDrawings()
     }
 
-    fun getVPlayerDrawing(): List<vDrawingData> {
-        return listOf()
+    fun getVPlayerDrawing(): List<VDrawingData> {
+        return endGameRepo.getVPlayerDrawings()
     }
 
     fun getGameResult(): StaticEndGameInfo {

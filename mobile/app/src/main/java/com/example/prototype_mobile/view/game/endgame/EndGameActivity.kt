@@ -17,17 +17,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.prototype_mobile.DrawingData
-import com.example.prototype_mobile.EndGameResult
-import com.example.prototype_mobile.R
-import com.example.prototype_mobile.StaticEndGameInfo
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
+import com.squareup.picasso.Picasso
 import nl.dionsegijn.konfetti.KonfettiView
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
+import java.lang.Exception
 
 class EndGameActivity: AppCompatActivity() {
 
@@ -78,18 +77,20 @@ class EndGameActivity: AppCompatActivity() {
         numberOfPage = 1
         contentMap[numberOfPage] = endGameViewModel.getGameResult()
 
+        // TEST
+        val data = VDrawingData("test", "https://drawingimages.s3.us-east-2.amazonaws.com/0fb3f245-cc29-4d6d-bf38-ee33038cce68.png", "0fb3f245-cc29-4d6d-bf38-ee33038cce68")
+        contentMap[++numberOfPage] = StaticEndGameInfo("Vote du dessing Singe","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, data)
+
+
         // Vote drawing from virtual player
         for (vDrawing in endGameViewModel.getVPlayerDrawing()) {
-            contentMap[numberOfPage++] = StaticEndGameInfo("Vote du dessin ${vDrawing.drawingName}","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, vDrawing)
+            contentMap[++numberOfPage] = StaticEndGameInfo("Vote du dessin ${vDrawing.drawingName}","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, vDrawing)
         }
-
-        contentMap[2] = StaticEndGameInfo("Vote du dessing Singe","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, null)
-        numberOfPage++
 
         // Upload
         for (drawing in endGameViewModel.getDrawings()) {
             val description = "Voulez vous envoyer votre dessin de ${drawing.drawingName} pour qu'il soit utilitsé dans le futur ?"
-            contentMap[numberOfPage++] = StaticEndGameInfo("Téléverser votre dessin", description, EndGamePageType.UPLOAD, drawing)
+            contentMap[++numberOfPage] = StaticEndGameInfo("Téléverser votre dessin", description, EndGamePageType.UPLOAD, drawing)
         }
 
         // Set progress bar
@@ -116,6 +117,22 @@ class EndGameActivity: AppCompatActivity() {
                 toast.show()
             }
         }
+        // Upvote
+        binding.buttonUpVote.setOnClickListener {
+            contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(true, it1) }
+            if(pageIndex == contentMap.size)
+                goToMenu()
+            else
+                nextPage()
+        }
+        // Downvote
+        binding.buttonDownVote.setOnClickListener {
+            contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(false, it1) }
+            if(pageIndex == contentMap.size)
+                goToMenu()
+            else
+                nextPage()
+        }
     }
 
     private fun addItemToRecyclerView(hints: MutableList<String>) {
@@ -140,12 +157,16 @@ class EndGameActivity: AppCompatActivity() {
             if(pageIndex < contentMap.size) {
                 nextPage()
             } else if(pageIndex == contentMap.size) {
-                val intent =  Intent(this@EndGameActivity, MainMenuActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                startActivity(intent)
-                this.finish()
+                goToMenu()
             }
         }
+    }
+
+    private fun goToMenu() {
+        val intent =  Intent(this@EndGameActivity, MainMenuActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        startActivity(intent)
+        this.finish()
     }
 
     private fun previousPage() {
@@ -160,20 +181,40 @@ class EndGameActivity: AppCompatActivity() {
         progressDot(pageIndex)
     }
 
+    private fun setImage(pageData: StaticEndGameInfo) {
+        val imgHolder = findViewById<ImageView>(R.id.image)
+        if (pageData.data?.image != null) {
+            when(pageData.type) {
+                EndGamePageType.UPLOAD -> {
+                    imgHolder.visibility = View.VISIBLE
+                    // Set image from Base64
+                    val imageBytes = Base64.decode(pageData.data.image, Base64.DEFAULT)
+                    val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    binding.image.setImageBitmap(decodedImage)
+                }
+                EndGamePageType.VOTE -> {
+                    try {
+                        Picasso.with(this).load(pageData.data.image).into(imgHolder);
+                        imgHolder.visibility = View.VISIBLE
+                    }
+                    catch (e: Exception) {
+                        Log.e("Virtual Player image", "Not found")
+                        imgHolder.visibility = View.INVISIBLE
+                    }
+                }
+                else -> { imgHolder.visibility = View.INVISIBLE }
+            }
+        } else { imgHolder.visibility = View.INVISIBLE }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun setPageContent() {
+
+        // Data
         val pageData = contentMap[pageIndex]!!
-        val imgHolder = findViewById<ImageView>(R.id.image)
-        Log.e("Image", pageData.data?.image.toString())
-        if (pageData.data?.image != null) {
-            imgHolder.visibility = View.VISIBLE
-            Log.e("Image", "Is visible")
-            val imageBytes = Base64.decode(pageData.data.image, Base64.DEFAULT)
-            val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-            binding.image.setImageBitmap(decodedImage)
-        } else {
-            imgHolder.visibility = View.INVISIBLE
-        }
+
+        // Content
+        setImage(pageData)
         binding.description.text = pageData.description
         binding.title.text = pageData.title
         if(pageIndex == contentMap.size) {
@@ -183,14 +224,16 @@ class EndGameActivity: AppCompatActivity() {
             val nextText = findViewById<TextView>(R.id.next_text)
             nextText.text = "Suivant"
         }
+
         // Hide back button
-        if(pageIndex == 1) {
-            val backButton = findViewById<LinearLayout>(R.id.back)
-            backButton.visibility = View.INVISIBLE
-        } else {
-            val backButton = findViewById<LinearLayout>(R.id.back)
-            backButton.visibility = View.VISIBLE
-        }
+//        if(pageIndex == 1) {
+        val backButton = findViewById<LinearLayout>(R.id.back)
+        backButton.visibility = View.INVISIBLE
+//        } else {
+//            val backButton = findViewById<LinearLayout>(R.id.back)
+//            backButton.visibility = View.VISIBLE
+//        }
+
         // Display the data according to the page type
         val upvoteButton = findViewById<Button>(R.id.buttonUpVote)
         val downvoteButton = findViewById<Button>(R.id.buttonDownVote)
@@ -241,7 +284,6 @@ class EndGameActivity: AppCompatActivity() {
 
     private fun burstKonfetti() {
         val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
-
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart)
         val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
         konfettiView.build()

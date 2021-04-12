@@ -1,7 +1,6 @@
 package com.example.prototype_mobile.model.game
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -11,9 +10,12 @@ import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.lang.reflect.Type
+
 
 const val DRAWING_NAME_EVENT = "drawingName"
 const val SCORE_EVENT = "score"
@@ -133,8 +135,16 @@ class GameRepository {
     }
 
     private var onEndGameEvent = Emitter.Listener {
+        Log.e("V player drawing", it[0].toString())
+        val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
+        val endGameRepos = EndGameRepository.getInstance()!!
+        for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
+            val index = vPlayersDrawing.virtualPlayerDrawings.indexOf(vDrawingName)
+            endGameRepos.addVPlayerDrawing(vDrawingName, vPlayersDrawing.virtualPlayerIds[index])
+        }
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)
+
     }
 
     private var onGuessesLeft = Emitter.Listener {
