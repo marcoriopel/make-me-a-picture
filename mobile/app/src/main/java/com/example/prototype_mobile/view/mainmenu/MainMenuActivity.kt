@@ -12,6 +12,7 @@ import androidx.core.view.MenuCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
 import com.example.prototype_mobile.util.Drawable

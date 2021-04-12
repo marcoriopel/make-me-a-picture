@@ -34,7 +34,7 @@ class GameListRepository {
                     gameJson.getString("id"),
                     gameJson.getString("gameName"),
                     GameDifficulty.values()[gameJson.getInt("difficulty")],
-                    GameType.values()[gameJson.getInt("gameType")]
+                    GameType.values()[gameJson.getInt("gameType")], null
                 )
                 gameList.add(game)
             }

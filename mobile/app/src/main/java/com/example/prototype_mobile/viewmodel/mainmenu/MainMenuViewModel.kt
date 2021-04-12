@@ -109,8 +109,8 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             val result: Result<Game> = mainMenuRepository.createGame(gameData, _isPrivate.value!! )
 
             if (result is Result.Success) {
-                lobbyRepository.listenLobby(result.data.gameID)
-                println("Join lobby in create game function " + _isPrivate.value)
+                if(!_isPrivate.value!!)
+                    lobbyRepository.listenLobby(result.data.gameID)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {
