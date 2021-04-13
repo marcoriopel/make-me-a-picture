@@ -42,8 +42,6 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
             canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
         }
 
-//        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
-
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
