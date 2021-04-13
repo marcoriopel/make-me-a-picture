@@ -38,8 +38,8 @@ class ToolRepository {
     var _alpha = 255
     
     private val paint = Paint().apply {
-        alpha = _alpha
         color = selectedColor
+        alpha = _alpha
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -84,7 +84,6 @@ class ToolRepository {
 
     fun setPen() {
         _selectedTool.value = Tool.PEN
-        setTransparence(_alpha)
         setColor(selectedColor)
         setStrokeWidth(strokeWidthPen)
     }
@@ -96,6 +95,7 @@ class ToolRepository {
     fun setColor(color: Int) {
         // We refer to color in getPaintCopy through selected copy..
         paint.color = color
+        paint.alpha = _alpha
         println(paint.color.toString() + "   " + paint.alpha.toString())
     }
 
@@ -103,11 +103,6 @@ class ToolRepository {
         // Ex: "#a8a8a8"
         paint.color = Color.parseColor(color)
         selectedColor = Color.parseColor(color)
-    }
-
-    fun setTransparence(alpha :Int) {
-        paint.alpha = alpha
-
     }
 
 }
