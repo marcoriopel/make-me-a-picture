@@ -35,7 +35,7 @@ class ToolRepository {
 
     // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
-    var alpha = 255
+    var _alpha = 255
     
     private val paint = Paint().apply {
         color = selectedColor
@@ -53,8 +53,11 @@ class ToolRepository {
         return Paint().apply {
             if(_selectedTool.value == Tool.ERASER)
                 color = Color.WHITE
-            else
+            else {
                 color = selectedColor
+                alpha = _alpha
+
+            }
 
             // Smooths out edges of what is drawn without affecting shape.
             isAntiAlias = true
@@ -91,7 +94,7 @@ class ToolRepository {
     fun setColor(color: Int) {
         // We refer to color in getPaintCopy through selected copy..
         paint.color = color
-        paint.alpha = alpha
+        paint.alpha = _alpha
         println(paint.color.toString() + "   " + paint.alpha.toString())
     }
 
