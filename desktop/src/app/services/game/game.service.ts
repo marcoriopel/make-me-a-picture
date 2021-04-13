@@ -223,6 +223,18 @@ export class GameService {
         }
         this.virtualPlayerDrawings.push(vdrawing);
       }
+      this.drawingService.strokeStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.redoStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.strokes = [];
+      this.virtualPlayerDrawings = [];
+      this.realPlayerDrawings = [];
+      this.drawingPlayer = this.username as string;
+      this.isInGame = false;
+      this.isGuessing = false;
+      this.isUserTeamGuessing = false;
+      this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
@@ -334,6 +346,7 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
