@@ -1,5 +1,22 @@
 #feed {
-    height: 800px;
+    height: 100%;
+    overflow-y: auto;
     width: 100%;
-    overflow-y: scroll;
+}
+
+#center-div {
+    height: 100%;
+}
+
+#title {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#name {
+    font-size: 20px;
+    margin-left: 10px;
 }
