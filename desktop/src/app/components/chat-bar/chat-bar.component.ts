@@ -18,8 +18,8 @@ export class ChatBarComponent implements OnInit {
     chatName: '',
   });
 
-  changeChat(name: string): void {
-    this.chatService.setCurrentChat(name);
+  changeChat(id: string): void {
+    this.chatService.setCurrentChat(id);
   }
 
   ngOnInit(): void {
