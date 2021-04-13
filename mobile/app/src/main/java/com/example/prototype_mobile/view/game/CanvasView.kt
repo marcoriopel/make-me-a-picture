@@ -42,7 +42,7 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
             canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
         }
 
-       // canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
+        canvas.drawPath(canvasViewModel.curPath, canvasViewModel.getPaint())
 
     }
 
