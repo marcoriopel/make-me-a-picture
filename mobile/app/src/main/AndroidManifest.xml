@@ -21,8 +21,8 @@
         <activity
             android:name=".view.game.endgame.EndGameActivity"
             android:screenOrientation="landscape"
-            android:label="StaticEndGame"
-            android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
+            android:windowSoftInputMode="adjustPan"
+            />
         <activity
             android:name=".view.game.GameActivity"
             android:screenOrientation="landscape"

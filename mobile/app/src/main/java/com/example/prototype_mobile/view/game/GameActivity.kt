@@ -41,6 +41,8 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.gamemenu, menu)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

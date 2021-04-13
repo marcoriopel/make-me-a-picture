@@ -8,6 +8,8 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -15,12 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.chat.ChatFragment
+import com.example.prototype_mobile.view.connection.login.LoginActivity
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
 import com.squareup.picasso.Picasso
@@ -40,18 +44,33 @@ class EndGameActivity: AppCompatActivity() {
     lateinit var binding: ActivityEndGameBinding
     private lateinit var endGameViewModel: EndGameViewModel
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.gamemenu, menu)
+        supportActionBar?.setLogo(R.mipmap.ic_launcher2)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_logout -> {
+            endGameViewModel.logout()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Creating view
-        binding = ActivityEndGameBinding.inflate(layoutInflater)
-        endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
         setContentView(R.layout.activity_end_game)
-        val view = binding.root
-        setContentView(view)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
         toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
         setSupportActionBar(toolbar)
+
+        binding = ActivityEndGameBinding.inflate(layoutInflater)
+        endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
+
         supportFragmentManager.beginTransaction()
                 .replace(R.id.containerChat, ChatFragment())
                 .commitNow()
@@ -65,10 +84,10 @@ class EndGameActivity: AppCompatActivity() {
         bindNavigation()
 
         // Binding hint recycler view
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
+        val recyclerView = binding.recyclerView
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
-        hintListAdapter = HintListAdapter(view.context, hintList, endGameViewModel);
+        hintListAdapter = HintListAdapter(applicationContext, hintList, endGameViewModel);
         recyclerView.adapter = hintListAdapter
         endGameViewModel.hints.observe(this, Observer {
             hintList = it
@@ -78,6 +97,12 @@ class EndGameActivity: AppCompatActivity() {
 
         // Display first page
         setPageContent()
+
+        endGameViewModel.logout.observe(this) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
     }
 

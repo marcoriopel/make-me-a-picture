@@ -6,8 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.*
+import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.connection.login.LoginRepository
+import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.EndGameRepository
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class EndGameViewModel(): ViewModel() {
 
@@ -15,6 +19,9 @@ class EndGameViewModel(): ViewModel() {
 
     private val _hints = MutableLiveData<MutableList<String>>()
     val hints: LiveData<MutableList<String>> = _hints
+
+    private val _logout = MutableLiveData<Boolean>()
+    val logout: LiveData<Boolean> = _logout
     
     init {
         endGameRepo.hints.observeForever {
@@ -53,5 +60,22 @@ class EndGameViewModel(): ViewModel() {
 
     fun getGameResult(): StaticEndGameInfo {
         return endGameRepo.getGameResult()
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            val result: Result<Boolean> = try {
+                LoginRepository.getInstance()!!.logout()
+            } catch (e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
+
+            if (result is Result.Success) {
+                _logout.postValue(true)
+            }
+            if (result is Result.Error) {
+                println("Bad request")
+            }
+        }
     }
 }
