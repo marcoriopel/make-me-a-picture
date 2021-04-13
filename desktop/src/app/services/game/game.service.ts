@@ -11,7 +11,8 @@ import { DrawingSuggestionsComponent } from '@app/components/drawing-suggestions
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
-import * as confetti from 'canvas-confetti';
+import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
+import { Stroke } from '@app/classes/drawing';
 
 interface Player {
   username: string;
@@ -31,6 +32,7 @@ interface Teams {
 export class GameService {
   transitionDialogRef: any;
   suggestionDialogRef: any;
+  endGameDialogRef: any;
 
   // Audio
   tick = new Audio('./assets/sounds/tick.wav');
@@ -50,14 +52,18 @@ export class GameService {
   gameId: string = '';
 
   // Classic game
-  virtualPlayerDrawings: string[] = [];
+  virtualPlayerDrawings: any[] = [];
+  realPlayerDrawings: any[] = [];
+  virtualPlayers: string[] = [];
+
   isUserTeamGuessing: boolean = false;
   isSuggestionsModalOpen: boolean = false;
-  virtualPlayers: string[] = [];
   isPlayerDrawing: boolean = false;
+  numberOfDrawings: number = 0;
   drawingSuggestions: string[];
   transitionTimer: number = 5;
   guessingPlayer: string = "";
+  drawings: string[] = [];
   isGuessing: boolean = false;
   drawingName: string = "";
   currentUserTeam: number;
@@ -155,11 +161,24 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
-      if (this.virtualPlayers.includes(this.drawingPlayer)) {
-        this.virtualPlayerDrawings.push(this.drawingService.canvas.toDataURL());
-      }
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
+
+        let eraserStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => stroke.isEraser);
+        let pencilStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => !stroke.isEraser);
+        const strokes = {
+          eraserStrokes: eraserStrokes,
+          pencilStrokes: pencilStrokes,
+        }
+
+        const drawing = {
+          url: dataUrl,
+          drawingName: this.drawingName,
+          strokes: strokes,
+        }
+
+        this.realPlayerDrawings.push(drawing);
+
         const headers = new HttpHeaders({
           'Content-Type': 'application/json',
           'authorization': localStorage.getItem(ACCESS.TOKEN)!
@@ -167,29 +186,55 @@ export class GameService {
         const options = { headers: headers, responseType: 'text' as 'json' };
         const body = { imageUrl: dataUrl, gameId: this.gameId }
         this.http.post<any>(environment.socket_url + 'api/games/upload', body, options).subscribe(
-          res => {
+          (res: any) => {
             console.log(res);
           },
-          err => {
+          (err: any) => {
             console.log(err);
           }
         );
       }
-      console.log(this.drawingPlayer, this.username);
       this.drawingPlayer = data.newDrawingPlayer;
-      this.drawingPlayer == this.username ? this.isPlayerDrawing = true : this.isPlayerDrawing = false;
+      if(this.drawingPlayer == this.username){
+        this.isPlayerDrawing = true;
+        this.numberOfDrawings++;
+      } else {
+        this.isPlayerDrawing = false;
+      }
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
       this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       this.drawingService.strokes = [];
+      this.drawingService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
       this.updateGuessingStatus();
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      this.openDialog(State.ENDGAME);
+      this.socketService.unbind('endGame');
+      for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
+        const vdrawing = {
+          name: data.virtualPlayerDrawings[i],
+          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.id + '.png',
+          id: data.virtualPlayerIds[i],
+        }
+        this.virtualPlayerDrawings.push(vdrawing);
+      }
+      this.openEndGameModal();
+      this.drawingService.strokeStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.redoStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.strokes = [];
+      this.virtualPlayerDrawings = [];
+      this.realPlayerDrawings = [];
+      this.drawingPlayer = this.username as string;
+      this.isInGame = false;
+      this.isGuessing = false;
+      this.isUserTeamGuessing = false;
+      this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
@@ -198,19 +243,6 @@ export class GameService {
       this.socketService.unbind('score');
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
-
-      if(this.score[this.currentUserTeam] > this.score[oppositeTeam]){
-        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
-        var myConfetti = confetti.create(canvasEl, { 
-          resize: true, 
-          useWorker: true, 
-        });
-    
-        myConfetti({
-          spread: 180,
-          particleCount: 200,
-        });         
-      }
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
     })
 
@@ -314,6 +346,7 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
@@ -329,5 +362,13 @@ export class GameService {
     } else {
       this.isGuessing = false;
     }
+  }
+
+  openEndGameModal(): void {
+    this.endGameDialogRef = this.dialog.open(EndGameDrawingComponent, {
+      disableClose: true,
+      height: '800px',
+      width: "1200px"
+    })
   }
 }

@@ -10,6 +10,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.model.game.GameRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
@@ -58,6 +59,7 @@ class LobbyRepository {
     }
 
     var onStart = Emitter.Listener {
+        EndGameRepository.getInstance()!!.initializeData(_lobbyJoined.value!!.difficulty)
         gameStarted = true
         val gameRepo = GameRepository.getInstance()!!
         if (_lobbyJoined.value!!.gameType == GameType.CLASSIC) {
@@ -65,6 +67,7 @@ class LobbyRepository {
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+            gameRepo.drawingPlayer = player
             //To access gameType inside game View model later with a liveData
             gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
             _lobbyPlayers.value!!.players.forEach { player ->
