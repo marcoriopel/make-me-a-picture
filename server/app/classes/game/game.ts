@@ -10,6 +10,7 @@ export abstract class Game {
     protected gameType: number;
     protected id: string;
     protected socketService: SocketService;
+    isGameEnded: boolean = false;
 
     constructor(lobby: Lobby, socketService: SocketService) {
         this.socketService = socketService;
