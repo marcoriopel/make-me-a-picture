@@ -101,6 +101,7 @@ class GameCreationFragment : Fragment() {
         binding.coopSprint.setOnClickListener {
             binding.coopSprint.isActivated = !binding.coopSprint.isActivated
             setSelectedButton(binding.coopSprint, SelectedButton.COOP)
+
             disableOtherButtons(binding.coopSprint, _createGameButtons)
         }
 

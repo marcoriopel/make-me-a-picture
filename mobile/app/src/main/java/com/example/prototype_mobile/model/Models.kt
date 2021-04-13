@@ -31,7 +31,8 @@ data class LoginResult(val success: String? = null, val error: Int? = null)
 //Data class for the Lobbies and list of lobbies
 data class LobbyId(val lobbyId: String)
 data class PrivateLobby( val lobbyInvited: String, val lobbyId: String)
-data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val lobbyInvited: String?)
+data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val isPrivate: Boolean)
+data class GameInvited(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val lobbyInvited: String?)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
 //Merge data change in form

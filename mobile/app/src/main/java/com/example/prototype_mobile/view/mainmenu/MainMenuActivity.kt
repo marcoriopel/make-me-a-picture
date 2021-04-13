@@ -103,7 +103,7 @@ class MainMenuActivity : AppCompatActivity() {
                 R.id.container2, LobbyFragment.newInstance(
                     gameJoined.gameName,
                     gameJoined.gameType.type,
-                    gameJoined.lobbyInvited
+                    mainMenuViewModel._gameInviteID.value
                 )
             )
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

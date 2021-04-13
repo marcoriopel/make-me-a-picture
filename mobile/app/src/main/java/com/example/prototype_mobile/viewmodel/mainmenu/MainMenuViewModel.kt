@@ -112,13 +112,15 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                 }
                 else -> println("Somethings wrong with game data")
             }
-            val result: Result<Game> = mainMenuRepository.createGame(gameData, _isPrivate.value!! )
+            val result: Result<GameInvited> = mainMenuRepository.createGame(gameData, _isPrivate.value!!)
             if (result is Result.Success) {
                 println(result.data.lobbyInvited)
                 if(result.data.lobbyInvited != null) {
                     _gameInviteID.value = result.data.lobbyInvited
                 }
                 lobbyRepository.listenLobby(result.data.gameID)
+                val isPrivate = _isPrivate.value
+                var game = Game(result.data.gameID,result.data.gameName,result.data.difficulty, result.data.gameType,_isPrivate.value!!)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {

@@ -41,8 +41,7 @@ class GameListRepository {
     fun analyseGameListAnswer(response: Response): Result<MutableList<Game>> {
         val jsonData: String = response.body()!!.string()
         allGames  = mutableListOf()
-        if(response.code() == ResponseCode.OK.code) {
-            var gameList: MutableList<Game> = mutableListOf()
+        if(response.code() == ResponseCode.OK.code){
             val jObject = JSONObject(jsonData)
             val jArray = jObject.getJSONArray("lobbies")
             for (i in 0 until jArray.length()) {
@@ -52,16 +51,13 @@ class GameListRepository {
                     gameJson.getString("gameName"),
                     GameDifficulty.values()[gameJson.getInt("difficulty")],
                     GameType.values()[gameJson.getInt("gameType")],
-                        gameJson.getString("lobbyInviteId")
+                        gameJson.getBoolean("isPrivate")
                 )
-                if(game.lobbyInvited == null){
-                    gameList.add(game)
-                }
-                allGames.add(game)
+                    allGames.add(game)
 
 
             }
-            val filteredGameList = gameList.filter{ filterGame(it) } as MutableList<Game>
+            val filteredGameList = allGames.filter{ filterGame(it) } as MutableList<Game>
             return Result.Success(filteredGameList)
         } else {
             return Result.Error(response.code())
@@ -87,7 +83,7 @@ class GameListRepository {
         if (!filters[GameFilter.HARD.filter] && game.difficulty == GameDifficulty.HARD) {
             return false
         }
-        if(game.lobbyInvited != null)
+        if(game.isPrivate)
             return false
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
