@@ -1,4 +1,4 @@
-<canvas id="confetti-canvas"></canvas>
+<!-- <canvas id="confetti-canvas"></canvas> -->
 <mat-horizontal-stepper linear #stepper>
     <mat-step [editable]="false">
         <ng-template matStepLabel>Résultat</ng-template>
@@ -60,7 +60,37 @@
             <img src={{drawing.url}}>
             <div>
                 <p>Voulez-vous ajouter votre dessin à la banque de dessins?</p>
-                <button mat-button matStepperNext>Oui</button>
+                <button mat-button *ngIf="isUploadButtonAvailable" (click)="showForm()">Oui</button>
+                <div *ngIf="isFormAvailable" id="image-form">
+                    <form class="form form-wrapper" [formGroup]="imageCreationForm">
+                        <p>{{realPlayerDrawings[0].drawingName}}</p>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Difficulté</mat-label>
+                            <mat-select formControlName="difficulty">
+                                <mat-option *ngFor="let level of difficulty" [value]="level">
+                                {{level}}
+                                </mat-option>
+                            </mat-select>                
+                        </mat-form-field>
+    
+                        <form class="form hint-form" [formGroup]="hintForm">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Indice</mat-label>
+                                <input matInput placeholder="Indice" formControlName="hint" required>
+                                <mat-error>
+                                    {{errorMessages.text}}
+                                </mat-error>
+                            </mat-form-field>
+                        </form>
+    
+                        <button id="tip-button" mat-raised-button (click)="addHint()" [disabled]="hintForm.invalid">Ajouter l'indice</button>
+                        <div id="tip" *ngFor="let hint of hints; let index = index">
+                            <p>{{hint}}</p>
+                            <input type="button" (click)="deleteHint(index)" value="X">
+                        </div>
+                        <button id="form-button" mat-raised-button matStepperNext (click)="processForm()" [disabled]="imageCreationForm.invalid || !isHintListValid">Envoyer</button>
+                    </form>
+                </div>
                 <button mat-button matStepperNext>Non</button>
             </div>
         </div>

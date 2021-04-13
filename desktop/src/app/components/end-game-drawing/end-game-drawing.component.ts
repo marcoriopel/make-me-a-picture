@@ -6,15 +6,38 @@ import * as confetti from 'canvas-confetti';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { PencilService } from '@app/services/tools/pencil.service';
+import { DrawingService } from '@app/services/drawing/drawing.service';
+import { Difficulty } from '@app/classes/game';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-end-game-drawing',
   templateUrl: './end-game-drawing.component.html',
-  styleUrls: ['./end-game-drawing.component.scss']
+  styleUrls: ['./end-game-drawing.component.scss'],
+  host: {
+    '[style.display]': '"flex"',
+    '[style.flex-direction]': '"column"',
+    '[style.overflow]': '"hidden"'
+  }
 })
 export class EndGameDrawingComponent implements OnInit {
   private baseUrl = environment.api_url;
   private voteUrl = this.baseUrl + '/api/drawings/vote'
+  private imageFormUrl = this.baseUrl + "/api/drawings/create"
+
+  isFormAvailable = false;
+  isUploadButtonAvailable = true;
+  imageCreationForm: FormGroup;
+  hintForm: FormGroup;
+  difficulty = ['Facile', 'Normale', 'Difficile'];
+  hint: string = '';
+  hints: string[] = [];
+  isHintListValid: boolean = false;
+
+  errorMessages: { [key: string]: string } = {
+    text: "Entre 1 et 30 caractères",
+  };
 
   virtualPlayerDrawings: any[] = [];
   realPlayerDrawings: any[] = [];
@@ -25,12 +48,24 @@ export class EndGameDrawingComponent implements OnInit {
   drawTeam1: any;
   drawTeam2: any;
 
-  constructor(private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar, private router: Router) {
+  constructor(private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar, private router: Router, private fb: FormBuilder) {
     this.virtualPlayerDrawings = this.gameService.virtualPlayerDrawings;
     this.realPlayerDrawings = this.gameService.realPlayerDrawings;
    }
 
   ngOnInit(): void {
+    this.imageCreationForm = this.fb.group({
+      difficulty: ['', Validators.required],
+    })
+    this.hintForm = this.fb.group({
+      hint: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(30),
+        Validators.pattern(/.*[^ ].*/),
+      ]],
+    })
+
     if(this.gameService.score[0] > this.gameService.score[1]){
       // Team 1 win
       if(this.gameService.teams.team1.includes(this.gameService.username as string)){
@@ -111,6 +146,68 @@ export class EndGameDrawingComponent implements OnInit {
     this.snackBar.open("Votre vote est enregistré, merci!", "", {
       duration: 2000,
     });
+  }
+
+  processForm(): void {
+    const drawing: any = {
+      eraserStrokes: this.realPlayerDrawings[0].strokes.eraserStrokes,
+      pencilStrokes: this.realPlayerDrawings[0].strokes.pencilStrokes,
+      drawingName: this.realPlayerDrawings[0].drawingName,
+      hints: this.hints,
+      difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
+      imageUrl: this.realPlayerDrawings[0].url,
+    }
+    console.log(drawing);
+    this.sendDrawing(drawing).subscribe(
+      res => {
+        this.snackBar.open("L'image a été enregistrée avec succès", "", {
+          duration: 2000,
+        });
+      },
+      err => {
+        this.snackBar.open("Un problème est survenu. Impossible d'enregistrer l'image.", "", {
+          duration: 2000,
+        });
+      }
+    );
+  }
+
+  convertDifficulty(difficulty: string): number {
+    switch (difficulty) {
+      case 'Facile': return Difficulty.EASY;
+      case 'Normale': return Difficulty.MEDIUM;
+      case 'Difficile': return Difficulty.HARD;
+    }
+    return Difficulty.EASY // Default
+  }
+
+  addHint(): void {
+    if (this.hints.includes(this.hintForm.value.hint)) {
+      alert('Vous avez déjà ajouté cet indice');
+      return;
+    }
+    this.hints.push(this.hintForm.value.hint);
+    this.isHintListValid = this.hints.length > 0 ? true : false;
+    this.hintForm.reset();
+  }
+
+  deleteHint(index: number): void {
+    this.hints.splice(index, 1);
+    this.isHintListValid = this.hints.length > 0 ? true : false;
+  }
+
+  sendDrawing(drawing: any) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!
+    });
+    const options = { headers: headers, responseType: 'text' as 'json' };
+    return this.http.post<any>(this.imageFormUrl, drawing, options);
+  }
+
+  showForm(): void {
+    this.isFormAvailable = true;
+    this.isUploadButtonAvailable = false;
   }
 
   quit(): void {

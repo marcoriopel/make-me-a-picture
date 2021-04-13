@@ -12,7 +12,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
-import { Drawing } from '@app/classes/drawing';
+import { Drawing, Stroke } from '@app/classes/drawing';
+import { PencilService } from '../tools/pencil.service';
 
 interface Player {
   username: string;
@@ -164,9 +165,17 @@ export class GameService {
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
 
+        let eraserStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => stroke.isEraser);
+        let pencilStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => !stroke.isEraser);
+        const strokes = {
+          eraserStrokes: eraserStrokes,
+          pencilStrokes: pencilStrokes,
+        }
+
         const drawing = {
           url: dataUrl,
           drawingName: this.drawingName,
+          strokes: strokes,
         }
 
         this.realPlayerDrawings.push(drawing);
@@ -198,6 +207,7 @@ export class GameService {
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       this.drawingService.strokes = [];
+      this.drawingService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
       this.updateGuessingStatus();

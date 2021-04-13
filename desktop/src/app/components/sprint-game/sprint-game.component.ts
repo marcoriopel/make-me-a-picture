@@ -54,7 +54,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
       switch (data.eventType) {
         case drawingEventType.MOUSEDOWN:
           const mouseDown = data.event as MouseDown;
-          this.pencilService.strokeNumber = mouseDown.strokeNumber;
+          this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
