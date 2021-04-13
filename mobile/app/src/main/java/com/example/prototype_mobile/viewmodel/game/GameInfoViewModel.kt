@@ -22,7 +22,15 @@ class GameInfoViewModel : ViewModel() {
     private val _guessesLeft = MutableLiveData<Int>()
     val guessesLeft: LiveData<Int> = _guessesLeft
 
-    val gameRepo = GameRepository.getInstance()!!
+    private val gameRepo = GameRepository.getInstance()!!
+
+    fun getTeam1(): MutableList<Players> {
+        return gameRepo.team1
+    }
+
+    fun getTeam2(): MutableList<Players> {
+        return gameRepo.team2
+    }
 
     init {
         gameRepo.teamScore.observeForever {
@@ -37,13 +45,5 @@ class GameInfoViewModel : ViewModel() {
         gameRepo.guessesLeft.observeForever {
             _guessesLeft.value = it
         }
-    }
-
-    fun getTeam1(): MutableList<Players> {
-        return gameRepo.team1
-    }
-
-    fun getTeam2(): MutableList<Players> {
-        return gameRepo.team2
     }
 }

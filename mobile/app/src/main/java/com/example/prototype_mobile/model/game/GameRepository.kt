@@ -1,7 +1,6 @@
 package com.example.prototype_mobile.model.game
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -11,9 +10,12 @@ import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.lang.reflect.Type
+
 
 const val DRAWING_NAME_EVENT = "drawingName"
 const val SCORE_EVENT = "score"
@@ -86,15 +88,20 @@ class GameRepository {
     var drawingPlayer: String? = null
     var guessesLeftByTeam: GuessesLeft = GuessesLeft(arrayOf(0,0))
 
-    private val _isGameEnded=  MutableLiveData<String>()
+    private val _isGameEnded = MutableLiveData<String>()
     val isGameEnded: LiveData<String> = _isGameEnded
+
+    private val _saveDrawingImage =  MutableLiveData<Boolean>()
+    val saveDrawingImage: LiveData<Boolean> = _saveDrawingImage
 
     // Listener
     var team = 0
     var suggestion = Suggestions(arrayOf())
 
     private var onDrawingNameEvent = Emitter.Listener {
-        _drawingName.postValue(JSONObject(it[0].toString()).getString("drawingName"))
+        val name = JSONObject(it[0].toString()).getString("drawingName")
+        _drawingName.postValue(name)
+        EndGameRepository.getInstance()!!.addNewDrawing(name)
     }
 
     private  var onScoreEvent = Emitter.Listener {
@@ -116,15 +123,31 @@ class GameRepository {
 
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
+            if (_isPlayerDrawing.value!!)
+                _saveDrawingImage.postValue(true)
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
             _isPlayerDrawing.postValue(false)
             _drawingName.postValue(null)
+        } else {
+            // To stop the tik sound
+            _roundTimer.postValue(Timer(0))
         }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
+
     private var onEndGameEvent = Emitter.Listener {
+        val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
+        val endGameRepos = EndGameRepository.getInstance()!!
+        for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
+            val index = vPlayersDrawing.virtualPlayerDrawings.indexOf(vDrawingName)
+            endGameRepos.addVPlayerDrawing(vDrawingName, vPlayersDrawing.virtualPlayerIds[index])
+        }
+        if (_isPlayerDrawing.value!!)
+            _saveDrawingImage.postValue(true)
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)
+        CanvasRepository.getInstance()!!.resetCanvas()
+
     }
 
     private var onGuessesLeft = Emitter.Listener {
@@ -157,6 +180,8 @@ class GameRepository {
                 _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
             }
         } else {
+            if (_isPlayerDrawing.value!!)
+                _saveDrawingImage.postValue(true)
             _isPlayerDrawing.postValue(false)
             _isPlayerGuessing.postValue(false)
         }
@@ -204,7 +229,6 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-
         _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)

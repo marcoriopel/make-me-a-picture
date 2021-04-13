@@ -56,7 +56,6 @@ export class SoloGame extends Game {
         const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
         this.currentDrawingName = drawing.drawingName;
         this.pastVirtualDrawingsId.push(drawing.drawingId);
-        this.pastVirtualDrawings.push(drawing.drawingName);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTransition();
     }
