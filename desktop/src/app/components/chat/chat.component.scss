@@ -102,12 +102,19 @@
 
 #history-button-container {
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
 }
 
 #history-button {
-  margin-top: 5px;
   color: #4AA7DD;
+  cursor: pointer;
+}
+
+#delete-button {
+  margin-top: 5px;
+  color: #BA2034;
   cursor: pointer;
 }
   

@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div *ngFor="let conversation of this.chatService.notJoinedChatList">
-                <div class="chat-button not-joined" (click)="this.changeChat(conversation.chatId)">
+                <div *ngIf="!conversation.isGameChat" class="chat-button not-joined" (click)="this.changeChat(conversation.chatId)">
                     <p>{{conversation.name}}</p>
                     <button (click)="joinChat(conversation.chatId)">Rejoindre</button>
                 </div>

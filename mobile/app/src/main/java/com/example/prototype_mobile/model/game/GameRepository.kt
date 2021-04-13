@@ -173,7 +173,9 @@ class GameRepository {
         _roundTimer.postValue(Timer(transitionTemp.timer))
         _transition.postValue(transitionTemp)
         if(Timer(transitionTemp.timer).timer == 0) {
-            if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
+            if ( gameType != GameType.CLASSIC) {
+                _isPlayerGuessing.postValue(true)
+            } else if (guessesLeftByTeam.guessesLeft[team] > 0 && drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username) && transitionTemp.state != 1) {
                 _isPlayerDrawing.postValue(true)
             } else if (!drawingPlayer.equals(LoginRepository.getInstance()!!.user!!.username)) {
                 _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)

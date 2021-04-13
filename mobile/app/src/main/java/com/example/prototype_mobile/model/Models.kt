@@ -10,9 +10,9 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import java.util.*
 
 // Data class for the chat
-data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long)
+data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long, val avatar: Int)
 data class MessageReceive (val id : String, val user : User, val text : String, val timestamp : Long, val textColor : String, val chatId: String)
-data class User (val username: String, val Avatar: Int)
+data class User (val username: String, val avatar: Int)
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val chatId: String)
 data class ChannelReceived(val chatId: String, val chatName: String)

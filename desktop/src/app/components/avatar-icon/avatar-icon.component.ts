@@ -7,13 +7,13 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class AvatarIconComponent implements OnInit {
 
-  @Input() avatar : number;
+  @Input() avatar : string;
   avatarImgRef : string = "./assets/img/";
 
   constructor() { }
 
   ngOnInit(): void {
-    switch(this.avatar){
+    switch(parseInt(this.avatar)){
       case 0 :
         this.avatarImgRef += "avatar0.png"
         break;
@@ -28,6 +28,9 @@ export class AvatarIconComponent implements OnInit {
         break;
       case 4 :
         this.avatarImgRef += "avatar4.png"
+        break;
+      case 5 :
+        this.avatarImgRef += "avatar5.png"
         break;
       case 6 :
         this.avatarImgRef += "profileVPlayer1.png"

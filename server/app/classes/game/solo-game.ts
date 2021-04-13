@@ -30,11 +30,11 @@ export class SoloGame extends Game {
     private endDate: number;
 
     constructor(
-        lobby: SoloLobby, 
-        socketService: SocketService, 
-        private drawingsService: DrawingsService, 
-        private statsService: StatsService, 
-        private userService: UserService, 
+        lobby: SoloLobby,
+        socketService: SocketService,
+        private drawingsService: DrawingsService,
+        private statsService: StatsService,
+        private userService: UserService,
         private chatManagerService: ChatManagerService) {
         super(<Lobby>lobby, socketService);
         for (const player of lobby.getPlayers()) {
@@ -95,7 +95,7 @@ export class SoloGame extends Game {
                 this.setupNextDrawing();
                 this.vPlayer.sayWrongGuess();
             }
-            else{
+            else {
                 this.vPlayer.sayWrongTry();
             }
         }
@@ -136,7 +136,7 @@ export class SoloGame extends Game {
         this.vPlayer.stopDrawing();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.vPlayer.sayEndSoloGame(this.score);
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
         this.chatManagerService.deleteChat(this.id);
     }
