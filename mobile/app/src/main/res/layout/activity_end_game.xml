@@ -121,7 +121,7 @@
                     android:text="blablalbla"
                     android:textColor="#000000"
                     android:textSize="20sp"
-                    android:translationX="1000px"
+                    android:translationX="800px"
                     android:translationY="175px" />
 
                 <TextView
@@ -170,10 +170,10 @@
                 <LinearLayout
                     android:id="@+id/upload"
                     android:layout_width="483dp"
-                    android:layout_height="306dp"
+                    android:layout_height="356dp"
                     android:layout_gravity="center"
                     android:orientation="vertical"
-                    android:translationX="1000px"
+                    android:translationX="800px"
                     android:translationY="275px">
 
                     <EditText
@@ -196,7 +196,6 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="20dp" />
-
 
                     <Button
                         android:id="@+id/buttonAddHint"
