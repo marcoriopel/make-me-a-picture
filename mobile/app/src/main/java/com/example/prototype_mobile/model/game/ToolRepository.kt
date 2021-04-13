@@ -35,6 +35,7 @@ class ToolRepository {
 
     // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
+    var alpha = 255
     
     private val paint = Paint().apply {
         color = selectedColor
@@ -90,6 +91,8 @@ class ToolRepository {
     fun setColor(color: Int) {
         // We refer to color in getPaintCopy through selected copy..
         paint.color = color
+        paint.alpha = alpha
+        println(paint.color.toString() + "   " + paint.alpha.toString())
     }
 
     fun setColorByValue(color: String) {

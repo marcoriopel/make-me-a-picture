@@ -11,6 +11,7 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentToolsAdjustmentBinding
 import com.example.prototype_mobile.databinding.FragmentToolsBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.Tool
+import com.example.prototype_mobile.viewmodel.game.ColorViewModel
 import com.example.prototype_mobile.viewmodel.game.ToolsAdjustmentViewModel
 
 class ToolsAdjustmentFragment : Fragment() {
@@ -19,6 +20,7 @@ class ToolsAdjustmentFragment : Fragment() {
     }
     private lateinit var binding: FragmentToolsAdjustmentBinding
     private lateinit var viewModel: ToolsAdjustmentViewModel
+    private lateinit var colorViewModel: ColorViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +32,9 @@ class ToolsAdjustmentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(ToolsAdjustmentViewModel::class.java)
+        colorViewModel = ViewModelProvider(this).get(ColorViewModel::class.java)
         binding = FragmentToolsAdjustmentBinding.bind(view)
+
 
         viewModel.isGrid.observe(viewLifecycleOwner, Observer {
             if (it) {
@@ -60,6 +64,9 @@ class ToolsAdjustmentFragment : Fragment() {
 
         binding.sliderGrid.addOnChangeListener { rangeSlider, value, fromUser ->
             viewModel.setGridSize(value.toInt())
+        }
+        binding.sliderAlpha.addOnChangeListener { slider, value, fromUser ->
+            colorViewModel.setAlpha(value.toInt())
         }
     }
 

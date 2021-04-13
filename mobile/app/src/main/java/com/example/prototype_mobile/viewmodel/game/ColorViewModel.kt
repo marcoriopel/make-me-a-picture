@@ -13,4 +13,10 @@ class ColorViewModel : ViewModel() {
             toolRepository.setPen()
         }
     }
+    fun setAlpha(alpha: Int) {
+        toolRepository.alpha = alpha
+        if (toolRepository.selectedTool.value == Tool.PEN) {
+            toolRepository.setPen()
+        }
+    }
 }
