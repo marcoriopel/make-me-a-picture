@@ -67,6 +67,7 @@ class LobbyRepository {
             val Jarray = Jobject.getString("player")
             val player: String = Jarray.toString()
             gameRepo.gameType = _lobbyJoined.value!!.gameType
+            gameRepo.drawingPlayer = player
             //To access gameType inside game View model later with a liveData
             gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
             _lobbyPlayers.value!!.players.forEach { player ->
