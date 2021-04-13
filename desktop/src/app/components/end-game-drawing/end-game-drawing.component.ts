@@ -47,8 +47,13 @@ export class EndGameDrawingComponent implements OnInit {
   drawTeam2: any;
 
   constructor(private gameService: GameService, private http: HttpClient, private snackBar: MatSnackBar, private router: Router, private fb: FormBuilder) {
-    this.virtualPlayerDrawings = this.gameService.virtualPlayerDrawings;
-    this.realPlayerDrawings = this.gameService.realPlayerDrawings;
+    this.gameService.virtualPlayerDrawings.forEach((drawing: any) => {
+      this.virtualPlayerDrawings.push(drawing);
+    });
+
+    this.gameService.realPlayerDrawings.forEach((drawing: any) => {
+      this.realPlayerDrawings.push(drawing);
+    });
    }
 
   ngOnInit(): void {

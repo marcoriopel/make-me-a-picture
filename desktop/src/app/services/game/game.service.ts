@@ -213,8 +213,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
-      console.log(data)
-      this.openEndGameModal();
+      this.socketService.unbind('endGame');
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
@@ -223,6 +222,7 @@ export class GameService {
         }
         this.virtualPlayerDrawings.push(vdrawing);
       }
+      this.openEndGameModal();
       this.drawingService.strokeStack = [];
       this.drawingService.strokeNumber = 0;
       this.drawingService.redoStack = [];
