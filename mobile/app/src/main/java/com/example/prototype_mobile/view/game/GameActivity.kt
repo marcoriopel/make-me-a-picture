@@ -291,7 +291,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         setUpGameInit()
     }
 
-    fun hintFragment() {
+    private fun hintFragment() {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.containerTools, HintFragment())
                 .commitNow()

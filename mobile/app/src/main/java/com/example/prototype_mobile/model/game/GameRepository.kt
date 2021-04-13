@@ -128,6 +128,9 @@ class GameRepository {
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
             _isPlayerDrawing.postValue(false)
             _drawingName.postValue(null)
+        } else {
+            // To stop the tik sound
+            _roundTimer.postValue(Timer(0))
         }
         CanvasRepository.getInstance()!!.resetCanvas()
     }
@@ -140,8 +143,12 @@ class GameRepository {
             val index = vPlayersDrawing.virtualPlayerDrawings.indexOf(vDrawingName)
             endGameRepos.addVPlayerDrawing(vDrawingName, vPlayersDrawing.virtualPlayerIds[index])
         }
+        if (_isPlayerDrawing.value!!)
+            _saveDrawingImage.postValue(true)
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)
+        CanvasRepository.getInstance()!!.resetCanvas()
+
     }
 
     private var onGuessesLeft = Emitter.Listener {
@@ -220,7 +227,6 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-
         _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)

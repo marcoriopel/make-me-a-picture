@@ -60,13 +60,17 @@ class GameViewModel :ViewModel() {
         gameRepository.isPlayerDrawing.observeForever {
             _isPlayerDrawing.value = it
         }
+
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
         }
+
         gameRepository.teamScore.observeForever {
             _teamScore.postValue(it)
         }
+
         gameRepository.isGameEnded.observeForever{
+            _tikSound.postValue(false)
             _isGameEnded.value = true
         }
 
@@ -96,6 +100,7 @@ class GameViewModel :ViewModel() {
         gameRepository.suggestions.observeForever {
             _suggestions.postValue(it)
         }
+
         gameRepository.roundTimer.observeForever {
             if (it.timer == 10)
                 _tikSound.postValue(true)

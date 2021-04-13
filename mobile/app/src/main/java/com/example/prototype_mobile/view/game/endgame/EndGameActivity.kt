@@ -30,6 +30,7 @@ import java.lang.Exception
 
 class EndGameActivity: AppCompatActivity() {
 
+    // Attributes
     var pageIndex = 1
     var numberOfPage = 0
     var hintList: MutableList<String> = mutableListOf()
@@ -55,7 +56,7 @@ class EndGameActivity: AppCompatActivity() {
         bindButton()
         bindNavigation()
 
-        // Display hint
+        // Binding hint recycler view
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
         recyclerView.layoutManager = layoutManager
@@ -64,7 +65,7 @@ class EndGameActivity: AppCompatActivity() {
         endGameViewModel.hints.observe(this, Observer {
             hintList = it
             hintListAdapter.hintList = hintList
-            addItemToRecyclerView(hintList)
+            addHintToRecyclerView(hintList)
         })
 
         // Display first page
@@ -76,11 +77,6 @@ class EndGameActivity: AppCompatActivity() {
         // Result
         numberOfPage = 1
         contentMap[numberOfPage] = endGameViewModel.getGameResult()
-
-        // TEST
-        val data = VDrawingData("test", "https://drawingimages.s3.us-east-2.amazonaws.com/0fb3f245-cc29-4d6d-bf38-ee33038cce68.png", "0fb3f245-cc29-4d6d-bf38-ee33038cce68")
-        contentMap[++numberOfPage] = StaticEndGameInfo("Vote du dessing Singe","Avez vous apprécié ce dessin ?", EndGamePageType.VOTE, data)
-
 
         // Vote drawing from virtual player
         for (vDrawing in endGameViewModel.getVPlayerDrawing()) {
@@ -129,7 +125,7 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
-    private fun addItemToRecyclerView(hints: MutableList<String>) {
+    private fun addHintToRecyclerView(hints: MutableList<String>) {
         runOnUiThread {
             hintList = hints
             hintListAdapter.notifyDataSetChanged()
@@ -139,7 +135,6 @@ class EndGameActivity: AppCompatActivity() {
     private fun bindNavigation() {
         // Bind button
         binding.back.setOnClickListener {
-            println("back button click ")
             if(pageIndex == 1) {
                 println("Can't decrement 0")
             } else {
@@ -147,12 +142,7 @@ class EndGameActivity: AppCompatActivity() {
             }
         }
         binding.next.setOnClickListener {
-            println("next button click ")
-            if(pageIndex < contentMap.size) {
-                nextPage()
-            } else if(pageIndex == contentMap.size) {
-                goToMenu()
-            }
+            nextPage()
         }
     }
 
@@ -172,7 +162,7 @@ class EndGameActivity: AppCompatActivity() {
     private fun nextPage() {
         if(pageIndex == contentMap.size) {
             goToMenu()
-        } else {
+        } else if(pageIndex < contentMap.size) {
             pageIndex++
             setPageContent()
             progressDot(pageIndex)
@@ -228,14 +218,14 @@ class EndGameActivity: AppCompatActivity() {
         backButton.visibility = View.INVISIBLE
 
         // Display the data according to the page type
-        val upvoteButton = findViewById<Button>(R.id.buttonUpVote)
-        val downvoteButton = findViewById<Button>(R.id.buttonDownVote)
+        val upVoteButton = findViewById<Button>(R.id.buttonUpVote)
+        val downVoteButton = findViewById<Button>(R.id.buttonDownVote)
         val uploadLayout = findViewById<LinearLayout>(R.id.upload)
 
         when(pageData.type) {
             EndGamePageType.RESULT -> {
-                upvoteButton.visibility = View.INVISIBLE
-                downvoteButton.visibility = View.INVISIBLE
+                upVoteButton.visibility = View.INVISIBLE
+                downVoteButton.visibility = View.INVISIBLE
                 uploadLayout.visibility = View.INVISIBLE
                 if (pageData.data != null) {
                     val result = pageData.data as EndGameResult
@@ -244,13 +234,13 @@ class EndGameActivity: AppCompatActivity() {
                 }
             }
             EndGamePageType.VOTE -> {
-                upvoteButton.visibility = View.VISIBLE
-                downvoteButton.visibility = View.VISIBLE
+                upVoteButton.visibility = View.VISIBLE
+                downVoteButton.visibility = View.VISIBLE
                 uploadLayout.visibility = View.INVISIBLE
             }
             EndGamePageType.UPLOAD -> {
-                upvoteButton.visibility = View.INVISIBLE
-                downvoteButton.visibility = View.INVISIBLE
+                upVoteButton.visibility = View.INVISIBLE
+                downVoteButton.visibility = View.INVISIBLE
                 uploadLayout.visibility = View.VISIBLE
             }
         }
