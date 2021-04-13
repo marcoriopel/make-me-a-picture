@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
+import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
 import com.squareup.picasso.Picasso
@@ -48,6 +49,13 @@ class EndGameActivity: AppCompatActivity() {
         setContentView(R.layout.activity_end_game)
         val view = binding.root
         setContentView(view)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
+        toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
+        setSupportActionBar(toolbar)
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.containerChat, ChatFragment())
+                .commitNow()
+
 
         // Creating content view
         createContentView()

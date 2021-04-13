@@ -120,7 +120,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(username: String) {
-        val intent = Intent(this, MainMenuActivity::class.java)
+//        val intent = Intent(this, MainMenuActivity::class.java)
+        val intent = Intent(this, EndGameActivity::class.java)
 
         startActivity(intent)
 
