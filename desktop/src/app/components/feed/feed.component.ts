@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { formatDateString } from '@app/classes/date';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -25,9 +26,9 @@ export class FeedComponent implements OnInit {
         console.log(data);
         data.feedInfo.forEach((image: any) => {
           image.url = 'https://drawingimages.s3.us-east-2.amazonaws.com/' + image.id + '.png';
+          image.timestamp = formatDateString(image.timestamp);
         })
         this.feed = data.feedInfo;
-        console.log(this.feed);
       });
   }
 }
