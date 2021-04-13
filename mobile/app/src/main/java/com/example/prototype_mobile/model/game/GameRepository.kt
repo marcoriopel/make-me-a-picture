@@ -123,7 +123,6 @@ class GameRepository {
 
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
-            Log.e("Will save", _isPlayerDrawing.value.toString())
             if (_isPlayerDrawing.value!!)
                 _saveDrawingImage.postValue(true)
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
@@ -189,7 +188,6 @@ class GameRepository {
     }
 
     private var onDrawingSuggestionsEvent = Emitter.Listener {
-        Log.e("Choose", "word")
         suggestion = gson.fromJson(it[0].toString(), Suggestions::class.java)
         _suggestions.postValue(gson.fromJson(it[0].toString(), Suggestions::class.java))
 
