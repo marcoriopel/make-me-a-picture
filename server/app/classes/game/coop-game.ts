@@ -134,6 +134,8 @@ export class CoopGame extends Game {
             return;
         }
         else{
+            this.isGameEnded = true;
+            this.gameEnded.next(true);
             this.endDate = new Date().getTime();
             clearInterval(this.gameTimerInterval);
             clearInterval(this.drawingTimerInterval);

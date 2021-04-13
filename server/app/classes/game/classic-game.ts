@@ -289,6 +289,8 @@ export class ClassicGame extends Game {
             return;
         }
         else{
+            this.isGameEnded = true;
+            this.gameEnded.next(true);
             this.endDate = new Date().getTime();
             clearInterval(this.timerInterval);
             this.guessesLeft = [0, 0];
