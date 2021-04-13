@@ -311,6 +311,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             else -> super.onKeyUp(keyCode, event)
         }
     }
+
     override fun onBackPressed() {
         Toast.makeText(
                 applicationContext,

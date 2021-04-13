@@ -148,6 +148,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
         currentX = motionTouchEventX
         currentY = motionTouchEventY
+        // Call the onDraw() method to update the view
+        _newCurPath.postValue(curPath)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -243,7 +245,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     }
 
     var canStartNewThread = true
-   private fun onReceivingEvent() {
+    private fun onReceivingEvent() {
        if (canStartNewThread) {
            canStartNewThread = false
            viewModelScope.launch(Dispatchers.IO) {
@@ -282,7 +284,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
            }
        }
 
-   }
+    }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Get an image of the drawing
