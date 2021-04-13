@@ -22,6 +22,13 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         // Color background white
         canvas.drawColor(-1)
 
+        if (!(canvasViewModel.pathStack.empty() && canvasViewModel.curPath.isEmpty)) {
+            // Draw the drawing so far
+            for (paintedPath in canvasViewModel.pathStack) {
+                canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
+            }
+        }
+
         // Add if to activate / unactivated the grid
         if (canvasViewModel.isGrid) {
             gridBitmap = canvasViewModel.getGrid()
@@ -32,14 +39,6 @@ class MyCanvasView(context: Context,val canvasViewModel: CanvasViewModel) : View
         val word = canvasViewModel.getDrawingWord()
         if (word != null) {
             canvas.drawText("Le mot à dessiner est: $word", 10F, 30F, canvasViewModel.getTextPaint())
-        }
-
-        if (canvasViewModel.pathStack.empty() && canvasViewModel.curPath.isEmpty) {
-            return
-        }
-        // Draw the drawing so far
-        for (paintedPath in canvasViewModel.pathStack) {
-            canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
         }
 
     }

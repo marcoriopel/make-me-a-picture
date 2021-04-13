@@ -326,6 +326,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             _newCurPath.value = curPath
         }
         canvasRepository.drawingEvent.observeForever {
+            if(it.eventType == EVENT_CLEAR)
+                canvasRepository.setGrid(false)
             onDrawingEvent(it)
         }
         canvasRepository.drawingEventServer.observeForever {

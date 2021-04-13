@@ -84,7 +84,9 @@ class EndGameRepository {
 
 
     fun addDrawingImage(encodedImg: String) {
-        drawingList[drawingList.lastIndex].image = encodedImg
+        Log.e("Image:", "image save")
+        if(drawingList.lastIndex != -1)
+            drawingList[drawingList.lastIndex].image = encodedImg
     }
 
     fun addDrawingEvent(event: DrawingEvent) {

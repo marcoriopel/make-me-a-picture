@@ -123,6 +123,7 @@ class GameRepository {
 
     private var onNewRound = Emitter.Listener {
         if (gameType == GameType.CLASSIC) {
+            Log.e("Will save", _isPlayerDrawing.value.toString())
             if (_isPlayerDrawing.value!!)
                 _saveDrawingImage.postValue(true)
             drawingPlayer = JSONObject(it[0].toString()).getString("newDrawingPlayer")
@@ -137,7 +138,6 @@ class GameRepository {
 
     private var onEndGameEvent = Emitter.Listener {
         val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
-        Log.e("drawing",it[0].toString())
         val endGameRepos = EndGameRepository.getInstance()!!
         for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
             val index = vPlayersDrawing.virtualPlayerDrawings.indexOf(vDrawingName)
@@ -179,6 +179,8 @@ class GameRepository {
                 _isPlayerGuessing.postValue(guessesLeftByTeam.guessesLeft[team] > 0)
             }
         } else {
+            if (_isPlayerDrawing.value!!)
+                _saveDrawingImage.postValue(true)
             _isPlayerDrawing.postValue(false)
             _isPlayerGuessing.postValue(false)
         }
