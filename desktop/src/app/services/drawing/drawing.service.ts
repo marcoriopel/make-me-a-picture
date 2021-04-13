@@ -22,6 +22,7 @@ export class DrawingService {
     color: string;
     lineWidth: number;
     strokes: Stroke[] = [];
+    strokeNumber: number = 0;
     
     setGrid(): void {
         this.clearCanvas(this.gridCtx);

@@ -25,34 +25,34 @@ const val GRID_WIDTH = 2f // has to be float
 const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
+    // Attribute
+    var canStartNewThread = true
+    var curPath = Path()
     private var lastCoordsReceive: Vec2 = Vec2(0,0)
-    // Path
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
-    var curPath = Path()
-    private val _newCurPath = MutableLiveData<Path>()
-    val newCurPath: LiveData<Path> = _newCurPath
-
-    private val _drawingName = MutableLiveData<String?>()
-    var drawingName: LiveData<String?> = _drawingName
-
-    // Undo-Redo
-    val pathStack = Stack<Pair<Int,PaintedPath>>()
-    private var redoStack = Stack<Pair<Int,PaintedPath>>()
-
-    // Repository
-    private val toolRepo = ToolRepository.getInstance()
-    private val gameRepo = GameRepository.getInstance()
-
-    // Text Paint
     private val textPaint = Paint().apply {
         color = Color.BLACK
         textSize = 30F
         isAntiAlias = true
         isDither = true
     }
+
+    // Repository
+    private val toolRepo = ToolRepository.getInstance()
+    private val gameRepo = GameRepository.getInstance()
+
+    // Live Data
+    private val _newCurPath = MutableLiveData<Path>()
+    val newCurPath: LiveData<Path> = _newCurPath
+
+    private val _drawingName = MutableLiveData<String?>()
+    var drawingName: LiveData<String?> = _drawingName
+
+    val pathStack = Stack<Pair<Int,PaintedPath>>()
+    private var redoStack = Stack<Pair<Int,PaintedPath>>()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
@@ -219,7 +219,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
     }
 
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the bitmap of the grid to be able to draw it on a
      * canvas
@@ -228,7 +227,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return gridBitmap
     }
 
-    // Undo - Redo
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Undo: Remove the last action
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -238,13 +236,18 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         _newCurPath.postValue(null)
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Redo: Add back the last action
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun redo() {
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
         _newCurPath.postValue(null)
     }
 
-    var canStartNewThread = true
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Class the drawing event on the right order (New Eraser)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun onReceivingEvent() {
        if (canStartNewThread) {
            canStartNewThread = false
@@ -307,7 +310,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     * Save the image to the end game repo
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun saveDrawingImage() {
-        Log.e("Image", "Saving image")
         val image = getDrawingImage()
         EndGameRepository.getInstance()!!.addDrawingImage(image)
     }

@@ -69,10 +69,6 @@ class EndGameRepository {
         _hints.postValue(_hints.value)
     }
 
-    fun removeAllHint() {
-        _hints.postValue(mutableListOf())
-    }
-
     fun addNewDrawing(drawingName: String) {
         drawingList.add(DrawingData(drawingName, null, LinkedList<DrawingEvent>(), mutableListOf()))
         undoStack = Stack()
@@ -82,9 +78,7 @@ class EndGameRepository {
         return drawingList
     }
 
-
     fun addDrawingImage(encodedImg: String) {
-        Log.e("Image:", "image save")
         if(drawingList.lastIndex != -1)
             drawingList[drawingList.lastIndex].image = encodedImg
     }
@@ -137,7 +131,7 @@ class EndGameRepository {
         body["imageUrl"] = drawingData.image!!
         val res = HttpRequestDrawGuess.httpRequestPost("/api/drawings/create", body, true)
 
-        Log.e("Upload", res.toString())
+        Log.e("Upload http response", res.toString())
     }
 
     private fun convertDrawing(drawingData: DrawingData): Drawing {
@@ -183,5 +177,3 @@ class EndGameRepository {
     }
 
 }
-
-

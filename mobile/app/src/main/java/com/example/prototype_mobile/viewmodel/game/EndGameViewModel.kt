@@ -30,7 +30,6 @@ class EndGameViewModel(): ViewModel() {
     }
 
     fun upload(drawingData: DrawingData) {
-        Log.e("uplaod", "Starting upload")
         viewModelScope.launch {
             endGameRepo.upload(drawingData)
         }

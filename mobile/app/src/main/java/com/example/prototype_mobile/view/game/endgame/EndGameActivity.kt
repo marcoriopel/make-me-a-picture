@@ -8,10 +8,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,6 +22,7 @@ import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.view.game.GuessFragment
 import com.example.prototype_mobile.view.mainmenu.MainMenuActivity
 import com.example.prototype_mobile.viewmodel.game.EndGameViewModel
 import com.squareup.picasso.Picasso
@@ -51,6 +49,7 @@ class EndGameActivity: AppCompatActivity() {
         supportActionBar?.setDisplayUseLogoEnabled(true)
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_logout -> {
             endGameViewModel.logout()
@@ -63,19 +62,20 @@ class EndGameActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Set view and View Model
         binding = ActivityEndGameBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
+
+        // Add Chat and Nav bar
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
         toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
         setSupportActionBar(toolbar)
-
-        endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
-
         supportFragmentManager.beginTransaction()
                 .replace(R.id.containerChat, ChatFragment())
                 .commitNow()
-
 
         // Creating content view
         createContentView()
@@ -99,14 +99,11 @@ class EndGameActivity: AppCompatActivity() {
         // Display first page
         setPageContent()
 
-        endGameViewModel.logout.observe(this) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Extract all the content to create the content map
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun createContentView() {
         // Result
         numberOfPage = 1
@@ -128,6 +125,9 @@ class EndGameActivity: AppCompatActivity() {
 
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Bind all button of the view
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun bindButton() {
         // Add Hint
         binding.buttonAddHint.setOnClickListener {
@@ -136,7 +136,7 @@ class EndGameActivity: AppCompatActivity() {
                 binding.hintInput.text.clear()
             }
         }
-        // upload
+        // Upload
         binding.buttonUpload.setOnClickListener {
             if(endGameViewModel.hints.value!!.size != 0) {
                 contentMap[pageIndex]?.data?.let { it1 -> endGameViewModel.upload(it1 as DrawingData) }
@@ -147,18 +147,27 @@ class EndGameActivity: AppCompatActivity() {
                 toast.show()
             }
         }
-        // Upvote
+        // Up vote
         binding.buttonUpVote.setOnClickListener {
             contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(true, it1) }
             nextPage()
         }
-        // Downvote
+        // Down vote
         binding.buttonDownVote.setOnClickListener {
             contentMap[pageIndex]!!.data?.let { it1 -> endGameViewModel.vote(false, it1) }
             nextPage()
         }
+        // Logout button
+        endGameViewModel.logout.observe(this) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Add a hint
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun addHintToRecyclerView(hints: MutableList<String>) {
         runOnUiThread {
             hintList = hints
@@ -166,6 +175,9 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Bind navigation button
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun bindNavigation() {
         // Bind button
         binding.back.setOnClickListener {
@@ -180,6 +192,9 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Go to the main menu
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun goToMenu() {
         val intent =  Intent(this@EndGameActivity, MainMenuActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
@@ -187,12 +202,18 @@ class EndGameActivity: AppCompatActivity() {
         this.finish()
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Go to the last page if possible
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun previousPage() {
         pageIndex--
         setPageContent()
         progressDot(pageIndex)
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Go to the next page or to the menu if these no content
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun nextPage() {
         if(pageIndex == contentMap.size) {
             goToMenu()
@@ -203,6 +224,10 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   *  Set the image from AWS S3 if it's from a V player
+   *  or from base64 if it's from a real player
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun setImage(pageData: StaticEndGameInfo) {
         val imgHolder = findViewById<ImageView>(R.id.image)
         if (pageData.data?.image != null) {
@@ -230,6 +255,10 @@ class EndGameActivity: AppCompatActivity() {
     }
 
     @SuppressLint("SetTextI18n")
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Set the content base on the content map at the
+    *  page index
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun setPageContent() {
 
         // Data
@@ -280,6 +309,9 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Update the progression bar
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun progressDot(tutorialIndex: Int) {
         val dotsLayout = findViewById<LinearLayout>(R.id.dots)
         val dots: Array<ImageView> = Array<ImageView>(contentMap.size) { _ -> ImageView(this) }
@@ -299,6 +331,9 @@ class EndGameActivity: AppCompatActivity() {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Burst confetti in the middle of the screen
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun burstKonfetti() {
         val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
         val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart)
@@ -312,12 +347,15 @@ class EndGameActivity: AppCompatActivity() {
             .addShapes(Shape.Square, Shape.Circle, drawableShape!!)
             .addSizes(Size(12, 5f))
             .setPosition(
-                konfettiView.x + 950,
+                konfettiView.x + 850,
                 konfettiView.y + 380
             )
             .burst(100)
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Block the back button
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onBackPressed() {
         Toast.makeText(
             applicationContext,
@@ -325,5 +363,22 @@ class EndGameActivity: AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
     }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Bind enter key to send message in chat fragment
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                for(fragment in supportFragmentManager.fragments) {
+                    if (fragment is ChatFragment)
+                        fragment.onKeyEnter()
+                }
+                true
+            }
+            else -> super.onKeyUp(keyCode, event)
+        }
+    }
+
 
 }
