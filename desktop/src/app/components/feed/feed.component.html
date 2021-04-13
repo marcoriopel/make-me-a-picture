@@ -1,6 +1,6 @@
 <div id="feed">
     <div id="center-div">
-        <div *ngFor="let element of feed">
+        <div id="post" *ngFor="let element of feed">
             <div id="title">
                 <app-avatar-icon [avatar]=element.avatar></app-avatar-icon>
                 <span id="name">{{element.username}} - {{element.timestamp}}</span>

@@ -16,6 +16,13 @@
     margin-top: 10px;
 }
 
+#post {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
 #name {
     font-size: 20px;
     margin-left: 10px;
