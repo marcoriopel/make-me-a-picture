@@ -39,6 +39,7 @@ class ToolRepository {
     
     private val paint = Paint().apply {
         color = selectedColor
+        alpha = _alpha
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
