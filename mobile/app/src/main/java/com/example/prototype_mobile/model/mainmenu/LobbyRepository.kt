@@ -118,6 +118,7 @@ class LobbyRepository {
         return result
     }
     suspend fun joinLobby(game: Game): Result<Game> {
+
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
@@ -163,6 +164,7 @@ class LobbyRepository {
         val lobbyId: String = response.body()!!.string()
 
         if(response.code() == ResponseCode.OK.code) {
+            currentListenLobby = lobbyId
             return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
         } else {
             Result.Error(response.code())

@@ -119,7 +119,6 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                     _gameInviteID.value = result.data.lobbyInvited
                 }
                 lobbyRepository.listenLobby(result.data.gameID)
-                val isPrivate = _isPrivate.value
                 var game = Game(result.data.gameID,result.data.gameName,result.data.difficulty, result.data.gameType,_isPrivate.value!!)
                 lobbyRepository.joinLobby(result.data)
             }
@@ -131,17 +130,25 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
 
      fun joinPrivateGame(code: String) {
 
+
          viewModelScope.launch {
+             try{
+                 GameListRepository.getInstance()!!.getGameList()
+             } catch (e: IllegalAccessException){
+                 throw e
+             }
              var result = lobbyRepository.joinPrivate(code)
-             println("joinPrivate done")
 
              if(result is Result.Success) {
-                 val game = GameListRepository.getInstance()!!.findGame(result.data.lobbyId)
-                 if(game is Result.Success){
+                 _gameInviteID.postValue(code)
+                 val gameList = GameListRepository.getInstance()!!.allGames
+                 var game = gameList.firstOrNull { it.gameID == result.data.lobbyId }
+                 if(game != null){
                      println("Join public game from join private game")
-                     lobbyRepository.listenLobby(game.data.gameID)
-                     lobbyRepository.joinLobby(game.data)
+                     lobbyRepository.joinLobby(game)
                  }
+
+
 
              }
 

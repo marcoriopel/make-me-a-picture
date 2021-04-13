@@ -53,7 +53,7 @@ class GameListRepository {
                     GameType.values()[gameJson.getInt("gameType")],
                         gameJson.getBoolean("isPrivate")
                 )
-                    allGames.add(game)
+                allGames.add(game)
 
 
             }
