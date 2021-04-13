@@ -13,6 +13,33 @@
     align-items: center;
 }
 
+#image-content {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#image {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#vote-section {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#skip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 #results {
     display: flex;
     flex-flow: row nowrap;
@@ -77,15 +104,18 @@
 }
 
 #image-form {
-    height: 100%;
+    height: 500px;
     width: 250px;
     background-color: #E0E0E0;
-    overflow-x: hidden; 
     overflow-y: scroll; 
 }
 
 #form-button {
     margin-top: 20px;
+}
+
+#skip-button {
+    margin-top: 30px;
 }
 
 #tip{
@@ -114,10 +144,10 @@
     margin-top: 50px;
 }
 
-button {
-    width: 70%;
-}
-
 .form {
     text-align: center;
+}
+
+#form-button {
+    width: 50%;
 }

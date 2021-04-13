@@ -12,8 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
-import { Drawing, Stroke } from '@app/classes/drawing';
-import { PencilService } from '../tools/pencil.service';
+import { Stroke } from '@app/classes/drawing';
 
 interface Player {
   username: string;

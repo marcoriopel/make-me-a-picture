@@ -6,8 +6,6 @@ import * as confetti from 'canvas-confetti';
 import { environment } from 'src/environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { PencilService } from '@app/services/tools/pencil.service';
-import { DrawingService } from '@app/services/drawing/drawing.service';
 import { Difficulty } from '@app/classes/game';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
