@@ -17,7 +17,7 @@
             android:name=".view.tutorial.StaticTutorialActivity"
             android:screenOrientation="landscape"
             android:label="@string/title_activity_static_tutorial"
-            android:theme="@style/Theme.Prototype_mobile.NoActionBar"></activity>
+            android:theme="@style/Theme.Prototype_mobile.NoActionBar" />
         <activity
             android:name=".view.game.endgame.EndGameActivity"
             android:screenOrientation="landscape"
@@ -26,7 +26,7 @@
         <activity
             android:name=".view.game.GameActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.mainmenu.MainMenuActivity"
             android:screenOrientation="landscape"

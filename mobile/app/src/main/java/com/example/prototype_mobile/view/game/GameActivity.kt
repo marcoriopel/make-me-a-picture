@@ -237,9 +237,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     gameViewModel.setEndGameResult("Vous avez perdu", "Meilleur change la prochaine fois! Vous avez perdu ${score}", EndGameResult(false, null))
                 }
                 mediaPlayer?.start()
-                val intent = Intent(this, EndGameActivity::class.java)
-                startActivity(intent)
+            } else {
+                val score = gameViewModel.teamScore.value!!.score[0]
+                gameViewModel.setEndGameResult("Bien joué!", "Bravo, vous avez un score de ${score} points!", EndGameResult(true, null))
             }
+            val intent = Intent(this, EndGameActivity::class.java)
+            startActivity(intent)
         }
     }
 
