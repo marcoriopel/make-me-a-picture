@@ -2,6 +2,7 @@ export interface Chat {
     name: string;
     messages: Message[];
     chatId: string;
+    isGameChat: boolean;
 }
 
 export interface JoinedChat {
