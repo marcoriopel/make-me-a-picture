@@ -115,7 +115,7 @@ export class ChatManagerService {
     }
 
     async removeUserFromChat(username: string, chatId: string) {
-        try{
+        try {
             await this.chatModel.removeUserFromChat(username, chatId);
             const response = await this.chatModel.getUsersInChat(chatId);
             if(!response){
@@ -125,7 +125,7 @@ export class ChatManagerService {
                 this.chatModel.deleteChat(chatId);
             }
         }
-        catch(e){
+        catch (e) {
             console.error(e);
         }
     }

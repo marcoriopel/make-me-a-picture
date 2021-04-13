@@ -18,6 +18,9 @@ export class SoloGame extends Game {
     private score: number = 0;
     private guessesLeft: number = 0;
     private pastVirtualDrawings: string[] = [];
+    private pastVirtualDrawingsId: string[] = [];
+    private transitionInterval: NodeJS.Timeout;
+    private transitionTimerCount: number = 5;
     private gameTimerCount: number = 0;
     private gameTimerInterval: NodeJS.Timeout;
     private drawingTimerCount: number = 0;
@@ -50,12 +53,29 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
-        this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+        const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
+        this.currentDrawingName = drawing.drawingName;
+        this.pastVirtualDrawingsId.push(drawing.drawingId);
+        this.pastVirtualDrawings.push(drawing.drawingName);
         this.pastVirtualDrawings.push(this.currentDrawingName);
-        this.startGameTimer();
-        this.startDrawingTimer();
-        this.vPlayer.startDrawing();
+        this.startGameTransition();
     }
+
+    startGameTransition() {
+        this.transitionInterval = setInterval(() => {
+            this.socketService.getSocket().to(this.id).emit('transitionTimer', { "timer": this.transitionTimerCount });
+            if (!this.transitionTimerCount) {
+                this.startGameTimer();
+                this.startDrawingTimer();
+                this.vPlayer.startDrawing();
+            }
+            else {
+                --this.transitionTimerCount;
+            }
+        }, 1000);
+
+    }
+
 
     guessDrawing(username: string, guess: string): void {
         if (!this.players.has(username)) {
@@ -89,8 +109,9 @@ export class SoloGame extends Game {
         clearInterval(this.drawingTimerInterval);
         this.setGuesses();
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
+        let drawing;
         try {
-            this.currentDrawingName = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
+            drawing = await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings);
         } catch (err) {
             if (err.message == "Max drawings") {
                 this.socketService.getSocket().to(this.id).emit('maxScore', {});
@@ -98,7 +119,9 @@ export class SoloGame extends Game {
                 return;
             }
         }
-        this.pastVirtualDrawings.push(this.currentDrawingName);
+        this.currentDrawingName = drawing.drawingName;
+        this.pastVirtualDrawingsId.push(drawing.drawingId);
+        this.pastVirtualDrawings.push(drawing.drawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
         await this.delay();
         this.vPlayer.startDrawing();
@@ -112,7 +135,7 @@ export class SoloGame extends Game {
         clearInterval(this.gameTimerInterval);
         this.guessesLeft = 0;
         this.vPlayer.stopDrawing();
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score });
+        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
         this.vPlayer.sayEndSoloGame(this.score);
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
@@ -157,6 +180,7 @@ export class SoloGame extends Game {
     }
 
     startGameTimer() {
+        clearInterval(this.transitionInterval);
         this.gameTimerCount = 120;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "timer": this.gameTimerCount });
@@ -193,7 +217,7 @@ export class SoloGame extends Game {
     }
 
 
-    disconnectGame(username: string){
+    disconnectGame(username: string) {
         this.endGame();
     }
 

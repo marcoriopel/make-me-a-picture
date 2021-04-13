@@ -76,7 +76,7 @@
         android:text="@string/coop_sprint"
         android:textStyle="bold"
         android:background="@drawable/button_rounded"
-        android:drawableRight="@drawable/icon_solo"
+        android:drawableRight="@drawable/ic_hands_helping_solid"
         app:backgroundTint = "@null"
         android:textAllCaps="false"
         android:gravity="left|center_vertical"

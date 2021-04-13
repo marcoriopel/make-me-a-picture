@@ -33,18 +33,20 @@ class ChatRepository {
     val messageReceived: LiveData<Message> = _messageReceived
 
     private val myUsername = LoginRepository.getInstance()!!.user!!.username
+    private val myAvatar = LoginRepository.getInstance()!!.user!!.avatar
     private val token = LoginRepository.getInstance()!!.user!!.token
     private val gson: Gson = Gson()
     private val channelJoinedSet = mutableSetOf<String>()
     private val channelNotJoinedSet = mutableSetOf<String>()
 
     var onUpdateChat = Emitter.Listener {
+        Log.e("Message", it[0].toString())
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1
         if (myUsername == messageReceive.user.username) {
             messageType = 0
         }
-        val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType, messageReceive.timestamp)
+        val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType, messageReceive.timestamp, messageReceive.user.avatar)
         channelMap[messageReceive.chatId]?.add(message)
 
         if (messageReceive.chatId == channelShown) {
@@ -59,7 +61,7 @@ class ChatRepository {
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
         val generalChatMessage: MutableList<Message> = mutableListOf()
-        generalChatMessage.add(Message("","", "", 2, 0))
+        generalChatMessage.add(Message("","", "", 2, 0, myAvatar))
         channelMap.putIfAbsent("General", generalChatMessage)
         channelJoinedSet.add("General")
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
@@ -111,8 +113,8 @@ class ChatRepository {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
-                    newMessageList.add(Message("", "", "", 3, 0))
-                    newMessageList.add(Message("", "", "", 2, 0))
+                    newMessageList.add(Message("", "", "", 3, 0, myAvatar))
+                    newMessageList.add(Message("", "", "", 2, 0, myAvatar))
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
@@ -197,10 +199,10 @@ class ChatRepository {
     private fun analyseGetChannelsAnswer(response: Response): Result<ChannelList> {
         val jsonData: String = response.body()!!.string()
         val channelList = gson.fromJson(jsonData, ChannelList::class.java)
-        if(response.code() == ResponseCode.OK.code) {
-            return Result.Success(channelList)
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success(channelList)
         } else {
-            return Result.Error(response.code())
+            Result.Error(response.code())
         }
     }
 
@@ -223,7 +225,7 @@ class ChatRepository {
                     messageType = 0
                 }
                 val username = message.username ?: "Unavailable"
-                historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp))
+                historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp, message.avatar))
             }
             if (channelMap.containsKey(channelShown)) {
                 if (channelShown == "General") {
@@ -232,11 +234,11 @@ class ChatRepository {
                     channelMap[channelShown]!!.removeAt(1)
                     channelMap[channelShown]!!.removeAt(0)
                 }
-                var firstMessageTimestamp: Long
-                if (channelShown == "General") {
-                    firstMessageTimestamp = if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
+                val firstMessageTimestamp: Long
+                firstMessageTimestamp = if (channelShown == "General") {
+                    if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
                 } else {
-                    firstMessageTimestamp = if (channelMap[channelShown]!!.size > 1) channelMap[channelShown]!![1].timestamp else Long.MAX_VALUE
+                    if (channelMap[channelShown]!!.size > 1) channelMap[channelShown]!![1].timestamp else Long.MAX_VALUE
                 }
                 for (message in historyMessage.asReversed()) {
                     if (message.timestamp < firstMessageTimestamp) {
@@ -246,7 +248,7 @@ class ChatRepository {
                     }
                 }
                 if (channelShown != "General") {
-                    channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0))
+                    channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0, myAvatar))
                 }
             }
         }

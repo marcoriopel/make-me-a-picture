@@ -145,7 +145,6 @@ class LoginActivity : AppCompatActivity() {
     }
 }
 
-
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
  */

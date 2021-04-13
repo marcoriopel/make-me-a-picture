@@ -8,6 +8,7 @@ export interface MouseDown {
     lineColor: string;
     lineWidth: number;
     coords: Vec2;
+    strokeNumber: number;
 }
 
 export interface Vec2 {

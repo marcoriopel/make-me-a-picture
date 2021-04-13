@@ -90,12 +90,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
 
         return liveDataMerger
     }
-
-    fun updateData(difficulty: GameDifficulty, str: String) {
-        liveDataMerger.value = Difficulty(difficulty)
-        liveDataMerger.value = GameName(str)
-    }
-
+    
     fun createGame() {
         viewModelScope.launch {
             var gameData = CreateGame(null, null, null)

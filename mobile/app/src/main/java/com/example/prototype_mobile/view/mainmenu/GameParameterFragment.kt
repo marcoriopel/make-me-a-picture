@@ -134,8 +134,8 @@ class GameParameterFragment : Fragment() {
     }
 
     fun updateFragmentView(type: SelectedButton) {
-        mainMenuViewModel.updateData(GameDifficulty.NONE, "")
-        binding.StartGame.isActivated =false
+        mainMenuViewModel.setGameName("")
+        mainMenuViewModel.setGameDifficulty(GameDifficulty.NONE)
         when(type)
         {
 
@@ -158,10 +158,7 @@ class GameParameterFragment : Fragment() {
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"
-                binding.gameLogo.setImageResource(R.drawable.icon_solo)
-                if(isPrivate) {
-                    println("Private ")
-                }
+                binding.gameLogo.setImageResource(R.drawable.ic_hands_helping_solid)
             }
             else -> throw(Exception("Unknown state exception"))
         }
