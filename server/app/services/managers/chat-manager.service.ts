@@ -36,10 +36,10 @@ export class ChatManagerService {
             const userChats = userInfo.rooms;
             for (let chatId of userChats) {
                 const chatInfo = await this.chatModel.getChatInfo(chatId);
-                if(chatInfo == null){
+                if (chatInfo == null) {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
-                else{
+                else {
                     chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
                 }
             }
@@ -118,10 +118,10 @@ export class ChatManagerService {
         try {
             await this.chatModel.removeUserFromChat(username, chatId);
             const response = await this.chatModel.getUsersInChat(chatId);
-            if(!response){
+            if (!response) {
                 throw new Error("Chat does not exist");
             }
-            else if(response.users.length == 0) {
+            else if (response.users.length == 0) {
                 this.chatModel.deleteChat(chatId);
             }
         }
@@ -133,10 +133,10 @@ export class ChatManagerService {
     async deleteChatRequest(chatId: string, res: Response, next: NextFunction) {
         try {
             const success = await this.deleteChat(chatId);
-            if(success){
+            if (success) {
                 next();
             }
-            else{
+            else {
                 throw new Error("chat does not exist")
             }
         }
@@ -149,17 +149,17 @@ export class ChatManagerService {
         try {
             const chatInfo = await this.chatModel.getChatInfo(chatId);
             console.log(chatInfo)
-            if(!chatInfo){
+            if (!chatInfo) {
                 throw new Error("Tried to delete chat that does not exist")
             }
-            else{
-                for(let username of chatInfo.users){
+            else {
+                for (let username of chatInfo.users) {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
                 await this.chatModel.deleteChat(chatId);
-                this.socketService.getSocket().to(chatId).emit('message', { "user": { username: "System" }, "text": "Ce canal a été supprimé", "timestamp": 0, "textColor": "#2065d4", chatId: chatId });
-                return true; 
-            } 
+                this.socketService.getSocket().to(chatId).emit('message', { "user": { username: "System", avatar: -1 }, "text": "Ce canal a été supprimé", "timestamp": 0, "textColor": "#2065d4", chatId: chatId });
+                return true;
+            }
         }
         catch (e) {
             console.error(e);

@@ -36,11 +36,11 @@ export class ClassicGame extends Game {
     private gameImagesUrl: FeedImage[] = [];
 
     constructor(
-        lobby: ClassicLobby, 
-        socketService: SocketService, 
-        private drawingsService: DrawingsService, 
-        private statsService: StatsService, 
-        private userService: UserService, 
+        lobby: ClassicLobby,
+        socketService: SocketService,
+        private drawingsService: DrawingsService,
+        private statsService: StatsService,
+        private userService: UserService,
         private chatManagerService: ChatManagerService) {
         super(<Lobby>lobby, socketService);
         this.teams = lobby.getTeams();
@@ -56,13 +56,13 @@ export class ClassicGame extends Game {
         this.assignRandomDrawingPlayer(0);
         this.assignRandomDrawingPlayer(1);
         await this.setupVPlayers();
-        for(const vPlayer of this.vPlayers){
-            if(vPlayer){
-               vPlayer.sayHello(); 
+        for (const vPlayer of this.vPlayers) {
+            if (vPlayer) {
+                vPlayer.sayHello();
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.drawingPlayer[this.drawingTeam].username, "teams": this.getPlayers() });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft });
@@ -270,7 +270,7 @@ export class ClassicGame extends Game {
         clearInterval(this.transitionInterval);
         this.transitionTimerCount = 5;
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         if (this.drawingPlayer[this.drawingTeam].isVirtual) {
             this.startTimer(true);
             const drawing = await (await this.vPlayers[this.drawingTeam].getNewDrawing(this.difficulty, this.pastVirtualDrawings));
@@ -291,7 +291,7 @@ export class ClassicGame extends Game {
         this.sendVPlayerEndGameMessage();
         this.uploadRandomFeedImage();
         this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System" }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
         this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
         this.chatManagerService.deleteChat(this.id);
     }
@@ -420,12 +420,12 @@ export class ClassicGame extends Game {
         }
     }
 
-    async setupVPlayers(){
+    async setupVPlayers() {
         for (let i = 0; i < this.vPlayers.length; ++i) {
             if (this.vPlayers[i]) {
                 this.vPlayers[i].setServices(this.drawingsService, this.socketService, this.userService);
-                for(let player of this.teams[i].values()){
-                    if(player.username != this.vPlayers[i].getBasicUser().username){
+                for (let player of this.teams[i].values()) {
+                    if (player.username != this.vPlayers[i].getBasicUser().username) {
                         await this.vPlayers[i].setTeammates(player);
                     }
                 }
