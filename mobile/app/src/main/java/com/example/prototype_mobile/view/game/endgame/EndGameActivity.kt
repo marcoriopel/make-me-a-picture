@@ -63,12 +63,13 @@ class EndGameActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_end_game)
+        binding = ActivityEndGameBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
         toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
         setSupportActionBar(toolbar)
 
-        binding = ActivityEndGameBinding.inflate(layoutInflater)
         endGameViewModel = ViewModelProvider(this).get(EndGameViewModel::class.java)
 
         supportFragmentManager.beginTransaction()
