@@ -65,6 +65,8 @@ class ColorFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ColorViewModel::class.java)
         viewModel.setColor(primaryColor)
 
+
+
         updateButtonColor(primaryColor)
         secondaryButtons.add(binding.secondary1)
         secondaryButtons.add(binding.secondary2)
@@ -86,27 +88,7 @@ class ColorFragment : Fragment() {
         }
     }
 
-    fun updateAlpha(alpha: Int) {
-        println("Update alpha called")
 
-        colorList = intArrayOf(
-        Color.argb(alpha,235, 87, 87),
-        Color.argb(alpha,242, 153, 74),
-        Color.argb(alpha,242, 201, 76),
-        Color.argb(alpha,33, 150, 83),
-        Color.argb(alpha,39, 174, 96),
-        Color.argb(alpha,47, 128, 237),
-        Color.argb(alpha,86, 204, 242),
-        Color.argb(alpha,155, 81, 224),
-        Color.argb(alpha,0, 0, 0)
-        )
-        var i = 0
-        for (button in secondaryButtons) {
-            button.setColorFilter(colorList[i])
-
-            i++
-        }
-    }
 
     private fun openColorPicker() {
         activity?.let {
