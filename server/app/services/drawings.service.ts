@@ -19,7 +19,7 @@ export class DrawingsService {
     async addDrawing(req: Request, res: Response, user: BasicUser) {
         try {
             let drawing: Drawing
-            if ((req.body.difficulty instanceof Object)) {
+            if ((req.body.pencilStrokes instanceof Object)) {
                 drawing = {
                     "drawingId": uuid(),
                     "difficulty": req.body.difficulty,
@@ -42,7 +42,7 @@ export class DrawingsService {
             }
 
             console.log(drawing)
-            console.log(drawing.pencilStrokes[0])
+            console.log(drawing.pencilStrokes)
 
             if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
