@@ -88,7 +88,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
                     if(toolRepo.selectedTool.value == Tool.PEN) {
-                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#"  + Integer.toHexString(paint.alpha) + Integer.toHexString(paint.color).substring(2), pathStack.size)
                     } else {
                         canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthEraser.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
                     }

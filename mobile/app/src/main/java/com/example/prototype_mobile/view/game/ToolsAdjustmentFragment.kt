@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentToolsAdjustmentBinding
-import com.example.prototype_mobile.databinding.FragmentToolsBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 import com.example.prototype_mobile.viewmodel.game.ColorViewModel
 import com.example.prototype_mobile.viewmodel.game.ToolsAdjustmentViewModel
@@ -71,4 +70,4 @@ class ToolsAdjustmentFragment : Fragment() {
         }
     }
 
-}
+}S

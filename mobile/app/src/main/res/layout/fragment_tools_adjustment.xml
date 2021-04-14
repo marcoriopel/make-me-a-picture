@@ -88,7 +88,7 @@
             android:value="255"
             android:stepSize="0"
             android:valueFrom="0.0"
-            android:valueTo="255.0" />
+            android:valueTo="100.0" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/slider_grid_layout"
