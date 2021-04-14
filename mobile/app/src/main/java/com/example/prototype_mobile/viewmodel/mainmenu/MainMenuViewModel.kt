@@ -11,6 +11,7 @@ import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButton
+import com.example.prototype_mobile.model.mainmenu.GameListRepository
 import java.lang.Exception
 
 //This class is a sharedViewModel that will allow us to send information to the server
@@ -22,9 +23,14 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     val creationGameButtonType: LiveData<SelectedButton> = _creationGameButtonType
 
     private val _gameName = MutableLiveData<String>()
-    private val _incognitoModeActivated = MutableLiveData<Boolean>()
+    val _isPrivate = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
+
+
+    var _gameInviteID = MutableLiveData<String?>()
+
+
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
     private val _lobbyJoined = MutableLiveData<Game>()
@@ -40,6 +46,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         liveDataMerger= fetchData()
         lobbyRepository = LobbyRepository.getInstance()!!
 
+        _isPrivate.value = false
         lobbyRepository.lobbyJoined.observeForever(Observer {
             _lobbyJoined.value = it ?: return@Observer
         })
@@ -58,7 +65,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
 
     fun setIncognitoMode(mode:Boolean) {
-        _incognitoModeActivated.value = mode
+        _isPrivate.value = mode
     }
 
     fun setGameDifficulty(difficulty: GameDifficulty) {
@@ -100,16 +107,47 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                 }
                 else -> println("Somethings wrong with game data")
             }
-            val result: Result<Game> = mainMenuRepository.createGame(gameData)
-
+            val result: Result<GameInvited> = mainMenuRepository.createGame(gameData, _isPrivate.value!!)
             if (result is Result.Success) {
+                println(result.data.lobbyInvited)
+                if(result.data.lobbyInvited != null) {
+                    _gameInviteID.value = result.data.lobbyInvited
+                }
                 lobbyRepository.listenLobby(result.data.gameID)
+                var game = Game(result.data.gameID,result.data.gameName,result.data.difficulty, result.data.gameType,_isPrivate.value!!)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {
                 println("Bad request")
             }
         }
+    }
+
+     fun joinPrivateGame(code: String) {
+
+
+         viewModelScope.launch {
+             try{
+                 GameListRepository.getInstance()!!.getGameList()
+             } catch (e: IllegalAccessException){
+                 throw e
+             }
+             var result = lobbyRepository.joinPrivate(code)
+
+             if(result is Result.Success) {
+                 _gameInviteID.postValue(code)
+                 val gameList = GameListRepository.getInstance()!!.allGames
+                 var game = gameList.firstOrNull { it.gameID == result.data.lobbyId }
+                 if(game != null){
+                     println("Join public game from join private game")
+                     lobbyRepository.joinLobby(game)
+                 }
+
+
+
+             }
+
+         }
     }
 
     fun logout() {

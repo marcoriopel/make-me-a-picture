@@ -24,6 +24,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
   constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) { }
 
   ngOnInit(): void {
+    console.log('SPRINT GAME INIT')
     this.socketService.bind('drawingEvent', (data: any) => {
       this.handleDrawingEvent(data.drawingEvent);
     });
@@ -65,6 +66,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
           this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
+          console.log('SPRINT GAME COMPONENT')
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;
 

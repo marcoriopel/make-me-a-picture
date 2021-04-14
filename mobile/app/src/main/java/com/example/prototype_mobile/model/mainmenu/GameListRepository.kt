@@ -13,9 +13,25 @@ import org.json.JSONObject
 
 class GameListRepository {
 
+
+    companion object {
+        private var instance: GameListRepository? = null
+
+        fun getInstance(): GameListRepository? {
+            if (instance == null) {
+                synchronized(GameListRepository::class.java) {
+                    if (instance == null) {
+                        instance = GameListRepository()
+                    }
+                }
+            }
+            return instance
+        }
+    }
     var lobbyRepository = LobbyRepository.getInstance()!!
     val filters = arrayOf(true, true, true, true, true)
     var filterGameName: String = ""
+    var allGames: MutableList<Game> = mutableListOf()
 
     suspend fun getGameList(): Result<MutableList<Game>> {
         val response = HttpRequestDrawGuess.httpRequestGet("/api/games/list")
@@ -24,8 +40,8 @@ class GameListRepository {
 
     fun analyseGameListAnswer(response: Response): Result<MutableList<Game>> {
         val jsonData: String = response.body()!!.string()
-        if(response.code() == ResponseCode.OK.code) {
-            var gameList: MutableList<Game> = mutableListOf()
+        allGames  = mutableListOf()
+        if(response.code() == ResponseCode.OK.code){
             val jObject = JSONObject(jsonData)
             val jArray = jObject.getJSONArray("lobbies")
             for (i in 0 until jArray.length()) {
@@ -34,10 +50,14 @@ class GameListRepository {
                     gameJson.getString("id"),
                     gameJson.getString("gameName"),
                     GameDifficulty.values()[gameJson.getInt("difficulty")],
-                    GameType.values()[gameJson.getInt("gameType")])
-                gameList.add(game)
+                    GameType.values()[gameJson.getInt("gameType")],
+                        gameJson.getBoolean("isPrivate")
+                )
+                allGames.add(game)
+
+
             }
-            val filteredGameList = gameList.filter{ filterGame(it) } as MutableList<Game>
+            val filteredGameList = allGames.filter{ filterGame(it) } as MutableList<Game>
             return Result.Success(filteredGameList)
         } else {
             return Result.Error(response.code())
@@ -63,6 +83,8 @@ class GameListRepository {
         if (!filters[GameFilter.HARD.filter] && game.difficulty == GameDifficulty.HARD) {
             return false
         }
+        if(game.isPrivate)
+            return false
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }
@@ -76,6 +98,7 @@ class GameListRepository {
     }
 
     suspend fun joinLobby(game: Game): Result<Game> {
+        println("Game list join lobby")
         return lobbyRepository.joinLobby(game)
     }
 }

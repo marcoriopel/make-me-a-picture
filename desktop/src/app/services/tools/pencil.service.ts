@@ -47,9 +47,6 @@ export class PencilService extends Tool {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.pathData.push(this.mouseDownCoord);
             this.updatePencilData();
-            if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-                this.drawingService.strokeNumber++;
-            }
 
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
@@ -62,6 +59,7 @@ export class PencilService extends Tool {
             this.drawingService.strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
             
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
+
             this.drawingService.setIsToolInUse(true);
         }
         if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -95,6 +93,9 @@ export class PencilService extends Tool {
                     gameId: this.gameService.gameId,
                 }
                 this.socketService.emit('drawingEvent', drawingEvent);
+                if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+                    this.drawingService.strokeNumber++;
+                }
             }
         }
         this.mouseDown = false;
@@ -105,13 +106,13 @@ export class PencilService extends Tool {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
-            if(this.gameService.isInGame) {
-                this.drawingService.strokes[this.drawingService.strokeNumber - 1].path.push(mousePosition);
+            if(this.gameService.isInGame && !this.gameService.isPlayerDrawing) {
+                this.drawingService.strokes[this.drawingService.strokeNumber].path.push(mousePosition);
             }
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
-            this.drawingService.strokeStack.forEach((stroke: any) => {
-                this.drawPencilStroke(this.drawingService.baseCtx, stroke);
-            });
+            // this.drawingService.strokes.forEach((stroke: any) => {
+            //     this.drawPencilStroke(this.drawingService.baseCtx, stroke);
+            // });
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -126,19 +127,19 @@ export class PencilService extends Tool {
     }
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
-        if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-            ctx.lineWidth = pencil.lineWidth;
-            ctx.strokeStyle = pencil.lineColor;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-            ctx.beginPath();
+        // if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+        //     ctx.lineWidth = pencil.lineWidth;
+        //     ctx.strokeStyle = pencil.lineColor;
+        //     ctx.lineJoin = 'round';
+        //     ctx.lineCap = 'round';
+        //     ctx.beginPath();
     
-            for(let i = 0; i < pencil.path.length - 1; i++){
-                ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
-            }
-            ctx.stroke();
-        } else {
-            this.drawingService.clearCanvas(this.drawingService.baseCtx);
+        //     for(let i = 0; i < pencil.path.length - 1; i++){
+        //         ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
+        //     }
+        //     ctx.stroke();
+        // } else {
+            // this.drawingService.clearCanvas(this.drawingService.baseCtx);
             for(let i = 0; i < this.drawingService.strokes.length; i++){
                 ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
                 ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
@@ -150,7 +151,7 @@ export class PencilService extends Tool {
                 }
                 ctx.stroke();
             }
-        }
+        // }
     }
 
     changeWidth(newWidth: number): void {

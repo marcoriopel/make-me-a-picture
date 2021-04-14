@@ -110,6 +110,12 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.gameId);
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    this.gameManagerService.disconnectGame(request.gameId, user.username);
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
             });
 
             socket.on('guessDrawing', (request: any) => {

@@ -1,53 +1,58 @@
 package com.example.prototype_mobile.viewmodel.game
 
 import android.graphics.*
+import android.util.Base64
 import android.util.Log
 import android.view.MotionEvent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.prototype_mobile.*
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
+import com.example.prototype_mobile.DrawingEvent
+import com.example.prototype_mobile.MouseDown
+import com.example.prototype_mobile.PaintedPath
+import com.example.prototype_mobile.Vec2
 import com.example.prototype_mobile.model.game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.util.*
 import kotlin.math.abs
+
 
 const val GRID_WIDTH = 2f // has to be float
 const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
+    // Attribute
+    var canStartNewThread = true
+    var curPath = Path()
     private var lastCoordsReceive: Vec2 = Vec2(0,0)
-    // Path
     private var motionTouchEventX = 0f
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
-    var curPath = Path()
-    private val _newCurPath = MutableLiveData<Path>()
-    val newCurPath: LiveData<Path> = _newCurPath
-
-    private val _drawingName = MutableLiveData<String?>()
-    var drawingName: LiveData<String?> = _drawingName
-
-    // Undo-Redo
-    val pathStack = Stack<PaintedPath>()
-    private var redoStack = Stack<PaintedPath>()
-
-    // Repository
-    private val toolRepo = ToolRepository.getInstance()
-    private val gameRepo = GameRepository.getInstance()
-
-    // Text Paint
     private val textPaint = Paint().apply {
         color = Color.BLACK
         textSize = 30F
         isAntiAlias = true
         isDither = true
     }
+
+    // Repository
+    private val toolRepo = ToolRepository.getInstance()
+    private val gameRepo = GameRepository.getInstance()
+
+    // Live Data
+    private val _newCurPath = MutableLiveData<Path>()
+    val newCurPath: LiveData<Path> = _newCurPath
+
+    private val _drawingName = MutableLiveData<String?>()
+    var drawingName: LiveData<String?> = _drawingName
+
+    val pathStack = Stack<Pair<Int,PaintedPath>>()
+    private var redoStack = Stack<Pair<Int,PaintedPath>>()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
@@ -81,7 +86,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
+                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
                 }
             }
         }
@@ -96,10 +101,10 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             EVENT_TOUCH_DOWN -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
-                toolRepo.setStrokeWidth(touchDown.lineWidth.toFloat())
+                toolRepo.setStrokeWidth((touchDown.lineWidth.toFloat() * 1.5).toFloat())
                 motionTouchEventX = (touchDown.coords.x.toFloat() * 1.5).toFloat()
                 motionTouchEventY = (touchDown.coords.y.toFloat() * 1.5).toFloat()
-                touchStart()
+                touchStart(touchDown.strokeNumber)
             }
             EVENT_TOUCH_MOVE -> {
                 val touchMove: Vec2 = drawingEvent.event as Vec2
@@ -132,15 +137,15 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * Handle user event touch down and send data to
      *  the server in live
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    private fun touchStart() {
-        curPath.reset()
+    private fun touchStart(strokeNumber: Int) {
+        curPath = Path()
+        pathStack.push(Pair(strokeNumber, PaintedPath(curPath, toolRepo!!.getPaintCopy())))
+        pathStack.sortBy { it.first }
         curPath.moveTo(motionTouchEventX, motionTouchEventY)
         // Add dot for touch feedback
         curPath.lineTo(motionTouchEventX + .01F , motionTouchEventY + .01F)
-
         currentX = motionTouchEventX
         currentY = motionTouchEventY
-
         // Call the onDraw() method to update the view
         _newCurPath.postValue(curPath)
     }
@@ -171,14 +176,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun touchUp() {
         // Undo Redo Feature
-        redoStack = Stack<PaintedPath>()
-        pathStack.push(PaintedPath(curPath, toolRepo!!.getPaintCopy()))
-
-        // Rewind the current path for the next touch
-        curPath = Path()
-
-        // Call the onDraw() method to update the view
-        _newCurPath.postValue(curPath)
+        redoStack = Stack<Pair<Int,PaintedPath>>()
     }
     
     // Grid attribute
@@ -219,7 +217,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         }
     }
 
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the bitmap of the grid to be able to draw it on a
      * canvas
@@ -228,7 +225,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         return gridBitmap
     }
 
-    // Undo - Redo
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Undo: Remove the last action
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -238,17 +234,26 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         _newCurPath.postValue(null)
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Redo: Add back the last action
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun redo() {
         if (!redoStack.empty())
             pathStack.push(redoStack.pop())
         _newCurPath.postValue(null)
     }
 
-    var canStartNewThread = true
-   private fun onReceivingEvent() {
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Class the drawing event on the right order (New Eraser)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun onReceivingEvent() {
        if (canStartNewThread) {
            canStartNewThread = false
            viewModelScope.launch(Dispatchers.IO) {
+               while (!canvasRepository.eraserStrokesList.isEmpty()) {
+                   val eraser = canvasRepository.eraserStrokesList.poll()
+                   onDrawingEvent(eraser)
+               }
                while (!canvasRepository.drawingEventList.isEmpty()) {
                    val json = canvasRepository.drawingEventList.poll()
                    if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
@@ -259,7 +264,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                            EVENT_TOUCH_DOWN -> {
                                val Jevent = JSONObject(objectJson.getString("event"))
                                val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords)
+                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
                                DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
                            }
                            EVENT_TOUCH_MOVE -> {
@@ -280,7 +285,33 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
            }
        }
 
-   }
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Get an image of the drawing
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun getDrawingImage(): String {
+        // Draw all path
+        val bitmap = Bitmap.createBitmap(1200, 820, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        for (paintedPath in pathStack)
+            canvas.drawPath(paintedPath.second.path, paintedPath.second.paint)
+        canvas.drawPath(curPath, getPaint())
+        // Create drawing image
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Save the image to the end game repo
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun saveDrawingImage() {
+        val image = getDrawingImage()
+        EndGameRepository.getInstance()!!.addDrawingImage(image)
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
     * Bind observer
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -295,6 +326,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
             _newCurPath.value = curPath
         }
         canvasRepository.drawingEvent.observeForever {
+            if(it.eventType == EVENT_CLEAR)
+                canvasRepository.setGrid(false)
             onDrawingEvent(it)
         }
         canvasRepository.drawingEventServer.observeForever {
@@ -303,7 +336,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         GameRepository.getInstance()!!.drawingName.observeForever {
             _drawingName.postValue(it)
         }
+        GameRepository.getInstance()!!.saveDrawingImage.observeForever {
+            saveDrawingImage()
+        }
     }
-
-
 }

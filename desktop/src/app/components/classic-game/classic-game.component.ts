@@ -15,7 +15,6 @@ import { ChatService } from '@app/services/chat/chat.service';
   styleUrls: ['./classic-game.component.scss']
 })
 export class ClassicGameComponent implements OnInit, OnDestroy {
-
   guessForm = this.formBuilder.group({
     guess: '',
   });
@@ -25,6 +24,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
+      console.log(data.drawingEvent);
       this.handleDrawingEvent(data.drawingEvent);
     });
   }
@@ -43,6 +43,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('drawingEvent');
     this.socketService.unbind('eraserStrokes');
     this.socketService.unbind('transitionTimer');
     this.socketService.unbind('drawingName');
@@ -64,6 +65,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
           this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
+          console.log('CLASSIC GAME COMPONENT')
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;
 
