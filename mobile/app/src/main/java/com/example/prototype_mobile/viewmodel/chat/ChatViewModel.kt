@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.viewmodel.connection.chat
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.R
@@ -52,6 +53,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 switchChannel("General")
                 leaveChannel(it)
         }
+        switchChannel(chatRepository.channelShown)
     }
 
     fun onDestroy(token:String) {
@@ -93,11 +95,11 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
-    var joinLimit = 4
+    var joinLimit = 10
     var chatTryingToBeJoined = ""
     fun joinLobbyChannel(chatId: String) {
         if (chatTryingToBeJoined != chatId) {
-            joinLimit = 4
+            joinLimit = 10
             chatTryingToBeJoined = chatId
         }
         viewModelScope.launch(Dispatchers.IO)
@@ -169,27 +171,26 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     }
 
     fun switchChannel(chatId: String) {
-
-        _messageList.postValue(chatRepository.channelMap[chatId]!!)
-
-        viewModelScope.launch(Dispatchers.IO){
-            channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
-            channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN
+        if (chatRepository.channelMap.containsKey(chatId)) {
+            _messageList.postValue(chatRepository.channelMap[chatId]!!)
             chatRepository.channelShown = chatId
-            getChannels()
+
+            viewModelScope.launch(Dispatchers.IO) {
+                channelList.firstOrNull { c -> c.channelState == ChannelState.SHOWN }?.channelState = ChannelState.JOINED
+                channelList.firstOrNull { c -> c.chatId == chatId }?.channelState = ChannelState.SHOWN
+                getChannels()
+            }
         }
     }
 
     fun showHistory() {
         viewModelScope.launch(Dispatchers.IO)
         {
-            val result: Result<Boolean> =
-                /*try {
+            val result: Result<Boolean> = try {
                     chatRepository.getHistory()
             } catch (e: Exception) {
                 Result.Error(ResponseCode.BAD_REQUEST.code)
-            }*/
-                    chatRepository.getHistory()
+            }
 
             if (result is Result.Success) {
                 if (chatRepository.channelMap.containsKey(chatRepository.channelShown)) {

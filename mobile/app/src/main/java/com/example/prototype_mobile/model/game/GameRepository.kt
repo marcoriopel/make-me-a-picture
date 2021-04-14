@@ -9,6 +9,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
@@ -137,6 +138,7 @@ class GameRepository {
     }
 
     private var onEndGameEvent = Emitter.Listener {
+        LobbyRepository.getInstance()!!.currentListenLobby = "null"
         val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
         val endGameRepos = EndGameRepository.getInstance()!!
         for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
@@ -241,7 +243,6 @@ class GameRepository {
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-        _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)
