@@ -105,7 +105,7 @@ export class DrawingsService {
     async getFeedInfo(res: Response, next: NextFunction) {
         try {
             const drawingInfo = await this.drawingsModel.getFeedInfo();
-            next(drawingInfo);
+            next(drawingInfo.slice(Math.max(drawingInfo.length - 10, 0)));
         }
         catch (e) {
             return res.status(StatusCodes.BAD_REQUEST).send(e.message);
