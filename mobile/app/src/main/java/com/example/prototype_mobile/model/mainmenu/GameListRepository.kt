@@ -88,14 +88,7 @@ class GameListRepository {
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }
-    fun findGame(id: String): Result<Game> {
-        for (game in allGames) {
-            if(game.gameID.equals(id))
-                return Result.Success(game)
-        }
-        return Result.Error(1)
-    }
-
+    
     fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {
         filters[filter.filter] = showThisTypeOfGame
     }
