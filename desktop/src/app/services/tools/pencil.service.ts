@@ -52,7 +52,7 @@ export class PencilService extends Tool {
                 lineColor: this.pencilData.lineColor,
                 lineWidth: this.pencilData.lineWidth,
                 strokeNumber: this.pencilData.strokeNumber,
-                path: [],
+                path: [this.mouseDownCoord],
                 isEraser: this.pencilData.isEraser,
             }
             this.drawingService.strokes.push(stroke);
@@ -106,7 +106,7 @@ export class PencilService extends Tool {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
-            this.drawingService.strokes[this.drawingService.strokeNumber].path.push(mousePosition);
+            this.drawingService.strokes.find((d) => d.strokeNumber == this.drawingService.strokeNumber)?.path.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
