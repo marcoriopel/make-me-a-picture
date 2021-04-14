@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.model.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -55,8 +56,8 @@ class CanvasRepository {
     var drawingEventServer: LiveData<Boolean> = _drawingEventServer
 
     val drawingEventList = LinkedList<String>()
-
     val eraserStrokesList = LinkedList<DrawingEvent>()
+
     var onDrawingEvent = Emitter.Listener {
         drawingEventList.add(it[0].toString())
         _drawingEventServer.postValue(true)
