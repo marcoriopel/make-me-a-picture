@@ -115,14 +115,7 @@
         android:gravity="center"
         android:src="@drawable/icon_incognito_64"
         android:textStyle="bold" />
-    <EditText
-        android:id="@+id/password_private_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:ems="10"
-        android:hint="Code accès"
-        android:visibility="invisible"/>
+
     <Button
         android:id="@+id/StartGame"
         android:layout_width="wrap_content"

@@ -24,7 +24,10 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
         viewModelScope.launch {
-            val result : Result<LoggedInUser> = loginRepository.login(username, password)
+            val result : Result<LoggedInUser> = try{ loginRepository.login(username, password)}
+            catch(e: Exception) {
+                Result.Error(ResponseCode.BAD_REQUEST.code)
+            }
             if (result is Result.Success) {
                 _loginResult.value = LoginResult(success = result.data.username)
             }

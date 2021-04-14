@@ -9,11 +9,13 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.lang.NullPointerException
 import java.lang.reflect.Type
 
 
@@ -136,6 +138,7 @@ class GameRepository {
     }
 
     private var onEndGameEvent = Emitter.Listener {
+        LobbyRepository.getInstance()!!.currentListenLobby = "null"
         val vPlayersDrawing = gson.fromJson(it[0].toString(), VPlayerDrawingEndGame::class.java)
         val endGameRepos = EndGameRepository.getInstance()!!
         for(vDrawingName in vPlayersDrawing.virtualPlayerDrawings) {
@@ -226,10 +229,20 @@ class GameRepository {
         socket.emit("drawingSuggestions", gson.toJson(data), opts)
     }
 
+    fun leaveGame() {
+        try {
+            val opts = IO.Options()
+            opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
+            val data = gson.toJson(GameId(this.gameId!!))
+            socket.emit("leaveGame", data, opts)
+        } catch (e: NullPointerException) {
+            println("Safe destructor leave game -> User already disconnected")
+        }
+    }
+
     init {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
-        _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)

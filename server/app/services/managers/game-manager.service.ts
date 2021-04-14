@@ -50,6 +50,7 @@ export class GameManagerService {
                 const classicGame = new ClassicGame(<ClassicLobby>lobby, this.socketService, this.drawingsService, this.statsService, this.userService, this.chatManagerService);
                 GameManagerService.games.set(req.body.lobbyId, classicGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                this.subscribeToEndGame(classicGame, req.body.lobbyId);
                 classicGame.startGame();
                 break;
             case GameType.SOLO:
@@ -58,6 +59,7 @@ export class GameManagerService {
                 const soloGame = new SoloGame(<SoloLobby>lobby, this.socketService, this.drawingsService, this.statsService, this.userService, this.chatManagerService);
                 GameManagerService.games.set(req.body.lobbyId, soloGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                this.subscribeToEndGame(soloGame, req.body.lobbyId);
                 soloGame.startGame();
                 break;
             case GameType.COOP:
@@ -66,6 +68,7 @@ export class GameManagerService {
                 const coopGame = new CoopGame(<CoopLobby>lobby, this.socketService, this.drawingsService, this.statsService, this.userService, this.chatManagerService);
                 GameManagerService.games.set(req.body.lobbyId, coopGame);
                 LobbyManagerService.lobbies.delete(req.body.lobbyId);
+                this.subscribeToEndGame(coopGame, req.body.lobbyId);
                 coopGame.startGame();
                 break;
             default:
@@ -172,5 +175,13 @@ export class GameManagerService {
 
     disconnectGame(gameId: string, username: string) {
         GameManagerService.games.get(gameId).disconnectGame(username);
+    }
+
+    subscribeToEndGame(game: Game, gameId: string){
+        game.getGameEnded().subscribe((value) => {
+            if (value) {
+                GameManagerService.games.delete(gameId)
+            }
+        });
     }
 }

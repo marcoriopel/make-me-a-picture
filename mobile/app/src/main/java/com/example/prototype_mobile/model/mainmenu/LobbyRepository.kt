@@ -53,6 +53,7 @@ class LobbyRepository {
     var gameStarted = false
 
     var onTeamsUpdate = Emitter.Listener {
+        println("On teams Update called")
         val gson: Gson = Gson()
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
@@ -75,7 +76,7 @@ class LobbyRepository {
                     when (player.team) {
                         0 -> gameRepo.team1.add(player)
                         1 -> gameRepo.team2.add(player)
-                        else -> throw Exception("Player has invalid team nunmber")
+                        else -> throw Exception("Player has invalid team number")
                     }
                 }
             }
@@ -103,27 +104,75 @@ class LobbyRepository {
         currentListenLobby = lobbyID
     }
 
-    suspend fun joinLobby(game: Game): Result<Game> {
+    suspend fun joinLobby(game: GameInvited): Result<GameInvited> {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
+
+        println("We are in public section of the request")
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
+        if (result is Result.Success) {
+            var game2 = Game(gameID = result.data.gameID, gameName = result.data.gameName,
+                    gameType = result.data.gameType, difficulty = result.data.difficulty, isPrivate = game.lobbyInvited == null)
+            _lobbyJoined.postValue(game2)
+            socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
+        }
+        return result
+    }
+    suspend fun joinLobby(game: Game): Result<Game> {
 
+        val map = HashMap<String, String>()
+        map["lobbyId"] = game.gameID
+        map["socketId"] = socket.id()
+        println("We are in public section of the request")
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
+        val result = analyseJoinLobbyAnswer(response, game)
         if (result is Result.Success) {
             _lobbyJoined.postValue(game)
             socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
         }
-
         return result
     }
 
-    private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
+
+    suspend fun joinPrivate(id: String): Result<PrivateLobby> {
+        val map = HashMap<String, String>()
+            map["lobbyInviteId"] = id
+            val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
+            println(response)
+            val result = analyseJoinPrivateLobbyAnswer(response, id)
+            return result
+    }
+
+
+    private fun analyseJoinLobbyAnswer(response: Response, game: GameInvited): Result<GameInvited> {
+        println("analyseJoinLobbyAnswer: "+ response)
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {
             return Result.Error(response.code())
         }
+    }
+    private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
+        println("analyseJoinLobbyAnswer: "+ response)
+        if(response.code() == ResponseCode.OK.code) {
+            return Result.Success(game)
+        } else {
+            return Result.Error(response.code())
+        }
+    }
+
+    private fun analyseJoinPrivateLobbyAnswer(response: Response, id: String): Result<PrivateLobby> {
+        val lobbyId: String = response.body()!!.string()
+
+        if(response.code() == ResponseCode.OK.code) {
+            currentListenLobby = lobbyId
+            return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
+        } else {
+            Result.Error(response.code())
+        }
+        return Result.Error(2)
     }
 
     suspend fun addVirtualPlayer(team: Int): Result<String> {

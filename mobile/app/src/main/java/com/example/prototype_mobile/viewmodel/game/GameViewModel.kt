@@ -157,6 +157,10 @@ class GameViewModel :ViewModel() {
     fun setEndGameResult(title: String, description: String, endGameResult: EndGameResult) {
         EndGameRepository.getInstance()!!.addGameResult(title, description, endGameResult)
     }
+
+    fun leaveGame() {
+        gameRepository.leaveGame()
+    }
 }
 
 

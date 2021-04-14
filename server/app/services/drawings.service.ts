@@ -47,8 +47,8 @@ export class DrawingsService {
             if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
 
-            await this.drawingsModel.addDrawing(user.username, drawing);
             await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
+            await this.drawingsModel.addDrawing(user.username, drawing);
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {

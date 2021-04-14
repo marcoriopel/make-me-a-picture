@@ -15,7 +15,7 @@ data class MessageReceive (val id : String, val user : User, val text : String, 
 data class User (val username: String, val avatar: Int)
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val chatId: String)
-data class ChannelReceived(val chatId: String, val chatName: String)
+data class ChannelReceived(val chatId: String, val chatName: String, val isGameChat: Boolean = false)
 data class ChannelList(val chats: Array<ChannelReceived>)
 data class Channel(val chatId: String, val chatName: String, var channelState: ChannelState)
 data class JoinChannel(val chatId: String)
@@ -31,7 +31,9 @@ data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies
 data class LobbyId(val lobbyId: String)
-data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType)
+data class PrivateLobby( val lobbyInvited: String, val lobbyId: String)
+data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val isPrivate: Boolean)
+data class GameInvited(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val lobbyInvited: String?)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
 //Merge data change in form

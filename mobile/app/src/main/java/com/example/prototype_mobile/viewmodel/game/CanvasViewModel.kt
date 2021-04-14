@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 import com.example.prototype_mobile.DrawingEvent
 import com.example.prototype_mobile.MouseDown
 import com.example.prototype_mobile.PaintedPath
@@ -86,7 +87,12 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                    if(toolRepo.selectedTool.value == Tool.PEN) {
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                    } else {
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthEraser.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                    }
+
                 }
             }
         }
@@ -125,7 +131,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 redo()
             }
             EVENT_CLEAR ->{
-                Log.d("clear", "pathStack")
                 pathStack.clear()
                 redoStack.clear()
                 curPath.reset()
@@ -139,7 +144,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  the server in live
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun touchStart(strokeNumber: Int) {
-        Log.d("stroke received", strokeNumber.toString())
         curPath = Path()
         pathStack.push(Pair(strokeNumber, PaintedPath(curPath, toolRepo!!.getPaintCopy())))
         pathStack.sortBy { it.first }
