@@ -88,7 +88,7 @@ class GameListRepository {
 
         return game.gameName.toLowerCase().startsWith(filterGameName.toLowerCase())
     }
-    
+
     fun setFilter(filter: GameFilter, showThisTypeOfGame: Boolean) {
         filters[filter.filter] = showThisTypeOfGame
     }
