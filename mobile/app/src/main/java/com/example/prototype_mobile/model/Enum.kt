@@ -35,3 +35,7 @@ enum class DrawingEventType(type: Int) {
 enum class ChannelState(state: Int) {
     NOTIFIED(0), SHOWN(1), JOINED(2), NOTJOINED(3),
 }
+
+enum class EndGamePageType(type: Int) {
+    RESULT(0), VOTE(1), UPLOAD(2)
+}

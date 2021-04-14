@@ -32,11 +32,18 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
     this.drawingService.strokeStack = [];
+    this.drawingService.strokeNumber = 0;
+    this.drawingService.redoStack = [];
+    this.pencilService.strokeNumber = 0;
+    this.pencilService.strokes = [];
+    this.gameService.virtualPlayerDrawings = [];
+    this.gameService.realPlayerDrawings = [];
     this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('eraserStrokes');
     this.socketService.unbind('transitionTimer');
     this.socketService.unbind('drawingName');
     this.socketService.unbind('timer');
@@ -54,7 +61,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
       switch (data.eventType) {
         case drawingEventType.MOUSEDOWN:
           const mouseDown = data.event as MouseDown;
-          this.pencilService.strokeNumber = mouseDown.strokeNumber;
+          this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));

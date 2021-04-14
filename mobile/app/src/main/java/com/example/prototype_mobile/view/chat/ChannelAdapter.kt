@@ -42,7 +42,6 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
                 } else {
                     holder.leaveButton.visibility = View.GONE
                 }
-
             }
             ChannelState.NOTIFIED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)

@@ -57,7 +57,6 @@ class ChatRepository {
     private val channelNotJoinedSet = mutableSetOf<String>()
 
     var onUpdateChat = Emitter.Listener {
-        Log.e("Message", it[0].toString())
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1
         if (myUsername == messageReceive.user.username) {
