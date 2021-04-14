@@ -320,6 +320,7 @@ export class GameService {
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       this.drawingService.strokes = [];
+      this.drawingService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
     })
@@ -346,6 +347,13 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.openDialog(State.ENDGAME);
+      this.drawingService.strokeStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.redoStack = [];
+      this.drawingService.strokeNumber = 0;
+      this.drawingService.strokes = [];
+      this.isInGame = false;
+      this.isGuessing = false;
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');

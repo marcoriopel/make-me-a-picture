@@ -86,6 +86,9 @@ export class PencilService extends Tool {
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.setIsToolInUse(false);
+            if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+                this.drawingService.strokeNumber++;
+            }
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
                     eventType: drawingEventType.MOUSEUP,
@@ -93,9 +96,6 @@ export class PencilService extends Tool {
                     gameId: this.gameService.gameId,
                 }
                 this.socketService.emit('drawingEvent', drawingEvent);
-                if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-                    this.drawingService.strokeNumber++;
-                }
             }
         }
         this.mouseDown = false;
@@ -106,13 +106,8 @@ export class PencilService extends Tool {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
-            if(this.gameService.isInGame && !this.gameService.isPlayerDrawing) {
-                this.drawingService.strokes[this.drawingService.strokeNumber].path.push(mousePosition);
-            }
+            this.drawingService.strokes[this.drawingService.strokeNumber].path.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
-            // this.drawingService.strokes.forEach((stroke: any) => {
-            //     this.drawPencilStroke(this.drawingService.baseCtx, stroke);
-            // });
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -127,31 +122,17 @@ export class PencilService extends Tool {
     }
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
-        // if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-        //     ctx.lineWidth = pencil.lineWidth;
-        //     ctx.strokeStyle = pencil.lineColor;
-        //     ctx.lineJoin = 'round';
-        //     ctx.lineCap = 'round';
-        //     ctx.beginPath();
-    
-        //     for(let i = 0; i < pencil.path.length - 1; i++){
-        //         ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
-        //     }
-        //     ctx.stroke();
-        // } else {
-            // this.drawingService.clearCanvas(this.drawingService.baseCtx);
-            for(let i = 0; i < this.drawingService.strokes.length; i++){
-                ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
-                ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
-                ctx.lineJoin = 'round';
-                ctx.lineCap = 'round';
-                ctx.beginPath();
-                for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
-                    ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
-                }
-                ctx.stroke();
+        for(let i = 0; i < this.drawingService.strokes.length; i++){
+            ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
+            ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
+                ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
             }
-        // }
+            ctx.stroke();
+        }
     }
 
     changeWidth(newWidth: number): void {
