@@ -39,4 +39,7 @@ class ToolsAdjustmentViewModel : ViewModel() {
     fun setGridSize(size: Int) {
         canvasRepository.setGridSize(size)
     }
+    fun resetAlpha() {
+        toolRepository.resetAlpha()
+    }
 }

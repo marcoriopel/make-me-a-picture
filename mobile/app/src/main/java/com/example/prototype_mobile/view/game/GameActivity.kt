@@ -256,6 +256,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     override fun onRestart() {
         super.onRestart()
         println("Restart")
+        gameViewModel.resetAlpha()
 
     }
 
@@ -330,5 +331,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 Toast.LENGTH_LONG
         ).show()
     }
+
 
 }

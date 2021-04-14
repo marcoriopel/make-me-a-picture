@@ -106,4 +106,9 @@ class ToolRepository {
         paint.alpha = _alpha
     }
 
+    fun resetAlpha() {
+        _alpha = 255
+        paint.alpha = _alpha
+    }
+
 }

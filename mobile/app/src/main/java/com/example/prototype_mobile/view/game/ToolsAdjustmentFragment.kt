@@ -70,4 +70,9 @@ class ToolsAdjustmentFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.resetAlpha()
+    }
+
 }

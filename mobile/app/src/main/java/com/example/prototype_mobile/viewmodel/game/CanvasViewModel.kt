@@ -303,8 +303,8 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     }
 
     fun updateTransparency(lineColor: String) {
-        var hexcode = Integer.valueOf(lineColor.substring(1,2))
-        ToolRepository.getInstance()!!._alpha = hexcode
+        var alphaInt = Integer.parseInt(lineColor.substring(1,3),16)
+        ToolRepository.getInstance()!!._alpha = alphaInt
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
