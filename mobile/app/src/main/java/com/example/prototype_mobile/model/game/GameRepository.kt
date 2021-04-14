@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken
 import io.socket.client.IO
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.lang.NullPointerException
 import java.lang.reflect.Type
 
 
@@ -224,6 +225,17 @@ class GameRepository {
         opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
         val data = GameId(this.gameId!!)
         socket.emit("drawingSuggestions", gson.toJson(data), opts)
+    }
+
+    fun leaveGame() {
+        try {
+            val opts = IO.Options()
+            opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
+            val data = gson.toJson(GameId(this.gameId!!))
+            socket.emit("leaveGame", data, opts)
+        } catch (e: NullPointerException) {
+            println("Safe destructor leave game -> User already disconnected")
+        }
     }
 
     init {
