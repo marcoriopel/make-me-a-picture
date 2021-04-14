@@ -18,15 +18,31 @@ export class DrawingsService {
 
     async addDrawing(req: Request, res: Response, user: BasicUser) {
         try {
-            const drawing: Drawing = {
-                "drawingId": uuid(),
-                "difficulty": req.body.difficulty,
-                "hints": req.body.hints,
-                "drawingVotes": 0,
-                "eraserStrokes": req.body.eraserStrokes,
-                "pencilStrokes": req.body.pencilStrokes,
-                "drawingName": req.body.drawingName
-            };
+            let drawing: Drawing
+            if ((req.body.difficulty instanceof Object)) {
+                drawing = {
+                    "drawingId": uuid(),
+                    "difficulty": req.body.difficulty,
+                    "hints": req.body.hints,
+                    "drawingVotes": 0,
+                    "eraserStrokes": req.body.eraserStrokes,
+                    "pencilStrokes": req.body.pencilStrokes,
+                    "drawingName": req.body.drawingName
+                };
+            } else {
+                drawing = {
+                    "drawingId": uuid(),
+                    "difficulty": JSON.parse(req.body.difficulty).difficulty,
+                    "hints": JSON.parse(req.body.hints),
+                    "drawingVotes": 0,
+                    "eraserStrokes": JSON.parse(req.body.eraserStrokes),
+                    "pencilStrokes": JSON.parse(req.body.pencilStrokes),
+                    "drawingName": JSON.parse(req.body.drawingName)
+                };
+            }
+
+            console.log(drawing)
+            console.log(drawing.pencilStrokes[0])
 
             if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
