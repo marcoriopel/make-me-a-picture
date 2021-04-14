@@ -41,6 +41,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         isDither = true
     }
 
+
     // Repository
     private val toolRepo = ToolRepository.getInstance()
     private val gameRepo = GameRepository.getInstance()
@@ -202,6 +203,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         strokeWidth = GRID_WIDTH // default: Hairline-width (really thin)
     }
 
+
+
+
+
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Prepare a canvas with a grid to put one top of the
      * view if needed
@@ -271,6 +277,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                            EVENT_TOUCH_DOWN -> {
                                val Jevent = JSONObject(objectJson.getString("event"))
                                val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                               val color = updateTransparency(Jevent.getString("lineColor"))
                                val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
                                DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
                            }
@@ -286,7 +293,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                            }
                        }
 
-
                        onDrawingEvent(drawingEventReceive)
                    }
                }
@@ -294,6 +300,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
            }
        }
 
+    }
+
+    fun updateTransparency(lineColor: String) {
+        var hexcode = Integer.valueOf(lineColor.substring(1,2))
+        ToolRepository.getInstance()!!._alpha = hexcode
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
