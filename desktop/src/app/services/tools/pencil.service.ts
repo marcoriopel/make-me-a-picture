@@ -126,7 +126,6 @@ export class PencilService extends Tool {
     }
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
-
         if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
             ctx.lineWidth = pencil.lineWidth;
             ctx.strokeStyle = pencil.lineColor;
@@ -139,6 +138,7 @@ export class PencilService extends Tool {
             }
             ctx.stroke();
         } else {
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
             for(let i = 0; i < this.drawingService.strokes.length; i++){
                 ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
                 ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
