@@ -81,6 +81,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
+                    println("Paint alpha: " +  paint.alpha)
                     canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
                 }
             }

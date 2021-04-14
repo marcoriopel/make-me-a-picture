@@ -1,5 +1,6 @@
 package com.example.prototype_mobile
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.drawable.Drawable
@@ -56,6 +57,7 @@ data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event
 data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
+data class ColorWithAlpha(val color: Int, val alpha: Int)
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)

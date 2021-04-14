@@ -103,6 +103,7 @@ class ToolRepository {
         // Ex: "#a8a8a8"
         paint.color = Color.parseColor(color)
         selectedColor = Color.parseColor(color)
+        paint.alpha = _alpha
     }
 
 }
