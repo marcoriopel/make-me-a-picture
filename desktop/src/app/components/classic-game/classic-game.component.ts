@@ -24,7 +24,6 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
-      console.log(data.drawingEvent);
       this.handleDrawingEvent(data.drawingEvent);
     });
   }
@@ -65,7 +64,6 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
           this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
-          console.log('CLASSIC GAME COMPONENT')
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;
 
