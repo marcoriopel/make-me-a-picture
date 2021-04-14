@@ -138,7 +138,7 @@ export class ClassicGame extends Game {
         if (!this.guessesLeft[this.drawingTeam]) {
             throw Error("It's not your turn to guess")
         }
-        if (this.currentDrawingName == guess) {
+        if (this.currentDrawingName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() == guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()) {
             console.log("Drawing team guessed drawing correctly!");
             ++this.score[this.drawingTeam];
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
@@ -177,7 +177,7 @@ export class ClassicGame extends Game {
         if (!this.guessesLeft[this.getOpposingTeam()]) {
             throw Error("It's not your turn to guess")
         }
-        if (this.currentDrawingName == guess) {
+        if (this.currentDrawingName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() == guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()) {
             console.log("Opposing team guessed drawing correctly!");
             this.score[this.getOpposingTeam()] += 1;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
@@ -285,10 +285,10 @@ export class ClassicGame extends Game {
     }
 
     private endGame(): void {
-        if(this.isGameEnded){
+        if (this.isGameEnded) {
             return;
         }
-        else{
+        else {
             this.isGameEnded = true;
             this.gameEnded.next(true);
             this.endDate = new Date().getTime();
