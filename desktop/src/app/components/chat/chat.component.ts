@@ -11,9 +11,9 @@ import { ChatService } from "@app/services/chat/chat.service"
 export class ChatComponent {
   @ViewChild("chatContainer") chatContainer: ElementRef;
   @ViewChild("input") input: ElementRef;
-
+  
   private onlySpaceRegExp = /^\s+$/;
-
+  
   messageForm = this.formBuilder.group({
     message: '',
   })
@@ -52,5 +52,9 @@ export class ChatComponent {
     } catch {
       return false;
     }
+  }
+
+  deleteChat(): void {
+    this.chatService.deleteChat();
   }
 }

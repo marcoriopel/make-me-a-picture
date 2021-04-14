@@ -1,17 +1,16 @@
 package com.example.prototype_mobile.model.game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.SocketOwner
-import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
+import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
-import org.json.JSONObject
 import java.util.*
 
 const val DRAWING_EVENT = "drawingEvent"
+const val ERASER_STROKES = "eraserStrokes"
 const val EVENT_TOUCH_DOWN = 0
 const val EVENT_TOUCH_MOVE = 1
 const val EVENT_TOUCH_UP = 2
@@ -36,9 +35,11 @@ class CanvasRepository {
     }
 
     // Attribute
-    var socket: io.socket.client.Socket
-    val gson: Gson = Gson()
-    val gameRepo = GameRepository.getInstance()!!
+    var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
+    private val gson: Gson = Gson()
+    private val gameRepo = GameRepository.getInstance()!!
+    var endGameRepos = EndGameRepository.getInstance()!!
+    private val toolRepository = ToolRepository.getInstance()!!
 
     // Live Data
     private val _isGrid = MutableLiveData<Boolean>()
@@ -55,14 +56,32 @@ class CanvasRepository {
 
     val drawingEventList = LinkedList<String>()
 
+    val eraserStrokesList = LinkedList<DrawingEvent>()
     var onDrawingEvent = Emitter.Listener {
         drawingEventList.add(it[0].toString())
         _drawingEventServer.postValue(true)
     }
 
+    var onEraserStrokes = Emitter.Listener {
+        val eraserStrokesReceived: EraserStrokesReceived = gson.fromJson(it[0].toString(), EraserStrokesReceived ::class.java)
+        for (eraseStroke in eraserStrokesReceived.eraserStrokes) {
+            val touchdown = MouseDown(eraseStroke.lineColor, eraseStroke.lineWidth, eraseStroke.path[0], eraseStroke.strokeNumber)
+            val event = DrawingEvent(EVENT_TOUCH_DOWN, touchdown, gameRepo.gameId.toString())
+            eraserStrokesList.add(event)
+
+            for(i in 1..eraseStroke.path.size - 1) {
+                val eventMove = DrawingEvent(EVENT_TOUCH_MOVE, eraseStroke.path[i], gameRepo.gameId.toString())
+                eraserStrokesList.add(eventMove)
+            }
+
+            val eventUp = DrawingEvent(EVENT_TOUCH_UP, eraseStroke.path[eraseStroke.path.size-1], gameRepo.gameId.toString())
+            eraserStrokesList.add(eventUp)
+        }
+    }
+
     init {
-        socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_EVENT, onDrawingEvent)
+        socket.on(ERASER_STROKES, onEraserStrokes)
     }
 
     fun setGrid(addGrid: Boolean) {
@@ -79,6 +98,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_UNDO, null, ""))
     }
 
     fun redoEvent() {
@@ -87,16 +108,20 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_REDO, null, ""))
     }
 
-    fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String) {
+    fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String, strokeNumber: Int) {
         // Create Event
-        val touchDown = MouseDown(lineColor, lineWith, coord)
+        val isEraser = toolRepository.selectedTool.value == Tool.ERASER
+        val touchDown = MouseDown(lineColor, lineWith, coord, strokeNumber, isEraser)
         val event = DrawingEvent(EVENT_TOUCH_DOWN, touchDown, gameRepo.gameId.toString())
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
-
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_DOWN, touchDown, ""))
     }
 
     fun touchMoveEvent(coord: Vec2) {
@@ -105,7 +130,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
-
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_MOVE, coord, ""))
     }
 
     fun touchUpEvent(coord: Vec2) {
@@ -114,6 +140,8 @@ class CanvasRepository {
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))
+        // Save if player want to send it
+        endGameRepos.addDrawingEvent(DrawingEvent(EVENT_TOUCH_UP, coord, ""))
 
     }
 

@@ -3,11 +3,12 @@ package com.example.prototype_mobile
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
+import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
 import com.example.prototype_mobile.model.connection.sign_up.model.GameDifficulty
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
+import java.util.*
 
 // Data class for the chat
 data class Message (val username : String, val text : String, val time : String, val messageType: Int, val timestamp: Long, val avatar: Int)
@@ -15,7 +16,7 @@ data class MessageReceive (val id : String, val user : User, val text : String, 
 data class User (val username: String, val avatar: Int)
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val chatId: String)
-data class ChannelReceived(val chatId: String, val chatName: String)
+data class ChannelReceived(val chatId: String, val chatName: String, val isGameChat: Boolean = false)
 data class ChannelList(val chats: Array<ChannelReceived>)
 data class Channel(val chatId: String, val chatName: String, var channelState: ChannelState)
 data class JoinChannel(val chatId: String)
@@ -31,7 +32,9 @@ data class LoginResult(val success: String? = null, val error: Int? = null)
 
 //Data class for the Lobbies and list of lobbies
 data class LobbyId(val lobbyId: String)
-data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType)
+data class PrivateLobby( val lobbyInvited: String, val lobbyId: String)
+data class Game(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val isPrivate: Boolean)
+data class GameInvited(val gameID: String, val gameName: String, val difficulty: GameDifficulty, val gameType: GameType, val lobbyInvited: String?)
 data class GameListResult(val success: MutableList<Game>? = null, val error: Int? = null)
 
 //Merge data change in form
@@ -56,11 +59,12 @@ data class Transition(val timer: Int, val state: Int)
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event
-data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2): Event()
-data class ColorWithAlpha(val color: Int, val alpha: Int)
+data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2, val strokeNumber: Int, val isEraser: Boolean = false): Event()
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)
+data class EraserStrokesReceived(val eraserStrokes: Array<EraserStroke>)
+data class EraserStroke(val path: Array<Vec2>, val isEraser: Boolean, val strokeNumber: Int, val lineWidth: Int, val lineColor: String)
 
 data class BasicUser(val username: String, val avatar: Int)
 
@@ -75,6 +79,17 @@ data class GameLog(val _id: String, val gameName: String, val gameType: Int, val
 data class Connection(val date: String, val action: String)
 data class GameHistoric(val date: String, val name: String, val mode: String, val team1: String, val team2: String, val score: String)
 
-
-
 data class StaticTutorialInfo(val title:String, @DrawableRes val image: Int, val description: String?)
+
+data class StaticEndGameInfo(val title:String, val description: String, val type: EndGamePageType, val data: EndGameData?)
+abstract class EndGameData() {
+    abstract val image: String?
+}
+data class VDrawingData(val drawingName: String, override var image: String, val id: String): EndGameData()
+data class DrawingData(val drawingName: String, override var image: String?, val drawingEventList: LinkedList<DrawingEvent>, val hint: MutableList<String>): EndGameData()
+data class EndGameResult(val win: Boolean, override var image: String?): EndGameData()
+data class VPlayerDrawingEndGame(val virtualPlayerDrawings: List<String>, val virtualPlayerIds: List<String>)
+
+// Export drawing
+data class Drawing(val difficulty: Difficulty, val pencilStrokes: MutableList<Stroke>, val eraserStrokes: MutableList<Stroke>, val hints: MutableList<String>, val drawingName : String)
+data class Stroke(val path: MutableList<Vec2>, val strokeNumber: Int, val isEraser: Boolean, val lineWidth: Int, val lineColor: String)

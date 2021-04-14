@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,7 +20,6 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
-import java.util.*
 
 class GameListFragment : Fragment() {
     companion object {

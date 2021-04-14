@@ -10,11 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.prototype_mobile.Channel
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChatBinding
-import com.example.prototype_mobile.util.StringUtil
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -35,8 +33,9 @@ class ChatFragment : Fragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chat, container, false)
     }
@@ -63,8 +62,7 @@ class ChatFragment : Fragment() {
         binding.send.setOnClickListener { sendMessage() }
 
         chatViewModel.messageReceived.observe(viewLifecycleOwner, Observer {
-            val messageToDisplay = it ?: return@Observer
-            addItemToRecyclerView(messageToDisplay)
+            addItemToRecyclerView()
         })
 
         chatViewModel.messageList.observe(viewLifecycleOwner, Observer {
@@ -109,7 +107,7 @@ class ChatFragment : Fragment() {
         binding.editText.setText("")
     }
 
-    private fun addItemToRecyclerView(message: Message) {
+    private fun addItemToRecyclerView() {
         // Since this function is inside of the listener,
         // You need to do it on UIThread!
         runOnUiThread {
@@ -150,4 +148,5 @@ class ChatFragment : Fragment() {
     fun onKeyEnter() {
         sendMessage()
     }
+
 }

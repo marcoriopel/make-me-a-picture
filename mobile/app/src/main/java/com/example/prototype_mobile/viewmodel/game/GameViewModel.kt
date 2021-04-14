@@ -1,19 +1,15 @@
 package com.example.prototype_mobile.viewmodel.game
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.prototype_mobile.BasicUser
-import com.example.prototype_mobile.Transition
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import androidx.lifecycle.viewModelScope
-import com.example.prototype_mobile.Score
-import com.example.prototype_mobile.Suggestions
+import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.model.game.GameRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,13 +60,17 @@ class GameViewModel :ViewModel() {
         gameRepository.isPlayerDrawing.observeForever {
             _isPlayerDrawing.value = it
         }
+
         gameRepository.isPlayerGuessing.observeForever {
             _isPlayerGuessing.value = it
         }
+
         gameRepository.teamScore.observeForever {
             _teamScore.postValue(it)
         }
+
         gameRepository.isGameEnded.observeForever{
+            _tikSound.postValue(false)
             _isGameEnded.value = true
         }
 
@@ -100,6 +100,7 @@ class GameViewModel :ViewModel() {
         gameRepository.suggestions.observeForever {
             _suggestions.postValue(it)
         }
+
         gameRepository.roundTimer.observeForever {
             if (it.timer == 10)
                 _tikSound.postValue(true)
@@ -151,6 +152,14 @@ class GameViewModel :ViewModel() {
                 println("Bad request")
             }
         }
+    }
+
+    fun setEndGameResult(title: String, description: String, endGameResult: EndGameResult) {
+        EndGameRepository.getInstance()!!.addGameResult(title, description, endGameResult)
+    }
+
+    fun leaveGame() {
+        gameRepository.leaveGame()
     }
 }
 

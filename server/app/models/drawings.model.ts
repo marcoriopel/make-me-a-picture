@@ -34,7 +34,7 @@ export class DrawingsModel {
         this.s3.upload(uploadParams, (err, data) => {
             if (err) {
                 console.log("Error", err);
-                return err;
+                throw err;
             }
             if (data) {
                 console.log("Upload Success");

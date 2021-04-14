@@ -12,6 +12,9 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.game.CanvasRepository
+import com.example.prototype_mobile.model.game.GameRepository
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
 import okhttp3.Response
@@ -20,6 +23,20 @@ import kotlin.collections.HashMap
 
 
 class ChatRepository {
+    companion object {
+        private var instance: ChatRepository? = null
+
+        fun getInstance(): ChatRepository? {
+            if (instance == null) {
+                synchronized(ChatRepository::class.java) {
+                    if (instance == null) {
+                        instance = ChatRepository()
+                    }
+                }
+            }
+            return instance
+        }
+    }
 
     var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
     val channelList = mutableListOf<Channel>()
@@ -40,7 +57,6 @@ class ChatRepository {
     private val channelNotJoinedSet = mutableSetOf<String>()
 
     var onUpdateChat = Emitter.Listener {
-        Log.e("Message", it[0].toString())
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1
         if (myUsername == messageReceive.user.username) {
@@ -48,7 +64,6 @@ class ChatRepository {
         }
         val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType, messageReceive.timestamp, messageReceive.user.avatar)
         channelMap[messageReceive.chatId]?.add(message)
-
         if (messageReceive.chatId == channelShown) {
             _messageReceived.postValue(message)
         } else {
@@ -113,8 +128,10 @@ class ChatRepository {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
-                    newMessageList.add(Message("", "", "", 3, 0, myAvatar))
-                    newMessageList.add(Message("", "", "", 2, 0, myAvatar))
+                    if (channel.chatId != LobbyRepository.getInstance()!!.currentListenLobby) {
+                        newMessageList.add(Message("", "", "", 3, 0, myAvatar))
+                        newMessageList.add(Message("", "", "", 2, 0, myAvatar))
+                    }
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
@@ -141,7 +158,7 @@ class ChatRepository {
                         isFound = true
                     }
                 }
-                if (!isFound) {
+                if (!isFound && channel != LobbyRepository.getInstance()!!.currentListenLobby) {
                     channelToRemove.add(channel)
                 }
             }
@@ -162,8 +179,16 @@ class ChatRepository {
             for (channel in result.data.chats) {
                 // Add channel if not in the list of channel
                 if(!channelJoinedSet.contains(channel.chatId) && !channelNotJoinedSet.contains(channel.chatId)) {
-                    channelList.add(Channel(channel.chatId, channel.chatName, ChannelState.NOTJOINED))
-                    channelNotJoinedSet.add(channel.chatId)
+                    if(!channel.isGameChat) {
+                        channelList.add(
+                            Channel(
+                                channel.chatId,
+                                channel.chatName,
+                                ChannelState.NOTJOINED
+                            )
+                        )
+                        channelNotJoinedSet.add(channel.chatId)
+                    }
                 }
             }
 

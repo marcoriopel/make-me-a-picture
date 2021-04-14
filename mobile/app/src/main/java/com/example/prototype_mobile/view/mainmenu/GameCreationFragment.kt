@@ -101,6 +101,7 @@ class GameCreationFragment : Fragment() {
         binding.coopSprint.setOnClickListener {
             binding.coopSprint.isActivated = !binding.coopSprint.isActivated
             setSelectedButton(binding.coopSprint, SelectedButton.COOP)
+
             disableOtherButtons(binding.coopSprint, _createGameButtons)
         }
 
@@ -110,10 +111,11 @@ class GameCreationFragment : Fragment() {
             val intent = Intent(activity, StaticTutorialActivity::class.java)
             startActivity(intent)
         }
+        binding.joinGame.setOnClickListener {
 
-        //Observers in fragment
+            sharedViewModel.joinPrivateGame(binding.inviteIdCode.text.toString())
+        }
 
-        //sharedViewModel.creationGameButtonType.observe(this@)
 
 
 
