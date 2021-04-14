@@ -33,7 +33,7 @@ export class ImageCreationComponent implements OnInit {
 
   constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private pencilService: PencilService) {
     this.drawingService.strokeStack = [];
-    this.drawingService.redoStack = []
+    this.drawingService.redoStack = [];
   }
 
   ngOnInit(): void {
@@ -73,7 +73,7 @@ export class ImageCreationComponent implements OnInit {
         });
         this.drawingService.strokeStack = [];
         this.drawingService.redoStack = [];
-        this.pencilService.strokeNumber = 0;
+        this.drawingService.strokeNumber = 0;
         this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.hintForm.reset();
         this.imageCreationForm.reset();

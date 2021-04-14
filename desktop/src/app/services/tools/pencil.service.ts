@@ -48,7 +48,7 @@ export class PencilService extends Tool {
             this.pathData.push(this.mouseDownCoord);
             this.updatePencilData();
             if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-                this.strokeNumber++;
+                this.drawingService.strokeNumber++;
             }
 
             let stroke: Stroke = {
@@ -69,7 +69,7 @@ export class PencilService extends Tool {
                 coords: this.mouseDownCoord,
                 lineColor: this.drawingService.color,
                 lineWidth: this.drawingService.lineWidth,
-                strokeNumber: this.strokeNumber,
+                strokeNumber: this.drawingService.strokeNumber,
             }
             const drawingEvent: DrawingEvent = {
                 eventType: drawingEventType.MOUSEDOWN,
@@ -106,7 +106,7 @@ export class PencilService extends Tool {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
             if(this.gameService.isInGame) {
-                this.drawingService.strokes[this.strokeNumber - 1].path.push(mousePosition);
+                this.drawingService.strokes[this.drawingService.strokeNumber - 1].path.push(mousePosition);
             }
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawingService.strokeStack.forEach((stroke: any) => {
@@ -169,7 +169,7 @@ export class PencilService extends Tool {
         this.pencilData = {
             path: this.pathData,
             isEraser: this.isCurrentToolEraser,
-            strokeNumber: this.strokeNumber,
+            strokeNumber: this.drawingService.strokeNumber,
             lineWidth: this.drawingService.lineWidth,
             lineColor: this.drawingService.color,
         };

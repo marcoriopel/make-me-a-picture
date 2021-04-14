@@ -3,6 +3,7 @@ import { Chat, JoinedChat, Message } from '@app/classes/chat';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { SocketService } from '@app/services/socket/socket.service';
 import { environment } from 'src/environments/environment';
+import { formatDateString } from '@app/classes/date';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +13,7 @@ export class ChatService {
   private createChatUrl = this.baseUrl + '/api/chat/create';
   private getChatListUrl = this.baseUrl + '/api/chat/list';
   private getChatHistoryUrl = this.baseUrl + '/api/chat/history';
+  private deleteChatUrl = this.baseUrl + '/api/chat/delete';
   public isChatInExternalWindow: boolean = false;
   joinedChatList: JoinedChat[] = [{
     name: 'Général',
@@ -24,6 +26,7 @@ export class ChatService {
     name: 'Général',
     messages: [],
     chatId: 'General',
+    isGameChat: false,
   }];
   index: number = 0;
   currentChatId: string = "General";
@@ -62,9 +65,10 @@ export class ChatService {
               name: element.chatName,
               chatId: element.chatId,
               messages: [],
+              isGameChat: element.isGameChat,
             }
             let isChatAlreadyJoined = false;
-            this.joinedChatList.forEach((el: Chat) => {
+            this.joinedChatList.forEach((el: any) => {
               if(el.chatId == chat.chatId){
                 isChatAlreadyJoined = true;
               }
@@ -76,6 +80,11 @@ export class ChatService {
   }
 
   setCurrentChat(chatId: string): void {
+    let isChatJoined = false;
+    this.joinedChatList.forEach((chat: any) => {
+      if(chat.chatId == chatId) isChatJoined = true;
+    });
+    if(!isChatJoined) return;
     this.currentChatId = chatId;
     for(let i = 0; i < this.joinedChatList.length; i++){
       if(this.joinedChatList[i].chatId == chatId){
@@ -98,6 +107,7 @@ export class ChatService {
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
+
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
         data.chats.forEach((element: any) => {
@@ -116,16 +126,28 @@ export class ChatService {
             this.joinedChatList.push(chat);            
           }
         });
+        for(let i = 0; i < this.joinedChatList.length; i++){
+          const id = this.joinedChatList[i].chatId;
+          let isChatDeleted = true;
+          data.chats.forEach((chat: any) => {
+            if(chat.chatId == id) isChatDeleted = false;
+          });
+          if(isChatDeleted){
+            this.joinedChatList.splice(i, 1);
+          }
+        }
         this.http.get<any>(this.getChatListUrl, options)
         .subscribe((data: any) => {
+
           data.chats.forEach((element: any) => {
             const chat: Chat = {
               name: element.chatName,
               chatId: element.chatId,
               messages: [],
+              isGameChat: element.isGameChat,
             }
             let isChatAlreadyJoined = false;
-            this.joinedChatList.forEach((el: Chat) => {
+            this.joinedChatList.forEach((el: any) => {
               if(el.chatId == chat.chatId){
                 isChatAlreadyJoined = true;
               }
@@ -166,7 +188,7 @@ export class ChatService {
         "username": message.user.username,
         "avatar": message.user.avatar,
         "text": message.text,
-        "timestamp": message.timestamp,
+        "timestamp": formatDateString(message.timestamp),
         "isUsersMessage": message.user.username === username ? true : false,
         "textColor": message.textColor
       }
@@ -192,13 +214,13 @@ export class ChatService {
           "username": message.username,
           "avatar": message.avatar,
           "text": message.message,
-          "timestamp": message.timestamp,
+          "timestamp": formatDateString(message.timestamp),
           "isUsersMessage": message.username === username ? true : false,
           "textColor": "#000000",
         }
         this.joinedChatList[this.index].messages.push(msg);  
-        this.joinedChatList[this.index].isChatHistoryDisplayed = true;
       });
+      this.joinedChatList[this.index].isChatHistoryDisplayed = true;
     });
   }
 
@@ -209,7 +231,20 @@ export class ChatService {
     const options = { headers: headers};
     this.http.post<any>(this.createChatUrl, {"chatName": chatName}, options)
     .subscribe((data: any) => {
-      console.log(data);
+      this.refreshChatList();
+    });
+  }
+
+  deleteChat(): void {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'authorization': localStorage.getItem('token')!});
+    let params = new HttpParams();
+    params = params.append('chatId', this.currentChatId);    
+    const options = { params: params, headers: headers, responseType: 'text' as 'json'};
+    this.http.delete<any>(this.deleteChatUrl, options).subscribe(async (data: any) => {
+      await this.refreshChatList();
+      this.setCurrentChat('General');
     });
   }
 

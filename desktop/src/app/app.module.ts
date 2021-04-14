@@ -55,6 +55,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
+import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-drawing.component';
 import { TutorialComponent } from './components/tutorial/tutorial.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
@@ -90,6 +91,7 @@ import { FeedComponent } from './components/feed/feed.component';
         ProfileComponent,
         LeaderboardComponent,
         DrawingSuggestionsComponent,
+        EndGameDrawingComponent,
         TutorialComponent,
         JoinPrivateGameComponent,
         FeedComponent,
