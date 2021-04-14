@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon",
-    "redeploy": "ssh -i \"C:\\sshkey.pem\" ubuntu@ec2-18-217-235-167.us-east-2.compute.amazonaws.com './redeploy.sh'",
-    "logs": "ssh -i \"C:\\sshkey.pem\" ubuntu@ec2-18-217-235-167.us-east-2.compute.amazonaws.com './logs.sh'"
+    "redeploy": "ssh -i \"C:\\sshkey.pem\" ubuntu@ec2-18-219-29-27.us-east-2.compute.amazonaws.com './redeploy.sh'",
+    "logs": "ssh -i \"C:\\sshkey.pem\" ubuntu@ec2-18-219-29-27.us-east-2.compute.amazonaws.com './logs.sh'"
   },
   "dependencies": {
     "aws-sdk": "^2.874.0",
