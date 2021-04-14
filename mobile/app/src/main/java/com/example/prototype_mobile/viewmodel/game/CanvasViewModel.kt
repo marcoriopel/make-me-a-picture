@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.connection.sign_up.model.DrawingEventType
+import com.example.prototype_mobile.model.connection.sign_up.model.Tool
 import com.example.prototype_mobile.model.game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,7 +82,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_UP -> canvasRepository.touchUpEvent(coord)
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
-                    canvasRepository.touchDownEvent(coord, paint.strokeWidth.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
+                    if(toolRepo.selectedTool.value == Tool.PEN) {
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
+                    } else {
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthEraser.toInt(), "#" + Integer.toHexString(paint.color).substring(2))
+                    }
                 }
             }
         }
