@@ -56,6 +56,7 @@ export class SoloGame extends Game {
         const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
         this.currentDrawingName = drawing.drawingName;
         this.pastVirtualDrawingsId.push(drawing.drawingId);
+        console.log(this.currentDrawingName);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTransition();
     }
@@ -80,7 +81,7 @@ export class SoloGame extends Game {
         if (!this.players.has(username)) {
             throw Error("User is not part of the game")
         }
-        if (this.currentDrawingName == guess) {
+        if (this.currentDrawingName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() == guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()) {
             this.addBonusGameTime();
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
@@ -119,6 +120,8 @@ export class SoloGame extends Game {
             }
         }
         this.currentDrawingName = drawing.drawingName;
+        console.log(this.currentDrawingName);
+
         this.pastVirtualDrawingsId.push(drawing.drawingId);
         this.pastVirtualDrawings.push(drawing.drawingName);
         this.socketService.getSocket().to(this.id).emit('newRound', {})
@@ -130,10 +133,10 @@ export class SoloGame extends Game {
     delay = () => new Promise(res => setTimeout(res, 500));
 
     private endGame(): void {
-        if(this.isGameEnded){
+        if (this.isGameEnded) {
             return;
         }
-        else{
+        else {
             this.isGameEnded = true;
             this.gameEnded.next(true);
             this.endDate = new Date().getTime();
