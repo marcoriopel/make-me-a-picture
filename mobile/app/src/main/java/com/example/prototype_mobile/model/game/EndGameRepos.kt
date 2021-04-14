@@ -91,7 +91,7 @@ class EndGameRepository {
                         undoStack.push(drawingList[drawingList.lastIndex].drawingEventList.removeLast())
                 }
                 EVENT_REDO -> {
-                    if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
+                    if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1 && !undoStack.isEmpty())
                         drawingList[drawingList.lastIndex].drawingEventList.add(undoStack.pop())
                 }
                 else -> {
