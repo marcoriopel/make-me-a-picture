@@ -44,6 +44,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('drawingEvent');
     this.socketService.unbind('eraserStrokes');
     this.socketService.unbind('transitionTimer');
     this.socketService.unbind('drawingName');

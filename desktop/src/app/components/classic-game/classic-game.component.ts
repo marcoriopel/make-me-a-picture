@@ -15,7 +15,6 @@ import { ChatService } from '@app/services/chat/chat.service';
   styleUrls: ['./classic-game.component.scss']
 })
 export class ClassicGameComponent implements OnInit, OnDestroy {
-
   guessForm = this.formBuilder.group({
     guess: '',
   });
@@ -43,6 +42,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.gameService.isInGame = false;
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
+    this.socketService.unbind('drawingEvent');
     this.socketService.unbind('eraserStrokes');
     this.socketService.unbind('transitionTimer');
     this.socketService.unbind('drawingName');

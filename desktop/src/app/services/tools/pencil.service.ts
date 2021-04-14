@@ -47,21 +47,19 @@ export class PencilService extends Tool {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.pathData.push(this.mouseDownCoord);
             this.updatePencilData();
-            if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-                this.drawingService.strokeNumber++;
-            }
 
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
                 lineWidth: this.pencilData.lineWidth,
                 strokeNumber: this.pencilData.strokeNumber,
-                path: [],
+                path: [this.mouseDownCoord],
                 isEraser: this.pencilData.isEraser,
             }
             this.drawingService.strokes.push(stroke);
             this.drawingService.strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
             
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
+
             this.drawingService.setIsToolInUse(true);
         }
         if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -88,6 +86,9 @@ export class PencilService extends Tool {
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.setIsToolInUse(false);
+            if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
+                this.drawingService.strokeNumber++;
+            }
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
                 const drawingEvent: DrawingEvent = {
                     eventType: drawingEventType.MOUSEUP,
@@ -105,13 +106,8 @@ export class PencilService extends Tool {
         if (this.mouseDown) {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
-            if(this.gameService.isInGame) {
-                this.drawingService.strokes[this.drawingService.strokeNumber - 1].path.push(mousePosition);
-            }
+            this.drawingService.strokes.find((d) => d.strokeNumber == this.drawingService.strokeNumber)?.path.push(mousePosition);
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
-            this.drawingService.strokeStack.forEach((stroke: any) => {
-                this.drawPencilStroke(this.drawingService.baseCtx, stroke);
-            });
             this.updatePencilData();
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             if(this.gameService.drawingPlayer == localStorage.getItem('username') && this.gameService.isInGame){
@@ -126,30 +122,16 @@ export class PencilService extends Tool {
     }
 
     drawPencilStroke(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
-
-        if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
-            ctx.lineWidth = pencil.lineWidth;
-            ctx.strokeStyle = pencil.lineColor;
+        for(let i = 0; i < this.drawingService.strokes.length; i++){
+            ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
+            ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
             ctx.beginPath();
-    
-            for(let i = 0; i < pencil.path.length - 1; i++){
-                ctx.lineTo(pencil.path[i].x, pencil.path[i].y);
+            for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
+                ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
             }
             ctx.stroke();
-        } else {
-            for(let i = 0; i < this.drawingService.strokes.length; i++){
-                ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
-                ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
-                ctx.lineJoin = 'round';
-                ctx.lineCap = 'round';
-                ctx.beginPath();
-                for(let j = 0; j < this.drawingService.strokes[i].path.length; j++){
-                    ctx.lineTo(this.drawingService.strokes[i].path[j].x, this.drawingService.strokes[i].path[j].y);
-                }
-                ctx.stroke();
-            }
         }
     }
 
