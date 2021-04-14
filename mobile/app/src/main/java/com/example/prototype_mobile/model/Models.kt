@@ -14,7 +14,7 @@ data class MessageReceive (val id : String, val user : User, val text : String, 
 data class User (val username: String, val avatar: Int)
 data class InitialData (val token : String)
 data class SendMessage(val text: String, val token: String, val chatId: String)
-data class ChannelReceived(val chatId: String, val chatName: String)
+data class ChannelReceived(val chatId: String, val chatName: String, val isGameChat: Boolean = false)
 data class ChannelList(val chats: Array<ChannelReceived>)
 data class Channel(val chatId: String, val chatName: String, var channelState: ChannelState)
 data class JoinChannel(val chatId: String)

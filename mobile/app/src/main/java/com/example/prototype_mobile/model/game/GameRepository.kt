@@ -10,6 +10,7 @@ import com.example.prototype_mobile.model.SocketOwner
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
+import com.example.prototype_mobile.model.mainmenu.LobbyRepository
 import com.google.gson.Gson
 import io.socket.client.IO
 import io.socket.emitter.Emitter
@@ -123,6 +124,7 @@ class GameRepository {
         CanvasRepository.getInstance()!!.resetCanvas()
     }
     private var onEndGameEvent = Emitter.Listener {
+        LobbyRepository.getInstance()!!.currentListenLobby = "null"
         _isPlayerGuessing.postValue(false)
         _isGameEnded.postValue(gameId)
     }
@@ -205,7 +207,6 @@ class GameRepository {
         _isPlayerDrawing.value = false
         _isPlayerGuessing.value = false
 
-        _isGameEnded.value = "false"
         socket = SocketOwner.getInstance()!!.socket
         socket.on(DRAWING_NAME_EVENT, onDrawingNameEvent)
         socket.on(TIMER_EVENT, onTimerEvent)

@@ -72,7 +72,7 @@ class LobbyRepository {
                     when (player.team) {
                         0 -> gameRepo.team1.add(player)
                         1 -> gameRepo.team2.add(player)
-                        else -> throw Exception("Player has invalid team nunmber")
+                        else -> throw Exception("Player has invalid team number")
                     }
                 }
             }
