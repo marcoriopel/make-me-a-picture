@@ -70,4 +70,4 @@ class ToolsAdjustmentFragment : Fragment() {
         }
     }
 
-}S
+}

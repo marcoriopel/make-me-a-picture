@@ -83,9 +83,8 @@
             android:id="@+id/slider_alpha"
             android:layout_width="305dp"
             android:layout_height="40dp"
-
             android:layout_weight="1"
-            android:value="255"
+            android:value="100"
             android:stepSize="0"
             android:valueFrom="0.0"
             android:valueTo="100.0" />
