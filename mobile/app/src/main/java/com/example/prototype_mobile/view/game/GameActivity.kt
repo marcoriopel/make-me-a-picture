@@ -47,6 +47,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_logout -> {
+            gameViewModel.leaveGame()
             gameViewModel.logout()
             true
         }
@@ -179,6 +180,11 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             startActivity(intent)
             finish()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        gameViewModel.leaveGame()
     }
 
     private fun burstKonfetti() {
