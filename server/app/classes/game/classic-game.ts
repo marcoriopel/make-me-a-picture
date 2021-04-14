@@ -285,15 +285,22 @@ export class ClassicGame extends Game {
     }
 
     private endGame(): void {
-        this.endDate = new Date().getTime();
-        clearInterval(this.timerInterval);
-        this.guessesLeft = [0, 0];
-        this.sendVPlayerEndGameMessage();
-        this.uploadRandomFeedImage();
-        this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
-        this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
-        this.chatManagerService.deleteChat(this.id);
+        if(this.isGameEnded){
+            return;
+        }
+        else{
+            this.isGameEnded = true;
+            this.gameEnded.next(true);
+            this.endDate = new Date().getTime();
+            clearInterval(this.timerInterval);
+            this.guessesLeft = [0, 0];
+            this.sendVPlayerEndGameMessage();
+            this.uploadRandomFeedImage();
+            this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
+            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+            this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), this.score, this.startDate, this.endDate);
+            this.chatManagerService.deleteChat(this.id);
+        }
     }
 
     private getOpposingTeam(): number {
