@@ -80,7 +80,7 @@ export class SoloGame extends Game {
         if (!this.players.has(username)) {
             throw Error("User is not part of the game")
         }
-        if (this.currentDrawingName == guess) {
+        if (this.currentDrawingName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase() == guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()) {
             this.addBonusGameTime();
             ++this.score;
             this.socketService.getSocket().to(this.id).emit('guessCallback', { "isCorrectGuess": true, "guessingPlayer": username });
@@ -130,10 +130,10 @@ export class SoloGame extends Game {
     delay = () => new Promise(res => setTimeout(res, 500));
 
     private endGame(): void {
-        if(this.isGameEnded){
+        if (this.isGameEnded) {
             return;
         }
-        else{
+        else {
             this.isGameEnded = true;
             this.gameEnded.next(true);
             this.endDate = new Date().getTime();
