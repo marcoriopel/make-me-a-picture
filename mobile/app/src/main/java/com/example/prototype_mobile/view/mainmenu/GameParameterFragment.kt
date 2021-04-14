@@ -26,6 +26,12 @@ class GameParameterFragment : Fragment() {
     private var filterDifficulty: Vector<Button> = Vector<Button>()
     private val mainMenuViewModel: MainMenuViewModel by activityViewModels()
 
+    private var isPrivate = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_game_parameter, container, false)
@@ -76,18 +82,17 @@ class GameParameterFragment : Fragment() {
         binding.incognito.setOnClickListener{
             binding.incognito.isActivated = ! binding.incognito.isActivated
             if(binding.incognito.isActivated) {
-                binding.passwordPrivateGame.visibility = View.VISIBLE
+                mainMenuViewModel._isPrivate.value = true
+                isPrivate = true
             } else {
-                binding.passwordPrivateGame.visibility = View.INVISIBLE
+                isPrivate = false
+                mainMenuViewModel._isPrivate.value = false
             }
 
             mainMenuViewModel.setIncognitoMode(binding.incognito.isActivated)
         }
 
-        binding.passwordPrivateGame.afterTextChanged {
-            updateIncognitoPassword(binding.passwordPrivateGame.text.toString())
-            mainMenuViewModel.liveDataMerger = mainMenuViewModel.fetchData()
-        }
+
         updateFragmentView(mainMenuViewModel.creationGameButtonType.value!!)
 
         // Set parameter to game
@@ -111,6 +116,7 @@ class GameParameterFragment : Fragment() {
         binding.StartGame.setOnClickListener{
             if(binding.StartGame.isActivated) {
                 mainMenuViewModel.createGame()
+
             }
         }
     }
@@ -132,22 +138,36 @@ class GameParameterFragment : Fragment() {
         mainMenuViewModel.setGameDifficulty(GameDifficulty.NONE)
         when(type)
         {
+
             SelectedButton.SEARCH -> {
                 //close popUp
             }
             SelectedButton.CLASSIC -> {
                 binding.GameCreation.text = "Création d'une partie classique"
                 binding.gameLogo.setImageResource(R.drawable.icon_classic)
+                if(isPrivate) {
+                    println("Private ")
+                }
             }
             SelectedButton.SPRINT -> {
                 binding.GameCreation.text = "Création d'une partie sprint solo"
                 binding.gameLogo.setImageResource(R.drawable.icon_solo)
+                binding.incognito.visibility = View.INVISIBLE
+                binding.gameCreationPrivate.visibility = View.INVISIBLE
+
             }
             SelectedButton.COOP -> {
                 binding.GameCreation.text = "Création d'une partie coop"
                 binding.gameLogo.setImageResource(R.drawable.ic_hands_helping_solid)
             }
+            else -> throw(Exception("Unknown state exception"))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("Game parameter Fragment on resume")
+        mainMenuViewModel._gameInviteID.value = null
     }
 
     companion object {

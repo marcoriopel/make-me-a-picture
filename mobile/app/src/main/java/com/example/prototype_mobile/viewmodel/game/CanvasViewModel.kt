@@ -125,7 +125,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 redo()
             }
             EVENT_CLEAR ->{
-                Log.d("clear", "pathStack")
                 pathStack.clear()
                 redoStack.clear()
                 curPath.reset()
@@ -139,7 +138,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  the server in live
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun touchStart(strokeNumber: Int) {
-        Log.d("stroke received", strokeNumber.toString())
         curPath = Path()
         pathStack.push(Pair(strokeNumber, PaintedPath(curPath, toolRepo!!.getPaintCopy())))
         pathStack.sortBy { it.first }
