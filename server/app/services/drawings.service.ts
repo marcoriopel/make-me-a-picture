@@ -32,7 +32,7 @@ export class DrawingsService {
             } else {
                 drawing = {
                     "drawingId": uuid(),
-                    "difficulty": JSON.parse(req.body.difficulty).difficulty,
+                    "difficulty": JSON.parse(req.body.difficulty),
                     "hints": JSON.parse(req.body.hints),
                     "drawingVotes": 0,
                     "eraserStrokes": JSON.parse(req.body.eraserStrokes),
@@ -40,15 +40,10 @@ export class DrawingsService {
                     "drawingName": JSON.parse(req.body.drawingName)
                 };
             }
-
-            console.log(drawing)
-            console.log(drawing.pencilStrokes)
-
             if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
-
-            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {

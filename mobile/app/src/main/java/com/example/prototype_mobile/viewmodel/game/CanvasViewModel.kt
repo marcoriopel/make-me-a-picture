@@ -295,6 +295,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                    canStartNewThread = true
                }
            }
+        } catch (e: Exception) {
+            println("Exception ${e.message} cause by ${e.cause} occurred in onReceivingEvent")
+            println(e)
         } finally {
             mutex.unlock()
         }
