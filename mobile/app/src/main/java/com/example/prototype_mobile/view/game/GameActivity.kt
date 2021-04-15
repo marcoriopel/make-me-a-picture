@@ -237,10 +237,14 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     mediaPlayer = MediaPlayer.create(this, R.raw.win)
                     val score = "${gameViewModel.teamScore.value!!.score[team]} - ${gameViewModel.teamScore.value!!.score[otherTeam]}"
                     gameViewModel.setEndGameResult("Victoire!", "Bravo, vous avez gagné: score ${score}", EndGameResult(true, null))
-                } else {
+                } else if (gameViewModel.teamScore.value!!.score[team] < gameViewModel.teamScore.value!!.score[otherTeam]) {
                     mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
                     val score = "${gameViewModel.teamScore.value!!.score[otherTeam]} - ${gameViewModel.teamScore.value!!.score[team]}"
                     gameViewModel.setEndGameResult("Vous avez perdu", "Meilleur change la prochaine fois! Vous avez perdu ${score}", EndGameResult(false, null))
+                } else {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                    val score = "${gameViewModel.teamScore.value!!.score[otherTeam]}"
+                    gameViewModel.setEndGameResult("Égualité!", "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points", EndGameResult(false, null))
                 }
                 mediaPlayer?.start()
             } else {
