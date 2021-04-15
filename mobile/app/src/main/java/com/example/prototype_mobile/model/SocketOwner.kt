@@ -35,8 +35,9 @@ class SocketOwner {
         try {
             val opts = IO.Options()
             opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
-            socket = IO.socket("http://10.0.2.2:3000/", opts)
+
 //            socket = IO.socket("http://18.219.29.27:3000/", opts)
+            socket = IO.socket("http://10.0.2.2:3000/", opts)
 
         } catch (e: Exception) {
             e.printStackTrace()

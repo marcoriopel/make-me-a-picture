@@ -84,18 +84,22 @@ class EndGameRepository {
     }
 
     fun addDrawingEvent(event: DrawingEvent) {
-        when(event.eventType) {
-            EVENT_UNDO -> {
-                if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
-                    undoStack.push(drawingList[drawingList.lastIndex].drawingEventList.removeLast())
+        try {
+            when (event.eventType) {
+                EVENT_UNDO -> {
+                    if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
+                        undoStack.push(drawingList[drawingList.lastIndex].drawingEventList.removeLast())
+                }
+                EVENT_REDO -> {
+                    if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1 && !undoStack.isEmpty())
+                        drawingList[drawingList.lastIndex].drawingEventList.add(undoStack.pop())
+                }
+                else -> {
+                    drawingList[drawingList.lastIndex].drawingEventList.add(event)
+                }
             }
-            EVENT_REDO -> {
-                if (drawingList[drawingList.lastIndex].drawingEventList.lastIndex != -1)
-                    drawingList[drawingList.lastIndex].drawingEventList.add(undoStack.pop())
-            }
-            else -> {
-                drawingList[drawingList.lastIndex].drawingEventList.add(event)
-            }
+        } catch (e: Exception) {
+            println("Error while saving drawing when event: ${event.eventType} occurred")
         }
     }
 
