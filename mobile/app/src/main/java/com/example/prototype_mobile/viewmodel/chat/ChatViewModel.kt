@@ -6,6 +6,7 @@ import com.example.prototype_mobile.*
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.chat.ChatRepository
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.GameRepository
@@ -34,6 +35,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
     var channelList: MutableList<Channel>
 
     var gameId: String? = null
+
+    private val loginRepository = LoginRepository.getInstance()!!
+
 
     init {
         chatRepository.messageReceived.observeForever(Observer {
@@ -238,5 +242,9 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 }
             }
         }
+    }
+
+    fun getUsername(): String? {
+        return loginRepository.user?.username
     }
 }
