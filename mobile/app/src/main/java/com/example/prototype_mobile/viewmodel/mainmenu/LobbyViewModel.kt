@@ -19,6 +19,9 @@ class LobbyViewModel:  ViewModel() {
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
+    private val _gameStarting = MutableLiveData<Boolean>()
+    val gameStarting: MutableLiveData<Boolean> = _gameStarting
+
     var lobbyRepository: LobbyRepository = LobbyRepository.getInstance()!!
     val gameRepository = GameRepository.getInstance()!!
 
@@ -36,6 +39,10 @@ class LobbyViewModel:  ViewModel() {
                 }
                 i++
             }
+        })
+
+        lobbyRepository.gameStarting.observeForever(Observer {
+            _gameStarting.postValue(it)
         })
 
         lobbyRepository.isPlayerDrawing.observeForever(Observer {

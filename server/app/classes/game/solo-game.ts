@@ -55,6 +55,7 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
         this.currentDrawingName = drawing.drawingName;
+        console.log(this.currentDrawingName)
         this.pastVirtualDrawingsId.push(drawing.drawingId);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTransition();
@@ -118,6 +119,7 @@ export class SoloGame extends Game {
                 return;
             }
         }
+        console.log(this.currentDrawingName)
         this.currentDrawingName = drawing.drawingName;
         this.pastVirtualDrawingsId.push(drawing.drawingId);
         this.pastVirtualDrawings.push(drawing.drawingName);

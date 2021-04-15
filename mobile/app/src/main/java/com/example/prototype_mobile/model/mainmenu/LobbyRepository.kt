@@ -34,7 +34,7 @@ class LobbyRepository {
     }
 
     // Socket
-    var socket: io.socket.client.Socket
+    var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
 
     // Lobby
     var currentListenLobby: String = "null"
@@ -45,6 +45,9 @@ class LobbyRepository {
     private val _lobbyJoined = MutableLiveData<Game>()
     val lobbyJoined: LiveData<Game> = _lobbyJoined
 
+    private val _gameStarting = MutableLiveData<Boolean>()
+    val gameStarting: MutableLiveData<Boolean> = _gameStarting
+
     // Game Start
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
@@ -52,7 +55,7 @@ class LobbyRepository {
 
     var gameStarted = false
 
-    var onTeamsUpdate = Emitter.Listener {
+    private var onTeamsUpdate = Emitter.Listener {
         println("On teams Update called")
         val gson: Gson = Gson()
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
@@ -80,18 +83,17 @@ class LobbyRepository {
                     }
                 }
             }
-            _isPlayerDrawing.postValue(player.equals(LoginRepository.getInstance()!!.user!!.username))
+            _isPlayerDrawing.postValue(player == LoginRepository.getInstance()!!.user!!.username)
+            _gameStarting.postValue(true)
         } else {
             gameRepo.gameType = _lobbyJoined.value!!.gameType
-
             gameRepo.getGameTypeLiveData().postValue(_lobbyJoined.value!!.gameType)
-            //gameRepo.getTransition().postValue(Transition(gameRepo.gameTimer.value!!.timer, 1))
             _isPlayerDrawing.postValue(false)
+            _gameStarting.postValue(true)
         }
     }
 
     init {
-        socket = SocketOwner.getInstance()!!.socket
         socket.on("dispatchTeams", onTeamsUpdate)
         socket.on("gameStart", onStart)
     }
@@ -113,15 +115,15 @@ class LobbyRepository {
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
         if (result is Result.Success) {
-            var game2 = Game(gameID = result.data.gameID, gameName = result.data.gameName,
+            val game2 = Game(gameID = result.data.gameID, gameName = result.data.gameName,
                     gameType = result.data.gameType, difficulty = result.data.difficulty, isPrivate = game.lobbyInvited == null)
             _lobbyJoined.postValue(game2)
             socket.emit("joinLobby", gson.toJson(LobbyId(game.gameID)))
         }
         return result
     }
-    suspend fun joinLobby(game: Game): Result<Game> {
 
+    suspend fun joinLobby(game: Game): Result<Game> {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
@@ -135,7 +137,6 @@ class LobbyRepository {
         return result
     }
 
-
     suspend fun joinPrivate(id: String): Result<PrivateLobby> {
         val map = HashMap<String, String>()
             map["lobbyInviteId"] = id
@@ -145,9 +146,8 @@ class LobbyRepository {
             return result
     }
 
-
     private fun analyseJoinLobbyAnswer(response: Response, game: GameInvited): Result<GameInvited> {
-        println("analyseJoinLobbyAnswer: "+ response)
+        println("analyseJoinLobbyAnswer: $response")
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {
@@ -155,7 +155,7 @@ class LobbyRepository {
         }
     }
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
-        println("analyseJoinLobbyAnswer: "+ response)
+        println("analyseJoinLobbyAnswer: $response")
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {
@@ -228,5 +228,6 @@ class LobbyRepository {
         _lobbyPlayers.value = null
         _lobbyJoined.value = null
         _isPlayerDrawing.value = null
+        _gameStarting.value = false
     }
 }

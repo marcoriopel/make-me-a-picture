@@ -3,6 +3,7 @@ package com.example.prototype_mobile.view.mainmenu
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,8 @@ private const val GAME_INVITE = "param3"
 
 class LobbyFragment : Fragment() {
 
-    private var game_name: String? = null
-    private var game_type: GameType? = null
+    private var gameName: String? = null
+    private var gameType: GameType? = null
     private var gameInviteId: String? = null
     private lateinit var binding: FragmentLobbyBinding
     private lateinit var lobbyViewModel: LobbyViewModel
@@ -43,8 +44,8 @@ class LobbyFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            game_name = it.getString(GAME_NAME)
-            game_type = GameType.values()[(it.getInt(GAME_TYPE))]
+            gameName = it.getString(GAME_NAME)
+            gameType = GameType.values()[(it.getInt(GAME_TYPE))]
             gameInviteId = it.getString(GAME_INVITE)
         }
         lobbyViewModel = ViewModelProvider(this, LobbyViewModelFactory()).get(LobbyViewModel::class.java)
@@ -75,23 +76,25 @@ class LobbyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentLobbyBinding.bind(view)
-        binding.lobbyGameName.text = game_name
+        binding.lobbyGameName.text = gameName
 
         if(gameInviteId.equals("")){
             binding.inviteId.text = gameInviteId
         } else {
-            binding.inviteId.text = "code: " + gameInviteId
+            binding.inviteId.text = "code: $gameInviteId"
         }
 
-        binding.lobbyGameLogo.setImageResource(Drawable.gameTypeDrawable[game_type!!.type])
+        binding.lobbyGameLogo.setImageResource(Drawable.gameTypeDrawable[gameType!!.type])
 
         lobbyViewModel.lobbyPlayers.observe(viewLifecycleOwner, Observer {
             val lobbyPlayers = it ?: return@Observer
             updatePlayers(lobbyPlayers)
         })
 
-        lobbyViewModel.isPlayerDrawing.observe(viewLifecycleOwner, Observer {
-            startGame(view)
+        lobbyViewModel.gameStarting.observe(viewLifecycleOwner, Observer {
+            Log.e("Start game", it.toString())
+            if(it)
+                startGame(view)
         })
 
         usernameList = arrayOf(
@@ -128,15 +131,15 @@ class LobbyFragment : Fragment() {
         }
     }
 
-    fun updatePlayers(lobbyPlayers: LobbyPlayers) {
-        when(game_type) {
+    private fun updatePlayers(lobbyPlayers: LobbyPlayers) {
+        when(gameType) {
             GameType.CLASSIC -> updatePlayersClassic(lobbyPlayers)
             GameType.SOLO -> updatePlayerSolo(lobbyPlayers)
             GameType.COOP -> updatePlayersCoop(lobbyPlayers)
         }
     }
 
-    fun updatePlayersClassic(lobbyPlayers: LobbyPlayers) {
+    private fun updatePlayersClassic(lobbyPlayers: LobbyPlayers) {
         var team1Count = 0
         var team2Count = 2 // Starts at player 3
         val realPlayers = lobbyPlayers.players.filter{ it.avatar < 6 } as MutableList<Players>
@@ -214,10 +217,10 @@ class LobbyFragment : Fragment() {
     }
 
 
-    fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
+    private fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
         binding.lobby4playerLayout.visibility = View.GONE
         binding.lobby1playerLayout.visibility = View.VISIBLE
-        if(lobbyPlayers.players.size > 0) {
+        if(lobbyPlayers.players.isNotEmpty()) {
             binding.lobbyPlayerSoloAvatar.setImageResource(Drawable.avatars[lobbyPlayers.players[0].avatar])
             binding.lobbyPlayerSoloName.text = lobbyPlayers.players[0].username
         }
@@ -226,7 +229,7 @@ class LobbyFragment : Fragment() {
         binding.start.isClickable = true
     }
 
-    fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){
+    private fun updatePlayersCoop(lobbyPlayers: LobbyPlayers){
         var i = 0
         for(player in lobbyPlayers.players) {
             usernameList[i].text = player.username
@@ -251,11 +254,14 @@ class LobbyFragment : Fragment() {
         }
     }
 
-    fun startGame(view: View) {
+    private fun startGame(view: View) {
         val intent = Intent(view.context, GameActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+        intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        activity?.finish()
+        lobbyViewModel.resetData()
     }
+
     fun getViewModel() : LobbyViewModel{
         return lobbyViewModel
     }

@@ -37,14 +37,10 @@ class StaticTutorialActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         //Creating the map content
-        contentMap.put(1, StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description"))
-        contentMap.put(2, StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description"))
-        contentMap.put(3, StaticTutorialInfo("title_game",R.drawable.guessing,"game_description"))
+        contentMap[1] = StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description")
+        contentMap[2] = StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description")
+        contentMap[3] = StaticTutorialInfo("title_game",R.drawable.guessing,"game_description")
         ProgressDot(tutorialPageIndex)
-
-
-
-
 
        binding.back.setOnClickListener {
             println("back button click ")
@@ -77,6 +73,7 @@ class StaticTutorialActivity : AppCompatActivity() {
         super.onResume()
         tutorialPageIndex =1
     }
+
     @SuppressLint("SetTextI18n")
     fun setNewPageContent() {
         var info = contentMap[tutorialPageIndex]
@@ -103,25 +100,23 @@ class StaticTutorialActivity : AppCompatActivity() {
 
     // Adaptation from https://www.youtube.com/watch?v=9uUMcV-m3Q0
     private fun ProgressDot(tutorialIndex: Int) {
-        var dotsLayout = findViewById<LinearLayout>(R.id.dots)
-        var dots: Array<ImageView> = Array<ImageView>(contentMap.size) {i -> ImageView(this) }
+        val dotsLayout = findViewById<LinearLayout>(R.id.dots)
+        val dots: Array<ImageView> = Array<ImageView>(contentMap.size) { ImageView(this) }
         dotsLayout.removeAllViews()
-        for (i in 0..dots.size-1 ) {
+        for (i in dots.indices) {
             dots[i] = ImageView(this)
-            var width_height = 15
-            var params:LinearLayout.LayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams(width_height,width_height))
+            val widthHeight = 15
+            val params:LinearLayout.LayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams(widthHeight,widthHeight))
             dots[i].layoutParams = params
             dots[i].setImageResource(R.drawable.circle)
             dots[i].setColorFilter(getColor(R.color.grey), PorterDuff.Mode.SRC_IN)
             dotsLayout.addView(dots[i])
 
         }
-        if(dots.size > 0) {
+        if(dots.isNotEmpty()) {
             dots[tutorialIndex-1].setImageResource(R.drawable.circle)
             dots[tutorialIndex-1].setColorFilter(getColor(R.color.poly_blue), PorterDuff.Mode.SRC_IN)
         }
-
-
     }
 
 
