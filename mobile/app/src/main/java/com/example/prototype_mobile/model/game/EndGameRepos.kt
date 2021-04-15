@@ -127,12 +127,18 @@ class EndGameRepository {
 
         val body = HashMap<String, String>()
         val drawing = convertDrawing(drawingData)
-        body["difficulty"] = gson.toJson(drawing.difficulty)
+
         body["hints"] = gson.toJson(drawing.hints)
         body["eraserStrokes"] = gson.toJson(drawing.eraserStrokes)
         body["pencilStrokes"] = gson.toJson(drawing.pencilStrokes)
         body["drawingName"] = gson.toJson(drawing.drawingName)
-        body["imageUrl"] = drawingData.image!!
+        body["imageUrl"] =  gson.toJson(drawingData.image!!)
+        body["difficulty"] = when(drawing.difficulty.difficulty) {
+            GameDifficulty.EASY -> "0"
+            GameDifficulty.MEDIUM -> "1"
+            GameDifficulty.HARD -> "2"
+            else -> "-1"
+        }
         val res = HttpRequestDrawGuess.httpRequestPost("/api/drawings/create", body, true)
 
         Log.e("Upload http response", res.toString())

@@ -17,6 +17,7 @@ import com.example.prototype_mobile.model.game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -295,6 +296,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                    canStartNewThread = true
                }
            }
+        } catch (e: JSONException) {
+            println("Exception ${e.message} cause by ${e.cause} occurred in onReceivingEvent")
+            println(e)
         } finally {
             mutex.unlock()
         }
