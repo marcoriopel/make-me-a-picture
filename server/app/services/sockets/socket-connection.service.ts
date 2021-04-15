@@ -101,7 +101,12 @@ export class SocketConnectionService {
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.lobbyId);
-                this.lobbyManagerService.dispatchTeams(request.lobbyId)
+                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    this.lobbyManagerService.removePlayerFromLobby(user, request.lobbyId)
+                } catch (err) {
+                    this.socketService.getSocket().to(socket.id).emit('error', { "error": err.message });
+                }
             });
 
             socket.on('leaveGame', (request: any) => {
@@ -187,13 +192,23 @@ export class SocketConnectionService {
             });
 
             socket.on('disconnect', () => {
-                const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                this.authService.addUserToLogCollection(user.username, false);
-                console.log('disconnection of ' + user.username);
-                const gameId = this.gameManagerService.isUserInGame(user.username);
-                if (gameId) {
-                    this.gameManagerService.disconnectGame(gameId, user.username);
+                try{
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                    this.authService.addUserToLogCollection(user.username, false);
+                    console.log('disconnection of ' + user.username);
+                    const lobbyId = this.lobbyManagerService.isUserInLobby(user.username);
+                    if (lobbyId) {
+                        this.lobbyManagerService.removePlayerFromLobby(user, lobbyId)
+                    }
+                    const gameId = this.gameManagerService.isUserInGame(user.username);
+                    if (gameId) {
+                        this.gameManagerService.disconnectGame(gameId, user.username);
+                    }
                 }
+                catch(e){
+                    console.error(e)
+                }
+                
             });
         });
     }
