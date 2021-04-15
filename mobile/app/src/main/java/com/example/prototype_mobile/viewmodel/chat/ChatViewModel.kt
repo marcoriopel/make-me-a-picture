@@ -27,6 +27,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
     private val _getChannelResult = MutableLiveData<Int>()
     val getChannelResult: LiveData<Int> = _getChannelResult
+
+    private val _notifyMsg = MutableLiveData<Int>()
+    val notifyMsg: LiveData<Int> = _notifyMsg
+
     var channelList: MutableList<Channel>
 
     var gameId: String? = null
@@ -63,6 +67,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
 
     fun sendMessage(msg: String) {
         chatRepository.sendMessage(msg)
+    }
+
+    fun notifyNewMessage() {
+        _notifyMsg.postValue(-1)
     }
 
     fun createChannel(channelName: String) {
@@ -231,5 +239,4 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             }
         }
     }
-
 }

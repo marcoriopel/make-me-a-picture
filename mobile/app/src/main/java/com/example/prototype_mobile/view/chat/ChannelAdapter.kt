@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.prototype_mobile.Channel
-import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.model.connection.sign_up.model.ChannelState
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
@@ -46,6 +45,8 @@ class ChannelAdapter(private val values: List<Channel>, val viewModel: ChatViewM
             ChannelState.NOTIFIED -> {
                 holder.background.setBackgroundResource(R.drawable.button_rounded_channel_notif)
                 holder.joinButton.visibility = View.GONE
+
+                viewModel.notifyNewMessage()
 
                 if (channel.chatId != "General" && channel.chatId != viewModel.gameId) {
                     holder.leaveButton.visibility = View.VISIBLE
