@@ -107,6 +107,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         when(drawingEvent.eventType) {
             EVENT_TOUCH_DOWN -> {
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
+                // todo parse with format rgba to argb
                 toolRepo!!.setColorByValue(touchDown.lineColor)
                 toolRepo.setStrokeWidth((touchDown.lineWidth.toFloat() * 1.5).toFloat())
                 motionTouchEventX = (touchDown.coords.x.toFloat() * 1.5).toFloat()
