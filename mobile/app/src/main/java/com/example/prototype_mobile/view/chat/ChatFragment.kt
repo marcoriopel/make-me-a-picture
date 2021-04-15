@@ -64,8 +64,10 @@ class ChatFragment : Fragment() {
 
         chatViewModel.messageReceived.observe(viewLifecycleOwner, Observer {
             addItemToRecyclerView()
-            val notificationSound = MediaPlayer.create(this.context, R.raw.notification)
-            notificationSound.start()
+            if(it.username != chatViewModel.getUsername()) {
+                val notificationSound = MediaPlayer.create(this.context, R.raw.notification)
+                notificationSound.start()
+            }
         })
 
         chatViewModel.notifyMsg.observe(viewLifecycleOwner, Observer {
