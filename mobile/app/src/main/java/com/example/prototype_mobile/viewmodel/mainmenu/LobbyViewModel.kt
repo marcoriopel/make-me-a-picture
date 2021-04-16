@@ -23,21 +23,19 @@ class LobbyViewModel:  ViewModel() {
     val gameStarting: MutableLiveData<Boolean> = _gameStarting
 
     var lobbyRepository: LobbyRepository = LobbyRepository.getInstance()!!
-    val gameRepository = GameRepository.getInstance()!!
+    private val gameRepository = GameRepository.getInstance()!!
 
     init {
         lobbyRepository.lobbyPlayers.observeForever(Observer {
             _lobbyPlayers.value = it ?: return@Observer
-            var i = 0
-            for(player in _lobbyPlayers.value!!.players) {
-                if (player.username.equals(LoginRepository.getInstance()!!.user!!.username)) {
+            for((i, player) in _lobbyPlayers.value!!.players.withIndex()) {
+                if (player.username == LoginRepository.getInstance()!!.user!!.username) {
                     if (i < 2) {
                         gameRepository.team = 0
                     } else {
                         gameRepository.team = 1
                     }
                 }
-                i++
             }
         })
 

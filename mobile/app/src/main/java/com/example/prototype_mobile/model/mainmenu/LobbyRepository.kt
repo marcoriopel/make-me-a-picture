@@ -14,6 +14,7 @@ import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.model.game.GameRepository
 import com.google.gson.Gson
 import io.socket.emitter.Emitter
+import kotlinx.coroutines.runBlocking
 import okhttp3.Response
 import org.json.JSONObject
 
@@ -148,10 +149,10 @@ class LobbyRepository {
 
     private fun analyseJoinLobbyAnswer(response: Response, game: GameInvited): Result<GameInvited> {
         println("analyseJoinLobbyAnswer: $response")
-        if(response.code() == ResponseCode.OK.code) {
-            return Result.Success(game)
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success(game)
         } else {
-            return Result.Error(response.code())
+            Result.Error(response.code())
         }
     }
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
@@ -225,6 +226,11 @@ class LobbyRepository {
 
     fun resetData() {
         println("reset data called")
+        if (_lobbyJoined.value?.gameID != null) {
+            runBlocking {
+                quitLobby()
+            }
+        }
         _lobbyPlayers.value = null
         _lobbyJoined.value = null
         _isPlayerDrawing.value = null

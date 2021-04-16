@@ -21,16 +21,11 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     //Information that we need to observe in order to send an gameCreation request.
     private val _creationGameButtonType = MutableLiveData<SelectedButton>()
     val creationGameButtonType: LiveData<SelectedButton> = _creationGameButtonType
-
     private val _gameName = MutableLiveData<String>()
-    val _isPrivate = MutableLiveData<Boolean>()
     private val _incognitoPassword= MutableLiveData<String>()
     private val _gameDifficulty = MutableLiveData<GameDifficulty>()
-
-
     var _gameInviteID = MutableLiveData<String?>()
-
-
+    val _isPrivate = MutableLiveData<Boolean>()
     var liveDataMerger: MediatorLiveData<GameCreationMergeData> = MediatorLiveData()
 
     private val _lobbyJoined = MutableLiveData<Game>()
@@ -39,13 +34,12 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     private val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
 
-    val lobbyRepository: LobbyRepository
+    private val lobbyRepository: LobbyRepository
     val avatar = LoginRepository.getInstance()!!.user!!.avatar
 
     init {
         liveDataMerger= fetchData()
         lobbyRepository = LobbyRepository.getInstance()!!
-
         _isPrivate.value = false
         lobbyRepository.lobbyJoined.observeForever(Observer {
             _lobbyJoined.value = it ?: return@Observer
@@ -79,7 +73,6 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             if(it !=null) {
                 liveDataMerger.value = Difficulty(it)
             }
-
         })
 
         liveDataMerger.addSource(_gameName){
@@ -114,7 +107,6 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
                     _gameInviteID.value = result.data.lobbyInvited
                 }
                 lobbyRepository.listenLobby(result.data.gameID)
-                var game = Game(result.data.gameID,result.data.gameName,result.data.difficulty, result.data.gameType,_isPrivate.value!!)
                 lobbyRepository.joinLobby(result.data)
             }
             if (result is Result.Error) {
@@ -124,29 +116,19 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
 
      fun joinPrivateGame(code: String) {
-
-
          viewModelScope.launch {
-             try{
-                 GameListRepository.getInstance()!!.getGameList()
-             } catch (e: IllegalAccessException){
-                 throw e
-             }
-             var result = lobbyRepository.joinPrivate(code)
+             GameListRepository.getInstance()!!.getGameList()
+             val result = lobbyRepository.joinPrivate(code)
 
              if(result is Result.Success) {
                  _gameInviteID.postValue(code)
                  val gameList = GameListRepository.getInstance()!!.allGames
-                 var game = gameList.firstOrNull { it.gameID == result.data.lobbyId }
+                 val game = gameList.firstOrNull { it.gameID == result.data.lobbyId }
                  if(game != null){
                      println("Join public game from join private game")
                      lobbyRepository.joinLobby(game)
                  }
-
-
-
              }
-
          }
     }
 
@@ -155,9 +137,8 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             val result: Result<Boolean> = try {
                 LoginRepository.getInstance()!!.logout()
             } catch (e: Exception) {
-            Result.Error(ResponseCode.BAD_REQUEST.code)
+                Result.Error(ResponseCode.BAD_REQUEST.code)
             }
-
             if (result is Result.Success) {
                 _logout.postValue(true)
             }
@@ -166,4 +147,9 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
             }
         }
     }
+
+    fun resetActivityData() {
+        lobbyRepository.resetData()
+    }
+
 }

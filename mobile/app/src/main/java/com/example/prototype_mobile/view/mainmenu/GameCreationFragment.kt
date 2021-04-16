@@ -19,46 +19,24 @@ import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import org.jetbrains.anko.support.v4.act
 import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GameCreationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
 class GameCreationFragment : Fragment() {
 
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var binding: FragmentGameCreationBinding
     private var _createGameButtons: Vector<Button> = Vector<Button>()
     private var _selectedButton: SelectedButton = SelectedButton.SEARCH
-
     private val sharedViewModel: MainMenuViewModel by activityViewModels()
 
+    companion object {
+        fun newInstance() = GameCreationFragment()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-
-
-
     }
 
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_game_creation, container, false)
     }
 
@@ -66,15 +44,11 @@ class GameCreationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentGameCreationBinding.bind(view)
 
-
         //Create game buttons
         _createGameButtons.addElement(binding.classic)
         _createGameButtons.addElement(binding.soloSprint)
         _createGameButtons.addElement(binding.coopSprint)
         _createGameButtons.addElement(binding.gameSearch)
-
-
-
 
         binding.gameSearch.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.red_to_lightred)
         binding.gameSearch.setOnClickListener {
@@ -108,36 +82,26 @@ class GameCreationFragment : Fragment() {
         binding.tutorial.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.red_to_lightred)
 
         binding.tutorial.setOnClickListener {
+            sharedViewModel.resetActivityData()
             val intent = Intent(activity, StaticTutorialActivity::class.java)
             startActivity(intent)
         }
         binding.joinGame.setOnClickListener {
-
             sharedViewModel.joinPrivateGame(binding.inviteIdCode.text.toString())
         }
-
-
-
-
     }
 
-    companion object {
-        fun newInstance() = GameCreationFragment()
-    }
-
-    fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
-
+    private fun disableOtherButtons(currentButton: Button, buttonGroup: Vector<Button>) {
         for (button in buttonGroup) {
             if (button.id != currentButton.id){
                 button.isActivated = false
             }
         }
     }
-    //Send data to viewmodel
-    fun setSelectedButton(button: Button, selection:SelectedButton) {
+
+    private fun setSelectedButton(button: Button, selection:SelectedButton) {
         _selectedButton = if(button.isActivated) selection else SelectedButton.NONE
         sharedViewModel.setCreationGameButtonType(_selectedButton)
     }
-
 
 }
