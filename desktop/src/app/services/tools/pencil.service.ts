@@ -29,6 +29,7 @@ export class PencilService extends Tool {
 
     onMouseLeave(): void {
         this.updatePencilData();
+        this.drawingService.clearCanvas(this.drawingService.baseCtx);
         this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
         this.clearPath();
         let mouseEvent = {
@@ -50,6 +51,7 @@ export class PencilService extends Tool {
 
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
+                lineOpacity: this.pencilData.lineOpacity,
                 lineWidth: this.pencilData.lineWidth,
                 strokeNumber: this.pencilData.strokeNumber,
                 path: [this.mouseDownCoord],
@@ -58,6 +60,7 @@ export class PencilService extends Tool {
             this.drawingService.strokes.push(stroke);
             this.drawingService.strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
             
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
 
             this.drawingService.setIsToolInUse(true);
@@ -66,6 +69,7 @@ export class PencilService extends Tool {
             const mouseDown: MouseDown = {
                 coords: this.mouseDownCoord,
                 lineColor: this.drawingService.color,
+                lineOpacity: this.drawingService.opacity,
                 lineWidth: this.drawingService.lineWidth,
                 strokeNumber: this.drawingService.strokeNumber,
             }
@@ -83,6 +87,7 @@ export class PencilService extends Tool {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
             this.updatePencilData();
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
             this.drawingService.setIsToolInUse(false);
@@ -125,6 +130,7 @@ export class PencilService extends Tool {
         for(let i = 0; i < this.drawingService.strokes.length; i++){
             ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
             ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
+            ctx.globalAlpha = this.drawingService.strokes[i].lineOpacity;
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
             ctx.beginPath();
@@ -154,6 +160,7 @@ export class PencilService extends Tool {
             strokeNumber: this.drawingService.strokeNumber,
             lineWidth: this.drawingService.lineWidth,
             lineColor: this.drawingService.color,
+            lineOpacity: this.drawingService.opacity,
         };
     }
 
