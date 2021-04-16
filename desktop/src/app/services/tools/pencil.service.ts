@@ -90,6 +90,7 @@ export class PencilService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
+            console.log(this.drawingService.strokeStack)
             this.drawingService.setIsToolInUse(false);
             if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
                 this.drawingService.strokeNumber++;
@@ -139,6 +140,19 @@ export class PencilService extends Tool {
             }
             ctx.stroke();
         }
+    }
+
+    redrawStack(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
+        ctx.lineWidth = pencil.lineWidth;
+        ctx.strokeStyle = pencil.lineColor;
+        ctx.globalAlpha = pencil.lineOpacity;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        for(let j = 0; j < pencil.path.length; j++){
+            ctx.lineTo(pencil.path[j].x, pencil.path[j].y);
+        }
+        ctx.stroke();
     }
 
     changeWidth(newWidth: number): void {

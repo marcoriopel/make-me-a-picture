@@ -80,7 +80,7 @@ export class EditorComponent implements AfterViewInit {
     ) {
         this.drawingService.color = BLACK;
         this.drawingService.lineWidth = this.lineWidth;
-        this.drawingService.opacity = this.opacity;
+        this.drawingService.opacity = this.opacity / 100;
     }
 
     ngAfterViewInit(): void {

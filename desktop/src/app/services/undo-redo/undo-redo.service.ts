@@ -59,6 +59,7 @@ export class UndoRedoService extends Tool {
     }
 
     undo(): void {
+        console.log(this.drawingService.strokeStack)
         this.changeUndoAvailability();
         this.changeRedoAvailability();
         if (!this.isUndoAvailable) {
@@ -130,6 +131,6 @@ export class UndoRedoService extends Tool {
     }
 
     drawElement(element: Stroke): void {
-        this.pencilService.drawPencilStroke(this.drawingService.baseCtx, element as Stroke);
+        this.pencilService.redrawStack(this.drawingService.baseCtx, element as Stroke);
     }
 }
