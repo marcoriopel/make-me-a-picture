@@ -53,7 +53,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    * Bind the view on create and setup listner handler
+    * Bind the view on create and setup listener handler
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
