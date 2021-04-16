@@ -30,7 +30,7 @@
         <form [formGroup]="searchForm" class="search-form">
             <input #box type="text" placeholder="Recherche de partie" formControlName="gameNameOrId" (keyup)="filterName(box.value)">
         </form>
-        <button (click)="onRefreshClick()"><span class="material-icons">cached</span></button>
+        <button id="refresh-button" (click)="onRefreshClick()"><span class="material-icons">cached</span></button>
     </div>
 
     <div class="game-list">

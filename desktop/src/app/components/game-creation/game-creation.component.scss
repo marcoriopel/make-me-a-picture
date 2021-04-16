@@ -1,5 +1,5 @@
 mat-card {
-    width: 80%;
+    width: 70%;
     text-align: center;
     height: 70%;
     position: absolute;
@@ -8,6 +8,16 @@ mat-card {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     border-radius: 15px;
+}
+
+.mat-button-toggle{
+    font-size: 16px;
+    color: black;
+}
+
+.mat-button-toggle-checked {
+    background-color: #4aa7dd;
+    color: black;
 }
 
 .formHeader{

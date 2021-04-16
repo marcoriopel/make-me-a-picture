@@ -181,3 +181,13 @@
 	cursor: pointer;
 	outline: inherit;
 }
+
+#refresh-button{
+    transition: transform;
+    transition-duration: 1s;
+}
+
+#refresh-button:active{
+    transform: rotate(360deg);
+    transition-duration: 0s;
+}

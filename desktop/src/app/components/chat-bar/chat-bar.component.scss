@@ -181,3 +181,13 @@ hr {
 .selected {
   background-color: #4AA7DD;
 }
+
+#refresh-button{
+  transition: transform;
+  transition-duration: 1s;
+}
+
+#refresh-button:active{
+  transform: rotate(360deg);
+  transition-duration: 0s;
+}

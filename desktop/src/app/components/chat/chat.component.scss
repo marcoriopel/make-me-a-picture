@@ -30,6 +30,7 @@
 .chat-container{
     height: 400px;
     overflow: auto;
+    padding-top: 12px;
 }
 
 .message-text-container{
@@ -113,7 +114,6 @@
 }
 
 #delete-button {
-  margin-top: 5px;
   color: #BA2034;
   cursor: pointer;
 }
