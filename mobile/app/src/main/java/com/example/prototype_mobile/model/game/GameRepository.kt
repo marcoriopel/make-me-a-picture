@@ -304,6 +304,7 @@ class GameRepository {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     fun leaveGame() {
         try {
+            LobbyRepository.getInstance()!!.currentListenLobby = "null"
             val opts = IO.Options()
             opts.query = "authorization=" + LoginRepository.getInstance()!!.user!!.token
             val data = gson.toJson(GameId(this.gameId!!))
