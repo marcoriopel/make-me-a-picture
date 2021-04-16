@@ -28,14 +28,15 @@ export class PencilService extends Tool {
     }
 
     onMouseLeave(): void {
-        this.updatePencilData();
-        this.drawingService.clearCanvas(this.drawingService.baseCtx);
-        this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
-        this.clearPath();
-        let mouseEvent = {
-            button: MouseButton.LEFT,
-        } as MouseEvent
-        this.onMouseUp(mouseEvent);
+        if(this.mouseDown) {
+            this.updatePencilData();
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
+            this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
+            let mouseEvent = {
+                button: MouseButton.LEFT,
+            } as MouseEvent
+            this.onMouseUp(mouseEvent);            
+        }
     }
 
     onMouseDown(event: MouseEvent): void {

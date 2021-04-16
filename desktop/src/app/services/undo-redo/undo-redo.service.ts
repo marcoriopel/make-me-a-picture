@@ -66,6 +66,7 @@ export class UndoRedoService extends Tool {
             return;
         }
         this.drawingService.strokeNumber--;
+        this.drawingService.strokes.pop();
         const modification = this.drawingService.strokeStack.pop();
         if (modification !== undefined) {
             this.drawingService.redoStack.push(modification);
@@ -100,6 +101,7 @@ export class UndoRedoService extends Tool {
             const modification = this.drawingService.redoStack.pop();
             if (modification !== undefined) {
                 this.drawingService.strokeStack.push(modification);
+                this.drawingService.strokes.push(modification);
             }
         }
         this.changeUndoAvailability();
