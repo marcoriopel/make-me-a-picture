@@ -1,5 +1,5 @@
 .wrapper {
-    background-color: #4F4F4F;
+    background-color: gray;
     position: fixed;
     top: 0;
     left: 0;
@@ -61,12 +61,20 @@ h1 {
     font-weight: 600px;
 }
 
+table {
+    border-spacing:0 20px;
+}
+
+td{
+    text-align: center;
+}
+
 #leaderboard {
-    margin-top: 50px;
+    height: 90%;
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    align-items: center;
+    align-items:center;
     justify-content: center;
 }
 
