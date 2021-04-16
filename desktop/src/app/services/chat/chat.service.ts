@@ -158,6 +158,7 @@ export class ChatService {
             })
             if(!isChatAlreadyJoined && !isChatAlreadyLoaded) this.notJoinedChatList.push(chat);
           });
+          console.log(this.currentChatId)
           this.setCurrentChat(this.currentChatId);
         });
       });

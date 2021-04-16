@@ -28,7 +28,7 @@ export class FeedComponent implements OnInit {
           image.url = 'https://drawingimages.s3.us-east-2.amazonaws.com/' + image.id + '.png';
           image.timestamp = formatDateString(image.timestamp);
         })
-        this.feed = data.feedInfo;
+        this.feed = data.feedInfo.reverse();
       });
   }
 }

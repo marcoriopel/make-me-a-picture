@@ -90,6 +90,7 @@ export class GamePreviewComponent{
         this.gameService.initialize(game.gameType);
 
         this.socketService.bind('joinChatRoomCallback', async () => {
+          console.log('test')
           await this.chatService.refreshChatList();
           this.chatService.setCurrentChat(this.game.id);
           this.socketService.unbind('joinChatRoomCallback')
