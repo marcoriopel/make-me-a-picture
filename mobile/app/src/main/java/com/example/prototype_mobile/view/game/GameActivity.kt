@@ -231,46 +231,44 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     * Prepare data for the end game activity
     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun endGameEvent() {
-        if(gameViewModel.teamScore.value != null) {
-            // Classic Game
-            var title = ""
-            var description = ""
-            var win = true
-            // Set title, description and sound
-            // Classic Game
-            if (gameViewModel.teamScore.value!!.score.size == 2) {
-                val myTeamIndex = gameViewModel.gameRepository.team
-                val otherTeamIndex = if (myTeamIndex == 1) 0 else 1
-                win = gameViewModel.teamScore.value!!.score[myTeamIndex] > gameViewModel.teamScore.value!!.score[otherTeamIndex]
-                val equality = gameViewModel.teamScore.value!!.score[myTeamIndex] == gameViewModel.teamScore.value!!.score[otherTeamIndex]
-                if (win) {
-                    mediaPlayer = MediaPlayer.create(this, R.raw.win)
-                    val score = "${gameViewModel.teamScore.value!!.score[myTeamIndex]} - ${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
-                    title = "Victoire!"
-                    description = "Bravo, vous avez gagné: score ${score}"
-                } else if (equality) {
-                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
-                    val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
-                    title = "Égualité!"
-                    description = "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points"
-                } else { // Defait
-                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
-                    val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]} - ${gameViewModel.teamScore.value!!.score[myTeamIndex]}"
-                    title = "Vous avez perdu"
-                    description = "Meilleur change la prochaine fois! Vous avez perdu ${score}"
-                }
-                mediaPlayer?.start()
-            }
-            // Sprint Game
-            else {
-                title = "Bien joué!"
-                description = "Bravo, vous avez un score de ${gameViewModel.teamScore.value!!.score[0]} points!"
-            }
-            gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
-            // Start end game activity
-            val intent = Intent(this, EndGameActivity::class.java)
-            startActivity(intent)
+        // Classic Game
+        var title = ""
+        var description = ""
+        var win = true
+        // Set title, description and sound
+        // Classic Game
+        if (gameViewModel.teamScore.value!!.score.size == 2) {
+            val myTeamIndex = gameViewModel.gameRepository.team
+            val otherTeamIndex = if (myTeamIndex == 1) 0 else 1
+            win = gameViewModel.teamScore.value!!.score[myTeamIndex] > gameViewModel.teamScore.value!!.score[otherTeamIndex]
+            val equality = gameViewModel.teamScore.value!!.score[myTeamIndex] == gameViewModel.teamScore.value!!.score[otherTeamIndex]
+            if (win) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.win)
+                val score = "${gameViewModel.teamScore.value!!.score[myTeamIndex]} - ${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
+                title = "Victoire!"
+                description = "Bravo, vous avez gagné: score ${score}"
+            } else if (equality) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
+                title = "Égualité!"
+                description = "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points"
+            } else { // Defait
+                mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]} - ${gameViewModel.teamScore.value!!.score[myTeamIndex]}"
+                title = "Vous avez perdu"
+                description = "Meilleur change la prochaine fois! Vous avez perdu ${score}"
+           }
+            mediaPlayer?.start()
         }
+        // Sprint Game
+        else {
+            title = "Bien joué!"
+            description = "Bravo, vous avez un score de ${gameViewModel.teamScore.value!!.score[0]} points!"
+        }
+        gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
+        // Start end game activity
+        val intent = Intent(this, EndGameActivity::class.java)
+        startActivity(intent)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
