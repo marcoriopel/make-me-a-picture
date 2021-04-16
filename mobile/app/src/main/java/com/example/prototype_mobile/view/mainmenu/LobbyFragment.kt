@@ -92,7 +92,6 @@ class LobbyFragment : Fragment() {
         })
 
         lobbyViewModel.gameStarting.observe(viewLifecycleOwner, Observer {
-            Log.e("Start game", it.toString())
             if(it)
                 startGame(view)
         })
@@ -215,7 +214,6 @@ class LobbyFragment : Fragment() {
             binding.start.isClickable = false
         }
     }
-
 
     private fun updatePlayerSolo(lobbyPlayers: LobbyPlayers) {
         binding.lobby4playerLayout.visibility = View.GONE
