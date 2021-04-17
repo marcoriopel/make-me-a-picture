@@ -47,9 +47,11 @@ class ToolsAdjustmentFragment : Fragment() {
             if (it == Tool.PEN) {
                 binding.sliderPenLayout.visibility = View.VISIBLE
                 binding.sliderEraserLayout.visibility = View.GONE
+                binding.sliderAlphaLayout.visibility = View.VISIBLE
             } else {
                 binding.sliderPenLayout.visibility = View.GONE
                 binding.sliderEraserLayout.visibility = View.VISIBLE
+                binding.sliderAlphaLayout.visibility = View.GONE
             }
         })
 
