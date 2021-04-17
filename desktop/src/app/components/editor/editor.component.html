@@ -23,6 +23,9 @@
         <div class="slider">
             <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="this.drawingService.lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
         </div>
+        <div class="slider" *ngIf="this.drawingService.currentTool == 'pencil'">
+            <mat-slider [min]="opacityMin" [max]="opacityMax" [step]="opacityStep" [(value)]="opacity" (change)="changeOpacity()"> </mat-slider>
+        </div>
     </div>    
 </div>
 

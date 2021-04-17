@@ -64,6 +64,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
           const mouseDown = data.event as MouseDown;
           this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
+          this.drawingService.opacity = mouseDown.lineOpacity;
           this.drawingService.color = mouseDown.lineColor;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;

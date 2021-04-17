@@ -243,6 +243,7 @@ export class GameService {
       this.isGuessing = false;
       this.isUserTeamGuessing = false;
       this.socketService.unbind('hintError');
+      this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
@@ -370,6 +371,7 @@ export class GameService {
       this.isInGame = false;
       this.isGuessing = false;
       this.socketService.unbind('hintError');
+      this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
       this.socketService.unbind('gameTimer');
