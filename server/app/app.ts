@@ -36,8 +36,8 @@ export class Application {
 
     private config(): void {
         this.app.use(logger('dev'));
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.json({ limit: '25mb' }));
+        this.app.use(express.urlencoded({ extended: false, limit: '25mb' }));
         this.app.use(cookieParser());
         this.app.use(cors());
     }

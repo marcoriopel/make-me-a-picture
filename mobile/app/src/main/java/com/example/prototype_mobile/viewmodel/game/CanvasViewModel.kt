@@ -17,6 +17,7 @@ import com.example.prototype_mobile.model.game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -28,7 +29,6 @@ const val TOUCH_TOLERANCE = 12
 class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewModel() {
 
     // Attribute
-    var canStartNewThread = true
     var curPath = Path()
     private var lastCoordsReceive: Vec2 = Vec2(0,0)
     private var motionTouchEventX = 0f
@@ -256,48 +256,48 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
      *  Class the drawing event on the right order (New Eraser)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private suspend fun onReceivingEvent() {
-        try {
             mutex.lock()
-           if (canStartNewThread) {
-               canStartNewThread = false
-               viewModelScope.launch(Dispatchers.IO) {
-                   while (!canvasRepository.eraserStrokesList.isEmpty()) {
-                       val eraser = canvasRepository.eraserStrokesList.poll()
-                       onDrawingEvent(eraser)
-                   }
-                   while (!canvasRepository.drawingEventList.isEmpty()) {
-                       val json = canvasRepository.drawingEventList.poll()
-                       if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
-                           val objectString = JSONObject(json).getString("drawingEvent")
-                           val objectJson = JSONObject(objectString)
-                           // try {
-                           val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
-                               EVENT_TOUCH_DOWN -> {
-                                   val Jevent = JSONObject(objectJson.getString("event"))
-                                   val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                                   val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
-                                   DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
-                               }
-                               EVENT_TOUCH_MOVE -> {
-                                   lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
-                                   DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
-                               }
-                               EVENT_TOUCH_UP -> {
-                                   DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
-                               }
-                               else -> {
-                                   DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
-                               }
-                           }
-                           onDrawingEvent(drawingEventReceive)
-                       }
-                   }
-                   canStartNewThread = true
-               }
-           }
-        } finally {
-            mutex.unlock()
-        }
+            viewModelScope.launch(Dispatchers.IO) {
+                while (!canvasRepository.eraserStrokesList.isEmpty()) {
+                    val eraser = canvasRepository.eraserStrokesList.poll()
+                    onDrawingEvent(eraser)
+                }
+                try {
+                    while (!canvasRepository.drawingEventList.isEmpty()) {
+
+                        val json = canvasRepository.drawingEventList.poll()
+                        if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
+                            val objectString = JSONObject(json).getString("drawingEvent")
+                            val objectJson = JSONObject(objectString)
+                            val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
+                                EVENT_TOUCH_DOWN -> {
+                                    val Jevent = JSONObject(objectJson.getString("event"))
+                                    val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+                                    val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
+                                    DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
+                                }
+                                EVENT_TOUCH_MOVE -> {
+                                    lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+                                    DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
+                                }
+                                EVENT_TOUCH_UP -> {
+                                    DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
+                                }
+                                else -> {
+                                    DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+                                }
+                            }
+                            onDrawingEvent(drawingEventReceive)
+                        }
+                    }
+
+                } catch (e: JSONException) {
+                    println("Exception ${e.message} cause by ${e.cause} occurred in onReceivingEvent")
+                    println(e)
+                } finally {
+                    mutex.unlock()
+                }
+            }
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *

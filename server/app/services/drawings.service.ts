@@ -18,21 +18,32 @@ export class DrawingsService {
 
     async addDrawing(req: Request, res: Response, user: BasicUser) {
         try {
-            const drawing: Drawing = {
-                "drawingId": uuid(),
-                "difficulty": req.body.difficulty,
-                "hints": req.body.hints,
-                "drawingVotes": 0,
-                "eraserStrokes": req.body.eraserStrokes,
-                "pencilStrokes": req.body.pencilStrokes,
-                "drawingName": req.body.drawingName
-            };
-
+            let drawing: Drawing
+            if ((req.body.pencilStrokes instanceof Object)) {
+                drawing = {
+                    "drawingId": uuid(),
+                    "difficulty": req.body.difficulty,
+                    "hints": req.body.hints,
+                    "drawingVotes": 0,
+                    "eraserStrokes": req.body.eraserStrokes,
+                    "pencilStrokes": req.body.pencilStrokes,
+                    "drawingName": req.body.drawingName
+                };
+            } else {
+                drawing = {
+                    "drawingId": uuid(),
+                    "difficulty": JSON.parse(req.body.difficulty),
+                    "hints": JSON.parse(req.body.hints),
+                    "drawingVotes": 0,
+                    "eraserStrokes": JSON.parse(req.body.eraserStrokes),
+                    "pencilStrokes": JSON.parse(req.body.pencilStrokes),
+                    "drawingName": JSON.parse(req.body.drawingName)
+                };
+            }
             if (!drawing.pencilStrokes.length || !drawing.drawingName.length || drawing.difficulty === undefined || !drawing.hints.length)
                 throw Error("Drawing is invalid");
-
-            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             await this.drawingsModel.addDrawing(user.username, drawing);
+            await this.drawingsModel.uploadImageToS3(drawing.drawingId, req.body.imageUrl)
             return res.sendStatus(StatusCodes.OK);
         }
         catch (e) {

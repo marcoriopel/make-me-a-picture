@@ -101,6 +101,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.signUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }
@@ -122,10 +123,10 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(username: String) {
         val intent = Intent(this, MainMenuActivity::class.java)
 //        val intent = Intent(this, EndGameActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         startActivity(intent)
 
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         Toast.makeText(
             applicationContext,
             "Bienvenue $username",

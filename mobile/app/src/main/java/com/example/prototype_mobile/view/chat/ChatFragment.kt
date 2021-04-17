@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.view.chat
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -63,6 +64,15 @@ class ChatFragment : Fragment() {
 
         chatViewModel.messageReceived.observe(viewLifecycleOwner, Observer {
             addItemToRecyclerView()
+            if(it.username != chatViewModel.getUsername()) {
+                val notificationSound = MediaPlayer.create(this.context, R.raw.notification)
+                notificationSound.start()
+            }
+        })
+
+        chatViewModel.notifyMsg.observe(viewLifecycleOwner, Observer {
+            val notificationSound = MediaPlayer.create(this.context, R.raw.notification)
+            notificationSound.start()
         })
 
         chatViewModel.messageList.observe(viewLifecycleOwner, Observer {

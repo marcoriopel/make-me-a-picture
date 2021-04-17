@@ -1,14 +1,13 @@
 package com.example.prototype_mobile.view.game
 
 import android.content.Intent
-import android.graphics.Color
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,15 +18,12 @@ import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.ActivityGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.view.chat.ChatFragment
-import com.example.prototype_mobile.view.game.endgame.EndGameActivity
 import com.example.prototype_mobile.view.connection.login.LoginActivity
+import com.example.prototype_mobile.view.game.endgame.EndGameActivity
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModel
 import com.example.prototype_mobile.viewmodel.game.CanvasViewModelFactory
 import com.example.prototype_mobile.viewmodel.game.GameViewModel
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
-import nl.dionsegijn.konfetti.KonfettiView
-import nl.dionsegijn.konfetti.models.Shape
-import nl.dionsegijn.konfetti.models.Size
 
 
 class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
@@ -177,6 +173,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel.logout.observe(this) {
             val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }
@@ -185,35 +182,15 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
     override fun onStop() {
         super.onStop()
         gameViewModel.leaveGame()
-    }
-
-    private fun burstKonfetti() {
-        val konfettiView: KonfettiView = findViewById(R.id.viewKonfetti)
-
-        val drawable = ContextCompat.getDrawable(applicationContext, R.drawable.ic_heart)
-        val drawableShape = drawable?.let { Shape.DrawableShape(it, true) }
-        konfettiView.build()
-            .addColors(Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA)
-            .setDirection(0.0, 359.0)
-            .setSpeed(1f, 5f)
-            .setFadeOutEnabled(true)
-            .setTimeToLive(2000L)
-            .addShapes(Shape.Square, Shape.Circle, drawableShape!!)
-            .addSizes(Size(12, 5f))
-            .setPosition(
-                konfettiView.x + 800,
-                konfettiView.y + 350
-            )
-            .burst(100)
+        finish()
     }
 
     private fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
     }
 
-    //override must be in activity
-    override fun onDialogDismissed(dialogId: Int) {
-    }
+    // Remove the call to super
+    override fun onDialogDismissed(dialogId: Int) {}
 
     override fun onColorSelected(dialogId: Int, color: Int) {
         // Todo: Setter and getter if we want private member in fragment
@@ -237,10 +214,14 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     mediaPlayer = MediaPlayer.create(this, R.raw.win)
                     val score = "${gameViewModel.teamScore.value!!.score[team]} - ${gameViewModel.teamScore.value!!.score[otherTeam]}"
                     gameViewModel.setEndGameResult("Victoire!", "Bravo, vous avez gagné: score ${score}", EndGameResult(true, null))
-                } else {
+                } else if (gameViewModel.teamScore.value!!.score[team] < gameViewModel.teamScore.value!!.score[otherTeam]) {
                     mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
                     val score = "${gameViewModel.teamScore.value!!.score[otherTeam]} - ${gameViewModel.teamScore.value!!.score[team]}"
                     gameViewModel.setEndGameResult("Vous avez perdu", "Meilleur change la prochaine fois! Vous avez perdu ${score}", EndGameResult(false, null))
+                } else {
+                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                    val score = "${gameViewModel.teamScore.value!!.score[otherTeam]}"
+                    gameViewModel.setEndGameResult("Égualité!", "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points", EndGameResult(false, null))
                 }
                 mediaPlayer?.start()
             } else {
@@ -250,13 +231,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             val intent = Intent(this, EndGameActivity::class.java)
             startActivity(intent)
         }
-    }
-
-    //maybe we will need to
-    override fun onRestart() {
-        super.onRestart()
-        println("Restart")
-
     }
 
     private fun setUpGameInit() {
@@ -296,6 +270,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             supportFragmentManager.beginTransaction().replace(R.id.containerTools, HintFragment()).commitNow()
         }
     }
+
     override fun onResume() {
         super.onResume()
         println("OnResume")

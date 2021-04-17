@@ -79,22 +79,20 @@ class MainMenuActivity : AppCompatActivity() {
         mainMenuViewModel = ViewModelProvider(this, MainMenuViewModelFactory())
                 .get(MainMenuViewModel::class.java)
 
-        mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity, {
+        mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity) {
             blockProfilButton = false
             if (it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
                 supportFragmentManager.beginTransaction().replace(
-                    R.id.container2,
-                    GameListFragment.newInstance()
+                        R.id.container2,
+                        GameListFragment.newInstance()
                 ).commit()
-
             } else {
                 supportFragmentManager.beginTransaction().replace(
-                    R.id.container2,
-                    GameParameterFragment.newInstance()
+                        R.id.container2,
+                        GameParameterFragment.newInstance()
                 ).commit()
             }
-        })
-
+        }
 
         mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
             val gameJoined = it ?: return@Observer
@@ -111,22 +109,20 @@ class MainMenuActivity : AppCompatActivity() {
                 .commit()
         })
 
-        mainMenuViewModel.logout.observe(this@MainMenuActivity, {
+        mainMenuViewModel.logout.observe(this@MainMenuActivity) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
-        })
+        }
     }
 
     override fun onRestart() {
         super.onRestart()
         println("On restart")
         removeLobbyFromStack()
-        //Todo reset specific gameData here or in the intent of EndGameFragment
     }
 
-    fun removeLobbyFromStack() {
-
+    private fun removeLobbyFromStack() {
         for(fragment in supportFragmentManager.fragments)
             if(fragment is LobbyFragment) {
                 (fragment).getViewModel().resetData()
@@ -137,6 +133,7 @@ class MainMenuActivity : AppCompatActivity() {
                 ).commitNowAllowingStateLoss()
             }
     }
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_ENTER -> {

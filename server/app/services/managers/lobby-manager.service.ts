@@ -102,18 +102,7 @@ export class LobbyManagerService {
     leave(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
         if (this.lobbyExist(req.query.lobbyId)) {
             try {
-                const lobby: Lobby = LobbyManagerService.lobbies.get(req.query.lobbyId);
-                lobby.removePlayer(user);
-                this.dispatchTeams(req.query.lobbyId);
-                let hasRealPlayers: boolean = false;
-                for (const player of lobby.getPlayers()) {
-                    if (!player.isVirtual) {
-                        hasRealPlayers = true
-                    }
-                }
-                if (!hasRealPlayers) {
-                    LobbyManagerService.lobbies.delete(req.query.lobbyId);
-                }
+                this.removePlayerFromLobby(user, req.query.lobbyId);
             }
             catch (err) {
                 return res.status(StatusCodes.NOT_ACCEPTABLE).send(err.message);
@@ -122,6 +111,21 @@ export class LobbyManagerService {
         else
             return res.status(StatusCodes.NOT_FOUND).send("Lobby does not exist or game already started");
         next();
+    }
+
+    removePlayerFromLobby(user: BasicUser, lobbyId: string){
+        const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
+        lobby.removePlayer(user);
+        this.dispatchTeams(lobbyId);
+        let hasRealPlayers: boolean = false;
+        for (const player of lobby.getPlayers()) {
+            if (!player.isVirtual) {
+                hasRealPlayers = true
+            }
+        }
+        if (!hasRealPlayers) {
+            LobbyManagerService.lobbies.delete(lobbyId);
+        }
     }
 
     addVirtualPlayer(req: Request, res: Response, user: BasicUser, next: NextFunction): void {
@@ -174,5 +178,18 @@ export class LobbyManagerService {
         const lobby: Lobby = LobbyManagerService.lobbies.get(lobbyId);
         this.socketService.getSocket().to(lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
         this.socketService.getSocket().to("tmp" + lobbyId).emit('dispatchTeams', { "players": lobby.getPlayers() });
+    }
+
+    isUserInLobby(username: string) {
+        let id = null;
+        LobbyManagerService.lobbies.forEach((lobby: Lobby, lobbyId: string) => {
+            const players = lobby.getPlayers();
+            for (let player of players) {
+                if (player.username == username) {
+                    id = lobbyId;
+                }
+            }
+        })
+        return id;
     }
 }
