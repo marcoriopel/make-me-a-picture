@@ -7,7 +7,7 @@
             <div class="chat-input">
                 <form [formGroup]="createChatForm" (ngSubmit)="createChat()">
                     <button id="add-button"><span class="material-icons">add</span></button>
-                    <input matInput type="text" formControlName="chatName" placeholder="Nouvelle conversation">
+                    <input matInput type="text" formControlName="chatName" placeholder="Rejoindre/Ajouter">
                 </form>
             </div>
             <button id="refresh-button" type="submit" (click)="refreshChatList()"><span class="material-icons">cached</span></button>
