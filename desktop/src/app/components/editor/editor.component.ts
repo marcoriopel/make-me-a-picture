@@ -45,6 +45,8 @@ export class EditorComponent implements AfterViewInit {
     lineWidthMax: number = MAX_LINE_WIDTH;
     lineWidthStep: number = LINE_WIDTH_STEP;
     lineWidth: number = INITIAL_LINE_WIDTH;
+    pencilWidth: number = 10;
+    eraserWidth: number = 10;
 
     workSpaceSize: Vec2 = { x: MINIMUM_WORKSPACE_WIDTH, y: MINIMUM_WORKSPACE_HEIGHT };
     previewSize: Vec2 = { x: MINIMUM_CANVAS_WIDTH, y: MINIMUM_CANVAS_HEIGHT };
@@ -97,6 +99,8 @@ export class EditorComponent implements AfterViewInit {
     }
 
     changeLineWidth(): void {
-        this.drawingService.lineWidth = this.lineWidth;
+        this.drawingService.currentTool == 'pencil' ? this.drawingService.pencilWidth = this.drawingService.lineWidth : this.drawingService.eraserWidth = this.drawingService.lineWidth;
+        this.drawingService.currentTool == 'pencil' ? this.drawingService.lineWidth = this.drawingService.pencilWidth : this.drawingService.eraserWidth = this.drawingService.eraserWidth;
     }
+
 }

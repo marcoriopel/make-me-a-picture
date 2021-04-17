@@ -21,7 +21,7 @@
             ></button>
         </div>
         <div class="slider">
-            <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
+            <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="this.drawingService.lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
         </div>
     </div>    
 </div>

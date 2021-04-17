@@ -21,6 +21,9 @@ export class DrawingService {
     isToolInUse: Subject<boolean> = new Subject<boolean>();
     color: string;
     lineWidth: number;
+    pencilWidth: number = 10;
+    eraserWidth: number = 10;
+    currentTool: string = 'pencil';
     strokes: Stroke[] = [];
     strokeNumber: number = 0;
     
