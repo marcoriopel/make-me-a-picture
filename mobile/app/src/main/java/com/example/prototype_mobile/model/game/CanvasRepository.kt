@@ -118,6 +118,7 @@ class CanvasRepository {
         val isEraser = toolRepository.selectedTool.value == Tool.ERASER
         val touchDown = MouseDown(lineColor, lineWith, coord, strokeNumber, isEraser)
         val event = DrawingEvent(EVENT_TOUCH_DOWN, touchDown, gameRepo.gameId.toString())
+        println(touchDown.lineColor)
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))

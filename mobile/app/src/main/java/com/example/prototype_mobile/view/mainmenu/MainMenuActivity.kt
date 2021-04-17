@@ -22,7 +22,7 @@ import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
 
-class  MainMenuActivity : AppCompatActivity() {
+class MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
     private var blockProfileButton = false
 

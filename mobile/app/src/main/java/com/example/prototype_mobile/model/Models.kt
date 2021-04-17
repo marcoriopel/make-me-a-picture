@@ -1,5 +1,6 @@
 package com.example.prototype_mobile
 
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import androidx.annotation.DrawableRes

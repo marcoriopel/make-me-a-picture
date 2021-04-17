@@ -35,9 +35,11 @@ class ToolRepository {
 
     // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
+    var _alpha = 255
     
     private val paint = Paint().apply {
         color = selectedColor
+        alpha = _alpha
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -52,8 +54,11 @@ class ToolRepository {
         return Paint().apply {
             if(_selectedTool.value == Tool.ERASER)
                 color = Color.WHITE
-            else
+            else {
                 color = selectedColor
+                alpha = _alpha
+
+            }
 
             // Smooths out edges of what is drawn without affecting shape.
             isAntiAlias = true
@@ -90,12 +95,20 @@ class ToolRepository {
     fun setColor(color: Int) {
         // We refer to color in getPaintCopy through selected copy..
         paint.color = color
+        paint.alpha = _alpha
+        println(paint.color.toString() + "   " + paint.alpha.toString())
     }
 
     fun setColorByValue(color: String) {
         // Ex: "#a8a8a8"
         paint.color = Color.parseColor(color)
         selectedColor = Color.parseColor(color)
+        paint.alpha = _alpha
+    }
+
+    fun resetAlpha() {
+        _alpha = 255
+        paint.alpha = _alpha
     }
 
 }

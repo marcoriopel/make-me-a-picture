@@ -233,6 +233,14 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
     }
 
+    //maybe we will need to
+    override fun onRestart() {
+        super.onRestart()
+        println("Restart")
+        gameViewModel.resetAlpha()
+
+    }
+
     private fun setUpGameInit() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
@@ -305,5 +313,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 Toast.LENGTH_LONG
         ).show()
     }
+
 
 }
