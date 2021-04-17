@@ -18,15 +18,13 @@ import com.example.prototype_mobile.model.connection.sign_up.model.SelectedButto
 import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.view.connection.login.LoginActivity
-import com.example.prototype_mobile.view.connection.sign_up.SignUpActivity
-import com.example.prototype_mobile.view.game.*
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.MainMenuViewModelFactory
 
 
-class MainMenuActivity : AppCompatActivity() {
+class  MainMenuActivity : AppCompatActivity() {
     private lateinit var mainMenuViewModel: MainMenuViewModel
-    var blockProfilButton = false
+    private var blockProfileButton = false
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -37,17 +35,17 @@ class MainMenuActivity : AppCompatActivity() {
         menu?.getItem(0)?.setIcon(Drawable.avatars[mainMenuViewModel.avatar])
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_profil -> {
-            if (!blockProfilButton) {
+            if (!blockProfileButton) {
                 supportFragmentManager.beginTransaction().replace(
                     R.id.container2,
                     ProfilFragment.newInstance())
                         .commit()
-                blockProfilButton = true
+                blockProfileButton = true
             }
             true
-
         }
         R.id.action_logout -> {
             mainMenuViewModel.logout()
@@ -57,6 +55,7 @@ class MainMenuActivity : AppCompatActivity() {
             super.onOptionsItemSelected(item)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_menu)
@@ -80,7 +79,7 @@ class MainMenuActivity : AppCompatActivity() {
                 .get(MainMenuViewModel::class.java)
 
         mainMenuViewModel.creationGameButtonType.observe(this@MainMenuActivity) {
-            blockProfilButton = false
+            blockProfileButton = false
             if (it == SelectedButton.NONE || it == SelectedButton.SEARCH) {
                 supportFragmentManager.beginTransaction().replace(
                         R.id.container2,
@@ -96,7 +95,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         mainMenuViewModel.lobbyJoined.observe(this@MainMenuActivity, Observer {
             val gameJoined = it ?: return@Observer
-            blockProfilButton = false
+            blockProfileButton = false
             supportFragmentManager.beginTransaction().replace(
                 R.id.container2, LobbyFragment.newInstance(
                     gameJoined.gameName,
