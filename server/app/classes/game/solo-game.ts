@@ -55,7 +55,6 @@ export class SoloGame extends Game {
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
         this.currentDrawingName = drawing.drawingName;
-        console.log(this.currentDrawingName)
         this.pastVirtualDrawingsId.push(drawing.drawingId);
         this.pastVirtualDrawings.push(this.currentDrawingName);
         this.startGameTransition();
@@ -119,7 +118,6 @@ export class SoloGame extends Game {
                 return;
             }
         }
-        console.log(this.currentDrawingName)
         this.currentDrawingName = drawing.drawingName;
         this.pastVirtualDrawingsId.push(drawing.drawingId);
         this.pastVirtualDrawings.push(drawing.drawingName);
@@ -140,6 +138,7 @@ export class SoloGame extends Game {
             this.gameEnded.next(true);
             this.endDate = new Date().getTime();
             clearInterval(this.gameTimerInterval);
+            clearInterval(this.drawingTimerInterval);
             this.guessesLeft = 0;
             this.vPlayer.stopDrawing();
             this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
@@ -189,7 +188,7 @@ export class SoloGame extends Game {
 
     startGameTimer() {
         clearInterval(this.transitionInterval);
-        this.gameTimerCount = 120;
+        this.gameTimerCount = 15;
         this.gameTimerInterval = setInterval(() => {
             this.socketService.getSocket().to(this.id).emit('gameTimer', { "timer": this.gameTimerCount });
             if (!this.gameTimerCount) {
@@ -214,6 +213,7 @@ export class SoloGame extends Game {
                 break;
         }
         this.drawingTimerInterval = setInterval(() => {
+
             this.socketService.getSocket().to(this.id).emit('drawingTimer', { "timer": this.drawingTimerCount });
             if (!this.drawingTimerCount) {
                 this.setupNextDrawing();
