@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.viewmodel.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,8 +19,9 @@ class ColorViewModel : ViewModel() {
             toolRepository.setPen()
         }
     }
+
     fun setAlpha(alpha: Int) {
-        toolRepository._alpha = alpha *255/100
+        toolRepository.setAlpha(alpha *255/100)
         _alphaLiveData.postValue(alpha)
         if (toolRepository.selectedTool.value == Tool.PEN) {
             toolRepository.setPen()

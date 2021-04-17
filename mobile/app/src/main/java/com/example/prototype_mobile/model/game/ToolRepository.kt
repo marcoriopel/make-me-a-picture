@@ -2,6 +2,7 @@ package com.example.prototype_mobile.model.game
 
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.model.connection.login.LoginRepository
@@ -29,17 +30,18 @@ class ToolRepository {
     init{
         _selectedTool.value = Tool.PEN
     }
+
     // Pencil attribute
     var strokeWidthEraser: Float = 12f
     var selectedColor = Color.BLACK
 
     // Eraser attribute
     var strokeWidthPen: Float = 12f // has to be float
-    var _alpha = 255
+    private var alpha = 255
     
     private val paint = Paint().apply {
         color = selectedColor
-        alpha = _alpha
+        alpha = alpha
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -52,12 +54,12 @@ class ToolRepository {
 
     fun getPaintCopy(): Paint {
         return Paint().apply {
+
             if(_selectedTool.value == Tool.ERASER)
                 color = Color.WHITE
             else {
                 color = selectedColor
-                alpha = _alpha
-
+                alpha = paint.alpha
             }
 
             // Smooths out edges of what is drawn without affecting shape.
@@ -75,15 +77,21 @@ class ToolRepository {
         return paint
     }
 
+    fun getOpacity(): Double {
+        return alpha.toDouble() / 255
+    }
+
     fun setEraser() {
         _selectedTool.value = Tool.ERASER
         selectedColor = paint.color
+        paint.alpha = 255
         setColor(Color.WHITE)
         setStrokeWidth(strokeWidthEraser)
     }
 
     fun setPen() {
         _selectedTool.value = Tool.PEN
+        paint.alpha = alpha
         setColor(selectedColor)
         setStrokeWidth(strokeWidthPen)
     }
@@ -92,23 +100,34 @@ class ToolRepository {
         paint.strokeWidth = width
     }
 
-    fun setColor(color: Int) {
-        // We refer to color in getPaintCopy through selected copy..
+    fun setStokeOpacity(opacity: Double) {
+        setAlpha((opacity * 255).toInt())
+    }
+
+    fun setAlpha(a: Int) {
+        if(_selectedTool.value == Tool.PEN) {
+            alpha = a
+            paint.alpha = alpha
+        }
+    }
+
+    private fun setColor(color: Int) {
         paint.color = color
-        paint.alpha = _alpha
-        println(paint.color.toString() + "   " + paint.alpha.toString())
     }
 
     fun setColorByValue(color: String) {
         // Ex: "#a8a8a8"
-        paint.color = Color.parseColor(color)
-        selectedColor = Color.parseColor(color)
-        paint.alpha = _alpha
+        if(_selectedTool.value == Tool.PEN) {
+            paint.color = Color.parseColor(color)
+            selectedColor = Color.parseColor(color)
+            paint.alpha = alpha
+        }
     }
 
     fun resetAlpha() {
-        _alpha = 255
-        paint.alpha = _alpha
+        println("resetAlpha")
+        alpha = 255
+        paint.alpha = alpha
     }
 
 }
