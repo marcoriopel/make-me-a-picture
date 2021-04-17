@@ -43,6 +43,7 @@ export class LobbyService {
     const options = { headers: headers,  responseType: 'text' as 'json'};
     const body = { lobbyId: this.game.id, teamNumber: teamNumber, username: teamNumber ? this.virtalPlayer1: this.virtalPlayer0}
     this.http.post<any>(this.addVirtualPlayerUrl, body, options).subscribe()
+    console.log(this.game)
   }
 
   removeVirtualPlayer(teamNumber: number): void {

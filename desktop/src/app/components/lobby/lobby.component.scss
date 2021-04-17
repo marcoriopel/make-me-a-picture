@@ -56,9 +56,6 @@
     margin-top: 50px;
     margin-left: 30px;
     vertical-align: middle;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 48px;
     border: none;
     outline:none;
@@ -87,9 +84,6 @@
     text-align: left;
     vertical-align: middle;
     line-height: 58px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 24px;
     color:  #F2F2F2;
     border: none;
@@ -107,9 +101,6 @@
     // text
     text-align: center;
     vertical-align: middle;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 16px;
     color:  #F2F2F2;
     border: none;
@@ -152,12 +143,16 @@
 .add-bot {
     height: 35px;
     width: 35px;
+    margin-left: 10px;
     background-color: #bbb;
     border-radius: 50%;
     color:  #F2F2F2;
     border: none;
     outline:none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .leave-button {
