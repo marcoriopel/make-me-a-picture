@@ -269,7 +269,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                         val json = canvasRepository.drawingEventList.poll()
                         if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
                             val objectString = JSONObject(json).getString("drawingEvent")
-                            Log.e("Touche down", objectString)
                             val objectJson = JSONObject(objectString)
                             val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
                                 EVENT_TOUCH_DOWN -> {

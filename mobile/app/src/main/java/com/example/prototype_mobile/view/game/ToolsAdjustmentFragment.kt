@@ -65,7 +65,6 @@ class ToolsAdjustmentFragment : Fragment() {
             viewModel.setGridSize(value.toInt())
         }
         binding.sliderAlpha.addOnChangeListener { slider, value, fromUser ->
-            println("slider change")
             colorViewModel.setAlpha(value.toInt())
         }
     }
