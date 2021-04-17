@@ -15,4 +15,5 @@ export interface Stroke {
     isEraser: boolean,
     lineWidth: number,
     lineColor: string,
+    lineOpacity: number,
 }

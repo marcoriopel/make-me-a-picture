@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     tools:context=".view.game.ToolsAdjustmentFragment">
@@ -14,12 +14,13 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginTop="-10px"
         android:backgroundTint="@color/light_grey">
         <TextView
             android:id="@+id/slider_pen_text"
             android:layout_width="200px"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:text="@string/pen_size"
             android:textStyle="bold"
             android:textColor="@color/light_grey"/>
@@ -28,24 +29,26 @@
             android:layout_width="800px"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="0px"
             android:valueFrom="1.0"
             android:valueTo="100.0"
             android:stepSize="1.0"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/slider_eraser_layout"
         android:layout_width="1000px"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginTop="-10px"
         android:backgroundTint="@color/light_grey"
         android:visibility="gone">
         <TextView
             android:id="@+id/slider_eraser_text"
             android:layout_width="200px"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:text="@string/eraser_size"
             android:textStyle="bold"
             android:textColor="@color/light_grey"/>
@@ -53,17 +56,44 @@
             android:id="@+id/slider_eraser"
             android:layout_width="800px"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10px"
+            android:layout_weight="255"
+            android:layout_marginTop="0px"
             android:valueFrom="1.0"
             android:valueTo="100.0"
             android:stepSize="1.0"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/slider_alpha_layout"
+        android:layout_width="1000px"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="-10px"
+        android:backgroundTint="@color/light_grey">
+        <TextView
+            android:id="@+id/slider_alpha_text"
+            android:layout_width="200px"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="@string/transparency"
+            android:textStyle="bold"
+            android:textColor="@color/light_grey"/>
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_alpha"
+            android:layout_width="305dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:value="100"
+            android:stepSize="0"
+            android:valueFrom="0.0"
+            android:valueTo="100.0" />
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/slider_grid_layout"
         android:layout_width="1000px"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="-10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:backgroundTint="@color/light_grey"

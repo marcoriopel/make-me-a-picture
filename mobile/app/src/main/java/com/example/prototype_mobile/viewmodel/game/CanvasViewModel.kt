@@ -35,12 +35,14 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     private var motionTouchEventY = 0f
     private var currentX = 0f
     private var currentY = 0f
+    private val mutexStartDrawingThread = Mutex()
     private val textPaint = Paint().apply {
         color = Color.BLACK
         textSize = 30F
         isAntiAlias = true
         isDither = true
     }
+
 
     // Repository
     private val toolRepo = ToolRepository.getInstance()
@@ -59,7 +61,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Get the current paint
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    fun getPaint(): Paint {
+    private fun getPaint(): Paint {
         return toolRepo!!.getPaint()
     }
 
@@ -89,9 +91,9 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 MotionEvent.ACTION_DOWN -> {
                     val paint = toolRepo!!.getPaint()
                     if(toolRepo.selectedTool.value == Tool.PEN) {
-                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthPen.toInt(), "#"  + Integer.toHexString(paint.color).substring(2), pathStack.size, toolRepo.getOpacity())
                     } else {
-                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthEraser.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size)
+                        canvasRepository.touchDownEvent(coord, toolRepo.strokeWidthEraser.toInt(), "#" + Integer.toHexString(paint.color).substring(2), pathStack.size, 1.00)
                     }
 
                 }
@@ -109,6 +111,7 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 val touchDown: MouseDown = drawingEvent.event as MouseDown
                 toolRepo!!.setColorByValue(touchDown.lineColor)
                 toolRepo.setStrokeWidth((touchDown.lineWidth.toFloat() * 1.5).toFloat())
+                toolRepo.setStokeOpacity(touchDown.lineOpacity)
                 motionTouchEventX = (touchDown.coords.x.toFloat() * 1.5).toFloat()
                 motionTouchEventY = (touchDown.coords.y.toFloat() * 1.5).toFloat()
                 touchStart(touchDown.strokeNumber)
@@ -250,13 +253,12 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
         _newCurPath.postValue(null)
     }
 
-    val mutex = Mutex()
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
      *  Class the drawing event on the right order (New Eraser)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private suspend fun onReceivingEvent() {
-            mutex.lock()
+            mutexStartDrawingThread.lock()
             viewModelScope.launch(Dispatchers.IO) {
                 while (!canvasRepository.eraserStrokesList.isEmpty()) {
                     val eraser = canvasRepository.eraserStrokesList.poll()
@@ -264,7 +266,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                 }
                 try {
                     while (!canvasRepository.drawingEventList.isEmpty()) {
-
                         val json = canvasRepository.drawingEventList.poll()
                         if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
                             val objectString = JSONObject(json).getString("drawingEvent")
@@ -273,7 +274,11 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                                 EVENT_TOUCH_DOWN -> {
                                     val Jevent = JSONObject(objectJson.getString("event"))
                                     val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-                                    val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
+                                    val event = try {
+                                        MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), Jevent.getString("lineOpacity").toDouble() ,coords, Jevent.getInt("strokeNumber"))
+                                    } catch (e: JSONException) {
+                                        MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), 1.00 ,coords, Jevent.getInt("strokeNumber"))
+                                    }
                                     DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
                                 }
                                 EVENT_TOUCH_MOVE -> {
@@ -295,9 +300,56 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                     println("Exception ${e.message} cause by ${e.cause} occurred in onReceivingEvent")
                     println(e)
                 } finally {
-                    mutex.unlock()
+                    mutexStartDrawingThread.unlock()
                 }
             }
+
+//    private fun onReceivingEvent() {
+//       if (canStartNewThread) {
+//           canStartNewThread = false
+//           viewModelScope.launch(Dispatchers.IO) {
+//               while (!canvasRepository.eraserStrokesList.isEmpty()) {
+//                   val eraser = canvasRepository.eraserStrokesList.poll()
+//                   onDrawingEvent(eraser)
+//               }
+//               while (!canvasRepository.drawingEventList.isEmpty()) {
+//                   val json = canvasRepository.drawingEventList.poll()
+//                   if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
+//                       val objectString = JSONObject(json).getString("drawingEvent")
+//                       val objectJson = JSONObject(objectString)
+//                       println("JEvent : " + objectJson.getString("event"))
+//                       // try {
+//                       val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
+//                           EVENT_TOUCH_DOWN -> {
+//                               val Jevent = JSONObject(objectJson.getString("event"))
+//                               val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
+//                               val color = updateTransparency(Jevent.getString("lineColor"))
+//                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
+//                               DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
+//                           }
+//                           EVENT_TOUCH_MOVE -> {
+//                               lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
+//                               DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
+//                           }
+//                           EVENT_TOUCH_UP -> {
+//                               DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
+//                           }
+//                           else -> {
+//                               DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
+//                           }
+//                       }
+//
+//                       onDrawingEvent(drawingEventReceive)
+//                   }
+//               }
+//               canStartNewThread = true
+//           }
+//       }
+    }
+
+    fun updateTransparency(lineColor: String) {
+        var alphaInt = Integer.parseInt(lineColor.substring(1,3),16)
+        ToolRepository.getInstance()!!.setAlpha(alphaInt)
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * *

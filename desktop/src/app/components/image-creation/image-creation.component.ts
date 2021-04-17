@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DrawingService } from '@app/services/drawing/drawing.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +16,7 @@ import { ToolsComponent } from '../tools/tools.component';
   templateUrl: './image-creation.component.html',
   styleUrls: ['./image-creation.component.scss']
 })
-export class ImageCreationComponent implements OnInit {
+export class ImageCreationComponent implements OnInit, OnDestroy {
   @ViewChild('toolsComponent', { static: false }) toolsComponent: ToolsComponent;
   imageCreationForm: FormGroup;
   hintForm: FormGroup;
@@ -54,6 +54,19 @@ export class ImageCreationComponent implements OnInit {
         Validators.pattern(/.*[^ ].*/),
       ]],
     })
+  }
+
+  ngOnDestroy(): void {
+    this.drawingService.strokes = [];
+    this.drawingService.strokeStack = [];
+    this.drawingService.redoStack = [];
+    this.drawingService.lineWidth = 10;
+    this.drawingService.color = '#000000';
+    this.drawingService.opacity = 1;
+    this.drawingService.strokeNumber = 0;
+    this.pencilService.strokeNumber = 0;
+    this.pencilService.strokes = [];
+    this.pencilService.width = 10;
   }
 
   async processForm() {
