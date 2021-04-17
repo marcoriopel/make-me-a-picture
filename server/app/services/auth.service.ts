@@ -140,8 +140,8 @@ export class AuthService {
         else {
             let lastLogin = 0;
             for (let login of logins) {
-                if (login.timeStamp > lastLogin)
-                    lastLogin = login.timeStamp
+                if (login.timestamp > lastLogin)
+                    lastLogin = login.timestamp
             }
             return lastLogin;
         }
