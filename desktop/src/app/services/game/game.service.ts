@@ -214,12 +214,14 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.socketService.unbind('endGame');
+      console.log(data)
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
-          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.id + '.png',
+          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.virtualPlayerIds[i] + '.png',
           id: data.virtualPlayerIds[i],
         }
+        console.log(this.virtualPlayerDrawings);
         this.virtualPlayerDrawings.push(vdrawing);
       }
       this.openEndGameModal();
