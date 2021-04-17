@@ -226,7 +226,7 @@ class LobbyRepository {
 
     fun resetData() {
         println("reset data called")
-        if (_lobbyJoined.value?.gameID != null) {
+        if (_lobbyJoined.value?.gameID != null && !gameStarted) {
             runBlocking {
                 quitLobby()
             }

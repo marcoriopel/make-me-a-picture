@@ -70,7 +70,7 @@ class CanvasRepository {
             val event = DrawingEvent(EVENT_TOUCH_DOWN, touchdown, gameRepo.gameId.toString())
             eraserStrokesList.add(event)
 
-            for(i in 1..eraseStroke.path.size - 1) {
+            for(i in 1 until eraseStroke.path.size) {
                 val eventMove = DrawingEvent(EVENT_TOUCH_MOVE, eraseStroke.path[i], gameRepo.gameId.toString())
                 eraserStrokesList.add(eventMove)
             }
