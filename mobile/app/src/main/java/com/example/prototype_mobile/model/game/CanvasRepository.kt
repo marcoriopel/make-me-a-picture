@@ -1,6 +1,5 @@
 package com.example.prototype_mobile.model.game
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -63,14 +62,14 @@ class CanvasRepository {
         _drawingEventServer.postValue(true)
     }
 
-    var onEraserStrokes = Emitter.Listener {
+    private var onEraserStrokes = Emitter.Listener {
         val eraserStrokesReceived: EraserStrokesReceived = gson.fromJson(it[0].toString(), EraserStrokesReceived ::class.java)
         for (eraseStroke in eraserStrokesReceived.eraserStrokes) {
-            val touchdown = MouseDown(eraseStroke.lineColor, eraseStroke.lineWidth, eraseStroke.path[0], eraseStroke.strokeNumber)
+            val touchdown = MouseDown(eraseStroke.lineColor, eraseStroke.lineWidth, 1.00 ,eraseStroke.path[0], eraseStroke.strokeNumber)
             val event = DrawingEvent(EVENT_TOUCH_DOWN, touchdown, gameRepo.gameId.toString())
             eraserStrokesList.add(event)
 
-            for(i in 1..eraseStroke.path.size - 1) {
+            for(i in 1 until eraseStroke.path.size) {
                 val eventMove = DrawingEvent(EVENT_TOUCH_MOVE, eraseStroke.path[i], gameRepo.gameId.toString())
                 eraserStrokesList.add(eventMove)
             }
@@ -113,11 +112,12 @@ class CanvasRepository {
         endGameRepos.addDrawingEvent(DrawingEvent(EVENT_REDO, null, ""))
     }
 
-    fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String, strokeNumber: Int) {
+    fun touchDownEvent(coord: Vec2, lineWith: Int, lineColor: String, strokeNumber: Int, opacity: Double) {
         // Create Event
         val isEraser = toolRepository.selectedTool.value == Tool.ERASER
-        val touchDown = MouseDown(lineColor, lineWith, coord, strokeNumber, isEraser)
+        val touchDown = MouseDown(lineColor, lineWith, opacity, coord, strokeNumber, isEraser)
         val event = DrawingEvent(EVENT_TOUCH_DOWN, touchDown, gameRepo.gameId.toString())
+        println(touchDown.lineColor)
         _drawingEvent.value = event
         // Send to other players
         socket.emit(DRAWING_EVENT, gson.toJson(event))

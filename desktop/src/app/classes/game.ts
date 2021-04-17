@@ -55,6 +55,7 @@ export interface DrawingEvent {
 
 export interface MouseDown {
     lineColor: string;
+    lineOpacity: number;
     lineWidth: number;
     coords: Vec2;
     strokeNumber: number;

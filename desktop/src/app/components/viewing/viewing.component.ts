@@ -39,6 +39,7 @@ export class ViewingComponent implements AfterViewInit {
       let stroke: Stroke = this.drawing.pencilStrokes[i];
       stroke = {
         lineColor: stroke.lineColor,
+        lineOpacity: stroke.lineOpacity,
         lineWidth: stroke.lineWidth,
         strokeNumber: stroke.strokeNumber,
         path: [],
@@ -60,6 +61,7 @@ export class ViewingComponent implements AfterViewInit {
     for(let i = 0; i < strokes.length; i++){
       this.baseCtx.lineWidth = strokes[i].lineWidth;
       this.baseCtx.strokeStyle = strokes[i].lineColor;
+      this.baseCtx.globalAlpha = strokes[i].lineOpacity;
       this.drawStroke(strokes[i].path);
     }
   }
