@@ -153,7 +153,6 @@ export class PencilService extends Tool {
             path: this.pathData,
             isEraser: this.isCurrentToolEraser,
             strokeNumber: this.drawingService.strokeNumber,
-            // lineWidth: this.drawingService.currentTool == 'pencil' ? this.drawingService.pencilWidth : this.drawingService.eraserWidth,
             lineWidth: this.drawingService.lineWidth,
             lineColor: this.drawingService.color,
         };
