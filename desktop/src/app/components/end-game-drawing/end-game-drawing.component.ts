@@ -169,7 +169,6 @@ export class EndGameDrawingComponent implements OnInit {
       difficulty: this.convertDifficulty(this.imageCreationForm.value.difficulty),
       imageUrl: this.realPlayerDrawings[0].url,
     }
-    console.log(drawing);
     this.sendDrawing(drawing).subscribe(
       res => {
         this.snackBar.open("L'image a été enregistrée avec succès", "", {
@@ -223,7 +222,6 @@ export class EndGameDrawingComponent implements OnInit {
   }
 
   quit(): void {
-    console.log('quit')
     this.router.navigate(['/home']);
   }
 

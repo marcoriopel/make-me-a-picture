@@ -28,7 +28,6 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log(this.getToken());
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': this.getToken()!,

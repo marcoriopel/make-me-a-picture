@@ -23,7 +23,6 @@ export class FeedComponent implements OnInit {
     const options = { headers: headers };
     this.http.get<any>(this.getFeedImagesUrl, options)
       .subscribe((data: any) => {
-        console.log(data);
         data.feedInfo.forEach((image: any) => {
           image.url = 'https://drawingimages.s3.us-east-2.amazonaws.com/' + image.id + '.png';
           image.timestamp = formatDateString(image.timestamp);
