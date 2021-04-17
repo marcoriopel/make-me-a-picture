@@ -255,6 +255,7 @@ export class ChatService {
         this.notJoinedChatList.splice(i, 1);
       }
     }
+    this.currentChatId = chatId; // peut etre pas bon
     this.socketService.emit('joinChatRoom', { "chatId": chatId })
   }
 

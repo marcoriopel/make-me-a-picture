@@ -36,13 +36,17 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { NgxElectronModule } from 'ngx-electron';
+import { ChatService } from './services/chat/chat.service';
 import { ImageCreationComponent } from './components/image-creation/image-creation.component';
 import { GameBarComponent } from './components/game-bar/game-bar.component';
+import { SearchGameService } from './services/search-game/search-game.service';
 import { GameSearchComponent } from './components/game-search/game-search.component';
 import { ViewingComponent } from './components/viewing/viewing.component';
 import { GamePreviewComponent } from './components/game-preview/game-preview.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
+import { LobbyService } from './services/lobby/lobby.service';
 import { GameCreationComponent } from './components/game-creation/game-creation.component'
+import { SocketService } from './services/socket/socket.service';
 import { ToolsComponent } from './components/tools/tools.component';
 import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
 import { ClassicGameComponent } from './components/classic-game/classic-game.component';
@@ -124,7 +128,7 @@ import { FeedComponent } from './components/feed/feed.component';
         MatStepperModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard,
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService,
     {
         provide: STEPPER_GLOBAL_OPTIONS,
         useValue: { displayDefaultIndicatorType: false }

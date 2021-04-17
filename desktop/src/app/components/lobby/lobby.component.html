@@ -14,24 +14,36 @@
     <div class="teamList" *ngIf="lobbyService.game.type == 0">
         <div class="team">
             <div class="teammate" *ngFor="let teammate of lobbyService.game.team1 "> 
-                <p> {{teammate}} </p> 
-                <div class="add-bot" *ngIf="(teammate == lobbyService.virtalPlayer0)" (click)="lobbyService.removeVirtualPlayer(0)"> <p id="minus"> - </p> </div>
+                <div id="username">
+                    <div id="center">
+                        <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon><p> {{teammate.username}} </p> 
+                        <div class="add-bot" *ngIf="(teammate == lobbyService.virtalPlayer0)" (click)="lobbyService.removeVirtualPlayer(0)"> <p id="minus"> - </p> </div>
+                    </div>
+                </div>
             </div>
             <div class="teammate" *ngIf="(lobbyService.game.team1.length < 2 && lobbyService.game.type == 0)"> 
-                <p> + Disponible </p>
-                <div class="add-bot" (click)="lobbyService.addVirtualPlayer(0)"> <p id="plus"> + </p> </div>
+                <div id="center">
+                    <p> + Disponible </p>
+                    <div class="add-bot" (click)="lobbyService.addVirtualPlayer(0)"> <p id="plus"> + </p> </div>
+                </div>
             </div>
             <div class="teammate" *ngIf="(lobbyService.game.team1.length < 4 && lobbyService.game.type == 1)"> <p id="plus"> + Disponible </p> </div>
         </div>
 
         <div class="team" *ngIf="lobbyService.game.type == 0">
             <div class="teammate" *ngFor="let teammate of lobbyService.game.team2 "> 
-                <p> {{teammate}} </p> 
-                <div class="add-bot" *ngIf="teammate == lobbyService.virtalPlayer1" (click)="lobbyService.removeVirtualPlayer(1)"> <p id="minus"> - </p> </div>
+                <div id="username">
+                    <div id="center">
+                        <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon><p> {{teammate.username}} </p> 
+                        <div class="add-bot" *ngIf="teammate == lobbyService.virtalPlayer1" (click)="lobbyService.removeVirtualPlayer(1)"> <span class="material-icons-outlined">add</span> </div>
+                    </div>
+                </div>
             </div>
             <div class="teammate" *ngIf="(lobbyService.game.team2.length < 2 && lobbyService.game.type == 0)">
-                <p> + Disponible </p>
-                <div class="add-bot" *ngIf="lobbyService.virtalPlayer1 == null" (click)="lobbyService.addVirtualPlayer(1)"> <p id="plus"> + </p> </div>
+                <div id="center">
+                    <p> + Disponible </p>
+                    <div class="add-bot" (click)="lobbyService.addVirtualPlayer(1)"> <p id="plus"> + </p> </div>
+                </div>
             </div>
         </div>
     </div>
@@ -40,7 +52,12 @@
         <div class="teamList">
             <div class="team">
                 <div class="teammate" *ngFor="let teammate of lobbyService.game.player"> 
-                    <p> {{teammate}} </p> 
+                    <div id="username">
+                        <div id="center">
+                            <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon>
+                            <p> {{teammate.username}} </p> 
+                        </div>
+                    </div>
                 </div>
             </div>            
         </div>
