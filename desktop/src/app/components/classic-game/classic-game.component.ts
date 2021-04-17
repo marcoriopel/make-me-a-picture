@@ -54,6 +54,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('gameStart');
     this.socketService.unbind('endGame');
     this.chatService.leaveChat(this.gameService.gameId);
+    this.gameService.tick.pause();
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
@@ -101,12 +102,19 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
-    if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
-    const body = {
-      "gameId": this.gameService.gameId,
-      "guess": this.guessForm.value.guess,
+    if(this.gameService.isGuessAvailable) {
+      this.gameService.isGuessAvailable = false;
+      if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
+      const body = {
+        "gameId": this.gameService.gameId,
+        "guess": this.guessForm.value.guess,
+      }
+      this.socketService.emit("guessDrawing", body);
+      setTimeout(() => {
+        this.gameService.isGuessAvailable = true;
+        console.log('done');
+      }, 1500);
     }
-    this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
 
