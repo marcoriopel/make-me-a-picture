@@ -160,11 +160,13 @@ class LobbyFragment : Fragment() {
             }
         }
         if(team1Count < 1) {
+            avatarList[team1Count].setImageResource(R.drawable.avatar0)
             usernameList[team1Count].text = getString(R.string.available)
             team1Count++
         }
 
         if(team2Count < 3) {
+            avatarList[team2Count].setImageResource(R.drawable.avatar0)
             usernameList[team2Count].text = getString(R.string.available)
             team2Count++
         }
@@ -192,6 +194,7 @@ class LobbyFragment : Fragment() {
 
         if(team1Count < 2) {
             usernameList[team1Count].text = getString(R.string.available)
+            avatarList[team1Count].setImageResource(R.drawable.avatar0)
             binding.lobbyVirtual1.visibility = View.VISIBLE
             binding.lobbyVirtual1.setImageResource(R.drawable.ic_add_circle_white_18dp)
             binding.lobbyVirtual1.isClickable = true
@@ -200,6 +203,7 @@ class LobbyFragment : Fragment() {
 
         if(team2Count < 4) {
             usernameList[team2Count].text = getString(R.string.available)
+            avatarList[team2Count].setImageResource(R.drawable.avatar0)
             binding.lobbyVirtual2.visibility = View.VISIBLE
             binding.lobbyVirtual2.setImageResource(R.drawable.ic_add_circle_white_18dp)
             binding.lobbyVirtual2.isClickable = true
@@ -237,6 +241,7 @@ class LobbyFragment : Fragment() {
 
         while (i < 4) {
             usernameList[i].text = getString(R.string.available)
+            avatarList[i].setImageResource(R.drawable.avatar0)
             i++
         }
 
