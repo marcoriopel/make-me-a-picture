@@ -56,9 +56,6 @@
     margin-top: 50px;
     margin-left: 30px;
     vertical-align: middle;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 48px;
     border: none;
     outline:none;
@@ -87,22 +84,15 @@
     text-align: left;
     vertical-align: middle;
     line-height: 58px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 24px;
     color:  #F2F2F2;
     border: none;
     outline:none;
     transition: all 0.5s ease-out;
 
-    p {
-        margin-left: 30px;
-    }
 
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    align-items: center;
 }
 
 .button {
@@ -111,9 +101,6 @@
     // text
     text-align: center;
     vertical-align: middle;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
     font-size: 16px;
     color:  #F2F2F2;
     border: none;
@@ -127,7 +114,6 @@
     top: 80%;
     left: 50%;
     margin-left: -100px;
-    
 }
 
 #start-game:active {
@@ -157,28 +143,16 @@
 .add-bot {
     height: 35px;
     width: 35px;
-    margin-top: 12px;
-    margin-right: 10px;
+    margin-left: 10px;
     background-color: #bbb;
     border-radius: 50%;
-    text-align: left;
-    vertical-align: middle;
-    line-height: 38px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 24px;
     color:  #F2F2F2;
     border: none;
     outline:none;
     cursor: pointer;
-
-    p {
-        margin-left: 11px;
-    }
-    #minus {
-        margin-left: 14px;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .leave-button {
@@ -189,4 +163,30 @@
     &:hover {
         cursor: pointer;
     }
+}
+
+#username {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+
+    p {
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+
+}
+
+#center {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-left: 20px;
+}
+
+app-avatar-icon {
+    display: flex;
+    align-items: center;
 }

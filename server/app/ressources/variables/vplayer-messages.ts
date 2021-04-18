@@ -6,7 +6,7 @@ export const vPlayerText = {
         meetAgainClassicWin: "Rebonjour ##, te rappelles-tu de la dernière fois où nous avons joué en mode classique ensemble? Moi je m'en rappelle parce que nous avions gagné.",
         meetAgainClassicLose: "Allo ##, te rappelles-tu de la dernière fois où nous avons joué ensemble? À cause de moi nous avons perdu contre ## en mode classique.",
         meetAgainClassicTie: "Bonjour ##, te rappelles-tu de la dernière fois où nous avons joué ensemble? Nous avions eu égalité en mode classique contre ##.",
-        meetAgainClassicOpposingTeam: "Bonjour ##, la dernière fois que nous avons joué ensemble nous étions l'un contre l'autre. J'espère ça ne te dérange pas d'être dans la même équipe cette fois.",
+        meetAgainClassicOpposingTeam: "Bonjour ##, la dernière fois que nous avons joué ensemble nous étions l'un contre l'autre. J'espère que ça ne te dérange pas d'être dans la même équipe cette fois.",
         meetMany: "Bonjour ##, je ne suis pas très bonne à ce mode de jeu j'espère que ça ne vous dérange pas trop.",
         meetAgainMany: "Bonjour ##, nous avons jamais joué ensemble alors je veux t'avertir que je ne sui pas très bonne. ## le savent déjà.",
         meetAgainAll: "Vous savez tous déjà que je ne joue pas très bien mais je vais faire de mon mieux.",

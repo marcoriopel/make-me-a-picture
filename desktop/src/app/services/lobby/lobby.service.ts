@@ -136,20 +136,20 @@ export class LobbyService {
         this.clearPlayers();
         if(game.type == GameType.Classic){
           res.players.forEach((user: { username: string; avatar: number; team: number}) => {
-            game.player.push(user.username);
+            game.player.push({username: user.username, avatar: user.avatar });
             if (user.team == 0) {
-              game.team1.push(user.username);
+              game.team1.push({username: user.username, avatar: user.avatar });
               if (user.avatar > 5)
                 this.virtalPlayer0 = user.username;
             } else { 
-              game.team2.push(user.username);
+              game.team2.push({username: user.username, avatar: user.avatar });
               if (user.avatar > 5)
                 this.virtalPlayer1 = user.username;
             }
           });          
         } else {
           res.players.forEach((user: { username: string; avatar: number}) => {
-            game.player.push(user.username);
+            game.player.push({username: user.username, avatar: user.avatar });
           });
         }
       this.isFull();
