@@ -10,7 +10,7 @@ import { formatTimePlayed } from '@app/classes/date';
 })
 export class LeaderboardComponent implements OnInit {
   private getLeadboardStatsUrl = environment.api_url + '/api/stats/leaderboard';
-  selectedVal = 0;
+  selectedVal = '0';
   leaderboard: any = [];
 
   constructor(private http: HttpClient) { }
@@ -43,6 +43,14 @@ export class LeaderboardComponent implements OnInit {
 
       case LeaderboardCategory.BEST_CLASSIC_WIN_RATIO.toString():
         params = params.append('category', LeaderboardCategory.BEST_CLASSIC_WIN_RATIO.toString());
+        break;
+
+      case LeaderboardCategory.MOST_CLASSIC_GAMES_WON.toString():
+        params = params.append('category', LeaderboardCategory.MOST_CLASSIC_GAMES_WON.toString());
+        break;
+    
+      case LeaderboardCategory.MOST_UPVOTES.toString():
+        params = params.append('category', LeaderboardCategory.MOST_UPVOTES.toString());
         break;
     }
     const options = { params: params, headers: headers};

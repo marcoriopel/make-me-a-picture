@@ -15,7 +15,7 @@
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=src/assets/icons/mac/LogoDark.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . \"Fais moi un dessin\" --overwrite --asar=true --platform=win32 --arch=ia32 --icon=src/assets/icons/win/LogoDark.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Guess & Draw\"",
     "package-linux": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --icon=src/assets/icons/png/LogoDark.png --prune=true --out=release-builds",
-    "build:electron": "ng build --base-href ./ && electron-packager . \"faisMoiUnDessin\" --asar=true --ignore=/node_modules --icon=src/assets/icons/win/LogoDark.ico --ignore=/e2e --ignore=/src --overwrite --out=./build"
+    "build:electron": "ng build --prod --base-href ./ && electron-packager . \"faisMoiUnDessin\" --asar=true --ignore=/node_modules --icon=src/assets/icons/win/LogoDark.ico --ignore=/e2e --ignore=/src --overwrite --out=./build"
   },
   "private": true,
   "dependencies": {
@@ -31,6 +31,7 @@
     "@angular/router": "~10.0.9",
     "@material/textfield": "^10.0.0",
     "electron-packager": "^15.2.0",
+    "material-design-icons": "^3.0.1",
     "ngx-electron": "^2.2.0",
     "rxjs": "~6.5.5",
     "socket.io-client": "^3.1.1",

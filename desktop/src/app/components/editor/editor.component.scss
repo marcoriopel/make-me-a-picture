@@ -90,3 +90,12 @@ mat-slider {
     flex-flow: column nowrap;
     justify-content: space-between;
 }
+
+.slider {
+    margin-left: 168px;
+    span {
+        font-size: 20px;
+        color: white;
+        margin-left: 10px;
+    }
+}

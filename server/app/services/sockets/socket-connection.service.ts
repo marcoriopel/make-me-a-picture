@@ -85,7 +85,6 @@ export class SocketConnectionService {
                     if (this.lobbyManagerService.lobbyExist(request.lobbyId)) {
                         socket.leave("tmp" + request.lobbyId);
                         socket.join(request.lobbyId);
-                        console.log("JOIN")
                         this.lobbyManagerService.dispatchTeams(request.lobbyId)
                     }
                     else
@@ -97,7 +96,6 @@ export class SocketConnectionService {
 
             socket.on('leaveLobby', (request: any) => {
                 if (!(request instanceof Object)) {
-                    console.log("LEAVE")
                     request = JSON.parse(request)
                 }
                 this.leaveRoom(socket, request.lobbyId);
@@ -110,7 +108,6 @@ export class SocketConnectionService {
             });
 
             socket.on('leaveGame', (request: any) => {
-                console.log("test");
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
@@ -163,14 +160,14 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                try{
+                try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.join(request.chatId);
                     await this.userService.addUserToChat(user.username, request.chatId)
                     await this.chatManagerService.addUserToChat(user.username, request.chatId)
                     this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
                 }
-                catch(e){
+                catch (e) {
                     console.error(e);
                 }
             });
@@ -179,20 +176,20 @@ export class SocketConnectionService {
                 if (!(request instanceof Object)) {
                     request = JSON.parse(request)
                 }
-                try{
-                   const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                try {
+                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.leave(request.chatId);
                     await this.userService.removeUserFromChat(user.username, request.chatId)
                     await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
-                    this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback'); 
+                    this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');
                 }
-                catch(e){
+                catch (e) {
                     console.error(e);
                 }
             });
 
             socket.on('disconnect', () => {
-                try{
+                try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     this.authService.addUserToLogCollection(user.username, false);
                     console.log('disconnection of ' + user.username);
@@ -205,10 +202,10 @@ export class SocketConnectionService {
                         this.gameManagerService.disconnectGame(gameId, user.username);
                     }
                 }
-                catch(e){
+                catch (e) {
                     console.error(e)
                 }
-                
+
             });
         });
     }

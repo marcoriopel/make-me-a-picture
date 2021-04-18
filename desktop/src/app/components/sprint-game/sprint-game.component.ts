@@ -56,6 +56,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('gameStart');
     this.socketService.unbind('endGame');
     this.chatService.leaveChat(this.gameService.gameId);
+    this.gameService.tick.pause();
   }
 
   handleDrawingEvent(data: DrawingEvent): void {
@@ -66,6 +67,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
           this.drawingService.strokeNumber = mouseDown.strokeNumber;
           this.drawingService.lineWidth = mouseDown.lineWidth;
           this.drawingService.color = mouseDown.lineColor;
+          this.drawingService.opacity = mouseDown.lineOpacity;
           this.pencilService.onMouseDown(this.createMouseEvent(mouseDown.coords));
           break;
 

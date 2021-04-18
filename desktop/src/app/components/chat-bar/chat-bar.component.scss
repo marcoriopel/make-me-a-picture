@@ -8,7 +8,7 @@
 .chat-container {
   padding-top: 5%;
   width: 100%;
-  height: 410px;
+  height: calc(100% - 550px);
 }
 
 .chat-button:active {
@@ -175,9 +175,39 @@ hr {
 
 .scroller {
   overflow-y: scroll;
+  padding-top: 6px;
   height: 100%;
 }
 
 .selected {
   background-color: #4AA7DD;
+}
+
+#refresh-button{
+  transition: transform;
+  transition-duration: 1s;
+}
+
+#refresh-button:active{
+  transform: rotate(360deg);
+  transition-duration: 0s;
+}
+
+.scroller::-webkit-scrollbar {
+  width: 20px;
+}
+
+.scroller::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scroller::-webkit-scrollbar-thumb {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.scroller::-webkit-scrollbar-thumb:hover {
+  background-color: #FFFFFF;
 }

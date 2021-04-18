@@ -36,7 +36,7 @@ export class GridComponent {
         public hotkeyService: HotkeyService,
     ) {
         this.drawingService.gridSpacing = this.currentSquareSize;
-        this.drawingService.opacity = this.currentOpacity;
+        this.drawingService.opacity = this.currentOpacity / 100;
         this.hotkeyService.getKey().subscribe((toolName) => {
             switch (toolName) {
                 case GRID_NAME: {

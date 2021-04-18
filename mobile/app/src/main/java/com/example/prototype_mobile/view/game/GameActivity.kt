@@ -271,10 +271,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         startActivity(intent)
     }
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    * Fill the containers with fragment depending on
-    * the game type
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    //maybe we will need to
+    override fun onRestart() {
+        super.onRestart()
+        println("Restart")
+        gameViewModel.resetAlpha()
+
+    }
     private fun setUpGameInit() {
         // Canvas
         supportFragmentManager.beginTransaction()
@@ -355,5 +358,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 Toast.LENGTH_LONG
         ).show()
     }
+
 
 }

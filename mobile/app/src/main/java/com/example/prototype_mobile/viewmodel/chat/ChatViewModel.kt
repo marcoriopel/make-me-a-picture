@@ -61,7 +61,11 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                 switchChannel("General")
                 leaveChannel(it)
         }
-        switchChannel(chatRepository.channelShown)
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            getChannelWithinThread(true)
+            switchChannel(chatRepository.channelShown)
+        }
     }
 
     fun onDestroy(token:String) {
@@ -103,7 +107,6 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
                     }
                 }
             }
-            getChannelWithinThread()
         }
     }
 

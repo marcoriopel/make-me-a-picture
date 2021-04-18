@@ -58,7 +58,7 @@ data class Transition(val timer: Int, val state: Int)
 data class PaintedPath(val path: Path, val paint: Paint)
 data class DrawingEvent(val eventType: Int, val event: Event?, val gameId: String)
 abstract class Event
-data class MouseDown(val lineColor: String, val lineWidth: Int, val coords: Vec2, val strokeNumber: Int, val isEraser: Boolean = false): Event()
+data class MouseDown(val lineColor: String, val lineWidth: Int, val lineOpacity: Double = 1.00, val coords: Vec2, val strokeNumber: Int, val isEraser: Boolean = false): Event()
 data class Vec2(val x: Int, val y : Int): Event()
 data class GuessEvent(val gameId: String, val guess: String)
 data class GuessesLeft(val guessesLeft: Array<Int>)

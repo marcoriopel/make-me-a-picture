@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
-import { formatDateString, formatTimePlayed } from '@app/classes/date';
+import { formatDateString, formatMeanTimePlayed, formatTimePlayed } from '@app/classes/date';
 
 @Component({
   selector: 'app-profile',
@@ -12,7 +11,7 @@ import { formatDateString, formatTimePlayed } from '@app/classes/date';
 })
 export class ProfileComponent implements OnInit {
   private getUserInfoUrl = environment.api_url + '/api/stats/private';
-  category = new FormControl();
+  category: string = '0';
   userInfo: any;
   avatar: number | null;
   username: string | null;
@@ -29,6 +28,7 @@ export class ProfileComponent implements OnInit {
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
     this.http.get<any>(this.getUserInfoUrl, options).subscribe((data: any) => {
+      console.log(data)
       data.privateInfo.games.forEach((game: any) => {
 
         game.team1 = [];
@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
         }
       });
       data.privateInfo.stats.timePlayed = formatTimePlayed(data.privateInfo.stats.timePlayed);
-      data.privateInfo.stats.meanGameTime = formatTimePlayed(data.privateInfo.stats.meanGameTime);
+      data.privateInfo.stats.meanGameTime = formatMeanTimePlayed(data.privateInfo.stats.meanGameTime);
       data.privateInfo.stats.classicWinRatio = data.privateInfo.stats.classicWinRatio.toFixed(2);
 
       data.privateInfo.logs.forEach((element:any) => {
@@ -66,5 +66,10 @@ export class ProfileComponent implements OnInit {
       this.userInfo.games = this.userInfo.games.reverse();
       this.userInfo.logs = this.userInfo.logs.reverse();
     })
+  }
+
+  onValChange(val: string){
+    console.log(val)
+    this.category = val;
   }
 }
