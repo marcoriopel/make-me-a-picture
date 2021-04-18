@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
 import { formatDateString, formatTimePlayed } from '@app/classes/date';
@@ -12,7 +11,7 @@ import { formatDateString, formatTimePlayed } from '@app/classes/date';
 })
 export class ProfileComponent implements OnInit {
   private getUserInfoUrl = environment.api_url + '/api/stats/private';
-  category = new FormControl();
+  category: string = '0';
   userInfo: any;
   avatar: number | null;
   username: string | null;
@@ -66,5 +65,10 @@ export class ProfileComponent implements OnInit {
       this.userInfo.games = this.userInfo.games.reverse();
       this.userInfo.logs = this.userInfo.logs.reverse();
     })
+  }
+
+  onValChange(val: string){
+    console.log(val)
+    this.category = val;
   }
 }

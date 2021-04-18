@@ -8,7 +8,7 @@
             <div id="profile-container">
                 <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
                 <h1>{{username}}</h1>
-                <mat-button-toggle-group id="toggle-group" [formControl]="category">
+                <mat-button-toggle-group id="toggle-group" #group="matButtonToggleGroup" [value]="category" (change)="onValChange(group.value)">
                     <mat-button-toggle value="0">
                         Profil
                     </mat-button-toggle>
@@ -23,11 +23,11 @@
                     </mat-button-toggle>
                 </mat-button-toggle-group>
                 <div id="information">
-                    <div *ngIf="category.value == 0">
+                    <div *ngIf="category == '0'">
                         <h1>Prénom: {{userInfo.surname}}</h1>
                         <h1>Nom: {{userInfo.name}}</h1>
                     </div>
-                    <div id="table-container" *ngIf="category.value == 1">
+                    <div id="table-container" *ngIf="category == '1'">
                         <table>
                             <tr>
                                 <th>Parties jouées</th>
@@ -47,7 +47,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="table-container" *ngIf="category.value == 2">
+                    <div id="table-container" *ngIf="category == '2'">
                         <table>
                             <tr>
                                 <th>Date</th>
@@ -67,7 +67,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="table-container" *ngIf="category.value == 3">
+                    <div id="table-container" *ngIf="category == '3'">
                         <table>
                             <tr>
                                 <th>Date</th>
