@@ -148,7 +148,6 @@ export class ChatManagerService {
     async deleteChat(chatId: string): Promise<boolean> {
         try {
             const chatInfo = await this.chatModel.getChatInfo(chatId);
-            console.log(chatInfo)
             if (!chatInfo) {
                 throw new Error("Tried to delete chat that does not exist")
             }
