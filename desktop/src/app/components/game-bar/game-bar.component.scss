@@ -1,9 +1,7 @@
 .game-bar {
-    position: absolute;
     width: 365px;
-    height: 95%;
-    left: 0px;
-    overflow-y: hidden;
+    height: 100%;
+    overflow-y: scroll;
     /* Gray 5 */
     background: #E0E0E0;
 }

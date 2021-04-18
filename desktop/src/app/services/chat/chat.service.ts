@@ -45,6 +45,7 @@ export class ChatService {
     const options = { headers: headers};
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
+        console.log(data)
         data.chats.forEach((element: any) => {
           const chat: JoinedChat = {
             name: element.chatName,
