@@ -20,3 +20,10 @@ export function formatTimePlayed(timestamp: number): string {
     let minutes = Math.floor((timestamp / 60) % 60);
     return `${hours}H${minutes}M`;
 }
+
+export function formatMeanTimePlayed(timestamp: number): string {
+    timestamp = Math.floor(timestamp / 1000);
+    let minutes = Math.floor((timestamp / 60) % 60);
+    let seconds = Math.floor(timestamp % 60);
+    return `${minutes}M${seconds}S`;
+}

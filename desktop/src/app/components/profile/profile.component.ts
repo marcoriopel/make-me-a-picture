@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
-import { formatDateString, formatTimePlayed } from '@app/classes/date';
+import { formatDateString, formatMeanTimePlayed, formatTimePlayed } from '@app/classes/date';
 
 @Component({
   selector: 'app-profile',
@@ -54,7 +54,7 @@ export class ProfileComponent implements OnInit {
         }
       });
       data.privateInfo.stats.timePlayed = formatTimePlayed(data.privateInfo.stats.timePlayed);
-      data.privateInfo.stats.meanGameTime = formatTimePlayed(data.privateInfo.stats.meanGameTime);
+      data.privateInfo.stats.meanGameTime = formatMeanTimePlayed(data.privateInfo.stats.meanGameTime);
       data.privateInfo.stats.classicWinRatio = data.privateInfo.stats.classicWinRatio.toFixed(2);
 
       data.privateInfo.logs.forEach((element:any) => {
