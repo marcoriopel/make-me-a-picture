@@ -66,6 +66,7 @@ export class UsersModel {
                 'bestCoopScore': userInfo.bestCoopScore,
                 'classicWinRatio': userInfo.classicWinRatio,
                 'meanGameTime': userInfo.meanGameTime,
+                'classicGamesPlayed': userInfo.classicGamesPlayed,
             }});
         } catch (e) {
             console.error(e);
