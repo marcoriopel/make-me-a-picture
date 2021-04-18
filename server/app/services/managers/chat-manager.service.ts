@@ -40,7 +40,7 @@ export class ChatManagerService {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
                 else {
-                    chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
+                    chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"], "isGameChat": chatInfo["isGameChat"] });
                 }
             }
             next(chatNames);
