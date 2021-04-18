@@ -41,3 +41,22 @@
     font-size: 20px;
     margin-left: 10px;
 }
+
+#feed::-webkit-scrollbar {
+    width: 20px;
+}
+
+#feed::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#feed::-webkit-scrollbar-thumb {
+    background-color: #E0E0E0;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+#feed::-webkit-scrollbar-thumb:hover {
+    background-color: #E0E0E0;
+}
