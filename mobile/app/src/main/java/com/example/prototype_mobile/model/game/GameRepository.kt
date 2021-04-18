@@ -32,6 +32,7 @@ const val DRAWING_SUGGESTIONS_EVENT = "drawingSuggestions"
 const val DRAWING_TIMER_EVENT = "drawingTimer"
 const val GAME_TIMER_EVENT = "gameTimer"
 const val GUESS_CALL_BACK_EVENT = "guessCallback"
+const val USER_DISCONNECT_EVENT = "userDisconnect"
 
 class GameRepository {
     companion object {
@@ -196,6 +197,10 @@ class GameRepository {
 
     }
 
+    private var onUserDisconnect = Emitter.Listener {
+        EndGameRepository.getInstance()!!.addGameResult("Partie null", "Un joueur s'est déconnecté", EndGameResult(false, null))
+    }
+
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         if (isDrawing)
             drawingPlayer = LoginRepository.getInstance()!!.user!!.username
@@ -255,6 +260,7 @@ class GameRepository {
         socket.on(DRAWING_TIMER_EVENT, onTimerEvent)
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
         socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
+        socket.on(USER_DISCONNECT_EVENT, onUserDisconnect)
     }
 
     fun getGameTypeLiveData() : MutableLiveData<GameType> {

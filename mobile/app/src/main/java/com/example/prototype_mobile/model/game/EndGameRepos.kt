@@ -52,7 +52,8 @@ class EndGameRepository {
     }
 
     fun addGameResult(title: String, description: String, endGameResult: EndGameResult, ) {
-        this.gameResult = StaticEndGameInfo(title, description, EndGamePageType.RESULT, endGameResult)
+        if(gameResult.title == "No Result")
+            this.gameResult = StaticEndGameInfo(title, description, EndGamePageType.RESULT, endGameResult)
     }
 
     fun getGameResult(): StaticEndGameInfo {
