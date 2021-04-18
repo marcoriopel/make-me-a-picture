@@ -35,9 +35,11 @@ export class AuthService {
     const options = { headers: headers };
     this.http.post<any>(this.logoutUrl, null, options)
       .subscribe((data: any) => {
-        console.log(data);
       });
-    sessionStorage.clear();
+    localStorage.removeItem('username');
+    localStorage.removeItem('avatar');
+    localStorage.removeItem('token');
+    localStorage.removeItem('tutorial');
     this.router.navigate(['/login']);
     window.location.reload();
   }

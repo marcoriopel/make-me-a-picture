@@ -10,7 +10,6 @@ import { GameService } from '@app/services/game/game.service';
 })
 export class MainPageComponent {
     readonly title: string = 'PolyDessin';
-    constructor(public dialog: MatDialog, public chatService: ChatService, public gameService: GameService) {
-    }
+    constructor(public dialog: MatDialog, public chatService: ChatService, public gameService: GameService) {}
 
 }

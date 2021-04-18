@@ -11,6 +11,7 @@ export interface JoinedChat {
     chatId: string;
     isNotificationOn: boolean;
     isChatHistoryDisplayed: boolean;
+    isGameChat: boolean;
 }
 
 export interface Message {

@@ -73,10 +73,9 @@ export class EndGameDrawingComponent implements OnInit {
       // Team 1 win
       if(this.gameService.teams.team1.includes(this.gameService.username as string)){
         this.result = 'Victoire';
-        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
+        let canvasEl = document.getElementById('confetti-canvas') as HTMLCanvasElement;
         var myConfetti = confetti.create(canvasEl, { 
           resize: true, 
-          useWorker: true, 
         });
     
         myConfetti({
@@ -102,16 +101,16 @@ export class EndGameDrawingComponent implements OnInit {
         this.result = 'Défaite';
       } else {
         this.result = 'Victoire';
-        let canvasEl = document.getElementById('confettiCanvas') as HTMLCanvasElement;
+        let canvasEl = document.getElementById('confetti-canvas') as HTMLCanvasElement;
         var myConfetti = confetti.create(canvasEl, { 
           resize: true, 
-          useWorker: true, 
         });
     
         myConfetti({
           spread: 180,
           particleCount: 200,
-        });  
+        });           
+
       }
 
       this.winningTeam = {
