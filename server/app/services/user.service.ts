@@ -40,6 +40,8 @@ export class UserService {
                 'bestCoopScore': userInfo.bestCoopScore,
                 'classicWinRatio': userInfo.classicWinRatio,
                 'meanGameTime': userInfo.meanGameTime,
+                'classicGamesWon': userInfo.classicGamesWon,
+                'totalDrawingVotes': userInfo.totalDrawingVotes,
             }
 
             let privateInfo = {"name" : userInfo.name, "surname" : userInfo.surname, "stats": userStats, "logs": userLogs, "games" : userGames}
@@ -64,6 +66,8 @@ export class UserService {
             'bestCoopScore': userInfo.bestCoopScore,
             'classicWinRatio': userInfo.classicWinRatio,
             'meanGameTime': userInfo.meanGameTime,
+            'classicGamesWon': userInfo.classicGamesWon,
+            'totalDrawingVotes': userInfo.totalDrawingVotes,
         }
         return userStats;
     }
@@ -88,6 +92,9 @@ export class UserService {
                     break;
                 case LeaderboardCategory.MOST_GAMES_PLAYED:
                     next(await this.usersModel.getTop10MostGamesPlayed());
+                    break;
+                case LeaderboardCategory.MOST_CLASSIC_GAMES_WON:
+                    next(await this.usersModel.getTop10MostClassicGamesWon());
                     break;
                 case LeaderboardCategory.MOST_UPVOTES:
                     next(await this.usersModel.getTop10MostUpvotes());

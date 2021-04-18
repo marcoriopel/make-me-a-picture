@@ -31,19 +31,23 @@
                         <table>
                             <tr>
                                 <th>Parties jouées</th>
+                                <th>Parties classiques gagnées</th>
+                                <th>Ratio V/D Classic</th>
                                 <th>Durée moyenne partie</th>
                                 <th>Temps jouées</th>
                                 <th>Meilleur score Solo</th>
                                 <th>Meilleur score Coop</th>
-                                <th>Ratio V/D Classic</th>
+                                <th>Votes sur dessins</th>
                             </tr>
                             <tr>
-                                <th>{{userInfo.stats.gamesPlayed}}</th>
-                                <th>{{userInfo.stats.meanGameTime}}</th>
-                                <th>{{userInfo.stats.timePlayed}}</th>
-                                <th>{{userInfo.stats.bestSoloScore}}</th>
-                                <th>{{userInfo.stats.bestCoopScore}}</th>
-                                <th>{{userInfo.stats.classicWinRatio}}</th>
+                                <td>{{userInfo.stats.gamesPlayed}}</td>
+                                <td>{{userInfo.stats.classicGamesWon}}</td>
+                                <td>{{userInfo.stats.classicWinRatio}}</td>
+                                <td>{{userInfo.stats.meanGameTime}}</td>
+                                <td>{{userInfo.stats.timePlayed}}</td>
+                                <td>{{userInfo.stats.bestSoloScore}}</td>
+                                <td>{{userInfo.stats.bestCoopScore}}</td>
+                                <td>{{userInfo.stats.totalDrawingVotes}}</td>
                             </tr>
                         </table>
                     </div>
@@ -57,15 +61,15 @@
                                 <th>Équipe 2</th>
                             </tr>
                             <tr *ngFor="let game of userInfo.games">
-                                <th>{{game.end}}</th>
-                                <th>{{game.gameName}}</th>
-                                <th>{{game.gameType}}</th>
-                                <th *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} et {{game.team1[1]}}</th>
-                                <th *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} et {{game.team2[1]}}</th>
-                                <th *ngIf="game.gameType == 'Solo'">{{game.team2[0]}}</th>
-                                <th *ngIf="game.gameType == 'Coop'">{{game.team2[0]}} et {{game.team2[1]}}</th>
-                                <th *ngIf="game.gameType == 'Coop' && game.team2.length > 3">{{game.team2[0]}}, {{game.team2[1]}} et {{game.team2[2]}}</th>
-                                <th *ngIf="game.gameType == 'Coop' && game.team2.length > 4">{{game.team2[0]}}, {{game.team2[1]}}, {{game.team2[2]}} et {{game.team2[3]}}</th>
+                                <td>{{game.end}}</td>
+                                <td>{{game.gameName}}</td>
+                                <td>{{game.gameType}}</td>
+                                <td *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} et {{game.team1[1]}}</td>
+                                <td *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} et {{game.team2[1]}}</td>
+                                <td *ngIf="game.gameType == 'Solo'">{{game.team2[0]}}</td>
+                                <td *ngIf="game.gameType == 'Coop'">{{game.team2[0]}} et {{game.team2[1]}}</td>
+                                <td *ngIf="game.gameType == 'Coop' && game.team2.length > 3">{{game.team2[0]}}, {{game.team2[1]}} et {{game.team2[2]}}</td>
+                                <td *ngIf="game.gameType == 'Coop' && game.team2.length > 4">{{game.team2[0]}}, {{game.team2[1]}}, {{game.team2[2]}} et {{game.team2[3]}}</td>
                             </tr>
                         </table>
                     </div>
@@ -76,8 +80,8 @@
                                 <th>Action</th>
                             </tr>
                             <tr *ngFor="let log of userInfo.logs">
-                                <th>{{log.timestamp}}</th>
-                                <th>{{log.isLogin}}</th>
+                                <td>{{log.timestamp}}</td>
+                                <td>{{log.isLogin}}</td>
                             </tr>
                         </table>
                     </div>                       
