@@ -132,6 +132,18 @@ export class UsersModel {
         }
     }
 
+    async getTop10MostUpvotes(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"totalDrawingVotes": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     async vote(artistUsername: string, isUpvote: boolean){
         try {
             const vote = isUpvote ? 1 : -1;
