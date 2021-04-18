@@ -21,16 +21,8 @@ export class ChatComponent {
   constructor(private formBuilder: FormBuilder, public chatService: ChatService) {
   }
 
-
   connectToChat(name: string): void {
     this.chatService.setCurrentChat(name);
-  }
-
-  onNewMessage(): void {
-    let messageScroller = document.getElementById('message-scroller');
-    if(messageScroller) {
-      messageScroller.scrollTop = messageScroller.scrollHeight;
-    }
   }
 
   onSubmit(): void {

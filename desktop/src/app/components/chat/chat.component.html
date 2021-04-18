@@ -20,7 +20,6 @@
                         <p [ngStyle]="{'color': message.textColor}">{{message.text}}</p>
                     </div>                  
                 </div>
-                {{onNewMessage()}}
             </div>
         </div>
         <form [formGroup]="messageForm" class="send-message-form" (ngSubmit)="onSubmit()">
