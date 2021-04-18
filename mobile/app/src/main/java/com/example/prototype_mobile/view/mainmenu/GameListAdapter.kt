@@ -47,11 +47,13 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
                 section1.visibility = View.VISIBLE
                 section2.visibility = View.VISIBLE
                 joinButton.visibility = View.VISIBLE
+                it.setBackgroundResource(R.drawable.button_lobby_expended)
 
             } else {
                 section1.visibility = View.GONE
                 section2.visibility = View.GONE
                 joinButton.visibility = View.GONE
+                it.setBackgroundResource(R.drawable.button_lobby)
             }
         }
 
@@ -65,6 +67,7 @@ class GameListAdapter(val context: Context, val gameList: MutableList<Game>, val
             val section1 = lastGameChecked!!.findViewById<LinearLayout>(R.id.gamelist_player_section_1)
             val section2 = lastGameChecked!!.findViewById<LinearLayout>(R.id.gamelist_player_section_2)
             val joinButton = lastGameChecked!!.findViewById<Button>(R.id.gamelist_join)
+            lastGameChecked!!.setBackgroundResource(R.drawable.button_lobby)
             section1.visibility = View.GONE
             section2.visibility = View.GONE
             joinButton.visibility = View.GONE

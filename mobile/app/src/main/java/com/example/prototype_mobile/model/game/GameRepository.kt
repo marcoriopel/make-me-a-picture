@@ -85,6 +85,7 @@ class GameRepository {
     var suggestions: LiveData<Suggestions> = _suggestions
 
     private val _drawingName = MutableLiveData<String?>()
+
     var drawingName: LiveData<String?> = _drawingName
 
     var drawingPlayer: String? = null
