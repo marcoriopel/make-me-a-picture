@@ -208,6 +208,7 @@ export class ChatService {
     const options = { params: params, headers: headers};
     this.http.get<any>(this.getChatHistoryUrl, options).subscribe((data: any) => {
       const username = localStorage.getItem('username');
+      this.joinedChatList[this.index].messages = [];
       data.chatHistory.forEach((message: any) => {
         const msg: Message = {
           "username": message.username,
