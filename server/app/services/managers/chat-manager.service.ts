@@ -40,7 +40,7 @@ export class ChatManagerService {
                     await this.usersModel.removeUserFromChat(username, chatId);
                 }
                 else {
-                    chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"] });
+                    chatNames.push({ "chatId": chatId, "chatName": chatInfo["chatName"], "users": chatInfo["users"], "isGameChat": chatInfo["isGameChat"] });
                 }
             }
             next(chatNames);
@@ -148,7 +148,6 @@ export class ChatManagerService {
     async deleteChat(chatId: string): Promise<boolean> {
         try {
             const chatInfo = await this.chatModel.getChatInfo(chatId);
-            console.log(chatInfo)
             if (!chatInfo) {
                 throw new Error("Tried to delete chat that does not exist")
             }
