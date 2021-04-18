@@ -37,7 +37,10 @@ export class AuthService {
       .subscribe((data: any) => {
         console.log(data);
       });
-    sessionStorage.clear();
+    localStorage.removeItem('username');
+    localStorage.removeItem('avatar');
+    localStorage.removeItem('token');
+    localStorage.removeItem('tutorial');
     this.router.navigate(['/login']);
     window.location.reload();
   }

@@ -21,6 +21,7 @@ export class ChatService {
     chatId: 'General',
     isNotificationOn: false,
     isChatHistoryDisplayed: false,
+    isGameChat: false,
   }];
   notJoinedChatList: Chat[] = [{
     name: 'Général',
@@ -62,6 +63,7 @@ export class ChatService {
             messages: [],
             isNotificationOn: false,
             isChatHistoryDisplayed: false,
+            isGameChat: element.isGameChat,
           }
           this.joinedChatList.push(chat);
           if(element.chatId != 'General'){
@@ -120,6 +122,7 @@ export class ChatService {
 
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
+        console.log(data)
         data.chats.forEach((element: any) => {
           let isChatAlreadyLoaded = false;
           this.joinedChatList.forEach((chat: any) => {
@@ -132,6 +135,7 @@ export class ChatService {
               messages: [],
               isNotificationOn: false,
               isChatHistoryDisplayed: false,
+              isGameChat: element.isGameChat,
             }
             this.joinedChatList.push(chat);            
           }
