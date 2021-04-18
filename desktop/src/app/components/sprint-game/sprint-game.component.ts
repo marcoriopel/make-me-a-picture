@@ -56,6 +56,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('gameStart');
     this.socketService.unbind('endGame');
     this.chatService.leaveChat(this.gameService.gameId);
+    this.gameService.tick.pause();
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

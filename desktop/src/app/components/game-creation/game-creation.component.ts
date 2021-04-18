@@ -52,7 +52,7 @@ export class GameCreationComponent implements OnInit {
       name: [ '', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(16)
+        Validators.maxLength(12)
       ]],
       difficulty: [ '', [
         Validators.required,

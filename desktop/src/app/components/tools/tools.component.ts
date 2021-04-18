@@ -33,6 +33,8 @@ export class ToolsComponent implements OnInit {
   }
 
   setEraser(): void {
+    this.drawingService.currentTool = 'eraser';
+    this.drawingService.lineWidth = this.drawingService.eraserWidth;
     this.pencilColor = this.drawingService.color;
     this.pencilService.isCurrentToolEraser = true;
     this.drawingService.color = WHITE;
@@ -46,6 +48,8 @@ export class ToolsComponent implements OnInit {
   }
 
   setPencil(): void {
+    this.drawingService.currentTool = 'pencil';
+    this.drawingService.lineWidth = this.drawingService.pencilWidth;
     this.pencilService.isCurrentToolEraser = false;
     this.pencilRef.nativeElement.style.backgroundColor = POLY_RED;
     this.eraserRef.nativeElement.style.backgroundColor = WHITE;

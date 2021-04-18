@@ -8,7 +8,7 @@
 .chat-container {
   padding-top: 5%;
   width: 100%;
-  height: 410px;
+  height: calc(100% - 550px);
 }
 
 .chat-button:active {

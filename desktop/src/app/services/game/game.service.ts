@@ -55,7 +55,7 @@ export class GameService {
   virtualPlayerDrawings: any[] = [];
   realPlayerDrawings: any[] = [];
   virtualPlayers: string[] = [];
-
+  isGuessAvailable: boolean = true;
   isUserTeamGuessing: boolean = false;
   isSuggestionsModalOpen: boolean = false;
   isPlayerDrawing: boolean = false;
@@ -134,6 +134,12 @@ export class GameService {
       this.drawingService.strokes = Array.from(data.eraserStrokes);
     })
 
+    this.socketService.bind('hintError', (data: any) => {
+      this.snackBar.open("Il ne reste plus d'indices", "", {
+        duration: 2000,
+      });
+    })
+
     this.socketService.bind('score', (data: any) => {
       this.score = data.score;
     })
@@ -161,6 +167,7 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
+      this.tick.pause();
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
 
@@ -214,10 +221,11 @@ export class GameService {
 
     this.socketService.bind('endGame', (data: any) => {
       this.socketService.unbind('endGame');
+      this.tick.pause();
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
-          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.id + '.png',
+          url: 'https://drawingimages.s3.us-east-2.amazonaws.com/' + data.virtualPlayerIds[i] + '.png',
           id: data.virtualPlayerIds[i],
         }
         this.virtualPlayerDrawings.push(vdrawing);
@@ -234,6 +242,7 @@ export class GameService {
       this.isInGame = false;
       this.isGuessing = false;
       this.isUserTeamGuessing = false;
+      this.socketService.unbind('hintError');
       this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
@@ -273,7 +282,6 @@ export class GameService {
 
     this.socketService.bind('drawingSuggestions', (data: any) => {
       this.drawingSuggestions = data.drawingNames;
-      console.log(this.isSuggestionsModalOpen)
       if (!this.isSuggestionsModalOpen) {
         this.suggestionDialogRef = this.dialog.open(DrawingSuggestionsComponent, {
           disableClose: true,
@@ -303,6 +311,12 @@ export class GameService {
       this.score[0] = data.score;
     })
 
+    this.socketService.bind('hintError', (data: any) => {
+      this.snackBar.open("Il ne reste plus d'indices", "", {
+        duration: 2000,
+      });
+    })
+
     this.socketService.bind('guessesLeft', (data: any) => {
       this.guessesLeft = data.guessesLeft;
     })
@@ -316,8 +330,9 @@ export class GameService {
     })
 
     this.socketService.bind('newRound', (data: any) => {
+      this.tick.pause();
+      this.isGuessAvailable = true;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
-      this.drawingService.clearCanvas(this.drawingService.previewCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
       this.drawingService.strokes = [];
@@ -347,6 +362,7 @@ export class GameService {
     })
 
     this.socketService.bind('endGame', (data: any) => {
+      this.tick.pause();
       this.openDialog(State.ENDGAME);
       this.drawingService.strokeStack = [];
       this.drawingService.strokeNumber = 0;
@@ -355,6 +371,7 @@ export class GameService {
       this.drawingService.strokes = [];
       this.isInGame = false;
       this.isGuessing = false;
+      this.socketService.unbind('hintError');
       this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
