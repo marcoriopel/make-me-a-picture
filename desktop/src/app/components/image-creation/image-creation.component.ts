@@ -10,6 +10,7 @@ import { Difficulty } from '@app/classes/game';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { ToolsComponent } from '../tools/tools.component';
+import { EditorComponent } from '../editor/editor.component';
 
 @Component({
   selector: 'app-image-creation',
@@ -18,6 +19,7 @@ import { ToolsComponent } from '../tools/tools.component';
 })
 export class ImageCreationComponent implements OnInit, OnDestroy {
   @ViewChild('toolsComponent', { static: false }) toolsComponent: ToolsComponent;
+  @ViewChild('editorComponent', { static: false }) editorComponent: EditorComponent;
   imageCreationForm: FormGroup;
   hintForm: FormGroup;
   difficulty = ['Facile', 'Normale', 'Difficile'];

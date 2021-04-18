@@ -52,7 +52,7 @@ export class GameCreationComponent implements OnInit {
       name: [ '', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(16)
+        Validators.maxLength(12)
       ]],
       difficulty: [ '', [
         Validators.required,
@@ -109,6 +109,7 @@ export class GameCreationComponent implements OnInit {
         this.router.navigate(['/lobby']);
         this.socketService.emit('joinLobby', {lobbyId: id});
         this.socketService.bind('joinChatRoomCallback', async () => {
+          this.chatService.currentChatId = this.gameService.gameId;
           await this.chatService.refreshChatList();
           this.chatService.setCurrentChat(this.gameService.gameId);
           this.socketService.unbind('joinChatRoomCallback')

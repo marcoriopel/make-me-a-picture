@@ -105,11 +105,11 @@ export class VirtualPlayerPassiveAgressive extends VirtualPlayer {
         }
         if(lastMutualGame.score[teamNumber] < lastMutualGame.score[opposingTeamNumber]){
             let str = vPlayerText.passiveAgressive.meetAgainClassicOpposingTeamWin.split("##");
-            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2] + oldTeammate + str[3];
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2] + oldTeammate + str[3];
         }
         else if(lastMutualGame.score[teamNumber] > lastMutualGame.score[opposingTeamNumber]){
             let str = vPlayerText.passiveAgressive.meetAgainClassicOpposingTeamLose.split("##");
-            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2];
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2];
         }
         else{
             let str = vPlayerText.passiveAgressive.meetAgainClassicOpposingTeamTie.split("##");

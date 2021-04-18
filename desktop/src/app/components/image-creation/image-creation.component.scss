@@ -66,6 +66,7 @@
 
 button {
     width: 70%;
+    margin-bottom: 5px;
 }
 
 .column-container {
@@ -77,6 +78,7 @@ button {
 
 #form-column {
     width: 250px;
+    height: 100%;
 }
 
 #chat-column {
@@ -90,3 +92,4 @@ button {
     justify-content: left;
     padding-left: 10px;
 }
+

@@ -12,16 +12,22 @@
                         Parties jouées
                     </mat-button-toggle>
                     <mat-button-toggle value="1">
-                        Temps joués
+                        Parties classiques gagnées
+                    </mat-button-toggle>
+                    <mat-button-toggle value="5">
+                        Classic
                     </mat-button-toggle>
                     <mat-button-toggle value="2">
-                        Solo
+                        Temps joués
                     </mat-button-toggle>
                     <mat-button-toggle value="3">
-                        Coop
+                        Solo
                     </mat-button-toggle>
                     <mat-button-toggle value="4">
-                        Classic
+                        Coop
+                    </mat-button-toggle>
+                    <mat-button-toggle value="6">
+                        Votes sur dessins
                     </mat-button-toggle>
                 </mat-button-toggle-group>
                 <div id="leaderboard">
@@ -30,19 +36,23 @@
                             <th>Position</th>
                             <th>Joueur</th>
                             <th>Parties jouées</th>
+                            <th>Parties classiques gagnées</th>
+                            <th>Ratio V/D Classic</th>
                             <th>Temps jouées</th>
                             <th>Meilleur score Solo</th>
                             <th>Meilleur score Coop</th>
-                            <th>Ratio V/D Classic</th>
+                            <th>Votes sur dessins</th>
                         </tr>
                         <tr *ngFor="let user of leaderboard, let index = index">
                             <td>{{index + 1}}</td>
                             <td>{{user.username}}</td>
                             <td>{{user.gamesPlayed}}</td>
+                            <td>{{user.classicGamesWon}}</td>
+                            <td>{{user.classicWinRatio}}</td>
                             <td>{{user.timePlayed}}</td>
                             <td>{{user.bestSoloScore}}</td>
                             <td>{{user.bestCoopScore}}</td>
-                            <td>{{user.classicWinRatio}}</td>
+                            <td>{{user.totalDrawingVotes}}</td>
                         </tr>
                     </table>
                 </div>                

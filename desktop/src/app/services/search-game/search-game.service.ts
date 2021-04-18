@@ -49,7 +49,6 @@ export class SearchGameService {
   }
 
   filterGame(filter: Map<string, boolean>): void {
-    console.log(filter)
     let filteredList: any[] = [];
     this.displayList = [];
     this.gameList.forEach(game => {

@@ -40,6 +40,7 @@ export class PencilService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
+        console.log(this.drawingService.lineWidth)
         this.drawingService.baseCtx.filter = 'none';
         if (event.button !== MouseButton.LEFT) {
             return;
@@ -175,7 +176,7 @@ export class PencilService extends Tool {
             strokeNumber: this.drawingService.strokeNumber,
             lineWidth: this.drawingService.lineWidth,
             lineColor: this.drawingService.color,
-            lineOpacity: this.drawingService.opacity,
+            lineOpacity: this.drawingService.currentTool == 'eraser' ? 1 : this.drawingService.opacity,
         };
     }
 

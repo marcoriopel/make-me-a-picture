@@ -32,6 +32,7 @@ export class UsersModel {
                 'classicWinRatio': 0,
                 'meanGameTime': 0,
                 'classicGamesPlayed': 0,
+                'classicGamesWon': 0,
                 'totalDrawingVotes': 0,
                 'rooms': ["General"] 
             });
@@ -66,6 +67,8 @@ export class UsersModel {
                 'bestCoopScore': userInfo.bestCoopScore,
                 'classicWinRatio': userInfo.classicWinRatio,
                 'meanGameTime': userInfo.meanGameTime,
+                'classicGamesPlayed': userInfo.classicGamesPlayed,
+                'classicGamesWon': userInfo.classicGamesWon,
             }});
         } catch (e) {
             console.error(e);
@@ -124,6 +127,30 @@ export class UsersModel {
         try {
          return await this.databaseModel.client.db("database").collection("users").aggregate([ 
             {$sort: {"gamesPlayed": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10MostClassicGamesWon(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"classicGamesWon": -1}}, 
+            {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
+            {$limit: 10}
+        ]).toArray();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async getTop10MostUpvotes(){
+        try {
+         return await this.databaseModel.client.db("database").collection("users").aggregate([ 
+            {$sort: {"totalDrawingVotes": -1}}, 
             {$project: {"name": 0, "_id": 0, "password":0, "meanGameTime":0, "surname": 0, "rooms": 0}}, 
             {$limit: 10}
         ]).toArray();
