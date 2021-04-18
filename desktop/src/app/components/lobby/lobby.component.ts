@@ -22,20 +22,23 @@ export class LobbyComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveLobby', {'lobbyId': this.gameService.gameId});
-    this.lobbyService.quit();
-    this.chatService.setCurrentChat("General");
-    this.socketService.unbind('drawingEvent');
-    this.socketService.unbind('eraserStrokes');
-    this.socketService.unbind('transitionTimer');
-    this.socketService.unbind('drawingName');
-    this.socketService.unbind('timer');
-    this.socketService.unbind('newRound');
-    this.socketService.unbind('guessCallBack');
-    this.socketService.unbind('guessesLeft');
-    this.socketService.unbind('score');
-    this.socketService.unbind('gameStart');
-    this.socketService.unbind('endGame');
+    // if(!this.gameService.isInGame){
+    //   console.log('test')
+    //   this.socketService.emit('leaveLobby', {'lobbyId': this.gameService.gameId});
+    //   this.lobbyService.quit();
+    //   this.chatService.setCurrentChat("General");
+    //   this.socketService.unbind('drawingEvent');
+    //   this.socketService.unbind('eraserStrokes');
+    //   this.socketService.unbind('transitionTimer');
+    //   this.socketService.unbind('drawingName');
+    //   this.socketService.unbind('timer');
+    //   this.socketService.unbind('newRound');
+    //   this.socketService.unbind('guessCallBack');
+    //   this.socketService.unbind('guessesLeft');
+    //   this.socketService.unbind('score');
+    //   this.socketService.unbind('gameStart');
+    //   this.socketService.unbind('endGame');
+    // }
   }
 
   leaveLobby(): void {

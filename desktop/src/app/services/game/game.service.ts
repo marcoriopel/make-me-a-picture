@@ -392,6 +392,7 @@ export class GameService {
   }
 
   openEndGameModal(): void {
+    console.log('open');
     this.endGameDialogRef = this.dialog.open(EndGameDrawingComponent, {
       disableClose: true,
       height: '800px',

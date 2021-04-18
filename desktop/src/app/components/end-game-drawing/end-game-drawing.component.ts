@@ -221,6 +221,7 @@ export class EndGameDrawingComponent implements OnInit {
   }
 
   quit(): void {
+    this.gameService.endGameDialogRef.close();
     this.router.navigate(['/home']);
   }
 
