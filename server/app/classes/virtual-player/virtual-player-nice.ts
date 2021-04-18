@@ -97,7 +97,7 @@ export class VirtualPlayerNice extends VirtualPlayer {
         }
         if(lastMutualGame.score[teamNumber] > lastMutualGame.score[opposingTeamNumber]){
             let str = vPlayerText.nice.meetAgainClassicWin.split("##");
-            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2] + lastMutualGame.score[teamNumber] + str[3] + lastMutualGame[opposingTeamNumber] + str[4];
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2] + lastMutualGame.score[teamNumber] + str[3] + lastMutualGame[opposingTeamNumber] + str[4];
         }
         else if(lastMutualGame.score[teamNumber] < lastMutualGame.score[opposingTeamNumber]){
             let str = vPlayerText.nice.meetAgainClassicLose.split("##");
@@ -105,7 +105,7 @@ export class VirtualPlayerNice extends VirtualPlayer {
         }
         else{
             let str = vPlayerText.nice.meetAgainClassicTie.split("##");
-            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame) + str[2];
+            message = str[0] + this.teammates + str[1] + this.getDate(lastMutualGame.start) + str[2];
         }
         const timestamp = new Date().getTime();
         this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp, "textColor": "#000000", chatId: this.gameId });
