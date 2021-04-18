@@ -3,7 +3,6 @@
         <div id="message-scroller" class="chat-container">
             <div id="history-button-container">
                 <p *ngIf="this.chatService.currentChatId != 'General' && !this.chatService.joinedChatList[this.chatService.index].isGameChat" id="delete-button" (click)="deleteChat()">Supprimer la conversation</p>
-                <!-- <p *ngIf="this.chatService.currentChatId != 'General'" id="delete-button" (click)="deleteChat()">Supprimer la conversation</p> -->
                 <p *ngIf="!this.isChatHistoryDisplayed()" id="history-button" (click)="loadChatHistory()">Afficher l'historique</p>
             </div>
             <div *ngFor="let message of chatService.getChatMessages()">

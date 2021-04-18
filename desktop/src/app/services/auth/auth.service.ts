@@ -35,7 +35,6 @@ export class AuthService {
     const options = { headers: headers };
     this.http.post<any>(this.logoutUrl, null, options)
       .subscribe((data: any) => {
-        console.log(data);
       });
     localStorage.removeItem('username');
     localStorage.removeItem('avatar');
