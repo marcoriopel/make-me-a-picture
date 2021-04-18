@@ -40,7 +40,7 @@ export class StatsService {
         let userInfo = await this.usersModel.getUserInfo(player.username);
 
         if(gameType == GameType.CLASSIC){
-            let gamesWon = userInfo.classicWinRatio * userInfo.classicGamesPlayed;
+            let gamesWon = userInfo.classicWinRatio * userInfo.classicGamesPlayed++;
             if(score[player.team] > score[this.getOpposingTeam(player.team)]){
                 ++gamesWon;
             }
