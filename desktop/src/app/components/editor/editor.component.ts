@@ -106,7 +106,7 @@ export class EditorComponent implements AfterViewInit {
 
     changeLineWidth(): void {
         this.drawingService.currentTool == 'pencil' ? this.drawingService.pencilWidth = this.drawingService.lineWidth : this.drawingService.eraserWidth = this.drawingService.lineWidth;
-        this.drawingService.currentTool == 'pencil' ? this.drawingService.lineWidth = this.drawingService.pencilWidth : this.drawingService.eraserWidth = this.drawingService.eraserWidth;
+        this.drawingService.currentTool == 'pencil' ? this.drawingService.lineWidth = this.drawingService.pencilWidth : this.drawingService.lineWidth = this.drawingService.eraserWidth;
     }
 
     changeOpacity(): void {
