@@ -89,6 +89,9 @@ export class UserService {
                 case LeaderboardCategory.MOST_GAMES_PLAYED:
                     next(await this.usersModel.getTop10MostGamesPlayed());
                     break;
+                case LeaderboardCategory.MOST_UPVOTES:
+                    next(await this.usersModel.getTop10MostUpvotes());
+                    break;
                 default:
                     res.status(StatusCodes.BAD_REQUEST).send("Leaderboard category does not exist");
             }

@@ -44,7 +44,7 @@ export class StatsService {
             if(score[player.team] > score[this.getOpposingTeam(player.team)]){
                 ++gamesWon;
             }
-            userInfo.classicWinRatio = gamesWon / (userInfo.classicGamesPlayed + 1);
+            userInfo.classicWinRatio = gamesWon / (++userInfo.classicGamesPlayed);
         }
         else if(gameType == GameType.SOLO && score[0] > userInfo.bestSoloScore){
             userInfo.bestSoloScore = score[0];
