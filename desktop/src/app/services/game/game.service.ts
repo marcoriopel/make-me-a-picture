@@ -331,6 +331,7 @@ export class GameService {
 
     this.socketService.bind('newRound', (data: any) => {
       this.tick.pause();
+      this.isGuessAvailable = true;
       this.drawingService.clearCanvas(this.drawingService.baseCtx);
       this.drawingService.strokeStack = [];
       this.drawingService.redoStack = [];
