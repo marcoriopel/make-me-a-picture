@@ -21,10 +21,8 @@
             ></button>
         </div>
         <div class="slider">
-            <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="this.drawingService.lineWidth" (change)="this.changeLineWidth()"> </mat-slider>
-        </div>
-        <div class="slider" *ngIf="this.drawingService.currentTool == 'pencil'">
-            <mat-slider [min]="opacityMin" [max]="opacityMax" [step]="opacityStep" [(value)]="opacity" (change)="changeOpacity()"> </mat-slider>
+            <mat-slider [min]="lineWidthMin" [max]="lineWidthMax" [step]="lineWidthStep" [(value)]="this.drawingService.lineWidth" (change)="this.changeLineWidth()"> </mat-slider><span>Grosseur du trait</span>
+            <mat-slider *ngIf="this.drawingService.currentTool == 'pencil'" [min]="opacityMin" [max]="opacityMax" [step]="opacityStep" [(value)]="opacity" (change)="changeOpacity()"> </mat-slider><span *ngIf="this.drawingService.currentTool == 'pencil'">Opacité</span>
         </div>
     </div>    
 </div>
