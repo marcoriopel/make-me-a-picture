@@ -28,7 +28,6 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log(this.getToken());
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': this.getToken()!,
@@ -36,14 +35,13 @@ export class AuthService {
     const options = { headers: headers };
     this.http.post<any>(this.logoutUrl, null, options)
       .subscribe((data: any) => {
-        console.log(data);
       });
-    localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('avatar');
+    localStorage.removeItem('token');
     localStorage.removeItem('tutorial');
     this.router.navigate(['/login']);
-    // TODO
+    window.location.reload();
   }
 
   loggedIn() {

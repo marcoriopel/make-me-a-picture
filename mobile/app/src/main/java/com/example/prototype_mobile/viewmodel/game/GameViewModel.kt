@@ -11,12 +11,14 @@ import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.EndGameRepository
 import com.example.prototype_mobile.model.game.GameRepository
+import com.example.prototype_mobile.model.game.ToolRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class GameViewModel :ViewModel() {
 
+    // Live data
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
 
@@ -53,6 +55,8 @@ class GameViewModel :ViewModel() {
     val gameRepository = GameRepository.getInstance()!!
 
     var gameTypeViewModel = GameType.CLASSIC
+
+    // Bind live data
     init {
         _isPlayerGuessing.value = gameRepository.isPlayerGuessing.value
 
@@ -109,7 +113,6 @@ class GameViewModel :ViewModel() {
         }
     }
 
-
     fun hintRequest() {
         val username = LoginRepository.getInstance()!!.user!!.username
         gameRepository.sendHintRequest(BasicUser(username, 0))
@@ -137,7 +140,12 @@ class GameViewModel :ViewModel() {
         gameRepository.refreshSuggestions()
     }
 
+    fun leaveGame() {
+        gameRepository.leaveGame()
+    }
+
     fun logout() {
+        leaveGame()
         viewModelScope.launch {
             val result: Result<Boolean> = try {
                 LoginRepository.getInstance()!!.logout()
@@ -158,8 +166,8 @@ class GameViewModel :ViewModel() {
         EndGameRepository.getInstance()!!.addGameResult(title, description, endGameResult)
     }
 
-    fun leaveGame() {
-        gameRepository.leaveGame()
+    fun resetAlpha() {
+        ToolRepository.getInstance()!!.resetAlpha()
     }
 }
 

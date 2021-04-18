@@ -2,10 +2,6 @@
   box-sizing: border-box
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-
 .chat-bar {
   display: flex;
   position: absolute;
@@ -118,3 +114,21 @@
   cursor: pointer;
 }
   
+.chat-container::-webkit-scrollbar {
+  width: 20px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #E0E0E0;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background-color: #E0E0E0;
+}

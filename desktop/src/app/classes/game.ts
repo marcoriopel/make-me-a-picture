@@ -33,9 +33,9 @@ export interface Game {
     name: string,
     type: GameType,
     difficulty: Difficulty,
-    player: string[],
-    team1: string[],
-    team2: string[]
+    player: Player[],
+    team1: Player[],
+    team2: Player[]
 }
 
 export interface JoinLobby {
@@ -55,6 +55,7 @@ export interface DrawingEvent {
 
 export interface MouseDown {
     lineColor: string;
+    lineOpacity: number;
     lineWidth: number;
     coords: Vec2;
     strokeNumber: number;

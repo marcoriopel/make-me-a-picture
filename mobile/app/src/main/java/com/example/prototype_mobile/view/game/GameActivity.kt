@@ -52,36 +52,37 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
     }
 
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Bind the view on create and setup listener handler
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Set view, view model and binding
         setContentView(R.layout.activity_game)
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.my_toolbar)
         toolbar.setTitleTextColor(ContextCompat.getColor(applicationContext, R.color.white))
         setSupportActionBar(toolbar)
-
         gameViewModel = ViewModelProvider(this).get(GameViewModel::class.java)
         binding = ActivityGameBinding.inflate(layoutInflater)
         canvasViewModel = ViewModelProvider(this, CanvasViewModelFactory())
                 .get(CanvasViewModel::class.java)
 
+        // Fill the container if it's not done
         if (savedInstanceState == null) {
             setUpGameInit()
         }
 
+        // Handle event
         gameViewModel.isPlayerDrawing.observe(this, Observer {
             if (it) {
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerTools, ToolsFragment())
-                        .commitNow()
+                        .replace(R.id.containerTools, ToolsFragment()).commitNow()
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.containerGuess, ToolsAdjustmentFragment())
-                        .commitNow()
+                        .replace(R.id.containerGuess, ToolsAdjustmentFragment()).commitNow()
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerColor, ColorFragment())
-                    .commitNow()
+                    .replace(R.id.containerColor, ColorFragment()).commitNow()
                 colorFragment =  (findColorFragment() as ColorFragment?)!!
-
             } else {
                 for (fragment in supportFragmentManager.fragments) {
                     if(checkIfDrawingFragment(fragment)) {
@@ -94,8 +95,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         gameViewModel.isPlayerGuessing.observe(this, Observer {
             if (it!!) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerGuess, GuessFragment())
-                    .commitNow()
+                    .replace(R.id.containerGuess, GuessFragment()).commitNow()
                 if(gameViewModel.gameRepository.gameType == GameType.CLASSIC) {
                     //When connecting to the game transition state is null since it doesn't receive can't set a timer
                     hintFragment()
@@ -114,7 +114,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 else {
                     hintFragment()
                 }
-
             } else if(!it){
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is GuessFragment || fragment is HintFragment) {
@@ -131,28 +130,29 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             if(gameViewModel.isGameEnded.value!! && gameViewModel.isGameEnded.value != null)
                 endGameEvent()
         })
+
         gameViewModel.transitionMessage.observe(this, Observer{
-            val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
-            toast.show()
+            if (gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
+                val toast = Toast.makeText(applicationContext, it, Toast.LENGTH_LONG)
+                toast.show()
+            }
         })
 
         gameViewModel.suggestions.observe(this, Observer {
             if (it != null) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerCanvas, ChooseWordFragment())
-                    .commitNow()
+                    .replace(R.id.containerCanvas, ChooseWordFragment()).commitNow()
                 for (fragment in supportFragmentManager.fragments) {
                     if(fragment is ChooseWordFragment) {
                         fragment.bindButton()
                     }
                 }
-
             } else {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
-                    .commitNow()
+                    .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel)).commitNow()
             }
         })
+
         gameViewModel.countDownSound.observe(this, Observer {
             if (it) {
                 mediaPlayer = MediaPlayer.create(this, R.raw.countdown)
@@ -179,25 +179,47 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Init game onResume
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    override fun onResume() {
+        super.onResume()
+        setUpGameInit()
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Leave game and close the activity onStop
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onStop() {
         super.onStop()
         gameViewModel.leaveGame()
         finish()
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Check it $fragment is drawing tool fragment
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun checkIfDrawingFragment(fragment: Fragment): Boolean {
         return fragment is ToolsFragment || fragment is ToolsAdjustmentFragment || fragment is ColorFragment
     }
 
-    // Remove the call to super
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Remove the call to super
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onDialogDismissed(dialogId: Int) {}
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Set the color in the fragment and view model
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onColorSelected(dialogId: Int, color: Int) {
-        // Todo: Setter and getter if we want private member in fragment
         colorFragment.viewModel.setColor(color)
         colorFragment.updateButtonColor(color)
     }
 
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Find the color fragment
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun findColorFragment(): Fragment? {
         for (fragment in supportFragmentManager.fragments)
             if(fragment is ColorFragment)
@@ -205,35 +227,59 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         return null
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    * Prepare data for the end game activity
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun endGameEvent() {
-        if (gameViewModel.teamScore.value != null) {
-            if (gameViewModel.teamScore.value!!.score.size == 2) {
-                val team = gameViewModel.gameRepository.team
-                val otherTeam = if (team == 1) 0 else 1
-                if (gameViewModel.teamScore.value!!.score[team] > gameViewModel.teamScore.value!!.score[otherTeam]) {
-                    mediaPlayer = MediaPlayer.create(this, R.raw.win)
-                    val score = "${gameViewModel.teamScore.value!!.score[team]} - ${gameViewModel.teamScore.value!!.score[otherTeam]}"
-                    gameViewModel.setEndGameResult("Victoire!", "Bravo, vous avez gagné: score ${score}", EndGameResult(true, null))
-                } else if (gameViewModel.teamScore.value!!.score[team] < gameViewModel.teamScore.value!!.score[otherTeam]) {
-                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
-                    val score = "${gameViewModel.teamScore.value!!.score[otherTeam]} - ${gameViewModel.teamScore.value!!.score[team]}"
-                    gameViewModel.setEndGameResult("Vous avez perdu", "Meilleur change la prochaine fois! Vous avez perdu ${score}", EndGameResult(false, null))
-                } else {
-                    mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
-                    val score = "${gameViewModel.teamScore.value!!.score[otherTeam]}"
-                    gameViewModel.setEndGameResult("Égualité!", "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points", EndGameResult(false, null))
-                }
-                mediaPlayer?.start()
-            } else {
-                val score = gameViewModel.teamScore.value!!.score[0]
-                gameViewModel.setEndGameResult("Bien joué!", "Bravo, vous avez un score de ${score} points!", EndGameResult(true, null))
-            }
-            val intent = Intent(this, EndGameActivity::class.java)
-            startActivity(intent)
+        // Classic Game
+        var title = ""
+        var description = ""
+        var win = true
+        // Set title, description and sound
+        // Classic Game
+        if (gameViewModel.teamScore.value!!.score.size == 2) {
+            val myTeamIndex = gameViewModel.gameRepository.team
+            val otherTeamIndex = if (myTeamIndex == 1) 0 else 1
+            win = gameViewModel.teamScore.value!!.score[myTeamIndex] > gameViewModel.teamScore.value!!.score[otherTeamIndex]
+            val equality = gameViewModel.teamScore.value!!.score[myTeamIndex] == gameViewModel.teamScore.value!!.score[otherTeamIndex]
+            if (win) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.win)
+                val score = "${gameViewModel.teamScore.value!!.score[myTeamIndex]} - ${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
+                title = "Victoire!"
+                description = "Bravo, vous avez gagné: score ${score}"
+            } else if (equality) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]}"
+                title = "Égualité!"
+                description = "Meilleur change la prochaine fois! Les deux équipes ont eu ${score} points"
+            } else { // Defait
+                mediaPlayer = MediaPlayer.create(this, R.raw.defeat)
+                val score = "${gameViewModel.teamScore.value!!.score[otherTeamIndex]} - ${gameViewModel.teamScore.value!!.score[myTeamIndex]}"
+                title = "Vous avez perdu"
+                description = "Meilleur change la prochaine fois! Vous avez perdu ${score}"
+           }
+            mediaPlayer?.start()
         }
+        // Sprint Game
+        else {
+            title = "Bien joué!"
+            description = "Bravo, vous avez un score de ${gameViewModel.teamScore.value!!.score[0]} points!"
+        }
+        gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
+        // Start end game activity
+        val intent = Intent(this, EndGameActivity::class.java)
+        startActivity(intent)
     }
 
+    //maybe we will need to
+    override fun onRestart() {
+        super.onRestart()
+        println("Restart")
+        gameViewModel.resetAlpha()
+
+    }
     private fun setUpGameInit() {
+        // Canvas
         supportFragmentManager.beginTransaction()
             .replace(R.id.containerCanvas, CanvasFragment(canvasViewModel))
             .commitNow()
@@ -241,6 +287,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             .replace(R.id.containerChat, ChatFragment())
             .commitNow()
 
+        // Drawing tools
         if (gameViewModel.isPlayerDrawing.value!!) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.containerTools, ToolsFragment())
@@ -253,6 +300,16 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 .commitNow()
             colorFragment =  (findColorFragment() as ColorFragment?)!!
         }
+
+        // Guessing tools
+        if (gameViewModel.isPlayerGuessing.value!!) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.containerGuess, GuessFragment())
+                .commitNow()
+            supportFragmentManager.beginTransaction().replace(R.id.containerTools, HintFragment()).commitNow()
+        }
+
+        // Game info (Score and timer)
         if (gameViewModel.gameTypeViewModel == GameType.CLASSIC) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.containerGameInfo, GameInfoFragment())
@@ -262,27 +319,20 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .replace(R.id.containerGameInfo, SprintInfoFragment())
                     .commit()
         }
-
-        if (gameViewModel.isPlayerGuessing.value!!) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.containerGuess, GuessFragment())
-                .commitNow()
-            supportFragmentManager.beginTransaction().replace(R.id.containerTools, HintFragment()).commitNow()
-        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        println("OnResume")
-        setUpGameInit()
-    }
-
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *  Add the hint fragment in the tool container
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private fun hintFragment() {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.containerTools, HintFragment())
                 .commitNow()
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Bind enter key to send message in chat fragment
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         return when (keyCode) {
             KeyEvent.KEYCODE_ENTER -> {
@@ -298,6 +348,9 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
     }
 
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    *  Block the back button
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     override fun onBackPressed() {
         Toast.makeText(
                 applicationContext,
@@ -305,5 +358,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 Toast.LENGTH_LONG
         ).show()
     }
+
 
 }

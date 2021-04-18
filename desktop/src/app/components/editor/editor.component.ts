@@ -45,6 +45,13 @@ export class EditorComponent implements AfterViewInit {
     lineWidthMax: number = MAX_LINE_WIDTH;
     lineWidthStep: number = LINE_WIDTH_STEP;
     lineWidth: number = INITIAL_LINE_WIDTH;
+    pencilWidth: number = 10;
+    eraserWidth: number = 10;
+
+    opacityMin: number = 0;
+    opacityMax: number = 100;
+    opacityStep: number = 1;
+    opacity: number = 100;
 
     workSpaceSize: Vec2 = { x: MINIMUM_WORKSPACE_WIDTH, y: MINIMUM_WORKSPACE_HEIGHT };
     previewSize: Vec2 = { x: MINIMUM_CANVAS_WIDTH, y: MINIMUM_CANVAS_HEIGHT };
@@ -75,6 +82,7 @@ export class EditorComponent implements AfterViewInit {
     ) {
         this.drawingService.color = BLACK;
         this.drawingService.lineWidth = this.lineWidth;
+        this.drawingService.opacity = this.opacity / 100;
     }
 
     ngAfterViewInit(): void {
@@ -97,6 +105,11 @@ export class EditorComponent implements AfterViewInit {
     }
 
     changeLineWidth(): void {
-        this.drawingService.lineWidth = this.lineWidth;
+        this.drawingService.currentTool == 'pencil' ? this.drawingService.pencilWidth = this.drawingService.lineWidth : this.drawingService.eraserWidth = this.drawingService.lineWidth;
+        this.drawingService.currentTool == 'pencil' ? this.drawingService.lineWidth = this.drawingService.pencilWidth : this.drawingService.lineWidth = this.drawingService.eraserWidth;
+    }
+
+    changeOpacity(): void {
+        this.drawingService.opacity = this.opacity / 100;
     }
 }

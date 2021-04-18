@@ -28,16 +28,19 @@ export class PencilService extends Tool {
     }
 
     onMouseLeave(): void {
-        this.updatePencilData();
-        this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
-        this.clearPath();
-        let mouseEvent = {
-            button: MouseButton.LEFT,
-        } as MouseEvent
-        this.onMouseUp(mouseEvent);
+        if(this.mouseDown) {
+            this.updatePencilData();
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
+            this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
+            let mouseEvent = {
+                button: MouseButton.LEFT,
+            } as MouseEvent
+            this.onMouseUp(mouseEvent);            
+        }
     }
 
     onMouseDown(event: MouseEvent): void {
+        console.log(this.drawingService.lineWidth)
         this.drawingService.baseCtx.filter = 'none';
         if (event.button !== MouseButton.LEFT) {
             return;
@@ -50,6 +53,7 @@ export class PencilService extends Tool {
 
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
+                lineOpacity: this.pencilData.lineOpacity,
                 lineWidth: this.pencilData.lineWidth,
                 strokeNumber: this.pencilData.strokeNumber,
                 path: [this.mouseDownCoord],
@@ -58,6 +62,7 @@ export class PencilService extends Tool {
             this.drawingService.strokes.push(stroke);
             this.drawingService.strokes.sort((stroke1, stroke2) => stroke1.strokeNumber - stroke2.strokeNumber )
             
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
 
             this.drawingService.setIsToolInUse(true);
@@ -66,6 +71,7 @@ export class PencilService extends Tool {
             const mouseDown: MouseDown = {
                 coords: this.mouseDownCoord,
                 lineColor: this.drawingService.color,
+                lineOpacity: this.drawingService.opacity,
                 lineWidth: this.drawingService.lineWidth,
                 strokeNumber: this.drawingService.strokeNumber,
             }
@@ -83,8 +89,10 @@ export class PencilService extends Tool {
             const mousePosition = this.getPositionFromMouse(event);
             this.pathData.push(mousePosition);
             this.updatePencilData();
+            this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
+            console.log(this.drawingService.strokeStack)
             this.drawingService.setIsToolInUse(false);
             if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
                 this.drawingService.strokeNumber++;
@@ -125,6 +133,7 @@ export class PencilService extends Tool {
         for(let i = 0; i < this.drawingService.strokes.length; i++){
             ctx.lineWidth = this.drawingService.strokes[i].lineWidth;
             ctx.strokeStyle = this.drawingService.strokes[i].lineColor;
+            ctx.globalAlpha = this.drawingService.strokes[i].lineOpacity;
             ctx.lineJoin = 'round';
             ctx.lineCap = 'round';
             ctx.beginPath();
@@ -133,6 +142,19 @@ export class PencilService extends Tool {
             }
             ctx.stroke();
         }
+    }
+
+    redrawStack(ctx: CanvasRenderingContext2D, pencil: Stroke): void {
+        ctx.lineWidth = pencil.lineWidth;
+        ctx.strokeStyle = pencil.lineColor;
+        ctx.globalAlpha = pencil.lineOpacity;
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        for(let j = 0; j < pencil.path.length; j++){
+            ctx.lineTo(pencil.path[j].x, pencil.path[j].y);
+        }
+        ctx.stroke();
     }
 
     changeWidth(newWidth: number): void {
@@ -154,6 +176,7 @@ export class PencilService extends Tool {
             strokeNumber: this.drawingService.strokeNumber,
             lineWidth: this.drawingService.lineWidth,
             lineColor: this.drawingService.color,
+            lineOpacity: this.drawingService.currentTool == 'eraser' ? 1 : this.drawingService.opacity,
         };
     }
 
