@@ -1,6 +1,7 @@
 package com.example.prototype_mobile.model.mainmenu
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
@@ -48,6 +49,9 @@ class LobbyRepository {
 
     private val _gameStarting = MutableLiveData<Boolean>()
     val gameStarting: MutableLiveData<Boolean> = _gameStarting
+
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
 
     // Game Start
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
@@ -152,6 +156,7 @@ class LobbyRepository {
         return if(response.code() == ResponseCode.OK.code) {
             Result.Success(game)
         } else {
+            _message.postValue("Le Lobby est inexistant ou plein.")
             Result.Error(response.code())
         }
     }
@@ -160,17 +165,18 @@ class LobbyRepository {
         if(response.code() == ResponseCode.OK.code) {
             return Result.Success(game)
         } else {
+            _message.postValue("Le Lobby est inexistant ou plein.")
             return Result.Error(response.code())
         }
     }
 
     private fun analyseJoinPrivateLobbyAnswer(response: Response, id: String): Result<PrivateLobby> {
         val lobbyId: String = response.body()!!.string()
-
         if(response.code() == ResponseCode.OK.code) {
             currentListenLobby = lobbyId
             return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
         } else {
+            _message.postValue("Le Lobby est inexistant ou plein.")
             Result.Error(response.code())
         }
         return Result.Error(2)

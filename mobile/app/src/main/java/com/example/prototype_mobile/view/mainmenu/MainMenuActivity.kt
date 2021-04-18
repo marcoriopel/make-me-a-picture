@@ -2,6 +2,7 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -113,6 +114,15 @@ class MainMenuActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        mainMenuViewModel.message.observe(this@MainMenuActivity) {
+            Toast.makeText(
+                    applicationContext,
+                    it,
+                    Toast.LENGTH_LONG
+            ).show()
+        }
+
     }
 
     override fun onRestart() {
