@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Stroke } from '@app/classes/drawing';
-import { MAX_PERCENTAGE } from '@app/ressources/global-variables/global-variables';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -41,7 +40,7 @@ export class DrawingService {
             this.gridCtx.moveTo(0, x);
             this.gridCtx.lineTo(canvasWidth, x);
         }
-        this.gridCtx.globalAlpha = this.opacity / MAX_PERCENTAGE;
+        this.gridCtx.globalAlpha = 1;
         this.gridCtx.strokeStyle = 'black';
         this.gridCtx.closePath();
         this.gridCtx.stroke();
