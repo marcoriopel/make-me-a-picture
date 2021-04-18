@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SocketService } from '@app/services/socket/socket.service';
 import { DrawingEvent, drawingEventType, MouseDown, Vec2 } from '@app/classes/game';
 import { PencilService } from '@app/services/tools/pencil.service';
@@ -19,7 +19,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) { 
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) {
   }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
+    this.socketService.emit('leaveGame', { 'gameId': this.gameService.gameId });
     this.drawingService.strokeStack = [];
     this.drawingService.strokeNumber = 0;
     this.drawingService.redoStack = [];
@@ -103,24 +103,24 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
-    if(this.gameService.isGuessAvailable) {
+    if (this.gameService.isGuessAvailable) {
       this.gameService.isGuessAvailable = false;
-      if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
+      setTimeout(() => {
+        this.gameService.isGuessAvailable = true;
+      }, 4000);
+      if (this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
       const body = {
         "gameId": this.gameService.gameId,
         "guess": this.guessForm.value.guess,
       }
       this.socketService.emit("guessDrawing", body);
-      setTimeout(() => {
-        this.gameService.isGuessAvailable = true;
-        console.log('done');
-      }, 1500);
+
     }
     this.guessForm.reset();
   }
 
   requestHint(): void {
-    this.socketService.emit('hintRequest', {'gameId': this.gameService.gameId});
+    this.socketService.emit('hintRequest', { 'gameId': this.gameService.gameId });
   }
 
 }
