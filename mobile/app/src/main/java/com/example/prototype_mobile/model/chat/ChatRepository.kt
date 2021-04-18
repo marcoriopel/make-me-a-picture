@@ -49,6 +49,9 @@ class ChatRepository {
     private val _messageReceived = MutableLiveData<Message>()
     val messageReceived: LiveData<Message> = _messageReceived
 
+    private val _switchToGeneral = MutableLiveData<Boolean>()
+    val switchToGeneral: LiveData<Boolean> = _switchToGeneral
+
     private val myUsername = LoginRepository.getInstance()!!.user!!.username
     private val myAvatar = LoginRepository.getInstance()!!.user!!.avatar
     private val token = LoginRepository.getInstance()!!.user!!.token
@@ -56,7 +59,7 @@ class ChatRepository {
     private val channelJoinedSet = mutableSetOf<String>()
     private val channelNotJoinedSet = mutableSetOf<String>()
 
-    var onUpdateChat = Emitter.Listener {
+    private var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1
         if (myUsername == messageReceive.user.username) {
@@ -82,6 +85,9 @@ class ChatRepository {
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
     }
 
+    fun switchToGeneral() {
+        _switchToGeneral.postValue(true)
+    }
 
     fun sendMessage(msg:String){
         socket.emit("message", gson.toJson(SendMessage(msg, token, channelShown)))
