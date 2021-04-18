@@ -6,6 +6,7 @@ import { SocketService } from '@app/services/socket/socket.service';
 import { Router } from '@angular/router';
 import { GameService } from '@app/services/game/game.service';
 import { ChatService } from '@app/services/chat/chat.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-game-preview',
@@ -49,7 +50,7 @@ export class GamePreviewComponent{
 
   isPreview: boolean = false;
 
-  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router, private gameService: GameService, private chatService: ChatService) {}
+  constructor(private renderer: Renderer2, private lobbyService: LobbyService, private socketService: SocketService, private router: Router, private gameService: GameService, private chatService: ChatService, private snackBar: MatSnackBar) {}
 
   preview() {
     if (this.isPreview) {
@@ -98,7 +99,9 @@ export class GamePreviewComponent{
 
       },
       err => {
-        console.log(err);
+        this.snackBar.open("Impossible de rejoindre le lobby", "", {
+          duration: 2000,
+        });
       }
     );
   }

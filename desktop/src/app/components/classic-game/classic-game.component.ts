@@ -55,6 +55,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('endGame');
     this.chatService.leaveChat(this.gameService.gameId);
     this.gameService.tick.pause();
+    this.chatService.setCurrentChat('General');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

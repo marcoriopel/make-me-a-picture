@@ -36,7 +36,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:ems="10"
-        android:hint="Nom de la partie*" />
+        android:hint="Nom de la partie*"
+        android:maxLength="12"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "/>
 
     <TextView
         android:id="@+id/game_creation_difficulty"

@@ -34,6 +34,9 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     private val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
+
     private val lobbyRepository: LobbyRepository
     val avatar = LoginRepository.getInstance()!!.user!!.avatar
 
@@ -43,6 +46,10 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
         _isPrivate.value = false
         lobbyRepository.lobbyJoined.observeForever(Observer {
             _lobbyJoined.value = it ?: return@Observer
+        })
+
+        lobbyRepository.message.observeForever(Observer {
+            _message.postValue(it)
         })
     }
 
