@@ -32,7 +32,16 @@ export class ChatService {
   currentChatId: string = "General";
 
   constructor(private http: HttpClient, private socketService: SocketService) {
-    this.initializeChats();
+    let joinedChats = localStorage.getItem('joinedChats');
+    let notJoinedChats = localStorage.getItem('notJoinedChats');
+    if(joinedChats && notJoinedChats){
+      this.joinedChatList = JSON.parse(joinedChats);
+      this.notJoinedChatList = JSON.parse(notJoinedChats);
+      let externalChatId = localStorage.getItem('currentChatId');
+      if(externalChatId) this.setCurrentChat(externalChatId);
+    } else {
+      this.initializeChats();
+    }
     this.initializeMessageListener();
   }
 
@@ -57,7 +66,7 @@ export class ChatService {
           if(element.chatId != 'General'){
             this.joinChat(element.chatId);
           }
-        });
+        });          
         this.http.get<any>(this.getChatListUrl, options)
         .subscribe((data: any) => {
           data.chats.forEach((element: any) => {

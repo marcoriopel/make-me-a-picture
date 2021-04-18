@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
 import { FormBuilder } from '@angular/forms';
@@ -10,7 +10,7 @@ import { SocketService } from '@app/services/socket/socket.service';
   styleUrls: ['./chat-bar.component.scss']
 })
 
-export class ChatBarComponent implements OnInit {
+export class ChatBarComponent implements OnInit, OnDestroy {
   isWindowButtonAvailable: boolean = true;
 
   constructor(public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService) {}
@@ -28,7 +28,16 @@ export class ChatBarComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    localStorage.removeItem('joinedChats');
+    localStorage.removeItem('notJoinedChats');
+    localStorage.removeItem('currentChatId');
+  }
+
   openExternalWindow(): void {
+    localStorage.setItem('joinedChats', JSON.stringify(this.chatService.joinedChatList));
+    localStorage.setItem('notJoinedChats', JSON.stringify(this.chatService.notJoinedChatList));
+    localStorage.setItem('currentChatId', this.chatService.currentChatId);
     this.chatService.isChatInExternalWindow = true;
     let BrowserWindow = this.electronService.remote.BrowserWindow
     let chatWindow = new BrowserWindow({
@@ -44,6 +53,7 @@ export class ChatBarComponent implements OnInit {
     }
 
     chatWindow.on('close', () => {
+      localStorage.removeItem('joinedChats');
       this.chatService.isChatInExternalWindow = false;
       let chatBar = document.getElementById('chat-bar');
       if(chatBar){
