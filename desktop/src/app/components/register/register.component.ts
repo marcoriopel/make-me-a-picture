@@ -24,20 +24,20 @@ export class RegisterComponent implements OnInit {
       firstname: ['', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(128)
+        Validators.maxLength(16)
       ]],
       name: ['', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(128)
+        Validators.maxLength(16)
       ]],
-      avatar: ['', [
+      avatar: ['0', [
         Validators.required,
       ]],
         username: ['', [
           Validators.required,
           Validators.minLength(1),
-          Validators.maxLength(128),
+          Validators.maxLength(16),
           forbiddenNameValidator
       ]],
       passwordGroup: this.fb.group({

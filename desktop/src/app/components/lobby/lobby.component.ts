@@ -4,7 +4,7 @@ import { LobbyService } from '@app/services/lobby/lobby.service';
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
-  styleUrls: ['./lobby.component.scss']
+  styleUrls: ['./lobby.component.scss'],
 })
 export class LobbyComponent implements OnInit {
 

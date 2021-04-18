@@ -41,7 +41,6 @@ export class JoinPrivateGameComponent implements OnInit {
           res => {
             res.lobbies.forEach((lobby: any) => {
               if(lobby.id == lobbyId){
-                console.log('works')
                 this.lobbyService.game = {
                   'id': lobby.id,
                   'name': lobby.gameName,
