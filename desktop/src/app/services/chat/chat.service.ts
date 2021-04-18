@@ -226,12 +226,14 @@ export class ChatService {
   createChat(chatName: string){
     for(let i = 0; i < this.notJoinedChatList.length; i++){
       if(this.notJoinedChatList[i].name == chatName){
-        this.socketService.bind('joinChatRoomCallback', () => {
-          this.refreshChatList();
-          this.socketService.unbind('joinChatRoomCallback')
-        });
-        this.joinChat(this.notJoinedChatList[i].chatId);
-        return;
+        if(!this.notJoinedChatList[i].isGameChat){
+          this.socketService.bind('joinChatRoomCallback', () => {
+            this.refreshChatList();
+            this.socketService.unbind('joinChatRoomCallback')
+          });
+          this.joinChat(this.notJoinedChatList[i].chatId);
+          return;          
+        }
       }
     }
     for(let i = 0; i< this.joinedChatList.length; i++){
