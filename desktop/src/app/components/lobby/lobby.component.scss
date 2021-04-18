@@ -4,6 +4,13 @@
     right: 0;
 }
 
+#flex-title{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
 .lobby {
     height: 95%;
     position: absolute;
@@ -47,7 +54,6 @@
 .sprint-logo {
     width: 100px;
     float: left;
-    margin-left: 20%;
 }
 
 .title {

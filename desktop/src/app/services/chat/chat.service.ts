@@ -210,6 +210,12 @@ export class ChatService {
           this.joinedChatList[i].messages.push(msg);
         }
       }
+
+      if(message.chatId == this.currentChatId){
+        setTimeout(() => {
+          this.onNewMessage();          
+        }, 1);
+      }
     });
   }
 
@@ -297,5 +303,12 @@ export class ChatService {
       }
     }
     this.socketService.emit('leaveChatRoom', { "chatId": chatId })
+  }
+
+  onNewMessage(): void {
+    let messageScroller = document.getElementById('message-scroller');
+    if(messageScroller) {
+      messageScroller.scrollTop = messageScroller.scrollHeight;
+    }
   }
 }
