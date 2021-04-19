@@ -140,8 +140,8 @@ class ChatRepository {
                     val newMessageList: MutableList<Message> = mutableListOf()
                     if (channel.chatId != LobbyRepository.getInstance()!!.currentListenLobby) {
                         newMessageList.add(Message("", "", "", 3, 0, LoginRepository.getInstance()!!.user!!.avatar))
-                        newMessageList.add(Message("", "", "", 2, 0, LoginRepository.getInstance()!!.user!!.avatar))
                     }
+                    newMessageList.add(Message("", "", "", 2, 0, LoginRepository.getInstance()!!.user!!.avatar))
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
                     if(channelNotJoinedSet.contains(channel.chatId)) {
@@ -263,14 +263,14 @@ class ChatRepository {
                 historyMessage.add(Message(username, message.message, timestamp, messageType, message.timestamp, message.avatar))
             }
             if (channelMap.containsKey(channelShown)) {
-                if (channelShown == "General") {
+                if (channelShown == "General" || channelShown == GameRepository.getInstance()!!.gameId || channelShown == LobbyRepository.getInstance()!!.currentListenLobby) {
                     channelMap[channelShown]!!.removeAt(0)
                 } else {
                     channelMap[channelShown]!!.removeAt(1)
                     channelMap[channelShown]!!.removeAt(0)
                 }
                 val firstMessageTimestamp: Long
-                firstMessageTimestamp = if (channelShown == "General") {
+                firstMessageTimestamp = if (channelShown == "General" || channelShown == GameRepository.getInstance()!!.gameId || channelShown == LobbyRepository.getInstance()!!.currentListenLobby) {
                     if (channelMap[channelShown]!!.size > 0) channelMap[channelShown]!![0].timestamp else Long.MAX_VALUE
                 } else {
                     if (channelMap[channelShown]!!.size > 1) channelMap[channelShown]!![1].timestamp else Long.MAX_VALUE
@@ -280,7 +280,7 @@ class ChatRepository {
                         channelMap[channelShown]!!.asReversed().add(message)
                     }
                 }
-                if (channelShown != "General") {
+                if (channelShown != "General" && channelShown != GameRepository.getInstance()!!.gameId && channelShown != LobbyRepository.getInstance()!!.currentListenLobby) {
                     channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0, LoginRepository.getInstance()!!.user!!.avatar))
                 }
             }

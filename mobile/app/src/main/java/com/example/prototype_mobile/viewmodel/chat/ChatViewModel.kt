@@ -59,9 +59,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
             }
         }
         GameRepository.getInstance()!!.isGameEnded.observeForever{
-            if(it != null)
+            if(it != null && !LobbyRepository.getInstance()!!.gameStarted) {
                 switchChannel("General")
                 leaveChannel(it)
+            }
         }
         viewModelScope.launch(Dispatchers.IO)
         {
