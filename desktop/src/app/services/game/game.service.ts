@@ -243,6 +243,7 @@ export class GameService {
     this.socketService.bind('endGame', (data: any) => {
       this.socketService.unbind('endGame');
       this.tick.pause();
+      this.countdown.pause();
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
@@ -251,8 +252,6 @@ export class GameService {
         }
         this.virtualPlayerDrawings.push(vdrawing);
       }
-      this.transitionDialogRef.close();
-      this.suggestionDialogRef.close();
       this.openEndGameModal();
       this.drawingService.strokeStack = [];
       this.drawingService.strokeNumber = 0;
@@ -286,6 +285,8 @@ export class GameService {
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
+      this.transitionDialogRef.close();
+      this.suggestionDialogRef.close();
     })
 
     this.socketService.bind('timer', (data: any) => {

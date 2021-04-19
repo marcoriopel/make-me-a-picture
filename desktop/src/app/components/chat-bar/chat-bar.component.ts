@@ -38,7 +38,6 @@ export class ChatBarComponent implements OnInit, OnDestroy {
 
   openExternalWindow(): void {
     this.socketService.bind('openExternalChatCallback', (data: any) => {
-      console.log('received')
       this.socketService.unbind('openExternalChatCallback');
       this.socketService.emit('openExternalChat', {linkedSocketId: data.externalWindowSocketid});
     });
