@@ -145,7 +145,7 @@ class ProfilFragment : Fragment() {
         val secondsTotal = (milisec / 1000)
         val minute = (secondsTotal / 60 ) % 60
         val heure = secondsTotal / 60 / 60
-        return heure.toInt().toString() + "H" + minute.toInt().toString() + "M" + seconds.toInt().toString() + "S"
+        return heure.toInt().toString() + "h " + minute.toInt().toString() + "m " + seconds.toInt().toString() + "s"
     }
 
     companion object {
