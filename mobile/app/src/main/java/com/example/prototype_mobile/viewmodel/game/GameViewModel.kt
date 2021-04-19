@@ -1,5 +1,6 @@
 package com.example.prototype_mobile.viewmodel.game
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,6 +49,9 @@ class GameViewModel :ViewModel() {
 
     private val _suggestions = MutableLiveData<Suggestions>()
     var suggestions: LiveData<Suggestions> = _suggestions
+
+    private val _isGuessGood =  MutableLiveData<Boolean>()
+    val isGuessGood: LiveData<Boolean> = _isGuessGood
 
     private val _logout = MutableLiveData<Boolean>()
     val logout: LiveData<Boolean> = _logout
@@ -110,6 +114,10 @@ class GameViewModel :ViewModel() {
                 _tikSound.postValue(true)
             else if (it.timer == 0)
                 _tikSound.postValue(false)
+        }
+
+        gameRepository.isGuessGood.observeForever {
+            _isGuessGood.postValue(it)
         }
     }
 
