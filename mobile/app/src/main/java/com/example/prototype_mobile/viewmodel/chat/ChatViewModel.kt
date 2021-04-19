@@ -49,7 +49,6 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         } )
         chatRepository.switchToGeneral.observeForever(Observer {
             switchChannel("General")
-
         } )
         channelList = chatRepository.channelList
 
@@ -67,8 +66,8 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO)
         {
             getChannelWithinThread(true)
-            switchChannel(chatRepository.channelShown)
         }
+        switchChannel(chatRepository.channelShown)
     }
 
     fun onDestroy(token:String) {

@@ -41,7 +41,7 @@ class ChatRepository {
     var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
     val channelList = mutableListOf<Channel>()
     var channelShown = "General"
-    var channelMap = mutableMapOf<String, MutableList<Message>>()
+    val channelMap = mutableMapOf<String, MutableList<Message>>()
 
     private val _notificationReceived = MutableLiveData<Boolean>()
     val notificationReceived = _notificationReceived
@@ -78,9 +78,16 @@ class ChatRepository {
     init {
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
+        initialize()
+    }
+
+    fun initialize() {
+        channelList.clear()
+        channelMap.clear()
+        channelShown = "General"
         val generalChatMessage: MutableList<Message> = mutableListOf()
         generalChatMessage.add(Message("","", "", 2, 0, myAvatar))
-        channelMap.putIfAbsent("General", generalChatMessage)
+        channelMap.put("General", generalChatMessage)
         channelJoinedSet.add("General")
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
     }
