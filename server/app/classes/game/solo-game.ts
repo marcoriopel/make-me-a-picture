@@ -47,7 +47,7 @@ export class SoloGame extends Game {
     async startGame(): Promise<void> {
         this.startDate = new Date().getTime();
         this.setGuesses();
-        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService);
+        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService, this.chatManagerService);
         await this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHello();
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username, "teams": this.getPlayers() });
