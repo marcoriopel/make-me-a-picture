@@ -277,8 +277,6 @@ class ChatRepository {
                 for (message in historyMessage.asReversed()) {
                     if (message.timestamp < firstMessageTimestamp) {
                         channelMap[channelShown]!!.asReversed().add(message)
-                    } else {
-                        break
                     }
                 }
                 if (channelShown != "General") {
