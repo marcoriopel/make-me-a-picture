@@ -22,7 +22,9 @@ export class RoundTransitionComponent implements OnInit {
         break;
       
       case State.REPLY:
-        this.message = this.gameService.guessingPlayer + " s'est trompé! Droit de réplique!";
+        setTimeout(() => {
+          this.message = this.gameService.guessingPlayer + " s'est trompé! Droit de réplique!";          
+        }, 500);
         break;
 
       case State.NEWROUND:

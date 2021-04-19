@@ -244,6 +244,39 @@ export class GameService {
       this.socketService.unbind('endGame');
       this.tick.pause();
       this.countdown.pause();
+      if (this.drawingPlayer == this.username) {
+        let dataUrl = this.drawingService.canvas.toDataURL();
+
+        let eraserStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => stroke.isEraser);
+        let pencilStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => !stroke.isEraser);
+        const strokes = {
+          eraserStrokes: eraserStrokes,
+          pencilStrokes: pencilStrokes,
+        }
+
+        const drawing = {
+          url: dataUrl,
+          drawingName: this.drawingName,
+          strokes: strokes,
+        }
+
+        this.realPlayerDrawings.push(drawing);
+
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem(ACCESS.TOKEN)!
+        });
+        const options = { headers: headers, responseType: 'text' as 'json' };
+        const body = { imageUrl: dataUrl, gameId: this.gameId }
+        this.http.post<any>(environment.socket_url + 'api/games/upload', body, options).subscribe(
+          (res: any) => {
+            console.log(res);
+          },
+          (err: any) => {
+            console.log(err);
+          }
+        );
+      }
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],

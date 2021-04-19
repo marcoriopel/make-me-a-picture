@@ -29,7 +29,6 @@ export class ProfileComponent implements OnInit {
       'authorization': localStorage.getItem('token')!});
     const options = { headers: headers};
     this.http.get<any>(this.getUserInfoUrl, options).subscribe((data: any) => {
-      console.log(data)
       data.privateInfo.games.forEach((game: any) => {
 
         game.team1 = [];
@@ -70,7 +69,6 @@ export class ProfileComponent implements OnInit {
   }
 
   onValChange(val: string){
-    console.log(val)
     this.category = val;
   }
 }

@@ -54,7 +54,6 @@ export class ChatComponent {
   isGameChat(): boolean {
     try {
       if(this.chatService.joinedChatList[this.chatService.index].isGameChat){
-        console.log(this.chatService.joinedChatList)
         return true
       } else {
         return false;
