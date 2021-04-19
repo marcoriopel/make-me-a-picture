@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { LeaderboardCategory } from '@app/ressources/global-variables/global-variables';
 import { formatTimePlayed } from '@app/classes/date';
 import { ChatService } from '@app/services/chat/chat.service';
+
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -20,7 +21,13 @@ export class LeaderboardComponent implements OnInit {
     this.updateLeaderboard("0");
   }
 
+  isSelected(selectedIndex: string){
+    if(selectedIndex === this.selectedVal) return "selected";
+    else return "";
+  }
+
   updateLeaderboard(value: string): void {
+    this.selectedVal = value;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'authorization': localStorage.getItem('token')!});
