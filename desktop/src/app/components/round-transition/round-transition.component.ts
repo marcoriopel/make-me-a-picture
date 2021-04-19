@@ -32,6 +32,14 @@ export class RoundTransitionComponent implements OnInit {
       case State.ENDGAME:
         this.message = "Partie terminée! Vous avez eu un score de " + this.gameService.score[0];
         break;
+
+      case State.MAXSCORE:
+        this.message = "Vous avez eu un score de " + this.gameService.score[0];
+        break;
+
+      case State.SPRINTSTART:
+        this.message = "Vous devez dessiner le plus de dessins possible. La partie va commencer dans:";
+        break;
     }
   } 
 

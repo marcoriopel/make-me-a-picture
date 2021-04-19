@@ -9,6 +9,7 @@ import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
 import { ChatService } from '@app/services/chat/chat.service';
+import { ElectronService } from 'ngx-electron';
 
 @Component({
   selector: 'app-coop-game',
@@ -21,7 +22,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, public chatService: ChatService) { }
+  constructor(private electronService: ElectronService, private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, public chatService: ChatService) { }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {
@@ -30,8 +31,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.socketService.emit('leaveGame', {'gameId': this.gameService.gameId});
-    this.drawingService.strokeStack = [];
+    this.socketService.emit('leaveGame', { 'gameId': this.gameService.gameId });
     this.drawingService.strokeStack = [];
     this.drawingService.strokeNumber = 0;
     this.drawingService.redoStack = [];
@@ -42,6 +42,13 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
+    if(this.electronService.process){
+      try {
+        this.gameService.chatWindow.closable = true;
+      } catch {
+        
+      }
+    }
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
     this.socketService.unbind('drawingEvent');
@@ -57,6 +64,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     this.socketService.unbind('endGame');
     this.chatService.leaveChat(this.gameService.gameId);
     this.gameService.tick.pause();
+    this.chatService.setCurrentChat('General');
   }
 
   handleDrawingEvent(data: DrawingEvent): void {

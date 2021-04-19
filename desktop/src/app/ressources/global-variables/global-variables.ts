@@ -57,6 +57,8 @@ export enum State {
     REPLY = 1,
     NEWROUND = 2,
     ENDGAME = 3,
+    MAXSCORE = 4,
+    SPRINTSTART = 5,
 }
 
 export enum LeaderboardCategory {
