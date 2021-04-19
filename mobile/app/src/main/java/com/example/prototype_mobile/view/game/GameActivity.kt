@@ -3,6 +3,7 @@ package com.example.prototype_mobile.view.game
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -173,6 +174,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         gameViewModel.logout.observe(this) {
             val intent = Intent(this, LoginActivity::class.java)
+            gameViewModel.resetData()
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
@@ -266,11 +268,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 title = "Bien joué!"
                 description = "Bravo, vous avez un score de ${gameViewModel.teamScore.value!!.score[0]} points!"
             }
+            gameViewModel.resetData()
+            gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
+            // Start end game activity
+            val intent = Intent(this, EndGameActivity::class.java)
+            startActivity(intent)
         }
-        gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
-        // Start end game activity
-        val intent = Intent(this, EndGameActivity::class.java)
-        startActivity(intent)
+        Log.e("test", "startActivity")
     }
 
     //maybe we will need to
