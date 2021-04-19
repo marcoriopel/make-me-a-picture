@@ -68,7 +68,7 @@ export class ChatBarComponent implements OnInit, OnDestroy {
       if(chatBar){
         chatBar.style.display = 'block';
       }
-      
+      this.chatService.isClosingExternalWindow = true; 
       let currentUrl = this.router.url;
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.router.onSameUrlNavigation = 'reload';

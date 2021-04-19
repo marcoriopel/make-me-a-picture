@@ -15,6 +15,7 @@ export class ChatService {
   private getChatHistoryUrl = this.baseUrl + '/api/chat/history';
   private deleteChatUrl = this.baseUrl + '/api/chat/delete';
   public isChatInExternalWindow: boolean = false;
+  public isClosingExternalWindow: boolean = false;
   joinedChatList: JoinedChat[] = [{
     name: 'Général',
     messages: [],
@@ -49,10 +50,15 @@ export class ChatService {
       let mainWindowSocketId = localStorage.getItem('socketId');
       if(localStorage.getItem('isExternalWindow')){
         localStorage.removeItem('isExternalWindow');
-        // SEND SOCKETID PAIR
-        if(mainWindowSocketId != null) this.socketService.emit('openExternalChat', {linkedSocketId: mainWindowSocketId});
-        console.log('main ' + mainWindowSocketId);
-        console.log('chat ' + this.socketService.socketId);        
+        
+        if(mainWindowSocketId != null) {
+          this.socketService.bind('refreshChatRequest', async (data: any) => {
+            console.log(data);
+            await this.refreshChatList();
+            this.setCurrentChat(data.chatId);
+          })
+          this.socketService.emit('openExternalChat', {linkedSocketId: mainWindowSocketId, isExternalWindow: true});
+        }
       } else {
       }      
     }, 500);
@@ -135,7 +141,6 @@ export class ChatService {
 
     this.http.get<any>(this.getJoinedChatUrl, options)
       .subscribe((data: any) => {
-        console.log(data)
         data.chats.forEach((element: any) => {
           let isChatAlreadyLoaded = false;
           this.joinedChatList.forEach((chat: any) => {
@@ -160,7 +165,9 @@ export class ChatService {
             if(chat.chatId == id) isChatDeleted = false;
           });
           if(isChatDeleted){
+            console.log(this.joinedChatList);
             this.joinedChatList.splice(i, 1);
+            console.log(this.joinedChatList);
           }
         }
         this.http.get<any>(this.getChatListUrl, options)

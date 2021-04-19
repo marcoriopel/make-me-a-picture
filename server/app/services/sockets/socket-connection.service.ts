@@ -17,7 +17,8 @@ import { UserService } from '../user.service';
 
 @injectable()
 export class SocketConnectionService {
-    private externalWindowChat: Map<string, any> = new Map<string, any>();
+    private socketIdLinks: Map<string, any> = new Map<string, any>();
+    private externalWindowSocketIds: string[] = [];
 
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
@@ -49,14 +50,17 @@ export class SocketConnectionService {
             });
 
             socket.on('openExternalChat', (data: any) => {
-                this.externalWindowChat.set(data.linkedSocketId, socket);
+                if(data.isExternalWindow){
+                    this.externalWindowSocketIds.push(socket.id);
+                }
+                this.socketIdLinks.set(data.linkedSocketId, socket);
                 this.socketService.getSocket().to(data.linkedSocketId).emit('openExternalChatCallback', { "externalWindowSocketid": socket.id });
             });
 
             socket.on('closeExternalChat', (data: any) => {
-                let externalSocket = this.externalWindowChat.get(data.mainWindowId);
-                this.externalWindowChat.delete(data.mainWindowId);
-                this.externalWindowChat.delete(externalSocket.id);
+                let externalSocket = this.socketIdLinks.get(data.mainWindowId);
+                this.socketIdLinks.delete(data.mainWindowId);
+                if(externalSocket) this.socketIdLinks.delete(externalSocket.id);
             });
 
             socket.on('drawingEvent', (drawingEvent: DrawingEvent) => {
@@ -174,12 +178,14 @@ export class SocketConnectionService {
                 try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.join(request.chatId);
-                    if(this.externalWindowChat.has(socket.id)){
-                        this.externalWindowChat.get(socket.id).join(request.chatId);
-                    }
                     await this.userService.addUserToChat(user.username, request.chatId)
                     await this.chatManagerService.addUserToChat(user.username, request.chatId)
                     this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
+                    if(this.socketIdLinks.has(socket.id)){
+                        let linkedSocket = this.socketIdLinks.get(socket.id);
+                        linkedSocket.join(request.chatId);
+                        this.socketService.getSocket().to(linkedSocket.id).emit('refreshChatRequest', {chatId: request.chatId});
+                    }
                 }
                 catch (e) {
                     console.error(e);
@@ -193,12 +199,14 @@ export class SocketConnectionService {
                 try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.leave(request.chatId);
-                    if(this.externalWindowChat.has(socket.id)){
-                        this.externalWindowChat.get(socket.id).leave(request.chatId);
-                    }
                     await this.userService.removeUserFromChat(user.username, request.chatId)
                     await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
                     this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');
+                    if(this.socketIdLinks.has(socket.id)){
+                        let linkedSocket = this.socketIdLinks.get(socket.id);
+                        linkedSocket.leave(request.chatId);
+                        this.socketService.getSocket().to(linkedSocket.id).emit('refreshChatRequest', {chatId: "General"});
+                    }
                 }
                 catch (e) {
                     console.error(e);
@@ -207,16 +215,25 @@ export class SocketConnectionService {
 
             socket.on('disconnect', () => {
                 try {
-                    const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
-                    this.authService.addUserToLogCollection(user.username, false);
-                    console.log('disconnection of ' + user.username);
-                    const lobbyId = this.lobbyManagerService.isUserInLobby(user.username);
-                    if (lobbyId) {
-                        this.lobbyManagerService.removePlayerFromLobby(user, lobbyId)
+                    if(!this.externalWindowSocketIds.includes(socket.id)){
+                        const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
+                        this.authService.addUserToLogCollection(user.username, false);
+                        console.log('disconnection of ' + user.username);
+                        const lobbyId = this.lobbyManagerService.isUserInLobby(user.username);
+                        if (lobbyId) {
+                            this.lobbyManagerService.removePlayerFromLobby(user, lobbyId)
+                        }
+                        const gameId = this.gameManagerService.isUserInGame(user.username);
+                        if (gameId) {
+                            this.gameManagerService.disconnectGame(gameId, user.username);
+                        }
                     }
-                    const gameId = this.gameManagerService.isUserInGame(user.username);
-                    if (gameId) {
-                        this.gameManagerService.disconnectGame(gameId, user.username);
+                    else{
+                        for( let i = 0; i < this.externalWindowSocketIds.length; i++){ 
+                            if ( this.externalWindowSocketIds[i] === socket.id) { 
+                                this.externalWindowSocketIds.splice(i, 1); 
+                            }
+                        }
                     }
                 }
                 catch (e) {
