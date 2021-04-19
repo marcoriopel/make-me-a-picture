@@ -111,6 +111,7 @@ class ProfilFragment : Fragment() {
             binding.soloScore.text = it.bestSoloScore.toString()
             binding.coopScore.text = it.bestCoopScore.toString()
             binding.ratio.text = "%.2f".format(it.classicWinRatio)
+            binding.meanTimePlayed.text = getTimeFromMiliSec(it.meanGameTime.toDouble())
         })
         profilViewModel.getProfilInfo()
     }
@@ -140,10 +141,11 @@ class ProfilFragment : Fragment() {
     }
 
     private fun getTimeFromMiliSec(milisec : Double): String {
-        val seconds = milisec / 1000
-        val minute = (seconds / 60 ) % 60
-        val heure = seconds / 60 / 60
-        return heure.toInt().toString() + "H" + minute.toInt().toString() + "M"
+        val seconds = (milisec / 1000) % 60
+        val secondsTotal = (milisec / 1000)
+        val minute = (secondsTotal / 60 ) % 60
+        val heure = secondsTotal / 60 / 60
+        return heure.toInt().toString() + "H" + minute.toInt().toString() + "M" + seconds.toInt().toString() + "S"
     }
 
     companion object {
