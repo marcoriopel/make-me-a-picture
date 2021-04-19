@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.prototype_mobile.Players
 import com.example.prototype_mobile.Score
 import com.example.prototype_mobile.Timer
+import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.game.GameRepository
 
 class GameInfoViewModel : ViewModel() {
@@ -30,6 +31,10 @@ class GameInfoViewModel : ViewModel() {
 
     fun getTeam2(): MutableList<Players> {
         return gameRepo.team2
+    }
+
+    fun getUsername(): String {
+        return LoginRepository.getInstance()!!.user!!.username
     }
 
     init {

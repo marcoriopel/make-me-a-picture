@@ -91,7 +91,8 @@
     <string name = "title_mainmenu">Menu principal </string>
     <string name = "title_lobby">Lobby </string>
     <string name = "title_game">Game guessing </string>
-
+    <string name="temps_restant">Temps restant:</string>
+    <string name="_60">60</string>
 
 
 </resources>
