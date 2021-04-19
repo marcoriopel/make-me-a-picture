@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
     constructor() {
+        if(localStorage.getItem('isExternalWindow') != 'true'){
+            localStorage.clear();
+        }
         const func = (e: MouseEvent) => {
             e.preventDefault();
         };
