@@ -50,6 +50,7 @@ class MainMenuActivity : AppCompatActivity() {
         }
         R.id.action_logout -> {
             mainMenuViewModel.logout()
+            removeLobbyFromStack()
             true
         }
         else -> {
@@ -111,6 +112,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         mainMenuViewModel.logout.observe(this@MainMenuActivity) {
             val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
         }
@@ -127,7 +129,7 @@ class MainMenuActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        println("On restart")
+        Log.e("Main menu", "onRestart")
         removeLobbyFromStack()
     }
 

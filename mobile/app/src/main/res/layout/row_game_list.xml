@@ -6,7 +6,7 @@
     android:layout_marginTop ="20dp"
     android:gravity="center_horizontal|center_vertical"
     android:orientation="vertical"
-    android:background="@drawable/button_rounded"
+    android:background="@drawable/button_lobby"
     android:backgroundTint = "@color/dark_grey">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -174,7 +174,7 @@
         android:enabled="true"
         android:text="@string/join_game"
         android:textStyle="bold"
-        android:background="@drawable/button_rounded"
+        android:background="@drawable/button_lobby"
         android:theme="@style/Widget.App.Button.Blue"
         android:textAllCaps="false"
         android:gravity="center_horizontal|center_vertical"

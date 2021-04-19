@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Connection
@@ -81,38 +82,38 @@ class ProfilFragment : Fragment() {
             }
         }
 
-        profilViewModel.avatar.observe(viewLifecycleOwner, {
+        profilViewModel.avatar.observe(viewLifecycleOwner) {
             binding.avatarProfil.setImageResource(Drawable.avatars[it])
-        })
+        }
 
-        profilViewModel.username.observe(viewLifecycleOwner, {
+        profilViewModel.username.observe(viewLifecycleOwner) {
             binding.profilUsername.text = it
-        })
+        }
 
-        profilViewModel.name.observe(viewLifecycleOwner, {
+        profilViewModel.name.observe(viewLifecycleOwner) {
             binding.prenom.text = it
-        })
+        }
 
-        profilViewModel.surname.observe(viewLifecycleOwner, {
+        profilViewModel.surname.observe(viewLifecycleOwner) {
             binding.nom.text = it
-        })
+        }
 
-        profilViewModel.gameHistoric.observe(viewLifecycleOwner, {
+        profilViewModel.gameHistoric.observe(viewLifecycleOwner) {
             addItemToGameRecyclerView(it)
-        })
+        }
 
-        profilViewModel.connection.observe(viewLifecycleOwner, {
+        profilViewModel.connection.observe(viewLifecycleOwner) {
             addItemToConnectionRecyclerView(it)
-        })
+        }
 
-        profilViewModel.stats.observe(viewLifecycleOwner, {
+        profilViewModel.stats.observe(viewLifecycleOwner) {
             binding.gamePlayed.text = it.gamesPlayed.toString()
             binding.timePlayed.text = getTimeFromMiliSec(it.timePlayed.toDouble())
             binding.soloScore.text = it.bestSoloScore.toString()
             binding.coopScore.text = it.bestCoopScore.toString()
             binding.ratio.text = "%.2f".format(it.classicWinRatio)
             binding.meanTimePlayed.text = getTimeFromMiliSec(it.meanGameTime.toDouble())
-        })
+        }
         profilViewModel.getProfilInfo()
     }
 

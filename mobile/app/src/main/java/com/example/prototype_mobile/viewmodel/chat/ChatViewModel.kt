@@ -47,7 +47,10 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         chatRepository.notificationReceived.observeForever(Observer {
             getChannels()
         } )
+        chatRepository.switchToGeneral.observeForever(Observer {
+            switchChannel("General")
 
+        } )
         channelList = chatRepository.channelList
 
         LobbyRepository.getInstance()!!.lobbyJoined.observeForever {
@@ -147,7 +150,7 @@ class ChatViewModel(val chatRepository: ChatRepository) : ViewModel() {
         }
     }
 
-    suspend fun getChannelWithinThread(isInit: Boolean = false) {
+    private suspend fun getChannelWithinThread(isInit: Boolean = false) {
         val result: Result<Boolean> = try {
             chatRepository.getChannels(isInit)
         } catch (e: Exception) {
