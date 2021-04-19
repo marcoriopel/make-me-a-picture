@@ -478,7 +478,6 @@ export class GameService {
       this.drawingService.redoStack = [];
       this.drawingService.strokeNumber = 0;
       this.drawingService.strokes = [];
-      // this.isInGame = false;
       if(this.electronService.process){
         try {
           this.chatWindow.closable = true;
