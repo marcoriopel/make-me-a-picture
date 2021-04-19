@@ -76,6 +76,7 @@ export class GameService {
 
   // Sprint coop and solo
   gameTimer: number = 180;
+  isMaxScoreEnding: boolean = false;
 
 
   constructor(private electronService: ElectronService, private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private http: HttpClient) {
@@ -177,6 +178,13 @@ export class GameService {
       this.isCorrectGuess = data.isCorrectGuess;
     })
 
+
+    this.socketService.bind('userDisconnect', (data: any) => {
+      this.snackBar.open("Un joueur s'est déconnecté, nous devons terminer la partie =(", "", {
+        duration: 4000,
+      });
+    })
+
     this.socketService.bind('newRound', (data: any) => {
       this.tick.pause();
       if (this.drawingPlayer == this.username) {
@@ -264,10 +272,12 @@ export class GameService {
       this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('transitionTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
       this.socketService.unbind('guessCallBack');
       this.socketService.unbind('guessesLeft');
+      this.socketService.unbind('userDisconnect');
       this.socketService.unbind('score');
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
@@ -336,6 +346,12 @@ export class GameService {
       this.drawingService.strokes = Array.from(data.eraserStrokes);
     })
 
+    this.socketService.bind('userDisconnect', (data: any) => {
+      this.snackBar.open("Un joueur s'est déconnecté, nous devons terminer la partie =(", "", {
+        duration: 4000,
+      });
+    })
+
     this.socketService.bind('score', (data: any) => {
       this.score[0] = data.score;
     })
@@ -390,15 +406,39 @@ export class GameService {
       }
     })
 
+    this.socketService.bind('transitionTimer', (data: any) => {
+      this.state = data.state;
+      if (data.timer == 5) {
+        this.openDialog(State.SPRINTSTART);
+      }
+      if (!data.timer) {
+        this.transitionDialogRef.close();
+      }
+      if (data.timer == 3) {
+        this.countdown.play();
+      }
+      this.transitionTimer = data.timer;
+    })
+
+    this.socketService.bind('maxScore', (data: any) => {
+      this.isMaxScoreEnding = true;
+    });
+
     this.socketService.bind('endGame', (data: any) => {
       this.tick.pause();
-      this.openDialog(State.ENDGAME);
+      this.isGuessing = false;
+      if(this.isMaxScoreEnding){
+        this.openDialog(State.MAXSCORE);
+      } else {
+        this.openDialog(State.ENDGAME);
+        this.isMaxScoreEnding = false;
+      }
       this.drawingService.strokeStack = [];
       this.drawingService.strokeNumber = 0;
       this.drawingService.redoStack = [];
       this.drawingService.strokeNumber = 0;
       this.drawingService.strokes = [];
-      this.isInGame = false;
+      // this.isInGame = false;
       if(this.electronService.process){
         try {
           this.chatWindow.closable = true;
@@ -406,16 +446,17 @@ export class GameService {
           
         }
       }
-      this.isGuessing = false;
       this.socketService.unbind('hintError');
       this.socketService.unbind('drawingEvent');
       this.socketService.unbind('eraserStrokes');
       this.socketService.unbind('drawingTimer');
+      this.socketService.unbind('transitionTimer');
       this.socketService.unbind('gameTimer');
       this.socketService.unbind('newRound');
       this.socketService.unbind('guessCallBack');
       this.socketService.unbind('guessesLeft');
       this.socketService.unbind('score');
+      this.socketService.unbind('userDisconnect');
     })
   }
 
