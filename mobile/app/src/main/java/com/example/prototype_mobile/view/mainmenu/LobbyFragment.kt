@@ -57,7 +57,6 @@ class LobbyFragment : Fragment() {
             lobbyViewModel.resetData()
         }
         firstTime = true
-
     }
 
     override fun onPause() {
@@ -126,7 +125,10 @@ class LobbyFragment : Fragment() {
             binding.lobbyVirtual2.isClickable = false
         }
         binding.start.setOnClickListener {
-            lobbyViewModel.startGame()
+            if (binding.start.isActivated) {
+                lobbyViewModel.startGame()
+                binding.start.isActivated = false
+            }
         }
     }
 

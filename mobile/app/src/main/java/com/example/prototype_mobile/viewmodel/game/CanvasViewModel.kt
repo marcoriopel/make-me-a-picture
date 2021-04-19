@@ -303,48 +303,6 @@ class CanvasViewModel(private val canvasRepository: CanvasRepository) : ViewMode
                     mutexStartDrawingThread.unlock()
                 }
             }
-
-//    private fun onReceivingEvent() {
-//       if (canStartNewThread) {
-//           canStartNewThread = false
-//           viewModelScope.launch(Dispatchers.IO) {
-//               while (!canvasRepository.eraserStrokesList.isEmpty()) {
-//                   val eraser = canvasRepository.eraserStrokesList.poll()
-//                   onDrawingEvent(eraser)
-//               }
-//               while (!canvasRepository.drawingEventList.isEmpty()) {
-//                   val json = canvasRepository.drawingEventList.poll()
-//                   if (json != null && !gameRepo!!.isPlayerDrawing.value!!) {
-//                       val objectString = JSONObject(json).getString("drawingEvent")
-//                       val objectJson = JSONObject(objectString)
-//                       println("JEvent : " + objectJson.getString("event"))
-//                       // try {
-//                       val drawingEventReceive = when (objectJson.getString("eventType").toInt()) {
-//                           EVENT_TOUCH_DOWN -> {
-//                               val Jevent = JSONObject(objectJson.getString("event"))
-//                               val coords = Vec2(JSONObject(Jevent.getString("coords")).getString("x").toInt(), JSONObject(Jevent.getString("coords")).getString("y").toInt())
-//                               val color = updateTransparency(Jevent.getString("lineColor"))
-//                               val event = MouseDown(Jevent.getString("lineColor"), Jevent.getString("lineWidth").toInt(), coords, Jevent.getInt("strokeNumber"))
-//                               DrawingEvent(EVENT_TOUCH_DOWN, event, objectJson.getString("gameId"))
-//                           }
-//                           EVENT_TOUCH_MOVE -> {
-//                               lastCoordsReceive = Vec2(JSONObject(objectJson.getString("event")).getString("x").toInt(), JSONObject(objectJson.getString("event")).getString("y").toInt())
-//                               DrawingEvent(EVENT_TOUCH_MOVE, lastCoordsReceive, objectJson.getString("gameId"))
-//                           }
-//                           EVENT_TOUCH_UP -> {
-//                               DrawingEvent(EVENT_TOUCH_UP, lastCoordsReceive, objectJson.getString("gameId"))
-//                           }
-//                           else -> {
-//                               DrawingEvent(objectJson.getString("eventType").toInt(), null, objectJson.getString("gameId"))
-//                           }
-//                       }
-//
-//                       onDrawingEvent(drawingEventReceive)
-//                   }
-//               }
-//               canStartNewThread = true
-//           }
-//       }
     }
 
     fun updateTransparency(lineColor: String) {
