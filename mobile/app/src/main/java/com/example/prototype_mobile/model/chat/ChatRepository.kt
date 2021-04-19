@@ -41,7 +41,7 @@ class ChatRepository {
     var socket: io.socket.client.Socket = SocketOwner.getInstance()!!.socket
     val channelList = mutableListOf<Channel>()
     var channelShown = "General"
-    var channelMap = mutableMapOf<String, MutableList<Message>>()
+    val channelMap = mutableMapOf<String, MutableList<Message>>()
 
     private val _notificationReceived = MutableLiveData<Boolean>()
     val notificationReceived = _notificationReceived
@@ -52,9 +52,6 @@ class ChatRepository {
     private val _switchToGeneral = MutableLiveData<Boolean>()
     val switchToGeneral: LiveData<Boolean> = _switchToGeneral
 
-    private val myUsername = LoginRepository.getInstance()!!.user!!.username
-    private val myAvatar = LoginRepository.getInstance()!!.user!!.avatar
-    private val token = LoginRepository.getInstance()!!.user!!.token
     private val gson: Gson = Gson()
     private val channelJoinedSet = mutableSetOf<String>()
     private val channelNotJoinedSet = mutableSetOf<String>()
@@ -62,7 +59,7 @@ class ChatRepository {
     private var onUpdateChat = Emitter.Listener {
         val messageReceive: MessageReceive = gson.fromJson(it[0].toString(), MessageReceive ::class.java)
         var messageType = 1
-        if (myUsername == messageReceive.user.username) {
+        if (LoginRepository.getInstance()!!.user!!.username == messageReceive.user.username) {
             messageType = 0
         }
         val message = Message(messageReceive.user.username, messageReceive.text, treatTimestamp(messageReceive.timestamp), messageType, messageReceive.timestamp, messageReceive.user.avatar)
@@ -78,9 +75,16 @@ class ChatRepository {
     init {
         //Register all the listener and callbacks here.yoo
         socket.on("message", onUpdateChat) // To update if someone send a message to chatroom
+        initialize()
+    }
+
+    fun initialize() {
+        channelList.clear()
+        channelMap.clear()
+        channelShown = "General"
         val generalChatMessage: MutableList<Message> = mutableListOf()
-        generalChatMessage.add(Message("","", "", 2, 0, myAvatar))
-        channelMap.putIfAbsent("General", generalChatMessage)
+        generalChatMessage.add(Message("","", "", 2, 0, 1))
+        channelMap.put("General", generalChatMessage)
         channelJoinedSet.add("General")
         channelList.add(Channel("General", "Général", ChannelState.SHOWN))
     }
@@ -90,7 +94,7 @@ class ChatRepository {
     }
 
     fun sendMessage(msg:String){
-        socket.emit("message", gson.toJson(SendMessage(msg, token, channelShown)))
+        socket.emit("message", gson.toJson(SendMessage(msg, LoginRepository.getInstance()!!.user!!.token, channelShown)))
     }
 
     fun onDestroy(token: InitialData){
@@ -135,8 +139,8 @@ class ChatRepository {
                 if (!channelJoinedSet.contains(channel.chatId)) {
                     val newMessageList: MutableList<Message> = mutableListOf()
                     if (channel.chatId != LobbyRepository.getInstance()!!.currentListenLobby) {
-                        newMessageList.add(Message("", "", "", 3, 0, myAvatar))
-                        newMessageList.add(Message("", "", "", 2, 0, myAvatar))
+                        newMessageList.add(Message("", "", "", 3, 0, LoginRepository.getInstance()!!.user!!.avatar))
+                        newMessageList.add(Message("", "", "", 2, 0, LoginRepository.getInstance()!!.user!!.avatar))
                     }
                     channelMap.putIfAbsent(channel.chatId, newMessageList)
                     channelJoinedSet.add(channel.chatId)
@@ -252,7 +256,7 @@ class ChatRepository {
             for (message in result.data.chatHistory) {
                 val timestamp = treatTimestamp(message.timestamp)
                 var messageType = 1
-                if (myUsername == message.username) {
+                if (LoginRepository.getInstance()!!.user!!.username == message.username) {
                     messageType = 0
                 }
                 val username = message.username ?: "Unavailable"
@@ -277,7 +281,7 @@ class ChatRepository {
                     }
                 }
                 if (channelShown != "General") {
-                    channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0, myAvatar))
+                    channelMap[channelShown]!!.asReversed().add(Message("", "", "", 3, 0, LoginRepository.getInstance()!!.user!!.avatar))
                 }
             }
         }

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.Result
+import com.example.prototype_mobile.model.chat.ChatRepository
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
 import com.example.prototype_mobile.model.game.EndGameRepository
@@ -70,6 +71,7 @@ class EndGameViewModel(): ViewModel() {
             }
 
             if (result is Result.Success) {
+                ChatRepository.getInstance()!!.initialize()
                 _logout.postValue(true)
             }
             if (result is Result.Error) {

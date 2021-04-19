@@ -1,5 +1,8 @@
 package com.example.prototype_mobile.view.mainmenu
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -41,8 +44,8 @@ class MainMenuActivity : AppCompatActivity() {
         R.id.action_profil -> {
             if (!blockProfileButton) {
                 supportFragmentManager.beginTransaction().replace(
-                    R.id.container2,
-                    ProfilFragment.newInstance())
+                        R.id.container2,
+                        ProfilFragment.newInstance())
                         .commit()
                 blockProfileButton = true
             }
@@ -99,22 +102,24 @@ class MainMenuActivity : AppCompatActivity() {
             val gameJoined = it ?: return@Observer
             blockProfileButton = false
             supportFragmentManager.beginTransaction().replace(
-                R.id.container2, LobbyFragment.newInstance(
+                    R.id.container2, LobbyFragment.newInstance(
                     gameJoined.gameName,
                     gameJoined.gameType.type,
                     mainMenuViewModel._gameInviteID.value
-                )
             )
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
+            )
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .addToBackStack(null)
+                    .commit()
         })
 
         mainMenuViewModel.logout.observe(this@MainMenuActivity) {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+            val mStartActivity = Intent(applicationContext, LoginActivity::class.java)
+            val mPendingIntentId = 123456
+            val mPendingIntent = PendingIntent.getActivity(applicationContext, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)
+            val mgr = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+            System.exit(0)
         }
 
         mainMenuViewModel.message.observe(this@MainMenuActivity) {
@@ -139,8 +144,8 @@ class MainMenuActivity : AppCompatActivity() {
                 (fragment).getViewModel().resetData()
                 supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
                 supportFragmentManager.beginTransaction().replace(
-                    R.id.container2,
-                    GameListFragment()
+                        R.id.container2,
+                        GameListFragment()
                 ).commitNowAllowingStateLoss()
             }
     }
@@ -160,9 +165,9 @@ class MainMenuActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         Toast.makeText(
-            applicationContext,
-            "Il n'est pas possible d'utiliser le bouton back dans l'application",
-            Toast.LENGTH_LONG
+                applicationContext,
+                "Il n'est pas possible d'utiliser le bouton back dans l'application",
+                Toast.LENGTH_LONG
         ).show()
     }
 }
