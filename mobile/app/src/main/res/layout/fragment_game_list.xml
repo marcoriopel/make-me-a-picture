@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_grey"
+    android:background="@color/white"
     android:gravity="center_horizontal">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        >
+        android:layout_marginTop="20dp">
+
         <Button
             android:id="@+id/classic_filter"
             android:layout_width="50dp"
@@ -23,13 +23,8 @@
             android:background="@drawable/button_round"
             android:drawableTop="@drawable/icon_classic"
             android:enabled="true"
-            app:backgroundTint = "@color/blue_to_lightblue"
+            app:backgroundTint = "@color/grey_to_blue"
             />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" >
-        </Space>
 
         <Space
             android:layout_width="0dp"
@@ -41,11 +36,11 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="start"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/orange_to_lightorange"
+            app:backgroundTint="@color/grey_to_orange"
             android:drawableTop="@drawable/ic_hands_helping_solid"
             android:paddingTop="5dp"
             android:enabled="true" />
@@ -143,7 +138,7 @@
         android:layout_marginEnd="48dp"
         android:layout_marginBottom="10dp"
         android:autofillHints="@string/search_game"
-        android:background="@drawable/edittext_rounded"
+        android:background="@drawable/edittext_rounded_grey"
         android:gravity="left|center_vertical"
         android:hint="@string/search_game"
         android:inputType="textEmailAddress"

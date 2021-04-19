@@ -56,6 +56,16 @@ export class ImageCreationComponent implements OnInit, OnDestroy {
         Validators.pattern(/.*[^ ].*/),
       ]],
     })
+    this.drawingService.strokes = [];
+    this.drawingService.strokeStack = [];
+    this.drawingService.redoStack = [];
+    this.drawingService.lineWidth = 10;
+    this.drawingService.color = '#000000';
+    this.drawingService.opacity = 1;
+    this.drawingService.strokeNumber = 0;
+    this.pencilService.strokeNumber = 0;
+    this.pencilService.strokes = [];
+    this.pencilService.width = 10;
   }
 
   ngOnDestroy(): void {
