@@ -171,6 +171,11 @@ class GameViewModel :ViewModel() {
     fun resetAlpha() {
         ToolRepository.getInstance()!!.resetAlpha()
     }
+
+    fun resetData() {
+        _teamScore.postValue(null)
+    }
+
 }
 
 

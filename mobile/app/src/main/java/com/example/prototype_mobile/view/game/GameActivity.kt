@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -271,11 +272,13 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 title = "Bien joué!"
                 description = "Bravo, vous avez un score de ${gameViewModel.teamScore.value!!.score[0]} points!"
             }
+            gameViewModel.resetData()
+            gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
+            // Start end game activity
+            val intent = Intent(this, EndGameActivity::class.java)
+            startActivity(intent)
         }
-        gameViewModel.setEndGameResult(title, description, EndGameResult(win, null))
-        // Start end game activity
-        val intent = Intent(this, EndGameActivity::class.java)
-        startActivity(intent)
+        Log.e("test", "startActivity")
     }
 
     //maybe we will need to
