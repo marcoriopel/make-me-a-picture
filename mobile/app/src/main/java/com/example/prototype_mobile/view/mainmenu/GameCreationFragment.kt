@@ -87,6 +87,7 @@ class GameCreationFragment : Fragment() {
             startActivity(intent)
         }
         binding.joinGame.setOnClickListener {
+            setSelectedButton(binding.gameSearch, SelectedButton.SEARCH)
             sharedViewModel.joinPrivateGame(binding.inviteIdCode.text.toString())
         }
     }

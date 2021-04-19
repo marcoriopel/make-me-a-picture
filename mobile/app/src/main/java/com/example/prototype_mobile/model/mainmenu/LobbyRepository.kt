@@ -169,6 +169,8 @@ class LobbyRepository {
         val lobbyId: String = response.body()!!.string()
         if(response.code() == ResponseCode.OK.code) {
             currentListenLobby = lobbyId
+            if (!socket.hasListeners("dispatchTeams"))
+                socket.on("dispatchTeams", onTeamsUpdate)
             return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
         } else {
             _message.postValue("Le Lobby est inexistant ou plein.")
