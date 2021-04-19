@@ -301,6 +301,10 @@ export class GameService {
       this.isInGame = true;
       this.drawingPlayer = data.player;
       this.router.navigate(['/game/sprint']);
+      this.teams = {
+        team1: data.teams,
+        team2: [],
+      }
     });
 
     this.socketService.bind('eraserStrokes', (data: any) => {

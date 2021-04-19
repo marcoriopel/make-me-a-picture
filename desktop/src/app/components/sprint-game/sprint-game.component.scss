@@ -30,15 +30,31 @@
     width: 380px;
 }
 
-#game-data {
-    height: 100%;
+#game-data-wrapper{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
     flex-grow: 1;
-    padding-top: 10%;
+}
+
+#game-data {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+    .my-username{
+        font-weight: bold;
+        font-size: 20px;
+        color: #4195C4;
+    }
 }
 
 #editor {
     height: 100%;
-    flex-grow: 5;
+    flex-grow: 2;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -105,8 +121,14 @@
 #game-time {
     width: 100%;
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
+
+    p{
+        color: white;
+    }
 
     h1 {
         color: white;
@@ -116,20 +138,24 @@
 }
 
 #round-time {
-    width: 100%;
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
 
-    h1 {
+    p{
         color: white;
-        font-size: 30px;
-        font-weight: 500;
+    }
+
+    h1 {
+        color: #F89524;
+        font-size: 50px;
+        font-weight: 600;
     }
 }
 
 #score-container {
-    width: 100%;
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
@@ -142,15 +168,26 @@
 }
 
 #guesses-container {
-    width: 100%;
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
 
     h3 {
-        color: white;
+        color: #F89524;
         font-size: 20px;
         font-weight: 400;
+    }
+}
+
+#team-container{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+
+    p {
+        color: white;
     }
 }
 

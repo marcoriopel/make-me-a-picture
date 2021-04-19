@@ -20,6 +20,12 @@
     p {
         color: white;
     }
+
+    .my-username{
+        font-weight: bold;
+        font-size: 20px;
+        color: #4195C4;
+    }
 }
 
 .team {
@@ -58,9 +64,15 @@
 }
 
 #game-data {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
     height: 100%;
     flex-grow: 1;
-    padding-top: 10%;
+}
+
+.guessing-data{
+    padding-bottom: 80px;
 }
 
 #editor {
@@ -141,11 +153,17 @@
 #timer-container {
     width: 100%;
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
+    align-items: center;
     margin-bottom: 50px;
 
-    h1 {
+    p{
         color: white;
+    }
+
+    h1 {
+        color: #F89524;
         font-size: 50px;
         font-weight: 600;
     }

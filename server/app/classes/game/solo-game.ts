@@ -50,7 +50,7 @@ export class SoloGame extends Game {
         this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService);
         await this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHello();
-        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username });
+        this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username, "teams": this.getPlayers() });
         this.socketService.getSocket().to(this.id).emit('score', { "score": this.score });
         this.socketService.getSocket().to(this.id).emit('guessesLeft', { "guessesLeft": this.guessesLeft })
         const drawing = await (await this.vPlayer.getNewDrawing(this.difficulty, this.pastVirtualDrawings));
