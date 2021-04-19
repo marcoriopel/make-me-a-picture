@@ -17,7 +17,7 @@ import { UserService } from '../user.service';
 
 @injectable()
 export class SocketConnectionService {
-
+    private externalWindowChat: Map<string, any> = new Map<string, any>();
 
     constructor(
         @inject(TYPES.SocketService) private socketService: SocketService,
@@ -46,6 +46,17 @@ export class SocketConnectionService {
                 } catch (err) {
                     console.log(err);
                 }
+            });
+
+            socket.on('openExternalChat', (data: any) => {
+                this.externalWindowChat.set(data.linkedSocketId, socket);
+                this.socketService.getSocket().to(data.linkedSocketId).emit('openExternalChatCallback', { "externalWindowSocketid": socket.id });
+            });
+
+            socket.on('closeExternalChat', (data: any) => {
+                let externalSocket = this.externalWindowChat.get(data.mainWindowId);
+                this.externalWindowChat.delete(data.mainWindowId);
+                this.externalWindowChat.delete(externalSocket.id);
             });
 
             socket.on('drawingEvent', (drawingEvent: DrawingEvent) => {
@@ -163,6 +174,9 @@ export class SocketConnectionService {
                 try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.join(request.chatId);
+                    if(this.externalWindowChat.has(socket.id)){
+                        this.externalWindowChat.get(socket.id).join(request.chatId);
+                    }
                     await this.userService.addUserToChat(user.username, request.chatId)
                     await this.chatManagerService.addUserToChat(user.username, request.chatId)
                     this.socketService.getSocket().to(socket.id).emit('joinChatRoomCallback');
@@ -179,6 +193,9 @@ export class SocketConnectionService {
                 try {
                     const user: any = this.tokenService.getTokenInfo(socket.handshake.query.authorization);
                     socket.leave(request.chatId);
+                    if(this.externalWindowChat.has(socket.id)){
+                        this.externalWindowChat.get(socket.id).leave(request.chatId);
+                    }
                     await this.userService.removeUserFromChat(user.username, request.chatId)
                     await this.chatManagerService.removeUserFromChat(user.username, request.chatId)
                     this.socketService.getSocket().to(socket.id).emit('leaveChatRoomCallback');

@@ -49,7 +49,8 @@ export class ChatService {
       let mainWindowSocketId = localStorage.getItem('socketId');
       if(localStorage.getItem('isExternalWindow')){
         localStorage.removeItem('isExternalWindow');
-        // SEND SOCKETID PAIR        
+        // SEND SOCKETID PAIR
+        if(mainWindowSocketId != null) this.socketService.emit('openExternalChat', {linkedSocketId: mainWindowSocketId});
         console.log('main ' + mainWindowSocketId);
         console.log('chat ' + this.socketService.socketId);        
       } else {
@@ -200,6 +201,7 @@ export class ChatService {
 
   initializeMessageListener(): void {
     this.socketService.bind('message', (message: any) => {
+      console.log(message);
       const username = localStorage.getItem('username');
       if(message.chatId != this.currentChatId){
         for(let i = 0; i < this.joinedChatList.length; i++){

@@ -37,6 +37,11 @@ export class ChatBarComponent implements OnInit, OnDestroy {
   }
 
   openExternalWindow(): void {
+    this.socketService.bind('openExternalChatCallback', (data: any) => {
+      console.log('received')
+      this.socketService.unbind('openExternalChatCallback');
+      this.socketService.emit('openExternalChat', {linkedSocketId: data.externalWindowSocketid});
+    });
     localStorage.setItem('joinedChats', JSON.stringify(this.chatService.joinedChatList));
     localStorage.setItem('notJoinedChats', JSON.stringify(this.chatService.notJoinedChatList));
     localStorage.setItem('socketId' , this.socketService.socket.id);
@@ -50,12 +55,12 @@ export class ChatBarComponent implements OnInit, OnDestroy {
       resizable: false,
     })
     this.gameService.chatWindow.loadURL('file://' + __dirname + '/index.html#/chat');
-
     let chatBar = document.getElementById('chat-bar');
     if(chatBar){
       chatBar.style.display = 'none';
     }
     this.gameService.chatWindow.on('close', () => {
+      this.socketService.emit('closeExternalChat', {mainWindowId: this.socketService.socketId});
       localStorage.removeItem('joinedChats');
       localStorage.removeItem('socketId');
       this.chatService.isChatInExternalWindow = false;
