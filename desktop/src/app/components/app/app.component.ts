@@ -11,6 +11,5 @@ export class AppComponent {
             e.preventDefault();
         };
         document.addEventListener('contextmenu', func, false);
-        
     }
 }

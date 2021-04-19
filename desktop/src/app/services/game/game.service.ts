@@ -13,6 +13,8 @@ import { environment } from 'src/environments/environment';
 import { ACCESS } from '@app/classes/acces';
 import { EndGameDrawingComponent } from '@app/components/end-game-drawing/end-game-drawing.component';
 import { Stroke } from '@app/classes/drawing';
+import { BrowserWindow } from 'electron';
+import { ElectronService } from 'ngx-electron';
 
 interface Player {
   username: string;
@@ -33,6 +35,8 @@ export class GameService {
   transitionDialogRef: any;
   suggestionDialogRef: any;
   endGameDialogRef: any;
+  chatWindow: BrowserWindow;
+
 
   // Audio
   tick = new Audio('./assets/sounds/tick.wav');
@@ -74,7 +78,7 @@ export class GameService {
   gameTimer: number = 180;
 
 
-  constructor(private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private http: HttpClient) {
+  constructor(private electronService: ElectronService, private socketService: SocketService, private router: Router, private drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private http: HttpClient) {
     this.username = localStorage.getItem('username');
   }
 
@@ -107,6 +111,13 @@ export class GameService {
   initializeClassic(): void {
     this.socketService.bind('gameStart', (data: any) => {
       this.isInGame = true;
+      if(this.electronService.process){
+        try {
+          this.chatWindow.closable = false;
+        } catch {
+
+        }
+      }
       this.drawingPlayer = data.player;
 
       if (this.drawingPlayer == this.username) {
@@ -240,6 +251,13 @@ export class GameService {
       this.realPlayerDrawings = [];
       this.drawingPlayer = this.username as string;
       this.isInGame = false;
+      if(this.electronService.process){
+        try {
+          this.chatWindow.closable = true;
+        } catch {
+          
+        }
+      }
       this.isGuessing = false;
       this.isUserTeamGuessing = false;
       this.socketService.unbind('hintError');
@@ -299,6 +317,13 @@ export class GameService {
   initializeSprint(): void {
     this.socketService.bind('gameStart', (data: any) => {
       this.isInGame = true;
+      if(this.electronService.process){
+        try {
+          this.chatWindow.closable = false;
+        } catch {
+
+        }
+      }
       this.drawingPlayer = data.player;
       this.router.navigate(['/game/sprint']);
     });
@@ -370,6 +395,13 @@ export class GameService {
       this.drawingService.strokeNumber = 0;
       this.drawingService.strokes = [];
       this.isInGame = false;
+      if(this.electronService.process){
+        try {
+          this.chatWindow.closable = true;
+        } catch {
+          
+        }
+      }
       this.isGuessing = false;
       this.socketService.unbind('hintError');
       this.socketService.unbind('drawingEvent');

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { LeaderboardCategory } from '@app/ressources/global-variables/global-variables';
 import { formatTimePlayed } from '@app/classes/date';
+import { ChatService } from '@app/services/chat/chat.service';
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -13,7 +14,7 @@ export class LeaderboardComponent implements OnInit {
   selectedVal = '0';
   leaderboard: any = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public chatService: ChatService) { }
 
   ngOnInit(): void {
     this.updateLeaderboard("0");

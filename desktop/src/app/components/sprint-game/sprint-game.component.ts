@@ -21,7 +21,7 @@ export class SprintGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) { }
+  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, public chatService: ChatService) { }
 
   ngOnInit(): void {
     this.socketService.bind('drawingEvent', (data: any) => {

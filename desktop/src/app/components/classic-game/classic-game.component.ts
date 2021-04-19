@@ -9,6 +9,8 @@ import { GameService } from '@app/services/game/game.service';
 import { FormBuilder } from '@angular/forms';
 import { OnDestroy } from "@angular/core";
 import { ChatService } from '@app/services/chat/chat.service';
+import { ElectronService } from 'ngx-electron';
+
 @Component({
   selector: 'app-classic-game',
   templateUrl: './classic-game.component.html',
@@ -19,7 +21,7 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     guess: '',
   });
 
-  constructor(private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, private chatService: ChatService) {
+  constructor(private electronService: ElectronService, private socketService: SocketService, public gameService: GameService, private pencilService: PencilService, private drawingService: DrawingService, private undoRedoService: UndoRedoService, private formBuilder: FormBuilder, public chatService: ChatService) {
   }
 
   ngOnInit(): void {
@@ -40,6 +42,13 @@ export class ClassicGameComponent implements OnInit, OnDestroy {
     this.pencilService.mouseDown = false;
     this.gameService.drawingPlayer = this.gameService.username as string;
     this.gameService.isInGame = false;
+    if(this.electronService.process){
+      try {
+        this.gameService.chatWindow.closable = true;
+      } catch {
+        
+      }
+    }
     this.gameService.isGuessing = false;
     this.gameService.isUserTeamGuessing = false;
     this.socketService.unbind('drawingEvent');

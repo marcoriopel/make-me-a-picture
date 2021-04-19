@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameType } from '@app/classes/game';
 import { environment } from 'src/environments/environment';
 import { formatDateString, formatMeanTimePlayed, formatTimePlayed } from '@app/classes/date';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ export class ProfileComponent implements OnInit {
   avatar: number | null;
   username: string | null;
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, public chatService: ChatService) { 
   }
 
   ngOnInit(): void {

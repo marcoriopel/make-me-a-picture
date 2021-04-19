@@ -8,7 +8,7 @@
             <app-feed></app-feed>
         </div>
         <div id="chat-bar">
-            <app-chat-bar></app-chat-bar>
+            <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
         </div>
     </div>
 </div>

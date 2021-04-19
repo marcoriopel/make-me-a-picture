@@ -44,6 +44,18 @@ export class ChatService {
       this.initializeChats();
     }
     this.initializeMessageListener();
+
+    setTimeout(() => {
+      let mainWindowSocketId = localStorage.getItem('socketId');
+      if(localStorage.getItem('isExternalWindow')){
+        localStorage.removeItem('isExternalWindow');
+        // SEND SOCKETID PAIR        
+        console.log('main ' + mainWindowSocketId);
+        console.log('chat ' + this.socketService.socketId);        
+      } else {
+      }      
+    }, 500);
+
   }
 
   async initializeChats() {

@@ -1,5 +1,5 @@
 <div class="chat-bar">
-    <button *ngIf="this.isWindowButtonAvailable" class="window-button" (click)="openExternalWindow()">
+    <button *ngIf="this.isWindowButtonAvailable && !this.gameService.isInGame" class="window-button" (click)="openExternalWindow()">
         <i class="far fa-window-restore"></i>
     </button>
     <div #chatContainer class="chat-container">

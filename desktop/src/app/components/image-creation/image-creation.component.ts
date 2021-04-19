@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PencilService } from '@app/services/tools/pencil.service';
 import { ToolsComponent } from '../tools/tools.component';
 import { EditorComponent } from '../editor/editor.component';
+import { ChatService } from '@app/services/chat/chat.service';
 
 @Component({
   selector: 'app-image-creation',
@@ -33,7 +34,7 @@ export class ImageCreationComponent implements OnInit, OnDestroy {
     text: "Entre 1 et 30 caractères",
   };
 
-  constructor(private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private pencilService: PencilService) {
+  constructor(public chatService: ChatService, private http: HttpClient, private fb: FormBuilder, public drawingService: DrawingService, public dialog: MatDialog, private snackBar: MatSnackBar, private pencilService: PencilService) {
     this.drawingService.strokeStack = [];
     this.drawingService.redoStack = [];
   }

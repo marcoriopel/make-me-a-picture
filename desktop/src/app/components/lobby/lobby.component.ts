@@ -15,7 +15,7 @@ export class LobbyComponent implements OnInit {
   coopImgRef: string = "./assets/img/hands-helping-solid.svg";
 
 
-  constructor(public lobbyService: LobbyService, private gameService: GameService, private chatService: ChatService, private socketService: SocketService) { }
+  constructor(public lobbyService: LobbyService, private gameService: GameService, public chatService: ChatService, private socketService: SocketService) { }
 
   ngOnInit(): void {
     
