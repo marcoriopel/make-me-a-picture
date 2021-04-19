@@ -6,7 +6,7 @@
             <div id="game-data-wrapper">
                 <div id="game-data">
                     <div id="round-time">
-                        <p>temps restant ronde:</p>
+                        <p>Temps restant ronde:</p>
                         <h1>{{this.gameService.timer}}</h1>
                     </div>
                     <div id="guesses-container">
@@ -16,14 +16,14 @@
                         <h3>Score - {{this.gameService.score[0] }} </h3>
                     </div>
                     <div id="team-container">
-                        <p>équipe:</p>
+                        <p>Équipe:</p>
                         <p *ngFor="let player of gameService.teams.team1" [ngClass]="{'my-username': this.gameService.username === player.username}">{{player.username}}</p>
                     </div>
                 </div>
             </div>
             <div id="editor">
                 <div id="game-time">
-                    <p>temps restant partie:</p>
+                    <p>Temps restant à la partie:</p>
                     <h1>{{this.gameService.gameTimer}}</h1>
                 </div>
                 <app-editor [isInGame]="true"></app-editor>
