@@ -6,7 +6,10 @@
 
     <span class="example-spacer"></span>
 
-    <button id="menu-button" mat-button [matMenuTriggerFor]="beforeMenu">{{username}}</button>
+    <div id="username">
+      <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
+      <button id="menu-button" mat-button [matMenuTriggerFor]="beforeMenu">{{username}}</button>
+    </div>
     <mat-menu #beforeMenu="matMenu" xPosition="before">
       <button mat-menu-item routerLink="/leaderboard">Classement</button>
       <button mat-menu-item routerLink="/profile">Profil</button>

@@ -40,7 +40,7 @@ export class GamePreviewComponent{
 
   classicGreyImgRef: string = "./assets/img/classicLogoWhite.png"
   sprintImgRef: string = "./assets/img/sprintLogo.png";
-  coopImgRef: string = "./assets/img/hands-helping-solid.svg";
+  coopImgRef: string = "./assets/img/hands-helping-solid-light.svg";
 
   @ViewChild("gamePreview") gamePreviewRef: ElementRef;
   @Input() game: AvailableGame;

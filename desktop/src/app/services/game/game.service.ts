@@ -75,7 +75,7 @@ export class GameService {
   teams: Teams;
 
   // Sprint coop and solo
-  gameTimer: number = 180;
+  gameTimer: number = 120;
   isMaxScoreEnding: boolean = false;
 
 
@@ -187,6 +187,8 @@ export class GameService {
 
     this.socketService.bind('newRound', (data: any) => {
       this.tick.pause();
+      this.drawingService.opacity = 1;
+      this.drawingService.isGridEnabled = false;
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
 
@@ -249,6 +251,8 @@ export class GameService {
         }
         this.virtualPlayerDrawings.push(vdrawing);
       }
+      this.transitionDialogRef.close();
+      this.suggestionDialogRef.close();
       this.openEndGameModal();
       this.drawingService.strokeStack = [];
       this.drawingService.strokeNumber = 0;
@@ -384,6 +388,8 @@ export class GameService {
       this.drawingService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
+      this.drawingService.opacity = 1;
+      this.drawingService.isGridEnabled = false;
     })
 
     this.socketService.bind('gameTimer', (data: any) => {

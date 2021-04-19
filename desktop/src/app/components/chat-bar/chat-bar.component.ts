@@ -1,7 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { SocketService } from '@app/services/socket/socket.service';
 import { GameService } from '@app/services/game/game.service';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export class ChatBarComponent implements OnInit, OnDestroy {
 
   constructor(private ngZone: NgZone, private router: Router, public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService, public gameService: GameService) {}
   createChatForm = this.formBuilder.group({
-    chatName: '',
+    chatName: ['', Validators.maxLength(12)],
   });
 
   changeChat(id: string): void {
@@ -103,5 +103,18 @@ export class ChatBarComponent implements OnInit, OnDestroy {
 
   refreshChatList(): void {
     this.chatService.refreshChatList();
+  }
+
+  isGameChat(): boolean {
+    try {
+      if(this.chatService.joinedChatList[this.chatService.index].isGameChat){
+        console.log('test')
+        return true
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
   }
 }
