@@ -1,12 +1,14 @@
 package com.example.prototype_mobile.model.mainmenu
 
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.model.HttpRequestDrawGuess
 import com.example.prototype_mobile.model.Result
 import com.example.prototype_mobile.model.SocketOwner
+import com.example.prototype_mobile.model.chat.ChatRepository
 import com.example.prototype_mobile.model.connection.login.LoginRepository
 import com.example.prototype_mobile.model.connection.sign_up.model.GameType
 import com.example.prototype_mobile.model.connection.sign_up.model.ResponseCode
@@ -49,12 +51,17 @@ class LobbyRepository {
     private val _gameStarting = MutableLiveData<Boolean>()
     val gameStarting: MutableLiveData<Boolean> = _gameStarting
 
+    private val _message = MutableLiveData<String>()
+    val message: LiveData<String> = _message
+
     // Game Start
     private val _isPlayerDrawing = MutableLiveData<Boolean>()
     val isPlayerDrawing: LiveData<Boolean> = _isPlayerDrawing
     val gson: Gson = Gson()
 
     var gameStarted = false
+
+    val chatRepo = ChatRepository.getInstance()!!
 
     private var onTeamsUpdate = Emitter.Listener {
         println("On teams Update called")
@@ -128,7 +135,6 @@ class LobbyRepository {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
-        println("We are in public section of the request")
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
         if (result is Result.Success) {
@@ -148,29 +154,29 @@ class LobbyRepository {
     }
 
     private fun analyseJoinLobbyAnswer(response: Response, game: GameInvited): Result<GameInvited> {
-        println("analyseJoinLobbyAnswer: $response")
         return if(response.code() == ResponseCode.OK.code) {
             Result.Success(game)
         } else {
+            _message.postValue("Le Lobby est inexistant ou plein.")
             Result.Error(response.code())
         }
     }
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
-        println("analyseJoinLobbyAnswer: $response")
-        if(response.code() == ResponseCode.OK.code) {
-            return Result.Success(game)
+        return if(response.code() == ResponseCode.OK.code) {
+            Result.Success(game)
         } else {
-            return Result.Error(response.code())
+            _message.postValue("Le Lobby est inexistant ou plein.")
+            Result.Error(response.code())
         }
     }
 
     private fun analyseJoinPrivateLobbyAnswer(response: Response, id: String): Result<PrivateLobby> {
         val lobbyId: String = response.body()!!.string()
-
         if(response.code() == ResponseCode.OK.code) {
             currentListenLobby = lobbyId
             return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
         } else {
+            _message.postValue("Le Lobby est inexistant ou plein.")
             Result.Error(response.code())
         }
         return Result.Error(2)
@@ -208,6 +214,11 @@ class LobbyRepository {
         socket.emit("leaveLobby",gson.toJson(LobbyId(_lobbyJoined.value!!.gameID)))
         socket.off("dispatchTeams")
         gameStarted = false
+        if (_lobbyJoined.value != null)
+            chatRepo.leaveChannel(_lobbyJoined.value!!.gameID)
+        currentListenLobby = "null"
+        chatRepo.switchToGeneral()
+        ChatRepository.getInstance()!!.channelShown = "General"
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, "")))
         val map = HashMap<String, String>()
         map["lobbyId"] = currentListenLobby
@@ -225,7 +236,6 @@ class LobbyRepository {
     }
 
     fun resetData() {
-        println("reset data called")
         if (_lobbyJoined.value?.gameID != null && !gameStarted) {
             runBlocking {
                 quitLobby()

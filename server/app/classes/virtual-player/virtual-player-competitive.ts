@@ -112,7 +112,7 @@ export class VirtualPlayerCompetitive extends VirtualPlayer {
     }
 
     private sayHelloAgainClassicOpposingTeam(teamNumber: number){
-        let str = vPlayerText.anxious.meetAgainClassicOpposingTeam.split("##");
+        let str = vPlayerText.competitive.meetAgainClassicOpposingTeam.split("##");
         let message = str[0] + this.teammates + str[1];
         switch(this.gameType){
             case GameType.SOLO:

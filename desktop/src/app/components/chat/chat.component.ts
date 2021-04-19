@@ -18,18 +18,11 @@ export class ChatComponent {
     message: '',
   })
 
-  constructor(private formBuilder: FormBuilder, public chatService: ChatService) {}
-
+  constructor(private formBuilder: FormBuilder, public chatService: ChatService) {
+  }
 
   connectToChat(name: string): void {
     this.chatService.setCurrentChat(name);
-  }
-
-  onNewMessage(): void {
-    let messageScroller = document.getElementById('message-scroller');
-    if(messageScroller) {
-      messageScroller.scrollTop = messageScroller.scrollHeight;
-    }
   }
 
   onSubmit(): void {
@@ -56,5 +49,17 @@ export class ChatComponent {
 
   deleteChat(): void {
     this.chatService.deleteChat();
+  }
+
+  getChatGameStatus(): boolean {
+    try {
+      if(!this.chatService.joinedChatList[this.chatService.index].isGameChat){
+        return true
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
   }
 }
