@@ -123,6 +123,7 @@ class MainMenuViewModel(private val mainMenuRepository: MainMenuRepository) : Vi
     }
 
      fun joinPrivateGame(code: String) {
+         lobbyRepository.resetData()
          viewModelScope.launch {
              GameListRepository.getInstance()!!.getGameList()
              val result = lobbyRepository.joinPrivate(code)

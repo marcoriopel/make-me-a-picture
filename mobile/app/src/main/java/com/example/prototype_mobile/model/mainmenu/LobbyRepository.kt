@@ -1,6 +1,5 @@
 package com.example.prototype_mobile.model.mainmenu
 
-
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -61,16 +60,15 @@ class LobbyRepository {
 
     var gameStarted = false
 
-    val chatRepo = ChatRepository.getInstance()!!
+    private val chatRepo = ChatRepository.getInstance()!!
 
     private var onTeamsUpdate = Emitter.Listener {
-        println("On teams Update called")
         val gson: Gson = Gson()
         val lobbyPlayersReceived: LobbyPlayers = gson.fromJson(it[0].toString(), LobbyPlayers::class.java)
         _lobbyPlayers.postValue(lobbyPlayersReceived)
     }
 
-    var onStart = Emitter.Listener {
+    private var onStart = Emitter.Listener {
         EndGameRepository.getInstance()!!.initializeData(_lobbyJoined.value!!.difficulty)
         gameStarted = true
         val gameRepo = GameRepository.getInstance()!!
@@ -118,8 +116,6 @@ class LobbyRepository {
         val map = HashMap<String, String>()
         map["lobbyId"] = game.gameID
         map["socketId"] = socket.id()
-
-        println("We are in public section of the request")
         val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/public", map, true)
         val result = analyseJoinLobbyAnswer(response, game)
         if (result is Result.Success) {
@@ -146,11 +142,9 @@ class LobbyRepository {
 
     suspend fun joinPrivate(id: String): Result<PrivateLobby> {
         val map = HashMap<String, String>()
-            map["lobbyInviteId"] = id
-            val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
-            println(response)
-            val result = analyseJoinPrivateLobbyAnswer(response, id)
-            return result
+        map["lobbyInviteId"] = id
+        val response = HttpRequestDrawGuess.httpRequestPost("/api/games/join/private", map, true)
+        return analyseJoinPrivateLobbyAnswer(response, id)
     }
 
     private fun analyseJoinLobbyAnswer(response: Response, game: GameInvited): Result<GameInvited> {
@@ -161,6 +155,7 @@ class LobbyRepository {
             Result.Error(response.code())
         }
     }
+
     private fun analyseJoinLobbyAnswer(response: Response, game: Game): Result<Game> {
         return if(response.code() == ResponseCode.OK.code) {
             Result.Success(game)
@@ -174,6 +169,8 @@ class LobbyRepository {
         val lobbyId: String = response.body()!!.string()
         if(response.code() == ResponseCode.OK.code) {
             currentListenLobby = lobbyId
+            if (!socket.hasListeners("dispatchTeams"))
+                socket.on("dispatchTeams", onTeamsUpdate)
             return Result.Success(PrivateLobby(lobbyInvited = id, lobbyId = lobbyId ))
         } else {
             _message.postValue("Le Lobby est inexistant ou plein.")
@@ -211,18 +208,20 @@ class LobbyRepository {
     }
 
     suspend fun quitLobby(): Result<String> {
-        socket.emit("leaveLobby",gson.toJson(LobbyId(_lobbyJoined.value!!.gameID)))
-        socket.off("dispatchTeams")
+        if(_lobbyJoined.value != null) {
+            socket.emit("leaveLobby", gson.toJson(LobbyId(_lobbyJoined.value!!.gameID)))
+            socket.off("dispatchTeams")
+        }
         gameStarted = false
-        if (_lobbyJoined.value != null)
+        if (_lobbyJoined.value != null) {
             chatRepo.leaveChannel(_lobbyJoined.value!!.gameID)
-        currentListenLobby = "null"
-        chatRepo.switchToGeneral()
-        ChatRepository.getInstance()!!.channelShown = "General"
+            chatRepo.switchToGeneral()
+        }
         socket.emit("listenLobby",gson.toJson(ListenLobby(currentListenLobby, "")))
         val map = HashMap<String, String>()
         map["lobbyId"] = currentListenLobby
         val response = HttpRequestDrawGuess.httpRequestDelete("/api/games/leave", map, true)
+        currentListenLobby = "null"
 
         return  analyseGeneralAnswer(response)
     }
