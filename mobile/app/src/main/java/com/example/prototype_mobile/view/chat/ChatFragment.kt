@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.Message
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentChatBinding
+import com.example.prototype_mobile.ressources.LinearLayoutManagerWrapper
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModel
 import com.example.prototype_mobile.viewmodel.connection.chat.ChatViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -46,11 +47,11 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(context)
         recyclerView.layoutManager = layoutManager
 
         val recyclerViewChannel: RecyclerView = view.findViewById(R.id.recyclerViewChannel)
-        val layoutManagerChannel: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val layoutManagerChannel: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(context)
         recyclerViewChannel.layoutManager = layoutManagerChannel
 
         // define an adapter for chatroom

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.prototype_mobile.*
 import com.example.prototype_mobile.databinding.ActivityEndGameBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.EndGamePageType
+import com.example.prototype_mobile.ressources.LinearLayoutManagerWrapper
 import com.example.prototype_mobile.view.chat.ChatFragment
 import com.example.prototype_mobile.view.connection.login.LoginActivity
 import com.example.prototype_mobile.view.game.GuessFragment
@@ -86,7 +87,7 @@ class EndGameActivity: AppCompatActivity() {
 
         // Binding hint recycler view
         val recyclerView = binding.recyclerView
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(applicationContext)
         recyclerView.layoutManager = layoutManager
         hintListAdapter = HintListAdapter(applicationContext, hintList, endGameViewModel);
         recyclerView.adapter = hintListAdapter
