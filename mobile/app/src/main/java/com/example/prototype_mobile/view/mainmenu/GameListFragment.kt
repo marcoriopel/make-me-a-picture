@@ -2,7 +2,11 @@ package com.example.prototype_mobile.view.mainmenu
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.util.AttributeSet
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.Nullable
@@ -17,6 +21,7 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGameListBinding
 import com.example.prototype_mobile.model.connection.sign_up.model.GameFilter
+import com.example.prototype_mobile.ressources.LinearLayoutManagerWrapper
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.GameList.GameListViewModelFactory
 import org.jetbrains.anko.support.v4.runOnUiThread
@@ -46,7 +51,7 @@ class GameListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(context)
         recyclerView.layoutManager = layoutManager
 
         // define an adapter

@@ -14,6 +14,7 @@ import com.example.prototype_mobile.Game
 import com.example.prototype_mobile.GameHistoric
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentProfilBinding
+import com.example.prototype_mobile.ressources.LinearLayoutManagerWrapper
 import com.example.prototype_mobile.util.Drawable
 import com.example.prototype_mobile.viewmodel.mainmenu.ProfilViewModel
 import com.example.prototype_mobile.viewmodel.mainmenu.ProfilViewModelFactory
@@ -46,10 +47,10 @@ class ProfilFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentProfilBinding.bind(view)
-        val gameLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val gameLayoutManager: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(context)
         binding.gameRecyclerView.layoutManager = gameLayoutManager
 
-        val connectionLayoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val connectionLayoutManager: RecyclerView.LayoutManager = LinearLayoutManagerWrapper(context)
         binding.connectionRecyclerView.layoutManager = connectionLayoutManager
 
         gameHistoricAdapter = GameHistoricAdapter(view.context, gameHistoricList)
