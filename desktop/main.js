@@ -23,6 +23,16 @@ function createWindow () {
     }
     
   })
+
+  mainWindow.webContents.on('did-fail-load', () => {
+    console.log('did-fail-load');
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  });
+
   mainWindow.removeMenu();
   mainWindow.maximize();
   mainWindow.loadURL(
@@ -34,7 +44,7 @@ function createWindow () {
   );
   
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null

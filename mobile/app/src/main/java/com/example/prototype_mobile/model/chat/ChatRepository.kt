@@ -125,7 +125,6 @@ class ChatRepository {
     }
 
     suspend fun getChannels(isInit: Boolean = false): Result<Boolean> {
-        Log.d("isInit", isInit.toString())
         var result = getChannelsList("/api/chat/joined")
         if (result is Result.Error) {
             return result
@@ -134,7 +133,6 @@ class ChatRepository {
             for (channel in result.data.chats) {
                 // Add channel if not there previously
                 if (!channelJoinedSet.contains(channel.chatId)) {
-                    Log.d("adding chat", channel.chatName)
                     val newMessageList: MutableList<Message> = mutableListOf()
                     if (channel.chatId != LobbyRepository.getInstance()!!.currentListenLobby) {
                         newMessageList.add(Message("", "", "", 3, 0, myAvatar))
@@ -152,7 +150,6 @@ class ChatRepository {
                         channelList.add(Channel(channel.chatId, channel.chatName, ChannelState.JOINED))
                     }
                     if (isInit) {
-                        Log.d("join channnel", channel.chatName)
                         joinChannel(channel.chatId)
                     }
                 }
@@ -277,8 +274,6 @@ class ChatRepository {
                 for (message in historyMessage.asReversed()) {
                     if (message.timestamp < firstMessageTimestamp) {
                         channelMap[channelShown]!!.asReversed().add(message)
-                    } else {
-                        break
                     }
                 }
                 if (channelShown != "General") {
