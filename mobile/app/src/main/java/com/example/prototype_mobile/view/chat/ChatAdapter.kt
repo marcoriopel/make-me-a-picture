@@ -40,12 +40,10 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
 
             0 ->{
                 view = LayoutInflater.from(context).inflate(R.layout.row_chat_user,parent,false)
-                Log.d("user inflating","viewType : ${viewType}")
             }
 
             1 -> {
                 view = LayoutInflater.from(context).inflate(R.layout.row_chat_partner,parent,false)
-                Log.d("partner inflating","viewType : ${viewType}")
             }
 
             2 -> {
