@@ -1,5 +1,8 @@
 package com.example.prototype_mobile.view.game
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -172,10 +175,12 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
         })
 
         gameViewModel.logout.observe(this) {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
+            val mStartActivity = Intent(applicationContext, LoginActivity::class.java)
+            val mPendingIntentId = 123456
+            val mPendingIntent = PendingIntent.getActivity(applicationContext, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)
+            val mgr = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
+            System.exit(0)
         }
     }
 
