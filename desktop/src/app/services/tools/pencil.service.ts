@@ -40,7 +40,6 @@ export class PencilService extends Tool {
     }
 
     onMouseDown(event: MouseEvent): void {
-        console.log(this.drawingService.lineWidth)
         this.drawingService.baseCtx.filter = 'none';
         if (event.button !== MouseButton.LEFT) {
             return;
@@ -92,7 +91,6 @@ export class PencilService extends Tool {
             this.drawingService.clearCanvas(this.drawingService.baseCtx);
             this.drawPencilStroke(this.drawingService.baseCtx, this.pencilData);
             this.drawingService.updateStack(this.pencilData);
-            console.log(this.drawingService.strokeStack)
             this.drawingService.setIsToolInUse(false);
             if(!this.gameService.isInGame || this.gameService.isPlayerDrawing){
                 this.drawingService.strokeNumber++;

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SocketService {
 
-  private socket: Socket;
+  public socket: Socket;
   private baseUrl = environment.api_url;
   public socketId: string;
 

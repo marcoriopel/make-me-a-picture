@@ -90,7 +90,7 @@
         </div>
         <div id="chat-column">
             <div id="chat-bar">
-                <app-chat-bar></app-chat-bar>
+                <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
             </div>
         </div>
     </div>

@@ -51,9 +51,10 @@ export class ChatComponent {
     this.chatService.deleteChat();
   }
 
-  getChatGameStatus(): boolean {
+  isGameChat(): boolean {
     try {
-      if(!this.chatService.joinedChatList[this.chatService.index].isGameChat){
+      if(this.chatService.joinedChatList[this.chatService.index].isGameChat){
+        console.log('test')
         return true
       } else {
         return false;
