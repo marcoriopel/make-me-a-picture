@@ -59,7 +59,6 @@ export class UndoRedoService extends Tool {
     }
 
     undo(): void {
-        console.log(this.drawingService.strokeStack)
         this.changeUndoAvailability();
         this.changeRedoAvailability();
         if (!this.isUndoAvailable) {

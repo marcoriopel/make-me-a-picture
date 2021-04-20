@@ -1,10 +1,11 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ElectronService } from "ngx-electron";
 import { ChatService } from '@app/services/chat/chat.service'
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { SocketService } from '@app/services/socket/socket.service';
 import { GameService } from '@app/services/game/game.service';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-chat-bar',
@@ -15,9 +16,9 @@ import { Router } from '@angular/router';
 export class ChatBarComponent implements OnInit, OnDestroy {
   isWindowButtonAvailable: boolean = true;
 
-  constructor(private ngZone: NgZone, private router: Router, public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService, public gameService: GameService) {}
+  constructor(private snackBar: MatSnackBar, private ngZone: NgZone, private router: Router, public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService, public gameService: GameService) {}
   createChatForm = this.formBuilder.group({
-    chatName: '',
+    chatName: ['', Validators.maxLength(12)],
   });
 
   changeChat(id: string): void {
@@ -31,14 +32,15 @@ export class ChatBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    localStorage.removeItem('joinedChats');
-    localStorage.removeItem('notJoinedChats');
-    localStorage.removeItem('currentChatId');
+    if(this.chatService.isChatInExternalWindow){
+      localStorage.removeItem('joinedChats');
+      localStorage.removeItem('notJoinedChats');
+      localStorage.removeItem('currentChatId');      
+    }
   }
 
   openExternalWindow(): void {
     this.socketService.bind('openExternalChatCallback', (data: any) => {
-      console.log('received')
       this.socketService.unbind('openExternalChatCallback');
       this.socketService.emit('openExternalChat', {linkedSocketId: data.externalWindowSocketid});
     });
@@ -79,7 +81,13 @@ export class ChatBarComponent implements OnInit, OnDestroy {
   
   createChat(): void {
     if(this.createChatForm.value.chatName == "" || !this.createChatForm.value.chatName) return;
-    this.chatService.createChat(this.createChatForm.value.chatName);
+    if(this.createChatForm.valid) {
+      this.chatService.createChat(this.createChatForm.value.chatName);
+    } else {
+      this.snackBar.open("Le nom du canal doit être en 1 et 12 charactères!", "", {
+        duration: 2000,
+      });
+    }
     this.createChatForm.reset();
 
   }
@@ -103,5 +111,17 @@ export class ChatBarComponent implements OnInit, OnDestroy {
 
   refreshChatList(): void {
     this.chatService.refreshChatList();
+  }
+
+  isGameChat(): boolean {
+    try {
+      if(this.chatService.joinedChatList[this.chatService.index].isGameChat){
+        return true
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
   }
 }

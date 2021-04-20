@@ -34,7 +34,7 @@
                                 class="material-icons">check_circle</span></button>
                     </form>
                 </div>
-                <button *ngIf="this.gameService.isGuessing" id="hint-button" (click)="requestHint()"><span class="material-icons">quiz</span></button>
+                <button *ngIf="this.gameService.isGuessing && this.gameService.state != 1" id="hint-button" (click)="requestHint()"><span class="material-icons">quiz</span></button>
             </div>
             <div id="tools">
                 <app-tools

@@ -7,8 +7,11 @@ import { AuthService } from '@app/services/auth/auth.service';
 })
 export class NavbarComponent {
   username: string | null;
+  avatar: string | null;
+
   constructor(private authService: AuthService) { 
     this.username = localStorage.getItem('username');
+    this.avatar = localStorage.getItem('avatar');
   }
 
   logout(): void {

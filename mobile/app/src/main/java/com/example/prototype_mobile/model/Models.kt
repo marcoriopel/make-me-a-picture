@@ -66,7 +66,7 @@ data class EraserStrokesReceived(val eraserStrokes: Array<EraserStroke>)
 data class EraserStroke(val path: Array<Vec2>, val isEraser: Boolean, val strokeNumber: Int, val lineWidth: Int, val lineColor: String)
 
 data class BasicUser(val username: String, val avatar: Int)
-
+data class GuessCallBack(val isCorrectGuess: Boolean, val guessingPlayer: String)
 data class HintRequest(val gameId: String, val user: BasicUser)
 
 //Data class for the profil

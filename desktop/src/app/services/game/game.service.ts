@@ -75,7 +75,7 @@ export class GameService {
   teams: Teams;
 
   // Sprint coop and solo
-  gameTimer: number = 180;
+  gameTimer: number = 120;
   isMaxScoreEnding: boolean = false;
 
 
@@ -187,6 +187,8 @@ export class GameService {
 
     this.socketService.bind('newRound', (data: any) => {
       this.tick.pause();
+      this.drawingService.opacity = 1;
+      this.drawingService.isGridEnabled = false;
       if (this.drawingPlayer == this.username) {
         let dataUrl = this.drawingService.canvas.toDataURL();
 
@@ -241,6 +243,40 @@ export class GameService {
     this.socketService.bind('endGame', (data: any) => {
       this.socketService.unbind('endGame');
       this.tick.pause();
+      this.countdown.pause();
+      if (this.drawingPlayer == this.username) {
+        let dataUrl = this.drawingService.canvas.toDataURL();
+
+        let eraserStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => stroke.isEraser);
+        let pencilStrokes: Stroke[] = this.drawingService.strokeStack.filter(stroke => !stroke.isEraser);
+        const strokes = {
+          eraserStrokes: eraserStrokes,
+          pencilStrokes: pencilStrokes,
+        }
+
+        const drawing = {
+          url: dataUrl,
+          drawingName: this.drawingName,
+          strokes: strokes,
+        }
+
+        this.realPlayerDrawings.push(drawing);
+
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem(ACCESS.TOKEN)!
+        });
+        const options = { headers: headers, responseType: 'text' as 'json' };
+        const body = { imageUrl: dataUrl, gameId: this.gameId }
+        this.http.post<any>(environment.socket_url + 'api/games/upload', body, options).subscribe(
+          (res: any) => {
+            console.log(res);
+          },
+          (err: any) => {
+            console.log(err);
+          }
+        );
+      }
       for(let i = 0; i < data.virtualPlayerDrawings.length; i++){
         const vdrawing = {
           name: data.virtualPlayerDrawings[i],
@@ -282,6 +318,8 @@ export class GameService {
       let oppositeTeam;
       this.currentUserTeam == 0 ? oppositeTeam = 1 : oppositeTeam = 0;
       this.score[this.currentUserTeam] > this.score[oppositeTeam] ? this.win.play() : this.defeat.play();
+      this.transitionDialogRef.close();
+      this.suggestionDialogRef.close();
     })
 
     this.socketService.bind('timer', (data: any) => {
@@ -384,6 +422,8 @@ export class GameService {
       this.drawingService.strokeNumber = 0;
       this.drawingService.lineWidth = INITIAL_LINE_WIDTH;
       this.drawingService.color = BLACK;
+      this.drawingService.opacity = 1;
+      this.drawingService.isGridEnabled = false;
     })
 
     this.socketService.bind('gameTimer', (data: any) => {
@@ -438,7 +478,6 @@ export class GameService {
       this.drawingService.redoStack = [];
       this.drawingService.strokeNumber = 0;
       this.drawingService.strokes = [];
-      // this.isInGame = false;
       if(this.electronService.process){
         try {
           this.chatWindow.closable = true;
