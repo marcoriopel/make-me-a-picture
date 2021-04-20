@@ -99,6 +99,9 @@ class GameRepository {
     private val _saveDrawingImage =  MutableLiveData<Boolean>()
     val saveDrawingImage: LiveData<Boolean> = _saveDrawingImage
 
+    private val _isGuessGood =  MutableLiveData<Boolean>()
+    val isGuessGood: LiveData<Boolean> = _isGuessGood
+
     // Listener
     var team = 0
     var suggestion = Suggestions(arrayOf())
@@ -207,7 +210,8 @@ class GameRepository {
      * debug
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     private var guessCallBack = Emitter.Listener {
-        Log.e("Guess call back", it[0].toString())
+        val guessCallBack = gson.fromJson(it[0].toString(), GuessCallBack::class.java)
+        _isGuessGood.postValue(guessCallBack.isCorrectGuess)
     }
 
 
@@ -252,7 +256,7 @@ class GameRepository {
     }
 
     private var onUserDisconnect = Emitter.Listener {
-        EndGameRepository.getInstance()!!.addGameResult("Partie null", "Un joueur s'est déconnecté", EndGameResult(false, null))
+        EndGameRepository.getInstance()!!.addGameResult("Partie nule", "Un joueur s'est déconnecté", EndGameResult(false, null))
     }
 
     fun setIsPlayerDrawing(isDrawing: Boolean) {

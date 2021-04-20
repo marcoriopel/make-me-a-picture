@@ -175,6 +175,22 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
         })
 
+        gameViewModel.isGuessGood.observe(this) {
+            if(it) {
+                Toast.makeText(
+                        applicationContext,
+                        "Bonne réponse",
+                        Toast.LENGTH_LONG
+                ).show()
+            } else {
+                Toast.makeText(
+                        applicationContext,
+                        "Mauvaise réponse",
+                        Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
         gameViewModel.logout.observe(this) {
             val mStartActivity = Intent(applicationContext, LoginActivity::class.java)
             val mPendingIntentId = 123456
@@ -278,7 +294,6 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
             val intent = Intent(this, EndGameActivity::class.java)
             startActivity(intent)
         }
-        Log.e("test", "startActivity")
     }
 
     //maybe we will need to

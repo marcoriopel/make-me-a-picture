@@ -81,7 +81,6 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
             CHAT_PARTNER ->{
                 holder.userName.text = userName
                 holder.message.text = content
-                Log.e("Avatar", avatar.toString())
                 avatarIconMap[avatar]?.let { holder.avatar.setImageResource(it) }
             }
             CHAT_HISTORY ->{
