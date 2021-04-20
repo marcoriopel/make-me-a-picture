@@ -37,15 +37,18 @@ class StaticTutorialActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         //Creating the map content
-        contentMap[1] = StaticTutorialInfo("title_mainmenu",R.drawable.menu,"main_menu_description")
-        contentMap[2] = StaticTutorialInfo("title_lobby",R.drawable.lobby,"lobby_description")
-        contentMap[3] = StaticTutorialInfo("title_game",R.drawable.guessing,"game_description")
+        contentMap[1] = StaticTutorialInfo("menu_game_title",R.drawable.menugame,"menu_game_description")
+        contentMap[2] = StaticTutorialInfo("parametre_game_title",R.drawable.parametergame,"parametre_game_description")
+        contentMap[3] = StaticTutorialInfo("lobby_title",R.drawable.lobby,"lobby_description")
+        contentMap[4] = StaticTutorialInfo("guess_classic_title",R.drawable.guessclassic,"guess_classic_description")
+        contentMap[5] = StaticTutorialInfo("draw_classic_title",R.drawable.drawclassic,"draw_classic_description")
+        contentMap[6] = StaticTutorialInfo("guess_coop_title",R.drawable.guesscoopsprint,"guess_coop_description")
+
+
         ProgressDot(tutorialPageIndex)
 
        binding.back.setOnClickListener {
-            println("back button click ")
             if(tutorialPageIndex == 1) {
-                println("Can't decrement 0")
             } else {
                 tutorialPageIndex--
                 setNewPageContent()
@@ -53,7 +56,6 @@ class StaticTutorialActivity : AppCompatActivity() {
             }
         }
         binding.next.setOnClickListener {
-            println("next button click ")
             if(tutorialPageIndex < contentMap.size) {
                 tutorialPageIndex++
                 setNewPageContent()
