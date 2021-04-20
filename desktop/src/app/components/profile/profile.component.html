@@ -67,9 +67,9 @@
                                 <td *ngIf="game.gameType == 'Classic'">{{game.team1[0]}} et {{game.team1[1]}}</td>
                                 <td *ngIf="game.gameType == 'Classic'">{{game.team2[0]}} et {{game.team2[1]}}</td>
                                 <td *ngIf="game.gameType == 'Solo'">{{game.team2[0]}}</td>
-                                <td *ngIf="game.gameType == 'Coop'">{{game.team2[0]}} et {{game.team2[1]}}</td>
-                                <td *ngIf="game.gameType == 'Coop' && game.team2.length > 3">{{game.team2[0]}}, {{game.team2[1]}} et {{game.team2[2]}}</td>
-                                <td *ngIf="game.gameType == 'Coop' && game.team2.length > 4">{{game.team2[0]}}, {{game.team2[1]}}, {{game.team2[2]}} et {{game.team2[3]}}</td>
+                                <td *ngIf="game.gameType == 'Coop' && game.team2.length == 3">{{game.team2[0]}} et {{game.team2[1]}}</td>
+                                <td *ngIf="game.gameType == 'Coop' && game.team2.length == 4">{{game.team2[0]}}, {{game.team2[1]}} et {{game.team2[2]}}</td>
+                                <td *ngIf="game.gameType == 'Coop' && game.team2.length == 5">{{game.team2[0]}}, {{game.team2[1]}}, {{game.team2[2]}} et {{game.team2[3]}}</td>
                             </tr>
                         </table>
                     </div>
