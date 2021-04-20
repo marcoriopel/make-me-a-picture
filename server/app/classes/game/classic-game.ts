@@ -61,7 +61,7 @@ export class ClassicGame extends Game {
                 vPlayer.sayHello();
             }
         }
-        const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
+        const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
         this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#000000", chatId: this.id });
         const basicUser = { username: "System", avatar: -1 };
         const incomingMessage = {
