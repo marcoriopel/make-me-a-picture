@@ -27,11 +27,10 @@ class ChatRoomAdapter(val context : Context, var chatList : MutableList<Message>
         Pair(3, R.drawable.avatar3),
         Pair(4, R.drawable.avatar4),
         Pair(5, R.drawable.avatar5),
-        Pair(6, R.drawable.avatar6),
-        Pair(7, R.drawable.avatar_v_p_v_player1),
-        Pair(8, R.drawable.avatar_v_player2),
-        Pair(9, R.drawable.avatar_v_player3),
-        Pair(10, R.drawable.avatar_v_player4),
+        Pair(6, R.drawable.avatar_v_p_v_player1),
+        Pair(7, R.drawable.avatar_v_player2),
+        Pair(8, R.drawable.avatar_v_player3),
+        Pair(9, R.drawable.avatar_v_player4),
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
