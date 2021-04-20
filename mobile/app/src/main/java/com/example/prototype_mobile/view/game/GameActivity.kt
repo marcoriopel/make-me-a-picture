@@ -103,7 +103,7 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                     .replace(R.id.containerGuess, GuessFragment()).commitNow()
                 if(gameViewModel.gameRepository.gameType == GameType.CLASSIC) {
                     //When connecting to the game transition state is null since it doesn't receive can't set a timer
-                    hintFragment()
+                    //hintFragment()
                     if (gameViewModel.transitionState.value != null) {
                         //Right of reply. We don't want to display hint button
                         if (gameViewModel.transitionState.value!!.state != 1) {
