@@ -66,31 +66,51 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="main_menu_description">
-        Voici la description du main menu. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
-        DSKJHFSAKJDHFSAKJDH
-        SDKFSAKDFJSAKDFJNSA;
-        SAFKDJNSAKDFNASKDJFNSA
-        NKLSDANFSAKJNFDSKDNJA
+    <string name="menu_game_description">
+        Création de partie: Les boutons permettent de d\'ouvrir l\'interface de création de game. \n
+        Rejoindre partie privée : Inscrire le code secret partagé dans un canal de discussion et
+        rejoindre une partie privé en cliquant sur la flèche. \n
+        Rejoindre une partie publique: Déployer le panneau pour voir une partie publique et rejoindre
+        la partie publique.
+    </string>
+    <string name="parametre_game_description">
+        Pour créer une partie,
+        il suffit de remplir les champs demandés.
+        Il faut d’abord nommer la partie, puis choisir si on désire la mettre privée ou
+        publique et ensuite choisir la difficulté. Une fois tous les champs remplis, il est possible
+        d\’appuyer sur le bouton \“Créer\” pour créer la partie.
     </string>
     <string name="lobby_description">
-        Voici la description du lobby. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
-        DSKJHFSAKJDHFSAKJDH
-        SDKFSAKDFJSAKDFJNSA;
-        SAFKDJNSAKDFNASKDJFNSA
-        NKLSDANFSAKJNFDSKDNJA
+Une fois dans la salle d\’attente d’une partie, il est possible de voir les autres joueurs qui attendent et d\'ajouter ou retirer des joueurs virtuels. Une fois que le nombre de joueurs requis est atteint, il est possible de commencer la partie en appuyant sur le bouton en bas de la page.
+        Il est possible de quitter la salle d’attente à tout moment en appuyant sur le bouton en haut à gauche.
     </string>
-    <string name="game_description">
-        Voici la description d\'une game. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
-        DSKJHFSAKJDHFSAKJDH
-        SDKFSAKDFJSAKDFJNSA;
-        SAFKDJNSAKDFNASKDJFNSA
-        NKLSDANFSAKJNFDSKDNJA
+    <string name="guess_classic_description">
+La partie classique est composée de deux équipes qui dessinent à tour de rôle.
+        Le but est de deviner le plus de dessins possible pour gagner des points.
+        La boîte de suggestion permet de faire des suggestions. Le bouton indice permet de demander des indices.
+    </string>
+    <string name="draw_classic_description">
+Dans les parties classiques, il est possible de dessiner sur la surface de dessin.
+        Une boîte d’outils est disponible avec les outils suivants: Grille, crayon, efface et annuler-refaire.
+        La palette de couleur permet de choisir des couleurs pré-sélectionnées
+        ou bien une couleur personnalisée en cliquant sur le bouton de la couleur primaire.
     </string>
 
-    <string name = "title_mainmenu">Menu principal </string>
-    <string name = "title_lobby">Lobby </string>
-    <string name = "title_game">Game guessing </string>
+    <string name="guess_coop_description">
+En sprint coop et sprint solo, il faut travailler en équipe pour deviner le plus de mots possible avant la fin de la partie.
+        Pour chaque dessin deviné correctement, vous gagnez des points et du temps supplémentaire.
+        La partie se termine lorsque le temps alloué à la partie est terminée, mais vous avez aussi un temps maximal pour deviner un dessin. Comme dans le mode classique,
+        la boîte de supposition permet d\'essayer de deviner le mot.
+
+    </string>
+
+    <string name = "menu_game_title">Rejoindre une partie </string>
+    <string name = "parametre_game_title">Paramètre de création de partie </string>
+    <string name = "lobby_title">Salle d\'attente </string>
+    <string name = "guess_classic_title">Deviner en mode classique </string>
+    <string name="draw_classic_title">Dessiner en mode classique</string>
+    <string name= "guess_coop_title">Deviner en mode coop et solo </string>
+
     <string name="temps_restant">Temps restant:</string>
     <string name="_60">60</string>
 

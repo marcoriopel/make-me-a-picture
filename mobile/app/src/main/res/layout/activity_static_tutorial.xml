@@ -87,18 +87,18 @@
 
         <TextView
             android:id="@+id/description"
-            android:layout_width="254dp"
-            android:layout_height="262dp"
+            android:layout_width="350dp"
+            android:layout_height="279dp"
             android:text="blablalbla"
             android:textColor="#000000"
             android:textSize="20sp"
-            android:translationX="1000px"
+            android:translationX="1200px"
             android:translationY="175px" />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="296dp"
-            android:layout_height="45dp"
+            android:layout_width="400dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="30px"
@@ -110,7 +110,7 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="500dp"
+            android:layout_width="700dp"
             android:layout_height="500dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"

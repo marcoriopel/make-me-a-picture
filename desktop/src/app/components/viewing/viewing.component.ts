@@ -4,6 +4,7 @@ import { MINIMUM_CANVAS_HEIGHT, MINIMUM_CANVAS_WIDTH } from '@app/ressources/glo
 import { Drawing, Stroke } from '@app/classes/drawing';
 import { Vec2 } from '@app/classes/vec2';
 import { Difficulty } from '@app/classes/game';
+import { DrawingService } from '@app/services/drawing/drawing.service';
 @Component({
   selector: 'app-viewing',
   templateUrl: './viewing.component.html',
@@ -17,7 +18,7 @@ export class ViewingComponent implements AfterViewInit {
   private drawingSpeed: number;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public drawing: Drawing,
+    @Inject(MAT_DIALOG_DATA) public drawing: Drawing, private drawingService: DrawingService,
   ) {   }
 
   ngAfterViewInit(): void {
@@ -58,6 +59,7 @@ export class ViewingComponent implements AfterViewInit {
   }
 
   drawStrokes(strokes: Stroke[]){
+    this.drawingService.clearCanvas(this.baseCtx)
     for(let i = 0; i < strokes.length; i++){
       this.baseCtx.lineWidth = strokes[i].lineWidth;
       this.baseCtx.strokeStyle = strokes[i].lineColor;
@@ -67,12 +69,11 @@ export class ViewingComponent implements AfterViewInit {
   }
 
   drawStroke(path: Vec2[]) {
+    this.baseCtx.beginPath();
     for(let i = 0; i < path.length - 1; i++){
-      this.baseCtx.beginPath();
       this.baseCtx.lineTo(path[i].x, path[i].y);
-      this.baseCtx.lineTo(path[i + 1].x, path[i + 1].y);
-      this.baseCtx.stroke();
     }
+    this.baseCtx.stroke();
   }
 
   delay = () => new Promise(res => setTimeout(res, this.drawingSpeed))

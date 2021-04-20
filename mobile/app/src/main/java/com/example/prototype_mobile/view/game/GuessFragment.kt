@@ -1,14 +1,17 @@
 package com.example.prototype_mobile.view.game
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.prototype_mobile.R
 import com.example.prototype_mobile.databinding.FragmentGuessBinding
 import com.example.prototype_mobile.viewmodel.game.GuessViewModel
+
 
 class GuessFragment : Fragment() {
 

@@ -30,6 +30,7 @@ export class LobbyComponent implements OnInit {
   }
 
   leaveLobby(): void {
+    this.lobbyService.lobbyInviteId = '';
     this.lobbyService.quit();
     this.chatService.setCurrentChat("General");
     this.socketService.unbind('drawingEvent');

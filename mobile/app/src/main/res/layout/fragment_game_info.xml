@@ -42,14 +42,14 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/scoreTeam1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/scoreTeam2"
+                android:layout_width="20dp"
+                android:layout_height="46dp"
                 android:layout_marginTop="4dp"
                 android:text="0"
                 android:textColor="@color/white"
-                android:textSize="32dp"
-                android:textStyle="bold" />
+                android:textSize="32sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/team1"
@@ -89,17 +89,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center">
-
+            
             <TextView
-                android:id="@+id/scoreTeam2"
-                android:layout_width="20dp"
-                android:layout_height="46dp"
+                android:id="@+id/scoreTeam1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="0"
                 android:textColor="@color/white"
-                android:textSize="32sp"
-                android:textStyle="bold"/>
-
+                android:textSize="32dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/team2"

@@ -139,8 +139,12 @@ class ChatFragment : Fragment() {
     private fun addChannel() {
         val channelName = binding.channelNameAdd.text.toString()
 
-        if (channelName != "") {
+        if (channelName != "" && channelName.length <= 12) {
             chatViewModel.createChannel(channelName)
+        } else {
+            val toast = Toast.makeText(view?.context, "12 caractères maximum", Toast.LENGTH_LONG)
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+            toast.show()
         }
 
         binding.channelNameAdd.setText("")
