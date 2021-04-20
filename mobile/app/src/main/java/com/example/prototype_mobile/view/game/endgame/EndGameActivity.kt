@@ -258,7 +258,16 @@ class EndGameActivity: AppCompatActivity() {
                 }
                 else -> { imgHolder.visibility = View.INVISIBLE }
             }
-        } else { imgHolder.visibility = View.INVISIBLE }
+        } else {
+            if(pageData.type == EndGamePageType.RESULT) {
+                if ((pageData.data as EndGameResult).win)
+                    imgHolder.setImageResource(R.drawable.couronner)
+                else
+                    imgHolder.visibility = View.INVISIBLE
+            } else {
+                imgHolder.visibility = View.INVISIBLE
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
