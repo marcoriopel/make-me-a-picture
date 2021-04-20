@@ -3,6 +3,7 @@ import { DrawingEvent, MouseDown } from '@app/ressources/interfaces/game-events'
 import { BasicUser, Player } from '@app/ressources/interfaces/user.interface';
 import { Difficulty, drawingEventType, GuessTime } from '@app/ressources/variables/game-variables';
 import { DrawingsService } from '@app/services/drawings.service';
+import { ChatManagerService } from '@app/services/managers/chat-manager.service';
 import { SocketService } from '@app/services/sockets/socket.service';
 import { UserService } from '@app/services/user.service';
 import { injectable } from 'inversify';
@@ -18,6 +19,7 @@ export class VirtualPlayer {
     private drawingsService: DrawingsService;
     protected socketService: SocketService;
     protected userService: UserService;
+    protected chatManagerService: ChatManagerService;
     private currentDrawing: Drawing;
     protected gameId: string;
     protected gameType: number;
@@ -31,10 +33,11 @@ export class VirtualPlayer {
         this.gameType = gameType;
     }
 
-    setServices(drawingsService: DrawingsService, socketService: SocketService, userService: UserService): void {
+    setServices(drawingsService: DrawingsService, socketService: SocketService, userService: UserService, chatManagerService: ChatManagerService): void {
         this.drawingsService = drawingsService;
         this.socketService = socketService;
         this.userService = userService;
+        this.chatManagerService = chatManagerService;
     }
 
     async getNewDrawing(difficulty: number, pastDrawingNames: string[]): Promise<Drawing> {
@@ -141,73 +144,80 @@ export class VirtualPlayer {
             this.socketService.getSocket().to(this.gameId).emit('hintError', { "message": "No more hints left" });
         }
         else {
+            const timestamp = new Date();
             const message = "Indice: " + this.currentDrawing.hints[this.nextHintIndex];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": 0, "textColor": "#2065d4", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp.getTime(), "textColor": "#000000", chatId: this.gameId });
+            const incomingMessage = {
+                token: "0",
+                text: message,
+                chatId: this.gameId
+            }
+            this.chatManagerService.addMessageToDB(this.getBasicUser(), incomingMessage, timestamp);
             this.nextHintIndex++;
         }
     }
 
-    async setTeammates(players: any){
-        if(Array.isArray(players)){
+    async setTeammates(players: any) {
+        if (Array.isArray(players)) {
             players.pop();
             this.teammates = [];
-            for(let player of players){
+            for (let player of players) {
                 this.teammates.push(player.username)
             }
         }
-        else{
+        else {
             this.teammates = [players.username];
         }
         await this.setLastMutualGames();
         await this.setTeamatesStats();
     }
 
-    async setLastMutualGames(){
-        for(let teammate of this.teammates){
+    async setLastMutualGames() {
+        for (let teammate of this.teammates) {
             let lastMutualGame = await this.userService.getLastMutualGame(teammate, this.username);
             this.lastMutualGames.push(lastMutualGame);
         }
     }
 
-    async setTeamatesStats(){
-        for(let teammate of this.teammates){
+    async setTeamatesStats() {
+        for (let teammate of this.teammates) {
             let teammateStats = await this.userService.getUserStats(teammate);
             this.teammatesStats.push(teammateStats);
         }
     }
 
-    sayHello(){}
+    sayHello() { }
 
-    sayHelloMany(){}
+    sayHelloMany() { }
 
-    sayRightGuess(){}
+    sayRightGuess() { }
 
     sayWrongGuess() { }
 
-    sayWrongTry(){}
+    sayWrongTry() { }
 
-    sayWeWon(){}
+    sayWeWon() { }
 
     sayWeLost() { }
 
-    sayWeTied(){}
+    sayWeTied() { }
 
-    sayEndSoloGame(finalScore: number){}
+    sayEndSoloGame(finalScore: number) { }
 
-    sayEndCoopGame(finalScore: number){}
+    sayEndCoopGame(finalScore: number) { }
 
     protected arrayToString(array: Array<string>): string {
         let str = '';
-        if (array.length == 1){
+        if (array.length == 1) {
             str = array.toString();
         }
-        else{
-            for(let i=0; i < array.length; i++){
-                if(i == array.length - 1){
+        else {
+            for (let i = 0; i < array.length; i++) {
+                if (i == array.length - 1) {
                     str = str.slice(0, str.length - 2);
                     str += " et " + array[i]
                 }
-                else{
+                else {
                     str += array[i] + ", "
                 }
             }
@@ -216,7 +226,7 @@ export class VirtualPlayer {
     }
 
     protected getOpposingTeamNumber(teamNumber: number): number {
-        if(teamNumber == 0)
+        if (teamNumber == 0)
             return 1;
         else
             return 0;

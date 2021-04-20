@@ -47,7 +47,7 @@ export class SoloGame extends Game {
     async startGame(): Promise<void> {
         this.startDate = new Date().getTime();
         this.setGuesses();
-        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService);
+        this.vPlayer.setServices(this.drawingsService, this.socketService, this.userService, this.chatManagerService);
         await this.vPlayer.setTeammates(this.getPlayers());
         this.vPlayer.sayHello();
         this.socketService.getSocket().to(this.id).emit('gameStart', { "player": this.vPlayer.getBasicUser().username, "teams": this.getPlayers() });
@@ -143,7 +143,7 @@ export class SoloGame extends Game {
             this.vPlayer.stopDrawing();
             this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
             this.vPlayer.sayEndSoloGame(this.score);
-            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#000000", chatId: this.id });
             this.statsService.updateStats(this.gameName, this.gameType, this.getPlayers(), [this.score], this.startDate, this.endDate);
             this.chatManagerService.deleteChat(this.id);
         }
