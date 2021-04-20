@@ -62,8 +62,9 @@ class StaticTutorialActivity : AppCompatActivity() {
                 ProgressDot(tutorialPageIndex)
             } else if(tutorialPageIndex == contentMap.size) {
                 val intent = Intent(this, MainMenuActivity::class.java)
-                startActivity(intent)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+               finish()
 
             }
 
@@ -84,10 +85,10 @@ class StaticTutorialActivity : AppCompatActivity() {
         binding.title.text = getString(resources.getIdentifier(info.title, "string", packageName))
         if(tutorialPageIndex == contentMap.size) {
             val nextText = findViewById<TextView>(R.id.next_text)
-            nextText.text = "Finish"
+            nextText.text = "Terminer"
         } else {
             val nextText = findViewById<TextView>(R.id.next_text)
-            nextText.text = "Next"
+            nextText.text = "Suivant"
         }
         //Hide back button
         if(tutorialPageIndex == 1) {
