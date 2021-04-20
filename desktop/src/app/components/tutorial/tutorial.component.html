@@ -1,21 +1,41 @@
 <app-navbar></app-navbar>  
 <mat-horizontal-stepper linear #stepper>
     <mat-step>
-        <ng-template matStepLabel>Classique</ng-template>
+        <ng-template matStepLabel>Menu principal</ng-template>
         <div id="content">
-            <div id="content">
-                <img src="./assets/img/placeholder.png">
-                <div>
+            <img src="./assets/tutorial/menuPrincipalM.png">
+            <p>La section gauche du menu principal permet de contrôler tout ce qui se passe au niveau des parties. 
+                Il est possible de créer une partie selon le mode de jeu voulu ou de rejoindre une partie privée ou 
+                publique déjà existante. Les trois boutons du haut permettent de créer une partie selon le mode de 
+                jeu désiré. Le petit bouton vert au-dessus de la zone de recherche permet de rejoindre une partie 
+                privée et les boutons gris au bas de la page permettent de visualiser les parties publiques disponibles.</p>
+            <div>
+            <button mat-button matStepperNext>Suivant</button>
+            </div>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Rejoindre une partie</ng-template>
+        <div id="content">
+            <img src="./assets/tutorial/RejoindrePartieM.png">
+            <p>Après avoir appuyé sur une partie publique, il est possible de voir les joueurs qui ont déjà 
+                rejoint la salle d'attente de cette partie. En appuyant sur le bouton vert sur lequel il est 
+                écrit rejoindre il est possible de rejoindre la salle d'attente de la partie.</p>
+            <div>
+                <button mat-button matStepperPrevious>Précédent</button>
                 <button mat-button matStepperNext>Suivant</button>
-                </div>
             </div>
         </div>
     </mat-step>
 
     <mat-step>
-    <ng-template matStepLabel>Classique - Deviner</ng-template>
+    <ng-template matStepLabel>Rejoindre une partie privée</ng-template>
     <div id="content">
-        <img src="./assets/img/placeholder.png">
+        <img src="./assets/tutorial/RejoindrePartiePrivéeM.png">
+        <p>Pour rejoindre une partie privée, il suffit d'appuyer sur le bouton vert au-dessus de la barre 
+            de recherche. Ceci fait apparaître la modale visible ci-haut où il faut entrer l'identifiant 
+            secret pour accéder à la partie.</p>
         <div>
             <button mat-button matStepperPrevious>Précédent</button>
             <button mat-button matStepperNext>Suivant</button>
@@ -24,20 +44,12 @@
     </mat-step>
 
     <mat-step>
-    <ng-template matStepLabel>Classique - Dessiner</ng-template>
-    <div id="content">
-        <img src="./assets/img/placeholder.png">
-        <div>
-            <button mat-button matStepperPrevious>Précédent</button>
-            <button mat-button matStepperNext>Suivant</button>
-        </div>
-    </div>
-    </mat-step>
-
-    <mat-step>
-        <ng-template matStepLabel>Sprint Solo</ng-template>
+        <ng-template matStepLabel>Créer une partie</ng-template>
         <div id="content">
-            <img src="./assets/img/placeholder.png">
+            <img src="./assets/tutorial/CréerPartieM.png">
+            <p>Pour créer une partie, il suffit de remplir les champs demandés. Il faut d’abord nommer 
+                la partie, puis choisir si on désire la mettre privée ou publique et ensuite choisir 
+                la difficulté. Une fois tous les champs remplis, il est possible d’appuyer sur le bouton “Créer” pour créer la partie.</p>
             <div>
             <button mat-button matStepperPrevious>Précédent</button>
             <button mat-button matStepperNext>Suivant</button>
@@ -46,9 +58,14 @@
     </mat-step>
 
     <mat-step>
-        <ng-template matStepLabel>Sprint Coop</ng-template>
+        <ng-template matStepLabel>Salle d'attente</ng-template>
         <div id="content">
-            <img src="./assets/img/placeholder.png">
+            <img src="./assets/tutorial/SalleDattenteM.png">
+            <p>Une fois dans la salle d’attente d’une partie, il est possible de voir les autres 
+                joueurs qui attendent et d'ajouter ou retirer des joueurs virtuels. Une fois que 
+                le nombre de joueurs requis est atteint, il est possible de commencer la partie 
+                en appuyant sur le bouton en bas de la page. Il est possible de quitter la salle 
+                d’attente à tout moment en appuyant sur le bouton en haut à gauche.</p>
             <div>
             <button mat-button matStepperPrevious>Précédent</button>
             <button mat-button matStepperNext>Suivant</button>
@@ -57,13 +74,59 @@
     </mat-step>
 
     <mat-step>
-        <ng-template matStepLabel>Fin</ng-template>
+        <ng-template matStepLabel>Partie classique - Deviner</ng-template>
         <div id="content">
-            <img src="./assets/img/placeholder.png">
+            <img src="./assets/tutorial/DevinerM.png">
+            <p>La partie classique est composée de deux équipes qui dessinent à tour de rôle. 
+                Le but est de deviner le plus de dessins possible pour gagner des points. 
+                La boîte de suggestion permet de faire des suggestions. Le bouton indice permet de demander des indices.</p>
             <div>
             <button mat-button matStepperPrevious>Précédent</button>
-            <button mat-button (click)="stepper.reset()">Recommencer</button>
-            <button mat-button (click)="quit()">Quitter</button>
+            <button mat-button matStepperNext>Suivant</button>
+            </div>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Partie classique - Suggestion de mots</ng-template>
+        <div id="content">
+            <img src="./assets/tutorial/SuggestionMotsM.png">
+            <p>Lorsque c'est votre tour de dessiner vous recevrez des suggestions de mots à dessiner. 
+                Si vous n'êtes pas satisfait des suggestions vous pouvez en demander d'autres.</p>
+            <div>
+            <button mat-button matStepperPrevious>Précédent</button>
+            <button mat-button matStepperNext>Suivant</button>
+            </div>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Partie classique - Dessiner</ng-template>
+        <div id="content">
+            <img src="./assets/tutorial/DessinerM.png">
+            <p>Dans les parties classiques, il est possible de dessiner sur la surface de dessin. 
+                Une boîte d’outils est disponible avec les outils suivants: Grille, crayon, efface et 
+                annuler-refaire. La palette de couleur permet de choisir des couleurs pré-sélectionnées 
+                ou bien une couleur personnalisée en cliquant sur le bouton de la couleur primaire.</p>
+            <div>
+            <button mat-button matStepperPrevious>Précédent</button>
+            <button mat-button matStepperNext>Suivant</button>
+            </div>
+        </div>
+    </mat-step>
+
+    <mat-step>
+        <ng-template matStepLabel>Sprint</ng-template>
+        <div id="content">
+            <img src="./assets/tutorial/SprintM.png">
+            <p>En sprint coop et sprint solo, il faut travailler en équipe pour deviner le plus de mots possible avant la fin de la partie. 
+                Pour chaque dessin deviné correctement, vous gagnez des points et du temps supplémentaire. La partie se termine lorsque le 
+                temps alloué à la partie est terminé, mais vous avez aussi un temps maximal pour deviner un dessin. cComme dans le mode classique, 
+                la boîte de suposition permet d'essayer de deviner le mot et il y a un bouton qui permet de demander des indices.</p>
+            <div>
+                <button mat-button matStepperPrevious>Précédent</button>
+                <button mat-button (click)="stepper.reset()">Recommencer</button>
+                <button mat-button (click)="quit()">Quitter</button>
             </div>
         </div>
     </mat-step>
