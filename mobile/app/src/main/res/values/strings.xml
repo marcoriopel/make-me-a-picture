@@ -97,11 +97,11 @@ Dans les parties classiques, il est possible de dessiner sur la surface de dessi
     </string>
 
     <string name="guess_coop_description">
-        En coop et solo, il faut travailler en équipe pour deviner le plus de mots possible.
-        A chaque réussite vous gagnez des points. et du temps. Le but est de deviner le plus de dessins possible pour
-        gagner des points.
-        La boîte de suggestion permet de faire des suggestions.
-        Le bouton indice permet de demander des indices.
+En sprint coop et sprint solo, il faut travailler en équipe pour deviner le plus de mots possible avant la fin de la partie.
+        Pour chaque dessin deviné correctement, vous gagnez des points et du temps supplémentaire.
+        La partie se termine lorsque le temps alloué à la partie est terminée, mais vous avez aussi un temps maximal pour deviner un dessin. Comme dans le mode classique,
+        la boîte de supposition permet d\'essayer de deviner le mot et il y a un bouton qui permet de demander des indices.
+
     </string>
 
     <string name = "menu_game_title">Rejoindre une partie </string>
