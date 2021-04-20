@@ -257,7 +257,7 @@ class GameRepository {
     }
 
     private var onUserDisconnect = Emitter.Listener {
-        EndGameRepository.getInstance()!!.addGameResult("Partie nule", "Un joueur s'est déconnecté", EndGameResult(false, null))
+        EndGameRepository.getInstance()!!.addGameResult("Partie nulle", "Un joueur s'est déconnecté", EndGameResult(false, null))
     }
 
     private var onMaxScore = Emitter.Listener {
