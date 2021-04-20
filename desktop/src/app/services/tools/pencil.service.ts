@@ -167,6 +167,7 @@ export class PencilService extends Tool {
     }
 
     private updatePencilData(): void {
+        console.log(this.drawingService.opacity);
         if(this.drawingService.opacity == null){
             this.drawingService.opacity = 1;
         }
