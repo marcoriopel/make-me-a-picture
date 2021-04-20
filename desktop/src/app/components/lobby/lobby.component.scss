@@ -1,0 +1,198 @@
+#chat-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}
+
+#flex-title{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.lobby {
+    height: 95%;
+    position: absolute;
+    left: 0;
+    width: calc(100% - 380px);
+}
+
+#nav-bar {
+    height: 95%;
+    position: absolute;
+    right: 0;
+}
+
+.green {
+    background-color: #8BC640;
+    transition: all 0.5s ease-out;
+}
+
+.white {
+    background-color: #E0E0E0;
+    transition: all 0.5s ease-out;
+}
+
+.title-div {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+        margin-top: 30px;
+    }
+}
+
+.classic-logo {
+    width: 100px;
+    float: left;
+}
+
+.sprint-logo {
+    width: 100px;
+    float: left;
+}
+
+.title {
+    float: left;
+    text-align: center;
+    margin-top: 50px;
+    margin-left: 30px;
+    vertical-align: middle;
+    font-size: 48px;
+    border: none;
+    outline:none;
+}
+
+.teamList {
+    margin-top: 120px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.team {
+    
+    margin: 20px;
+    width: 300px;
+}
+
+.teammate {
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    background: #4F4F4F;;
+    border-radius: 50px;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    line-height: 58px;
+    font-size: 24px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+    transition: all 0.5s ease-out;
+
+
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: center;
+    vertical-align: middle;
+    font-size: 16px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+}
+
+#start-game {
+    position: absolute;
+    width: 200px;
+    height: 60px;
+    top: 80%;
+    left: 50%;
+    margin-left: -100px;
+}
+
+#start-game:active {
+    background: #73a334;
+}
+
+#joint-team-1 {
+    width: 160px;
+    height: 35px;
+    margin-left: 70px;
+}
+
+#joint-team-1:active {
+    background: #73a334;
+}
+
+#joint-team-2 {
+    width: 160px;
+    height: 35px;
+    margin-left: 70px;
+}
+
+#joint-team-2:active {
+    background: #73a334;
+}
+
+.add-bot {
+    height: 35px;
+    width: 35px;
+    margin-left: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leave-button {
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 50px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+#username {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+
+    p {
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+
+}
+
+#center {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-left: 20px;
+}
+
+app-avatar-icon {
+    display: flex;
+    align-items: center;
+}

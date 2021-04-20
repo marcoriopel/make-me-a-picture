@@ -1,0 +1,9 @@
+export enum LeaderboardCategory {
+    MOST_GAMES_PLAYED = 0,
+    MOST_CLASSIC_GAMES_WON = 1,
+    MOST_TIME_PLAYED = 2,
+    BEST_SOLO_SCORE = 3,
+    BEST_COOP_SCORE = 4,
+    BEST_CLASSIC_WIN_RATIO = 5,
+    MOST_UPVOTES = 6
+}

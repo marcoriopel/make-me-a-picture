@@ -1,0 +1,10 @@
+<div>
+    <h2 id="max-drawing-message"  *ngIf="state == 4">
+        *Vous avez épuisé les dessins disponibles pour cette difficulté (pour le moment). Il risque d'y avoir plus de dessins la prochaine fois!*
+    </h2>
+    <h1 [ngClass]="{'bold': state == 4 || state == 3}">{{message}}</h1>
+    <h1 *ngIf="state != 3 && state != 4" id="timer">{{this.gameService.transitionTimer}}</h1>
+    <mat-dialog-actions *ngIf="state == 3 || state == 4" align="end">
+        <button mat-button mat-dialog-close (click)="endGame()">Quitter</button>
+    </mat-dialog-actions>
+</div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth/auth.service';
-import { User } from '@app/classes/user';
+import { NewUser } from '@app/classes/user';
 import { Router } from '@angular/router';
 import { CustomValidators, ConfirmValidParentMatcher, errorMessages, forbiddenNameValidator } from './custom-validator';
+import { ACCESS } from '@app/classes/acces';
 
 @Component({
   selector: 'app-register',
@@ -23,18 +24,21 @@ export class RegisterComponent implements OnInit {
       firstname: ['', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(128)
+        Validators.maxLength(16)
       ]],
       name: ['', [
         Validators.required,
         Validators.minLength(1),
-        Validators.maxLength(128)
+        Validators.maxLength(16)
       ]],
-      username: ['', [
+      avatar: ['0', [
         Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(128),
-        forbiddenNameValidator
+      ]],
+        username: ['', [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(16),
+          forbiddenNameValidator
       ]],
       passwordGroup: this.fb.group({
         password: ['', [
@@ -47,17 +51,20 @@ export class RegisterComponent implements OnInit {
   }
 
   async register() {
-    const user: User = {
+    const user: NewUser = {
       username: this.userRegistrationForm.value.username,
-      password: this.userRegistrationForm.value.passwordGroup.password
+      password: this.userRegistrationForm.value.passwordGroup.password,
+      surname: this.userRegistrationForm.value.name,
+      name: this.userRegistrationForm.value.firstname,
+      avatar: this.userRegistrationForm.value.avatar
     }
     this.authService.register(user).subscribe(
       res => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('username', this.userRegistrationForm.value.username);
-        console.log('res: ' + res);
+        localStorage.setItem(ACCESS.TOKEN, res.token);
+        localStorage.setItem(ACCESS.USERNAME, this.userRegistrationForm.value.username);
+        localStorage.setItem(ACCESS.AVATAR, res.avatar);
+        localStorage.setItem('tutorial', '0');
         this.router.navigate(['/home']);
-        // set information
       },
       err => {
         console.log(err);

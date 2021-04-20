@@ -1,2 +1,14 @@
-<app-navbar></app-navbar>
-<app-chat-bar></app-chat-bar>
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="game-bar">
+            <app-game-bar></app-game-bar>
+        </div>
+        <div id="feed-container">
+            <app-feed></app-feed>
+        </div>
+        <div id="chat-bar">
+            <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+        </div>
+    </div>
+</div>

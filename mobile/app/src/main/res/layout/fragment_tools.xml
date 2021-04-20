@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/grey"
+    tools:context=".view.game.ToolsFragment">
+
+    <ImageView
+        android:id="@+id/button_pencil"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/button_pencil"
+        app:backgroundTint="@null" />
+
+    <ImageView
+        android:id="@+id/button_eraser"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:backgroundTint="@null"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/button_eraser" />
+
+    <ImageView
+        android:id="@+id/button_grid"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_grid" />
+
+    <Button
+        android:id="@+id/button_undo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_undo" />
+
+    <Button
+        android:id="@+id/button_redo"
+        android:layout_width="52dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/button_redo"
+        app:backgroundTint="@null" />
+
+</LinearLayout>

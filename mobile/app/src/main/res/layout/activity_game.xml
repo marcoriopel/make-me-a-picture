@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fefefe"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:gravity="right"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        </androidx.appcompat.widget.Toolbar>
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/grey"
+            tools:context=".GameActivity">
+
+            <LinearLayout
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <FrameLayout
+                android:id="@+id/containerGameInfo"
+                android:layout_width="150dp"
+                android:layout_height="227dp" />
+            <FrameLayout
+                android:id="@+id/containerTools"
+                android:layout_width="150dp"
+                android:layout_height="502dp" />
+
+        </LinearLayout>
+
+            <LinearLayout
+            android:layout_width="800dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+                <FrameLayout
+                    android:id="@+id/containerCanvas"
+                    android:layout_width="1200px"
+                    android:layout_height="820px">
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/containerGuess"
+                    android:layout_width="800dp"
+                    android:layout_height="wrap_content">
+                </FrameLayout>
+            </LinearLayout>
+            <FrameLayout
+                android:id="@+id/containerColor"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+            </FrameLayout>
+            <FrameLayout
+                android:id="@+id/containerChat"
+                android:layout_width="265dp"
+                android:layout_height="813dp">
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

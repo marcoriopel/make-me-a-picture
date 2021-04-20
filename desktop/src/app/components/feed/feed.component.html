@@ -1,0 +1,12 @@
+<div id="feed">
+    <div id="center-div">
+        <h1>Dessins récents:</h1>
+        <div id="post" *ngFor="let element of feed">
+            <div id="title">
+                <app-avatar-icon [avatar]=element.avatar></app-avatar-icon>
+                <span id="name">{{element.username}} - {{element.timestamp}}</span>
+            </div>
+            <img src={{element.url}}>
+        </div>   
+    </div>
+</div>

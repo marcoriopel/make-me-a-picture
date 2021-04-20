@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_grey"
+    tools:context=".view.mainmenu.GameCreationFragment">
+    <Button
+        android:id="@+id/game_search"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="true"
+        android:text="@string/search_game"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/button_rounded"
+        app:backgroundTint = "@null"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
+        android:background="@drawable/edittext_rounded"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/invite_id_code"
+            android:layout_width="164dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="8px"
+            android:layout_marginEnd="0px"
+            android:layout_marginBottom="-9px"
+            android:ems="10"
+            android:fontFamily="@font/mont_extralight"
+            android:hint="Rejoindre partie privée"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="0dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="12dp" />
+
+        <ImageView
+            android:id="@+id/join_game"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/play_arrow"
+            android:clickable="true"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/classic"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="true"
+        android:text="@string/classic"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        android:drawableRight="@drawable/icon_classic"
+        app:backgroundTint = "@null"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"/>
+
+    <Button
+        android:id="@+id/solo_sprint"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="true"
+        android:text="@string/solo_sprint"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        android:drawableRight="@drawable/icon_solo"
+        app:backgroundTint = "@null"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"/>
+
+    <Button
+        android:id="@+id/coop_sprint"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="10dp"
+        android:enabled="true"
+        android:text="@string/coop_sprint"
+        android:textStyle="bold"
+        android:background="@drawable/button_rounded"
+        android:drawableRight="@drawable/ic_hands_helping_solid"
+        app:backgroundTint = "@null"
+        android:textAllCaps="false"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"/>
+
+    <Button
+        android:id="@+id/tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="start"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_rounded"
+        android:drawableRight="@drawable/ic_baseline_help_24"
+        android:enabled="true"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="30dp"
+        android:text="@string/tutorial"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        app:backgroundTint="@null" />
+
+</LinearLayout>

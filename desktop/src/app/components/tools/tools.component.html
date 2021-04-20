@@ -1,0 +1,7 @@
+<div class="button-container">
+    <button #pencil class="tool-button" (click)="resetPencil()"><i class="fas fa-pencil-alt fa-2x"></i></button>
+    <button #eraser class="tool-button" (click)="setEraser()"><i class="fas fa-eraser fa-2x"></i></button>
+    <app-grid></app-grid>
+    <button class="tool-button" (click)="this.undoRedoService.undo()"><i class="fas fa-undo fa-2x"></i></button>
+    <button class="tool-button" (click)="this.undoRedoService.redo()"><i class="fas fa-redo fa-2x"></i></button>    
+</div>

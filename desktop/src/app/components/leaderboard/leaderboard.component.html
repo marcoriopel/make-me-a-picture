@@ -1,0 +1,67 @@
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="game-column">
+            <app-game-bar></app-game-bar>
+        </div>
+        <div id="leaderboard-column">
+            <h1>Classement</h1>
+            <div id="leaderboard-container">
+                <mat-button-toggle-group id="toggle-group" #group="matButtonToggleGroup" (change)="updateLeaderboard(group.value)" [value]="selectedVal">
+                    <mat-button-toggle value="0">
+                        Parties jouées
+                    </mat-button-toggle>
+                    <mat-button-toggle value="1">
+                        Parties classiques gagnées
+                    </mat-button-toggle>
+                    <mat-button-toggle value="5">
+                        Ratio V/D Classic
+                    </mat-button-toggle>
+                    <mat-button-toggle value="2">
+                        Temps joués
+                    </mat-button-toggle>
+                    <mat-button-toggle value="3">
+                        Solo
+                    </mat-button-toggle>
+                    <mat-button-toggle value="4">
+                        Coop
+                    </mat-button-toggle>
+                    <mat-button-toggle value="6">
+                        Votes sur dessins
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+                <div id="leaderboard">
+                    <table>
+                        <tr>
+                            <th>Position</th>
+                            <th>Joueur</th>
+                            <th [ngClass]="{'selected': selectedVal === '0'}" >Parties jouées</th>
+                            <th [ngClass]="{'selected': selectedVal === '1'}" >Parties classiques gagnées</th>
+                            <th [ngClass]="{'selected': selectedVal === '5'}" >Ratio V/D Classic</th>
+                            <th [ngClass]="{'selected': selectedVal === '2'}" >Temps jouées</th>
+                            <th [ngClass]="{'selected': selectedVal === '3'}" >Meilleur score Solo</th>
+                            <th [ngClass]="{'selected': selectedVal === '4'}" >Meilleur score Coop</th>
+                            <th [ngClass]="{'selected': selectedVal === '6'}" >Votes sur dessins</th>
+                        </tr>
+                        <tr *ngFor="let user of leaderboard, let index = index">
+                            <td>{{index + 1}}</td>
+                            <td>{{user.username}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '0'}" >{{user.gamesPlayed}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '1'}" >{{user.classicGamesWon}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '5'}" >{{user.classicWinRatio}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '2'}" >{{user.timePlayed}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '3'}" >{{user.bestSoloScore}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '4'}" >{{user.bestCoopScore}}</td>
+                            <td [ngClass]="{'selected': selectedVal === '6'}" >{{user.totalDrawingVotes}}</td>
+                        </tr>
+                    </table>
+                </div>                
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>

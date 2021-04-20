@@ -1,0 +1,47 @@
+
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="editor-column">
+            <div id="game-data-wrapper">
+                <div id="game-data">
+                    <div id="round-time">
+                        <p>Temps restant ronde:</p>
+                        <h1>{{this.gameService.timer}}</h1>
+                    </div>
+                    <div id="guesses-container">
+                        <h3>{{this.gameService.guessesLeft }} essais restant</h3>
+                    </div>
+                    <div id="score-container">
+                        <h3>Score - {{this.gameService.score[0] }} </h3>
+                    </div>
+                    <div id="team-container">
+                        <p>Équipe:</p>
+                        <p *ngFor="let player of gameService.teams.team1" [ngClass]="{'my-username': this.gameService.username === player.username}">{{player.username}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="editor">
+                <div id="game-time">
+                    <p>Temps restant à la partie:</p>
+                    <h1>{{this.gameService.gameTimer}}</h1>
+                </div>
+                <app-editor [isInGame]="true"></app-editor>
+                <div #guessBox id="guess-box">
+                    <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                        <input matInput id="guess-input" type="text" formControlName="guess" autocomplete="off"
+                            placeholder="Supposition...">
+                        <button #guessButton id="guess-button" type="submit"><span
+                                class="material-icons">check_circle</span></button>
+                    </form>
+                </div>
+                <button id="hint-button" (click)="requestHint()"><span class="material-icons">quiz</span></button>
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="form-column">
+            <div id="image-form">
+                <form class="form form-wrapper" [formGroup]="imageCreationForm">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Mot</mat-label>
+                        <input matInput placeholder="Mot" formControlName="drawingName" required>
+                        <mat-error>
+                            {{errorMessages.text}}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill">
+                        <mat-label>Difficulté</mat-label>
+                        <mat-select formControlName="difficulty">
+                            <mat-option *ngFor="let level of difficulty" [value]="level">
+                            {{level}}
+                            </mat-option>
+                        </mat-select>                
+                    </mat-form-field>
+                    <form class="form hint-form" [formGroup]="hintForm">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Indice</mat-label>
+                            <input matInput placeholder="Indice" formControlName="hint" required>
+                            <mat-error>
+                                {{errorMessages.text}}
+                            </mat-error>
+                        </mat-form-field>
+                        <button id="tip-button" mat-raised-button (click)="addHint()" [disabled]="hintForm.invalid">Ajouter l'indice</button>
+                        <div id="tip" *ngFor="let hint of hints; let index = index">
+                            <p>{{hint}}</p>
+                            <input type="button" (click)="deleteHint(index)" value="X">
+                        </div>
+                    </form>
+                    <button id="form-button" mat-raised-button (click)="openPreview()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Prévisualiser</button>
+                    <button id="form-button" mat-raised-button (click)="processForm()" [disabled]="imageCreationForm.invalid || !isHintListValid || this.drawingService.strokeStack.length < 1">Envoyer</button>
+                </form>
+            </div>
+        </div>
+        <div id="editor-column">
+            <div id="editor">
+                <app-editor (colorChange)="toolsComponent.setPencil()" [isInGame]="false"></app-editor>
+            </div>
+            <div id="tools">
+                <app-tools #toolsComponent></app-tools>
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+            </div>  
+        </div>
+    </div>
+</div>
+

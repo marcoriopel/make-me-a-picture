@@ -1,0 +1,92 @@
+mat-card {
+    width: 70%;
+    text-align: center;
+    height: 70%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+}
+
+.mat-button-toggle{
+    font-size: 16px;
+    color: black;
+}
+
+.mat-button-toggle-checked {
+    background-color: #4aa7dd;
+    color: black;
+}
+
+.formHeader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h2{
+        margin: 0% 10% 0% 0%;
+        flex-grow: 1;
+    }
+}
+
+mat-form-field {
+    display: block;
+}
+
+button {
+    background-color: #8BC640;
+    color: white;
+    width: 30%;
+    border-radius: 15px;
+}
+
+.container {
+    margin-top: -10%;
+    height: 90%;
+    position: relative;
+}
+
+.mat-radio-group{
+    display: flex;
+    justify-content: space-around;
+}
+
+:host ::ng-deep .mat-radio-container{
+    display: none;
+}
+
+:host ::ng-deep .mat-radio-label-content{
+    padding: 0px;
+    display: flex;
+}
+
+.mat-radio-checked {
+
+    #easy {
+        background-color: #8BC640;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+    }
+
+    #normal {
+        background: #F89524;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+    }
+
+    #hard {
+        background: #BA2034;
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+    }
+}
+
+.difficulty {
+    width: 30px;
+    height: 30px;
+}

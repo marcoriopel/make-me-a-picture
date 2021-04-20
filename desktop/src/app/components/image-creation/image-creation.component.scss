@@ -1,0 +1,95 @@
+#chat-bar {
+    height: 100%;
+    width: 380px;
+    float: right;
+}
+
+#image-form {
+    height: 100%;
+    width: 250px;
+    background-color: #E0E0E0;
+    overflow-x: hidden; 
+    overflow-y: auto; 
+}
+
+#editor-column {
+    flex: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    max-height: 700px;
+}
+
+.wrapper {
+    background-color: #4F4F4F;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.form {
+    text-align: center;
+}
+
+
+#form-button {
+    margin-top: 20px;
+}
+
+#tip{
+    margin: auto;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    width: 80%;
+    background-color: white;
+    margin-top: 10px;
+}
+
+#tip input {
+    height: 30px;
+    background-color: white;
+    border-style: hidden;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#tip p {
+    margin:auto;
+}
+
+.form-wrapper {
+    margin-top: 50px;
+}
+
+button {
+    width: 70%;
+    margin-bottom: 5px;
+}
+
+.column-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 95%;
+}
+
+#form-column {
+    width: 250px;
+    height: 100%;
+}
+
+#chat-column {
+    width: 380px;
+}
+
+#tools {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: left;
+    padding-left: 10px;
+}
+

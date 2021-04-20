@@ -1,0 +1,181 @@
+.wrapper {
+    background-color: #4F4F4F;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: auto;
+}
+
+#score {
+    display: flex;
+    height: 200px;
+
+    h1 {
+        color: white;
+        font-size: 30px;
+    }
+
+    p {
+        color: white;
+    }
+
+    .my-username{
+        font-weight: bold;
+        font-size: 20px;
+        color: #4195C4;
+    }
+}
+
+.team {
+    width: 50%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 300px;
+    #team-score {
+        color: white;
+        font-size: 50px;
+        font-weight: 600;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.column-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 95%;
+}
+
+#editor-column {
+    flex: 1;
+    margin-top: 1%;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+#chat-column {
+    width: 380px;
+}
+
+#game-data {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    height: 100%;
+    flex-grow: 1;
+}
+
+.guessing-data{
+    padding-bottom: 80px;
+}
+
+#editor {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+        color: white;
+        font-size: 30px;
+    }
+}
+
+#tools {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding-bottom: 10%;
+    padding-left: 10px;
+}
+
+#chat-bar {
+    height: 100%;
+    width: 380px;
+    float: right;
+}
+
+#guess-box {
+    position: relative;
+    border: 3px solid #56A0CE;
+    padding: 10px;
+    border-radius: 35px;
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+#guess-button {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    margin-left: 10px;
+}
+
+#guess-input {
+    font-family: inherit;
+    width: 80%;
+    border: 0;
+    border-bottom: 2px solid #2E2E2E;
+    outline: 0;
+    font-size: 1.3rem;
+    color: white;
+    margin-left: 10px;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+
+#guess-input:focus {
+    font-weight: 500;
+    border-image-slice: 1;
+}
+
+#guess-button span {
+    color: #A8DBFF;
+    height: 100%;
+    font-size: 30px;
+    position: absolute;
+    top: 10px;
+}
+
+#timer-container {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+
+    p{
+        color: white;
+    }
+
+    h1 {
+        color: #F89524;
+        font-size: 50px;
+        font-weight: 600;
+    }
+}
+
+#hint-button {
+    background: none;
+    color: #A8DBFF;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 50px;
+}

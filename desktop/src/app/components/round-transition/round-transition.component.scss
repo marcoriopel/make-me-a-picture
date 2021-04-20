@@ -1,0 +1,23 @@
+div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    text-align: center;
+}
+
+.bold {
+    font-weight: bold;
+    margin: 50px 20px;
+}
+
+#max-drawing-message {
+    color: #4AA7DD;
+    text-align: center;
+}
+
+#timer {
+    margin-top: 20%;
+    font-size: 50px;
+    font-weight: 600;
+}

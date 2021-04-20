@@ -1,0 +1,75 @@
+<app-navbar cid="nav-bar"></app-navbar>
+
+<div class="lobby">
+    <span class="material-icons leave-button" (click)="leaveLobby()">exit_to_app</span>
+    <div class="title-div">
+        <div id="flex-title">
+            <img *ngIf="lobbyService.game.type == 0" [src]="classicBlackImgRef" class="classic-logo"> 
+            <img *ngIf="lobbyService.game.type == 1" [src]="sprintImgRef" class="sprint-logo"> 
+            <img *ngIf="lobbyService.game.type == 2" [src]="coopImgRef" class="sprint-logo"> 
+            <p class="title"> {{lobbyService.game.name}} </p>            
+        </div>
+        <h1 *ngIf="this.lobbyService.lobbyInviteId != ''">Code de la partie: {{this.lobbyService.lobbyInviteId}}</h1>
+    </div>
+    <div class="teamList" *ngIf="lobbyService.game.type == 0">
+        <div class="team">
+            <div class="teammate" *ngFor="let teammate of lobbyService.game.team1 "> 
+                <div id="username">
+                    <div id="center">
+                        <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon><p> {{teammate.username}} </p> 
+                        <div class="add-bot" *ngIf="(teammate.username == lobbyService.virtalPlayer0)" (click)="lobbyService.removeVirtualPlayer(0)"> <span class="material-icons">remove</span> </div>
+                    </div>
+                </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team1.length < 2 && lobbyService.game.type == 0)">
+                <div id="username">
+                    <div id="center">
+                        <p> + Disponible </p>
+                        <button class="add-bot" (click)="lobbyService.addVirtualPlayer(0)"><span class="material-icons">add</span></button>
+                    </div>
+                </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team1.length < 4 && lobbyService.game.type == 1)"> <p id="plus"> + Disponible </p> </div>
+        </div>
+
+        <div class="team" *ngIf="lobbyService.game.type == 0">
+            <div class="teammate" *ngFor="let teammate of lobbyService.game.team2 "> 
+                <div id="username">
+                    <div id="center">
+                        <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon><p> {{teammate.username}} </p> 
+                        <button class="add-bot" *ngIf="teammate.username == lobbyService.virtalPlayer1" (click)="lobbyService.removeVirtualPlayer(1)"> <span class="material-icons">remove</span> </button>
+                    </div>
+                </div>
+            </div>
+            <div class="teammate" *ngIf="(lobbyService.game.team2.length < 2 && lobbyService.game.type == 0)">
+                <div id="username">
+                    <div id="center">
+                        <p> + Disponible </p>
+                        <button class="add-bot" *ngIf="lobbyService.virtalPlayer1 == null" (click)="lobbyService.addVirtualPlayer(1)"> <span class="material-icons">add</span> </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sprint" *ngIf="lobbyService.game.type == 1 || lobbyService.game.type == 2">
+        <div class="teamList">
+            <div class="team">
+                <div class="teammate" *ngFor="let teammate of lobbyService.game.player"> 
+                    <div id="username">
+                        <div id="center">
+                            <app-avatar-icon [avatar]=teammate.avatar></app-avatar-icon>
+                            <p> {{teammate.username}} </p> 
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    <button class="button" id="start-game" (click)="lobbyService.start()" [ngClass]="{'green' : lobbyService.isLobbyFull, 'white':  !lobbyService.isLobbyFull}"> Commencer la partie </button>
+</div>
+
+<div id="chat-bar">
+    <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+</div>

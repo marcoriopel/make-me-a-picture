@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Eraser, Pencil} from '@app/classes/tool-properties';
-import { MAX_PERCENTAGE } from '@app/ressources/global-variables/global-variables';
+import { Stroke } from '@app/classes/drawing';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -16,10 +15,17 @@ export class DrawingService {
     canvas: HTMLCanvasElement;
     gridCanvas: HTMLCanvasElement;
     previewCanvas: HTMLCanvasElement;
-    undoStack: (Pencil | Eraser)[] = [];
-    redoStack: (Pencil | Eraser)[] = [];
+    strokeStack: Stroke[] = [];
+    redoStack: Stroke[] = [];
     isToolInUse: Subject<boolean> = new Subject<boolean>();
-
+    color: string;
+    lineWidth: number;
+    pencilWidth: number = 10;
+    eraserWidth: number = 10;
+    currentTool: string = 'pencil';
+    strokes: Stroke[] = [];
+    strokeNumber: number = 0;
+    
     setGrid(): void {
         this.clearCanvas(this.gridCtx);
         const canvasWidth = this.canvas.width;
@@ -34,7 +40,7 @@ export class DrawingService {
             this.gridCtx.moveTo(0, x);
             this.gridCtx.lineTo(canvasWidth, x);
         }
-        this.gridCtx.globalAlpha = this.opacity / MAX_PERCENTAGE;
+        this.gridCtx.globalAlpha = 1;
         this.gridCtx.strokeStyle = 'black';
         this.gridCtx.closePath();
         this.gridCtx.stroke();
@@ -52,15 +58,15 @@ export class DrawingService {
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    updateStack(modification: Pencil | Eraser): void {
-        this.undoStack.push(modification);
+    updateStack(modification: Stroke): void {
+        this.strokeStack.push(modification);
         if (this.redoStack.length) {
             this.redoStack = [];
         }
     }
 
     resetStack(): void {
-        this.undoStack = [];
+        this.strokeStack = [];
         this.redoStack = [];
     }
 }

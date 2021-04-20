@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop ="20dp"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical"
+    android:background="@drawable/button_lobby"
+    android:backgroundTint = "@color/dark_grey">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/gamelist_name"
+            android:layout_width="430dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:enabled="true"
+            android:text="Game 1"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+        <ImageView
+            android:id="@+id/gamelist_difficulty"
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/icon_easy_white"
+            android:layout_weight="1"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <ImageView
+            android:id="@+id/gamelist_type"
+            android:layout_width="7dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:paddingTop="5dp"
+            app:srcCompat="@drawable/icon_classic_white"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/gamelist_player_section_1">
+
+        <ImageView
+            android:id="@+id/gamelist_avatar0"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginStart="50dp"
+            app:srcCompat="@drawable/avatar0" />
+
+        <TextView
+            android:id="@+id/gamelist_username0"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/available"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+        <ImageView
+            android:id="@+id/gamelist_avatar1"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/avatar0" />
+
+        <TextView
+            android:id="@+id/gamelist_username1"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/available"
+
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/gamelist_player_section_2">
+
+        <ImageView
+            android:id="@+id/gamelist_avatar2"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginStart="50dp"
+            app:srcCompat="@drawable/avatar0" />
+
+        <TextView
+            android:id="@+id/gamelist_username2"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/available"
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+        <ImageView
+            android:id="@+id/gamelist_avatar3"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/avatar0" />
+
+        <TextView
+            android:id="@+id/gamelist_username3"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="50dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:text="@string/available"
+
+            android:textAllCaps="false"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="30dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/gamelist_join"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:enabled="true"
+        android:text="@string/join_game"
+        android:textStyle="bold"
+        android:background="@drawable/button_lobby"
+        android:theme="@style/Widget.App.Button.Blue"
+        android:textAllCaps="false"
+        android:gravity="center_horizontal|center_vertical"
+        android:paddingLeft="30dp"
+        android:visibility="gone"/>
+</LinearLayout>

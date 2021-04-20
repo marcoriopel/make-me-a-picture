@@ -1,18 +1,98 @@
 <resources>
     <string name="app_name">Fais-moi un dessin</string>
-    <!-- Strings related to login -->
-    <string name="prompt_username">Pseudonyme</string>
-    <string name="prompt_password">Mot de passe</string>
-    <string name="action_sign_in">Connection</string>
+    <!-- General purpose strings -->
+    <string name="send">Envoyer</string>
+    <string name="back">Retour</string>
+    <string name="bad_request">"Mauvaise requête"</string>
+    <string name="not_authorized">"Vous n'êtes pas autorisés à faire cette requête"</string>
+    <string name="mandatory_field">"Champ requis"</string>
+    <string name= "tutorial">Tutoriel</string>
+
+    <!-- Strings related to login and sign up -->
+    <string name="sign_up">Inscription</string>
+    <string name="prompt_username">Nom d\'utilisateur*</string>
+    <string name="prompt_password">Mot de passe*</string>
+    <string name="prompt_firstname">Prénom</string>
+    <string name="prompt_lastname">Nom</string>
+    <string name="action_sign_in">Connexion</string>
     <string name="welcome">"Bienvenue!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Le nom d'utilisateur ou le mot de passe est eronné"</string>
-    <string name="inscription">Inscription</string>
-    <string name="mot_de_passe">Mot de passe</string>
-    <string name="envoyer">Envoyer</string>
-    <string name="pr_nom">Prénom</string>
-    <string name="confirmer_mot_de_passe">Confirmer mot de passe</string>
-    <string name="nom_d_utilisateur">Nom d\'utilisateur</string>
-    <string name="nom">Nom</string>
+    <string name="prompt_password_confirm">Confirmer mot de passe</string>
+    <string name="invalid_username">Pas un nom d\'utilisateur valide</string>
+    <string name="invalid_password">Pas un mot de passe valide</string>
+    <string name="login_failed">Le nom d\'utilisateur ou le mot de passe est eronné</string>
+    <string name="username_used">Ce nom d\'utilisateur est déjà utilisé</string>
+    <string name="password_not_matched">"Les mots de passe ne sont pas identiques"</string>
+
+    <!-- Strings related to game creation -->
+    <string name="classic">Classique</string>
+    <string name="solo_sprint">Sprint Solo</string>
+    <string name="coop_sprint">Sprint Coop</string>
+    <string name="difficulty">Difficulté*</string>
+    <string name="private_mode">Mode privé</string>
+
+    <!-- Strings related to game searching -->
+    <string name="search_game">"Rechercher une partie"</string>
+    <string name="join_game">"Rejoindre"</string>
+    <string name="available">"Disponible"</string>
+    <string name="lobby_full">"Le lobby est déjà plein"</string>
+
+    <!-- Strings related to the lobby -->
+    <string name="join_team">Rejoindre l\'équipe</string>
+    <string name="start_game">Commencer la partie</string>
+    <string name="team1">Équipe 1</string>
+    <string name="team2">Équipe 2</string>
+
+    <!-- Strings related to the drawing tools -->
+    <string name="pen_size">Grosseur du crayon</string>
+    <string name="eraser_size">Grosseur de l\'efface</string>
+    <string name="grid_size">Grosseur de la grille</string>
+    <string name="transparency">Transparence</string>
+    <string name="colorPickerToolTitle">Choisir une couleur</string>
+
+
+    <!-- Strings related to the game -->
+    <string name="guess">Supposition...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings related to the chat -->
+    <string name="channel_name_used">Le nom de ce canal est déjà utilisé.</string>
+    <string name="title_activity_static_tutorial">StaticTutorial</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="main_menu_description">
+        Voici la description du main menu. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+    <string name="lobby_description">
+        Voici la description du lobby. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+    <string name="game_description">
+        Voici la description d\'une game. Ce n\'est pas le texte officiel, car on va attendre que sa soit plus complet. A
+        DSKJHFSAKJDHFSAKJDH
+        SDKFSAKDFJSAKDFJNSA;
+        SAFKDJNSAKDFNASKDJFNSA
+        NKLSDANFSAKJNFDSKDNJA
+    </string>
+
+    <string name = "title_mainmenu">Menu principal </string>
+    <string name = "title_lobby">Lobby </string>
+    <string name = "title_game">Game guessing </string>
+    <string name="temps_restant">Temps restant:</string>
+    <string name="_60">60</string>
+
+
 </resources>

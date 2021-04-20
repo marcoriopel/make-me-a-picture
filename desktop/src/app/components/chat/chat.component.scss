@@ -1,0 +1,134 @@
+* {
+  box-sizing: border-box
+}
+
+.chat-bar {
+  display: flex;
+  position: absolute;
+  width: 380px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  bottom: 100px;
+}
+
+.container{
+  width: 90%;
+  margin:fit-content 0 auto;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color:#FFFFFFFF;
+}
+
+.chat-container{
+    height: 400px;
+    overflow: auto;
+    padding-top: 12px;
+}
+
+.message-text-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.username{
+  font-size: 10px;
+  color: gray;
+}
+
+.message{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 20px;
+    overflow-wrap: break-word;
+
+    p{
+      margin: 0px 10px;
+      overflow-wrap: break-word;
+      width:200px;
+    }
+}
+
+.reverse{
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.send-message-form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+
+  input{
+    flex-grow: 1;
+    border: none;
+    font-size: 16px;
+    padding: 6px 10px;
+    outline: none;
+    border-radius: 20px;
+    background-color: rgb(235, 235, 235);
+  }
+  button{
+    margin: 5px;
+    width: 8%;
+    height: 26px;
+    border: 0px;
+    padding: auto;
+    cursor: pointer;
+    background-color: white;
+    background-image: url(../../../assets/img/paper_plane.png);
+    background-size: cover;
+    outline: none;
+  }
+} 
+
+.avatar {
+  width: 10%;
+  align-self: flex-start;
+  margin: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  background: url(../../../assets/img/profileIcon.svg) no-repeat top left;
+}
+
+#history-button-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#history-button {
+  color: #4AA7DD;
+  cursor: pointer;
+}
+
+#delete-button {
+  color: #BA2034;
+  cursor: pointer;
+}
+  
+.chat-container::-webkit-scrollbar {
+  width: 20px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #E0E0E0;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  background-color: #E0E0E0;
+}

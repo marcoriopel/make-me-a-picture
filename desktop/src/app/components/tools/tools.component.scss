@@ -1,0 +1,15 @@
+.tool-button {
+    border:none;
+    background-color: #FFFFFF;
+    padding: 6px;
+    margin: 4px;
+    cursor: pointer;
+    border-radius: 12px;
+    outline: none;
+    width: 40px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+}

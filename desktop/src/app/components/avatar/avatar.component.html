@@ -1,3 +1,7 @@
-<p>avatar works!</p>
-
-<div #dataContainer></div>
+<div>
+    <svg id="avatarSvg" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580.67 580.67">
+        <circle class="avatarBackground" [ngStyle]="{ fill : backgroundColor }" cx="290.34" cy="290.34" r="290.34"/>
+        <path class="avatarBody" [ngStyle]="{ fill : bodyColor }" d="M360,650.34a289.39,289.39,0,0,0,200.55-80.4C559.28,453.18,470.66,406.22,360,406.22s-199.29,47-200.55,163.72A289.39,289.39,0,0,0,360,650.34Z" transform="translate(-69.66 -69.66)"/>
+        <circle class="avatarHead" [ngStyle]="{ fill : headColor }" cx="290.34" cy="224.02" r="138.53"/>
+    </svg>
+</div>

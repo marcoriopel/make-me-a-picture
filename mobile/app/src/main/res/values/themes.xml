@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Prototype_mobile" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Prototype_mobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/poly_blue</item>
+        <item name="colorPrimary">@color/black_bar</item>
         <item name="colorPrimaryVariant">@color/light_grey</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -12,5 +12,52 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="titleTextColor">@color/white</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
+        <item name="materialButtonStyle">@style/ButtonStyle</item>
+    </style>
+
+    <style name="Widget.App.Button.Blue" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/poly_blue</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Widget.App.Button.Green" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/poly_green</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Widget.App.Button.Orange" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/poly_orange</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Widget.App.Button.LightGreen" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/light_green</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+
+    <style name="Widget.App.Button.Red" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/poly_red</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Widget.App.Button.Grey" parent="Widget.MaterialComponents.Button">
+        <item name="colorPrimary">@color/button_grey</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+    <style name="Theme.Prototype_mobile.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Prototype_mobile.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Prototype_mobile.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:minHeight">60dp</item>
     </style>
 </resources>

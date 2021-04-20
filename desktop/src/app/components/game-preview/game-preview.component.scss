@@ -1,0 +1,111 @@
+
+.game-button{
+    width: 90%;
+    height: 60px;
+    margin: 5%;
+    background: #4F4F4F;;
+    border-radius: 30px;
+    cursor: pointer;
+    // text
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+    transition: all 0.5s ease-out;
+
+    .all-info{ 
+        display: flex;
+        justify-content: space-between;
+
+        .info {
+            width: 100px;
+            display: flex;
+            justify-content: flex-end;
+            float: right;
+    
+            .difficulty {
+                width: 30px;
+                height: 30px;
+                margin-top: 15px;
+            }
+            
+            .sprint-logo {
+                margin: 10px;
+                height: 42px;
+                margin-right: 20px;
+            }
+        
+            .classic-logo {
+                margin: 15px;
+                height: 25px;
+                margin-right: 20px;
+            }
+        }
+    }
+}
+
+.game-preview {
+    height: 120px;
+    transition: all 0.5s ease;
+}
+
+.title {
+    margin-left: 10%;
+    line-height: 58px;
+    width: 70%;
+    overflow: hidden;
+}
+
+.preview {
+    vertical-align: top;
+    margin: 0%;
+    display: flex;
+}
+
+.joint-button {
+    width: 30%;
+    height: 35px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    background: #8BC640;
+    border-radius: 50px;
+    cursor: pointer;
+    // text
+    text-align: center;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    color:  #F2F2F2;
+    border: none;
+    outline:none;
+}
+
+.players {
+    width: 60%;
+    height: 80%;
+    overflow: scroll;
+    display: flex;
+    justify-content: flex-start;
+    .player {
+        margin: 5px;
+        display: flex;
+        flex-shrink: 3;
+
+        p {
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+    }
+}
+
+.players::-webkit-scrollbar {
+    display: none;
+}

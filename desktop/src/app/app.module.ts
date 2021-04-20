@@ -22,41 +22,79 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
-import { AttributePanelComponent } from './components/attribute-panel/attribute-panel.component';
 import { ChatBarComponent } from './components/chat-bar/chat-bar.component';
-import { ColorPickerComponent } from './components/color-picker/color-picker.component';
 import { DrawingComponent } from './components/drawing/drawing.component';
 import { EditorComponent } from './components/editor/editor.component';
 import { GridComponent } from './components/grid/grid.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { EraserAttributesComponent } from './components/tools/eraser-attributes/eraser-attributes.component';
-import { SliderComponent } from './components/tools/shared-Attributes/slider/slider.component';
-import { PencilAttributesComponent } from './components/tools/pencil-attributes/pencil-attributes.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AvatarComponent } from './components/avatar/avatar.component'
 import { AuthService } from './services/auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AvatarIconComponent } from './components/avatar-icon/avatar-icon.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { NgxElectronModule } from 'ngx-electron';
+import { ChatService } from './services/chat/chat.service';
+import { ImageCreationComponent } from './components/image-creation/image-creation.component';
+import { GameBarComponent } from './components/game-bar/game-bar.component';
+import { SearchGameService } from './services/search-game/search-game.service';
+import { GameSearchComponent } from './components/game-search/game-search.component';
+import { ViewingComponent } from './components/viewing/viewing.component';
+import { GamePreviewComponent } from './components/game-preview/game-preview.component';
+import { LobbyComponent } from './components/lobby/lobby.component';
+import { LobbyService } from './services/lobby/lobby.service';
+import { GameCreationComponent } from './components/game-creation/game-creation.component'
+import { SocketService } from './services/socket/socket.service';
+import { ToolsComponent } from './components/tools/tools.component';
+import { RoundTransitionComponent } from './components/round-transition/round-transition.component';
+import { ClassicGameComponent } from './components/classic-game/classic-game.component';
+import { SprintGameComponent } from './components/sprint-game/sprint-game.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { DrawingSuggestionsComponent } from './components/drawing-suggestions/drawing-suggestions.component';
+import { EndGameDrawingComponent } from './components/end-game-drawing/end-game-drawing.component';
+import { TutorialComponent } from './components/tutorial/tutorial.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { JoinPrivateGameComponent } from './components/join-private-game/join-private-game.component';
+import { FeedComponent } from './components/feed/feed.component';
+
 @NgModule({
     declarations: [
         AppComponent,
         GridComponent,
         EditorComponent,
-        SidebarComponent,
         DrawingComponent,
         MainPageComponent,
-        AttributePanelComponent,
-        EraserAttributesComponent,
-        PencilAttributesComponent,
         ChatBarComponent,
-        SliderComponent,
-        ColorPickerComponent,
         LoginComponent,
         RegisterComponent,
         AvatarComponent,
-        NavbarComponent
+        NavbarComponent,
+        ChatComponent,
+        ImageCreationComponent,
+        AvatarIconComponent,
+        ChatComponent,
+        GameBarComponent,
+        GameSearchComponent,
+        ViewingComponent,
+        GamePreviewComponent,
+        LobbyComponent,
+        GameCreationComponent,
+        ToolsComponent,
+        RoundTransitionComponent,
+        ClassicGameComponent,
+        SprintGameComponent,
+        ProfileComponent,
+        LeaderboardComponent,
+        DrawingSuggestionsComponent,
+        EndGameDrawingComponent,
+        TutorialComponent,
+        JoinPrivateGameComponent,
+        FeedComponent,
     ],
     imports: [
         BrowserModule,
@@ -84,9 +122,17 @@ import { NavbarComponent } from './components/navbar/navbar.component';
         MatCheckboxModule,
         MatInputModule,
         MatToolbarModule,
+        NgxElectronModule,
+        MatMenuModule,
+        BrowserAnimationsModule,
+        MatStepperModule,
     ],
     entryComponents: [MainPageComponent],
-    providers: [AuthService, AuthGuard,],
+    providers: [AuthService, AuthGuard, ChatService, SearchGameService, LobbyService, SocketService,
+    {
+        provide: STEPPER_GLOBAL_OPTIONS,
+        useValue: { displayDefaultIndicatorType: false }
+    }],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

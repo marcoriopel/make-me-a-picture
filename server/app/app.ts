@@ -6,6 +6,10 @@ import * as logger from 'morgan';
 import { TYPES } from './types';
 import { AuthController } from '@app/controllers/auth.controller';
 import { DatabaseModel } from './models/database.model';
+import { GamesController } from './controllers/games.controller';
+import { ChatController } from './controllers/chat.controller';
+import { DrawingsController } from './controllers/drawings.controller';
+import { StatsController } from './controllers/stats.controller';
 
 @injectable()
 export class Application {
@@ -15,11 +19,14 @@ export class Application {
 
     constructor(
         @inject(TYPES.AuthController) private authController: AuthController,
-        @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel 
-        ) {
+        @inject(TYPES.StatsController) private statsController: StatsController,
+        @inject(TYPES.GamesController) private gamesController: GamesController,
+        @inject(TYPES.DrawingsController) private drawingsController: DrawingsController,
+        @inject(TYPES.ChatController) private chatController: ChatController,
+        @inject(TYPES.DatabaseModel) private databaseModel: DatabaseModel
+    ) {
         this.app = express();
 
-        this.swaggerConfig();
         this.config();
 
         this.databaseModel = DatabaseModel.getInstance();
@@ -27,47 +34,21 @@ export class Application {
         this.bindRoutes();
     }
 
-    private swaggerConfig(): void {
-        const swaggerUi = require('swagger-ui-express');
-        const swaggerJSDoc = require('swagger-jsdoc');
-
-        const swaggerDefinition = {
-            openapi: '3.0.0',
-            swaggerURL: '/swagger',
-            info: {
-              title: 'API for the best application ever',
-              version: '1.0.0',
-            },
-            servers: [
-                {
-                  url: 'http://localhost:3000',
-                  description: 'Development server',
-                },
-              ], 
-          };
-          
-        const options = {
-            swaggerDefinition,
-            // Paths to files containing OpenAPI definitions
-            apis: ['./app/controllers/*.ts'],
-        };
-
-        const swaggerSpec = swaggerJSDoc(options);
-
-        this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); 
-    }
-
     private config(): void {
         this.app.use(logger('dev'));
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.json({ limit: '25mb' }));
+        this.app.use(express.urlencoded({ extended: false, limit: '25mb' }));
         this.app.use(cookieParser());
         this.app.use(cors());
     }
 
 
     bindRoutes(): void {
-        this.app.use('/api/auth', this.authController.router);
+        this.app.use('/api/authenticate', this.authController.router);
+        this.app.use('/api/stats', this.statsController.router);
+        this.app.use('/api/games', this.gamesController.router);
+        this.app.use('/api/chat', this.chatController.router);
+        this.app.use('/api/drawings', this.drawingsController.router);
         this.errorHandling();
     }
 

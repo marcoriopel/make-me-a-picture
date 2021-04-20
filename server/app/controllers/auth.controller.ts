@@ -4,9 +4,9 @@ import { TYPES } from '@app/types';
 import { Router, Response, Request } from 'express';
 import { inject, injectable } from 'inversify';
 import {
-  ReasonPhrases,
   StatusCodes,
 } from 'http-status-codes';
+import { DetailedUser, AuthInfo } from '@app/ressources/interfaces/user.interface';
 
 
 @injectable()
@@ -15,7 +15,7 @@ export class AuthController {
 
   constructor(
     @inject(TYPES.TokenService) private tokenService: TokenService,
-    @inject(TYPES.AuthService) private authService: AuthService
+    @inject(TYPES.AuthService) private authService: AuthService,
   ) {
     this.configureRouter();
     this.tokenService = TokenService.getInstance();
@@ -24,84 +24,35 @@ export class AuthController {
   private configureRouter(): void {
     this.router = Router();
 
-    /**
-     * @swagger
-     * /api/auth/authenticate:
-     *   post:
-     *     summary: Login user request
-     *     description: Send a post request to try to authenticate a user.
-     *     parameters:
-     *         - name: username
-     *           description: Your username
-     *           in: formData
-     *           required: true
-     *           type: string
-     *         - name: password
-     *           description: Your password
-     *           in: formData
-     *           required: true
-     *           type: string
-     */
-    this.router.post('/authenticate', (req, res) => {
-      this.authService.loginUser(req.body.username, req.body.password).then((response) => {
-        if (response) {
-          // TODO: Generate Json object with an interface to pass to the token generator
-          const user = req.body.username;
-          // TODO: Add user to ther userConnected[]
-
-          const token = this.tokenService.generateAccesToken(user);
-          res.status(StatusCodes.OK).send({ token });
-        }
-        else {
-          res.sendStatus(StatusCodes.UNAUTHORIZED);
-        }
+    this.router.post('/login', (req, res) => {
+      this.authService.loginUser(req, res, (userInfo: DetailedUser) => {
+        const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
+        const avatar: number = userInfo.avatar;
+        res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
 
-    /**
-     * @swagger
-     * /api/auth/register:
-     *   post:
-     *     summary: Register user request
-     *     description: Send a post request to try to register a user.
-     *     parameters:
-     *         - name: username
-     *           description: Your username
-     *           in: formData
-     *           required: true
-     *           type: string
-     *         - name: password
-     *           description: Your password
-     *           in: formData
-     *           required: true
-     *           type: string
-     */
     this.router.post('/register', (req, res) => {
-      this.authService.registerUser(req.body.username, req.body.password).then((response) => {
-        if (response) {
-          // TODO: Generate Json object with an interface to pass to the token generator
-          const user = req.body.username;
-          // TODO: Add user to the userConnected[]
-
-          const token = this.tokenService.generateAccesToken(user);
-          res.status(StatusCodes.OK).send({ token });
-        }
-        else {
-          res.sendStatus(StatusCodes.FORBIDDEN);
-        }
+      this.authService.registerUser(req, res, (userInfo: DetailedUser) => {
+        const token = this.tokenService.generateAccesToken(userInfo.username, userInfo.avatar);
+        const avatar: number = userInfo.avatar;
+        res.status(StatusCodes.OK).send({ token, avatar });
       });
     });
 
-    /**
-     * Logout from the app
-     * + Exemple d'utilisation de lock une route avec un token
-     */
-    this.router.post('/logout', (req: Request, res: Response) => {
+    this.router.post('/logout', (req, res) => {
       this.tokenService.authenticateToken(req, res, (user: any) => {
-        //TODO: Remove user from the userConnected[]
+        this.authService.addUserToLogCollection(user.username, false);
+        res.sendStatus(StatusCodes.OK);
+      });
+    });
 
-        res.sendStatus(StatusCodes.ACCEPTED);
+    this.router.get('/last/logout', (req: Request, res: Response) => {
+      this.tokenService.authenticateToken(req, res, (user: any) => {
+        this.authService.returnLastLogout(user.username, res, (lastLogout: any) => {
+          res.status(StatusCodes.OK).send({ lastLogout });
+        });
       });
     });
 

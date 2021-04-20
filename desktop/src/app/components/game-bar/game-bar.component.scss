@@ -1,0 +1,116 @@
+.game-bar {
+    width: 365px;
+    height: 100%;
+    overflow-y: scroll;
+    /* Gray 5 */
+    background: #E0E0E0;
+}
+
+.game-bar::-webkit-scrollbar {
+    width: 20px;
+}
+
+.game-bar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.game-bar::-webkit-scrollbar-thumb {
+    background-color: #808080;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+.game-bar::-webkit-scrollbar-thumb:hover {
+    background-color: #808080;
+}
+
+.button {
+    width: 90%;
+    height: 60px;
+    margin: 15px;
+    top: 102px;
+    border-radius: 30px;
+    cursor: pointer;
+    text-align: left;
+    vertical-align: middle;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 58px;
+    transition: all 0.8s ease-out;
+}
+
+img{
+    max-width: 40px;
+}
+
+.button-expanded {
+    height: 400px;
+    transition: all 0.8s ease;
+}
+
+
+#classic-button {
+    background: #4AA7DD;
+}
+
+#solo-button{
+    background: #8BC640;
+}
+
+#coop-button{
+    background: #F89524;
+}
+
+#create-button{
+    background: #BA2034;
+    outline: none;
+
+    p{
+        color: white;
+    }
+}
+
+.title {
+    margin-left: 10%;
+}
+
+hr {
+    width: 90%;
+}
+
+.game-logo {
+    float:right;
+    margin: 10px;
+    margin-right: 20px;
+    height: 40px;
+}
+
+
+#more-button {
+    border-style: none;
+    background: none;
+    font: 16px Serif;
+    color: blue;
+    margin: 0 0 10px 0;
+}
+  
+#grow input:checked {
+    color: red;
+}
+  
+#more-button:hover {
+    color: black;
+}
+  
+#grow {
+    -moz-transition: height .5s;
+    -ms-transition: height .5s;
+    -o-transition: height .5s;
+    -webkit-transition: height .5s;
+    transition: height .5s;
+    height: 0;
+    overflow: hidden;
+}

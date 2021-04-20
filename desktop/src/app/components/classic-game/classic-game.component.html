@@ -1,0 +1,51 @@
+<div class="wrapper">
+    <app-navbar></app-navbar>
+    <div class="column-container">
+        <div id="editor-column">
+            <div id="game-data" [ngClass]="{'guessing-data': this.gameService.isGuessing}">
+                <div id="timer-container">
+                    <p>Temps restant:</p>
+                    <h1>{{this.gameService.timer}}</h1>
+                </div>
+                <div id="score">
+                    <div id="team1" class="team">
+                        <h1 id="team-score">{{this.gameService.score[0]}}</h1>
+                        <h1>Équipe 1</h1>
+                        <p [ngClass]="{'my-username': this.gameService.username === this.gameService.teams.team1[0]}">{{this.gameService.teams.team1[0]}}</p>
+                        <p [ngClass]="{'my-username': this.gameService.username === this.gameService.teams.team1[1]}">{{this.gameService.teams.team1[1]}}</p>
+                    </div>
+                    <div id="team2" class="team">
+                        <h1 id="team-score">{{this.gameService.score[1]}}</h1>
+                        <h1>Équipe 2</h1>
+                        <p [ngClass]="{'my-username': this.gameService.username === this.gameService.teams.team2[0]}">{{this.gameService.teams.team2[0]}}</p>
+                        <p [ngClass]="{'my-username': this.gameService.username === this.gameService.teams.team2[1]}">{{this.gameService.teams.team2[1]}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="editor">
+                <h1 *ngIf="(this.gameService.drawingPlayer == this.gameService.username)">C'est à votre tour de
+                    dessiner! Le mot est: {{this.gameService.drawingName}}</h1>
+                <app-editor [isInGame]="true"></app-editor>
+                <div #guessBox id="guess-box" *ngIf="this.gameService.isGuessing">
+                    <form [formGroup]="guessForm" (ngSubmit)="onGuessSubmit()">
+                        <input matInput id="guess-input" type="text" formControlName="guess" autocomplete="off"
+                            placeholder="Supposition...">
+                        <button #guessButton id="guess-button" type="submit"><span
+                                class="material-icons">check_circle</span></button>
+                    </form>
+                </div>
+                <button *ngIf="this.gameService.isGuessing && this.gameService.state != 1" id="hint-button" (click)="requestHint()"><span class="material-icons">quiz</span></button>
+            </div>
+            <div id="tools">
+                <app-tools
+                    *ngIf="(this.gameService.drawingPlayer == this.gameService.username) || !this.gameService.isInGame">
+                </app-tools>
+            </div>
+        </div>
+        <div id="chat-column">
+            <div id="chat-bar">
+                <app-chat-bar *ngIf="!this.chatService.isChatInExternalWindow"></app-chat-bar>
+            </div>
+        </div>
+    </div>
+</div>

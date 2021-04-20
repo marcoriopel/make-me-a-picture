@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from "express";
+import { textSpanIntersection } from 'typescript';
 
 @injectable()
 export class TokenService {
@@ -27,10 +28,11 @@ export class TokenService {
 
     /**
      * Generate a new acces to the user
-     * @param user: Data to encryp in the jwt
+     * @param username: Data to encryp in the jwt
      * @returns encrypted token
      */
-    public generateAccesToken(user: any): any {
+    public generateAccesToken(username: string, avatar: number): any {
+        const user = { avatar: avatar, username: username }
         return jwt.sign(user, process.env.ACCES_TOKEN_SECRET);
     }
 
@@ -42,18 +44,18 @@ export class TokenService {
      */
     public authenticateToken(req: Request, res: Response, next: NextFunction): any {
         const token = req.headers['authorization'];
-        if (!token) { return res.sendStatus(401); }
+        if (!token) { return res.status(401).send("No authorization header!"); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
-            if (err) { return res.sendStatus(403); }
+            if (err) { return res.status(403).send("Invalid Token"); }
             next(user);
         });
     }
 
-    public asAccess(req: Request, res: Response) {
+    public hasAccess(req: Request, res: Response) {
         const token = req.headers['authorization'];
-        if (!token) { return res.sendStatus(401); }
+        if (!token) { return res.status(401).send("No authorization header!"); }
         jwt.verify(token, process.env.ACCES_TOKEN_SECRET, (err: any, user: any): any => {
-            if (err) { return res.sendStatus(403); }
+            if (err) { return res.status(403).send("Invalid Token"); }
         });
     }
 

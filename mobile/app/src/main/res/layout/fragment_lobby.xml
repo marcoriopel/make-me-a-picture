@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".view.mainmenu.LobbyFragment">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        >
+        <ImageView
+            android:id="@+id/lobby_game_logo"
+            android:layout_width="60dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:src="@drawable/icon_classic" />
+
+        <TextView
+            android:id="@+id/lobby_game_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="Game 1"
+            android:textStyle="bold"
+            android:textSize="32dp"
+            android:textColor="@color/black"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/invite_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="code : 2h4f2"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id = "@+id/lobby_4player_layout"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:id="@+id/lobby_team1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="1"
+                android:text="@string/team1"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="@color/dark_grey"
+                android:layout_marginBottom="20dp"
+                android:paddingLeft="10dp">
+                <ImageView
+                    android:id="@+id/lobby_player1_avatar"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/avatar0" />
+                <TextView
+                    android:id="@+id/lobby_player1_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/available"
+                    android:textColor="@color/white"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="@color/dark_grey"
+                android:paddingLeft="10dp">
+
+                <ImageView
+                    android:id="@+id/lobby_player2_avatar"
+                    android:layout_width="32dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/avatar0" />
+                <TextView
+                    android:id="@+id/lobby_player2_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/available"
+                    android:textColor="@color/white"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+                <ImageView
+                    android:id="@+id/lobby_virtual_1"
+                    android:layout_width="18dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_add_circle_white_18dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </LinearLayout>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:id="@+id/lobby_team2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="1"
+                android:text="@string/team2"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="@color/dark_grey"
+                android:layout_marginBottom="20dp"
+                android:paddingLeft="10dp">
+                <ImageView
+                    android:id="@+id/lobby_player3_avatar"
+                    android:layout_width="10dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/avatar0" />
+                <TextView
+                    android:id="@+id/lobby_player3_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/available"
+                    android:textColor="@color/white"/>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+            </LinearLayout>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </Space>
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/button_rounded"
+                android:backgroundTint="@color/dark_grey"
+                android:paddingLeft="10dp">
+
+                <ImageView
+                    android:id="@+id/lobby_player4_avatar"
+                    android:layout_width="32dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/avatar0" />
+                <TextView
+                    android:id="@+id/lobby_player4_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/available"
+                    android:textColor="@color/white" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" >
+                </Space>
+                <ImageView
+                    android:id="@+id/lobby_virtual_2"
+                    android:layout_width="18dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_add_circle_white_18dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lobby_1player_layout"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="@drawable/button_rounded"
+        android:backgroundTint="@color/dark_grey"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/lobby_player_solo_avatar"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:src="@drawable/avatar0" />
+        <TextView
+            android:id="@+id/lobby_player_solo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/available"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_rounded"
+        app:backgroundTint="@color/blue_to_lightblue"
+        android:text="@string/start_game"
+        android:clickable="false"/>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" >
+    </Space>
+</LinearLayout>

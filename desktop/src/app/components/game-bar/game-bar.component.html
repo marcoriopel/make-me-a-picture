@@ -1,0 +1,32 @@
+<div class="game-bar">
+    <div id="classic-button" class="button" #classic>
+        <div (click)="displayGameMenu('classic')" >
+            <p class="title"> Classique 
+                <img [src]="classicBlackImgRef" class="game-logo"> 
+            </p>
+        </div>
+        <app-game-creation *ngIf="classicOpen" [type]="0"></app-game-creation>
+    </div>
+    <div id="solo-button" class="button" #solo>
+        <div (click)="displayGameMenu('solo')">
+            <p class="title"> Sprint Solo
+                <img [src]="sprintImgRef" class="game-logo">     
+            </p>
+        </div>
+        <app-game-creation *ngIf="soloOpen" [type]="1"></app-game-creation>
+    </div>
+    <div id="coop-button" class="button" #coop>
+        <div (click)="displayGameMenu('coop')">
+            <p class="title"> Sprint Coop
+                <img [src]="coopImgRef" class="game-logo">         
+            </p>
+        </div>
+        <app-game-creation *ngIf="coopOpen" [type]="2"></app-game-creation>
+    </div>
+    <div id="create-button" class="button" [routerLink]="['/image']">
+        <p class="title"> Création de mot-image </p>
+    </div>
+    <hr>
+    <app-game-search></app-game-search>
+</div>
+

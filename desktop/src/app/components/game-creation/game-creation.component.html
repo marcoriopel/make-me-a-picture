@@ -1,0 +1,38 @@
+<div class="container">
+    <mat-card [@inOutAnimation]>
+      <mat-card-content>
+        <form [formGroup]="gameForm" novalidate>
+          <div class="formHeader">
+              <h2>Creation de la partie</h2>
+          </div>
+  
+          <mat-form-field class="full-width-input">
+            <input matInput placeholder="Nom de la partie" formControlName="name" required autocomplete="off">
+            <mat-error>
+              Le nom de la partie doit être entre 1 et 12 caractères.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-button-toggle-group *ngIf="type != 1" id="toggle-group" appearance="legacy" formControlName="privacy">
+            <mat-button-toggle value="public">Publique</mat-button-toggle>
+            <mat-button-toggle value="private">Privée</mat-button-toggle>
+          </mat-button-toggle-group>
+
+          <mat-radio-group class="full-width-input" formControlName="difficulty">
+              <mat-radio-button [value]="0">
+              <img src="./assets/img/easyLogo.png" alt="easy" class="difficulty" id="easy">
+              </mat-radio-button>
+              <mat-radio-button [value]="1">
+              <img src="./assets/img/normalLogo.png" alt="normal" class="difficulty" id="normal">
+              </mat-radio-button>
+              <mat-radio-button [value]="2">
+              <img src="./assets/img/hardLogo.png" alt="hard" class="difficulty" id ="hard">
+              </mat-radio-button>
+          </mat-radio-group>
+          <button mat-raised-button [disabled]="gameForm.invalid" (click)="create()">Créer</button>
+          
+        </form>
+      </mat-card-content>
+    </mat-card>  
+</div>
+  

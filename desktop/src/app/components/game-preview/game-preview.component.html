@@ -1,0 +1,25 @@
+<div class="game-button" (click)="preview()"  *ngIf="game.gameType != 1" #gamePreview>
+    <div class="all-info">
+        <p class="title"> {{game.gameName}} </p>
+        <div class="info">
+            <img *ngIf="game.difficulty == 0" src="./assets/img/easyLogo2.png" class="difficulty">
+            <img *ngIf="game.difficulty == 1" src="./assets/img/normalLogo2.png" class="difficulty">
+            <img *ngIf="game.difficulty == 2" src="./assets/img/hardLogo2.png" class="difficulty">
+
+            <img *ngIf="game.gameType == 0" [src]="classicGreyImgRef" class="classic-logo"> 
+            <img *ngIf="game.gameType == 2" [src]="coopImgRef" class="sprint-logo"> 
+        </div>
+    </div>
+
+    <div *ngIf="isPreview" class="preview">
+        <button class="joint-button" [@inOutAnimation] (click)="join()"> Rejoindre </button>
+        <!-- TODO: Avatar and name -->
+        <div class="players">
+            <div class="player" *ngFor="let player of players">
+                <app-avatar-icon [avatar]=player.avatar></app-avatar-icon>
+                <p> {{ player.username | titlecase }} </p>
+            </div>
+        </div>
+    </div>
+
+</div>

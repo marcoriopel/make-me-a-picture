@@ -1,0 +1,41 @@
+
+    <div id="search-button-container">
+        <button class="game-type-button" (click)="filterGameType('classic')" [ngClass]="{'blue' : this.filter.get('classic'), 'white': !this.filter.get('classic')}">
+            <img [src]="classicBlackImgRef" alt="avatar" class="logo"> 
+        </button>   
+
+        <button class="game-type-button" (click)="filterGameType('sprint')" [ngClass]="{'blue' : this.filter.get('sprint'), 'white': !this.filter.get('sprint')}">
+            <img [src]="coopImgRef" alt="avatar" class="logo"> 
+        </button>   
+
+        <button class="game-type-button" (click)="filterGameType('easy')" [ngClass]="{'green' : this.filter.get('easy'), 'white': !this.filter.get('easy')}">
+            <img [src]="easyImgRef" alt="avatar" class="logo"> 
+        </button>   
+
+        <button class="game-type-button" (click)="filterGameType('normal')" [ngClass]="{'orange' : this.filter.get('normal'), 'white': !this.filter.get('normal')}">
+            <img [src]="normalImgRef" alt="avatar" class="logo"> 
+        </button>   
+
+        <button class="game-type-button" (click)="filterGameType('hard')" [ngClass]="{'red' : this.filter.get('hard'), 'white': !this.filter.get('hard')}">
+            <img [src]="hardImgRef" alt="avatar" class="logo"> 
+        </button> 
+    </div>
+      
+
+    <div id="join-private-container">
+        <button (click)="joinPrivateGame()" id="join-private-button">Rejoindre partie privée</button>
+    </div>
+
+    <div id="form-container">
+        <form [formGroup]="searchForm" class="search-form">
+            <input #box type="text" placeholder="Recherche de partie" formControlName="gameNameOrId" (keyup)="filterName(box.value)">
+        </form>
+        <button id="refresh-button" (click)="onRefreshClick()"><span class="material-icons">cached</span></button>
+    </div>
+
+    <div class="game-list">
+        <div *ngFor="let game of this.searchGameService.displayList">
+            <app-game-preview *ngIf="!game.isPrivate" #preview [game]=game (closeAllPreview)="closeAllPreview()"></app-game-preview>
+        </div>
+    </div>
+

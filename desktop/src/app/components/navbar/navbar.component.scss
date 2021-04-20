@@ -7,5 +7,43 @@ span {
 }
 
 mat-toolbar {
-    background-color:#5fa6d8;
+    background: #231F20;
+    height: 5%;
+}
+
+img {
+    width: 30px;
+    margin-right: 10px;
+}
+
+#logo-container{
+    outline: none;
+}
+
+#logo-container:hover {
+    cursor: pointer;
+}
+
+button {
+    a {
+        margin-left: 10px;
+        text-decoration: none;
+        color: white;
+    }
+}
+
+#menu-button {
+    color: white;
+    font-size: 20px;
+}
+
+#username {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+app-avatar-icon {
+    margin-top: 8px;
 }

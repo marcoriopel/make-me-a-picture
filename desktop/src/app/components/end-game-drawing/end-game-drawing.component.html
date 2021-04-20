@@ -1,0 +1,114 @@
+<canvas id="confetti-canvas"></canvas>
+<mat-horizontal-stepper linear #stepper>
+    <mat-step [editable]="false">
+        <ng-template matStepLabel>Résultat</ng-template>
+        <div id="content">
+            <h1 id="title">{{result}}</h1>
+            <div id="draw" *ngIf="result == 'Partie nulle'">
+                <div id="results" class="draw-game">
+                    <div class="team">
+                        <p id="score">{{drawTeam1.score}}</p>
+                        <p class="player">{{drawTeam1.players[0]}}</p>
+                        <p class="player">{{drawTeam1.players[1]}}</p>
+                    </div>
+                    <div class="team">
+                        <p id="score">{{drawTeam2.score}}</p>
+                        <p class="player">{{drawTeam2.players[0]}}</p>
+                        <p class="player">{{drawTeam2.players[1]}}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="not-draw" *ngIf="result != 'Partie nulle'">
+                <div id="results">
+                    <div id="winning-team" class="team winning">
+                        <p>{{winningTeam.score}}</p>
+                        <img id="crown" src="./assets/img/couronner.png">
+                        <p class="player winning-player">{{winningTeam.players[0]}}</p>
+                        <p class="player winning-player">{{winningTeam.players[1]}}</p>
+                    </div>
+                    <div class="team loosing">
+                        <p id="loosing-team-score">{{loosingTeam.score}}</p>
+                        <p class="player loosing-player">{{loosingTeam.players[0]}}</p>
+                        <p class="player loosing-player">{{loosingTeam.players[1]}}</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button mat-button matStepperNext>Suivant</button>
+            </div>
+        </div>
+    </mat-step>
+
+    <mat-step [editable]="false" *ngFor="let vdrawing of virtualPlayerDrawings">
+        <ng-template matStepLabel>Dessin - virtuel</ng-template>
+        <div id="image-content">
+            <div id="image">
+                <h1>{{vdrawing.name}}</h1>
+                <img src={{vdrawing.url}}>
+            </div>
+            <div>
+                <p>Avez-vous apprécié ce dessin?</p>
+                <div id="vote-section">
+                    <button mat-button matStepperNext (click)="vote(vdrawing.id, true)"><span class="material-icons">thumb_up</span></button>
+                    <button mat-button matStepperNext (click)="vote(vdrawing.id, false)"><span class="material-icons">thumb_down</span></button>
+                </div>
+                <div id="skip">
+                    <button id="skip-button" mat-button matStepperNext>Sauter cette étape</button>
+                </div>
+            </div>
+        </div>
+    </mat-step>
+
+
+    <mat-step [editable]="false" *ngFor="let drawing of realPlayerDrawings">
+        <ng-template matStepLabel>Dessin - joueur</ng-template>
+        <div id="image-content">
+            <img src={{drawing.url}}>
+            <div>
+                <p *ngIf="isUploadButtonAvailable">Voulez-vous ajouter votre dessin à la banque de dessins?</p>
+                <button mat-button *ngIf="isUploadButtonAvailable" (click)="showForm()">Oui</button>
+                <div *ngIf="isFormAvailable" id="image-form">
+                    <form class="form form-wrapper" [formGroup]="imageCreationForm">
+                        <p>{{realPlayerDrawings[0].drawingName}}</p>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Difficulté</mat-label>
+                            <mat-select formControlName="difficulty">
+                                <mat-option *ngFor="let level of difficulty" [value]="level">
+                                {{level}}
+                                </mat-option>
+                            </mat-select>                
+                        </mat-form-field>
+    
+                        <form class="form hint-form" [formGroup]="hintForm">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Indice</mat-label>
+                                <input matInput placeholder="Indice" formControlName="hint" required>
+                                <mat-error>
+                                    {{errorMessages.text}}
+                                </mat-error>
+                            </mat-form-field>
+                        </form>
+    
+                        <button id="tip-button" mat-raised-button (click)="addHint()" [disabled]="hintForm.invalid">Ajouter l'indice</button>
+                        <div id="tip" *ngFor="let hint of hints; let index = index">
+                            <p>{{hint}}</p>
+                            <input type="button" (click)="deleteHint(index)" value="X">
+                        </div>
+                        <button id="form-button" mat-raised-button matStepperNext (click)="processForm()" [disabled]="imageCreationForm.invalid || !isHintListValid">Envoyer</button>
+                    </form>
+                </div>
+                <button *ngIf="isUploadButtonAvailable" mat-button matStepperNext>Non</button>
+                <button *ngIf="isFormAvailable" mat-button matStepperNext>Annuler</button>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step [editable]="false">
+        <ng-template matStepLabel>Terminer</ng-template>
+        <div id="content">
+            <div>
+                <p>Vous pouvez maintenant retourner au menu principal</p>
+                <button mat-button mat-dialog-close (click)="quit()">Retourner au menu principal</button>
+            </div>
+        </div>
+    </mat-step>
+</mat-horizontal-stepper>

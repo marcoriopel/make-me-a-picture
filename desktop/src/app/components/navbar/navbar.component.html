@@ -1,7 +1,20 @@
 <mat-toolbar>
-    <span>Fais moi un dessin</span>
+    <div id="logo-container" routerLink="/home">
+      <img src="./assets/img/LogoLight.png">
+      <span>Fais moi un dessin</span>      
+    </div>
+
     <span class="example-spacer"></span>
-    <button mat-button (click)="logout()">
-      <span>Déconnexion</span>
-    </button>
+
+    <div id="username">
+      <app-avatar-icon [avatar]="avatar"></app-avatar-icon>
+      <button id="menu-button" mat-button [matMenuTriggerFor]="beforeMenu">{{username}}</button>
+    </div>
+    <mat-menu #beforeMenu="matMenu" xPosition="before">
+      <button mat-menu-item routerLink="/leaderboard">Classement</button>
+      <button mat-menu-item routerLink="/profile">Profil</button>
+      <button mat-menu-item routerLink="/tutorial">Tutoriel</button>
+      <button mat-menu-item (click)="logout()" >Déconnexion</button>
+    </mat-menu>      
+
 </mat-toolbar>

@@ -1,7 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { FormBuilder } from '@angular/forms';
-import { io, Socket } from "socket.io-client";
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ElectronService } from "ngx-electron";
+import { ChatService } from '@app/services/chat/chat.service'
+import { FormBuilder, Validators } from '@angular/forms';
+import { SocketService } from '@app/services/socket/socket.service';
+import { GameService } from '@app/services/game/game.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-chat-bar',
@@ -9,47 +13,115 @@ import { io, Socket } from "socket.io-client";
   styleUrls: ['./chat-bar.component.scss']
 })
 
-export class ChatBarComponent implements OnInit {
+export class ChatBarComponent implements OnInit, OnDestroy {
+  isWindowButtonAvailable: boolean = true;
 
-  @ViewChild("chatContainer") chatContainer: ElementRef;
+  constructor(private snackBar: MatSnackBar, private ngZone: NgZone, private router: Router, public chatService: ChatService, private electronService: ElectronService, private formBuilder: FormBuilder, private socketService: SocketService, public gameService: GameService) {}
+  createChatForm = this.formBuilder.group({
+    chatName: ['', Validators.maxLength(12)],
+  });
 
-  messageForm = this.formBuilder.group({
-    message: '',
-  })
-
-  chat: any[] = [];
-  socket: Socket;
-
-  constructor(private formBuilder: FormBuilder) {
-    this.socket = io(environment.socket_url);
+  changeChat(id: string): void {
+    this.chatService.setCurrentChat(id);
   }
 
   ngOnInit(): void {
-     this.socket.on('message', (message: any) => {
-      let isUsersMessage: boolean = false;
-      const username = localStorage.getItem('username');
-      if (message.username === username) {
-        isUsersMessage = true
-      } else {
-        isUsersMessage = false;
-      }
-      this.chat.push({"username": message.username, "text": message.text, "timeStamp": message.timeStamp, "isUsersMessage": isUsersMessage, "textColor": message.textColor});
+    if(!this.electronService.process){
+      this.isWindowButtonAvailable = false;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if(this.chatService.isChatInExternalWindow){
+      localStorage.removeItem('joinedChats');
+      localStorage.removeItem('notJoinedChats');
+      localStorage.removeItem('currentChatId');      
+    }
+  }
+
+  openExternalWindow(): void {
+    this.socketService.bind('openExternalChatCallback', (data: any) => {
+      this.socketService.unbind('openExternalChatCallback');
+      this.socketService.emit('openExternalChat', {linkedSocketId: data.externalWindowSocketid});
     });
+    localStorage.setItem('joinedChats', JSON.stringify(this.chatService.joinedChatList));
+    localStorage.setItem('notJoinedChats', JSON.stringify(this.chatService.notJoinedChatList));
+    localStorage.setItem('socketId' , this.socketService.socket.id);
+    localStorage.setItem('isExternalWindow', 'true');
+    localStorage.setItem('currentChatId', this.chatService.currentChatId);
+    this.chatService.isChatInExternalWindow = true;
+    let BrowserWindow = this.electronService.remote.BrowserWindow
+    this.gameService.chatWindow = new BrowserWindow({
+      width: 384,
+      height: 840,
+      resizable: false,
+    })
+    this.gameService.chatWindow.loadURL('file://' + __dirname + '/index.html#/chat');
+    let chatBar = document.getElementById('chat-bar');
+    if(chatBar){
+      chatBar.style.display = 'none';
+    }
+    this.gameService.chatWindow.on('close', () => {
+      this.socketService.emit('closeExternalChat', {mainWindowId: this.socketService.socketId});
+      localStorage.removeItem('joinedChats');
+      localStorage.removeItem('socketId');
+      this.chatService.isChatInExternalWindow = false;
+      let chatBar = document.getElementById('chat-bar');
+      if(chatBar){
+        chatBar.style.display = 'block';
+      }
+      this.chatService.isClosingExternalWindow = true; 
+      let currentUrl = this.router.url;
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+      this.router.onSameUrlNavigation = 'reload';
+      this.ngZone.run(() => this.router.navigate([currentUrl]))
+    })
   }
 
-  onNewMessage(): void {
-    this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
+  
+  createChat(): void {
+    if(this.createChatForm.value.chatName == "" || !this.createChatForm.value.chatName) return;
+    if(this.createChatForm.valid) {
+      this.chatService.createChat(this.createChatForm.value.chatName);
+    } else {
+      this.snackBar.open("Le nom du canal doit être en 1 et 12 charactères!", "", {
+        duration: 2000,
+      });
+    }
+    this.createChatForm.reset();
+
+  }
+  
+  joinChat(chatId: string): void {
+    this.socketService.bind('joinChatRoomCallback', () => {
+      this.chatService.refreshChatList();
+      this.socketService.unbind('joinChatRoomCallback')
+    });
+    this.chatService.joinChat(chatId);
   }
 
-
-  onSubmit(): void {
-    if(this.messageForm.value.message == "" || this.messageForm.value.message == null){
-      this.messageForm.reset();
-      return;
-    } 
-    const jwt = localStorage.getItem('token');
-    this.socket.emit('message', {"text": this.messageForm.value.message,"token": jwt});
-    this.messageForm.reset();
+  leaveChat(chatId: string): void {
+    this.socketService.bind('leaveChatRoomCallback', () => {
+      this.chatService.refreshChatList();
+      this.socketService.unbind('leaveChatRoomCallback');
+      this.chatService.setCurrentChat('General');
+    });
+    this.chatService.leaveChat(chatId);
   }
 
+  refreshChatList(): void {
+    this.chatService.refreshChatList();
+  }
+
+  isGameChat(): boolean {
+    try {
+      if(this.chatService.joinedChatList[this.chatService.index].isGameChat){
+        return true
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+  }
 }

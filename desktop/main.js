@@ -16,14 +16,25 @@ const iconPath = app.isPackaged
 function createWindow () {
   mainWindow = new BrowserWindow({
     // icon: iconPath,
+    resizable: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      enableRemoteModule: true,
     }
     
   })
 
-  mainWindow.maximize();
+  mainWindow.webContents.on('did-fail-load', () => {
+    console.log('did-fail-load');
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  });
+
   mainWindow.removeMenu();
+  mainWindow.maximize();
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, `/dist/index.html`),

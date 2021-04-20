@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:gravity="center_horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/classic_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_round"
+            android:drawableTop="@drawable/icon_classic"
+            android:enabled="true"
+            app:backgroundTint = "@color/grey_to_blue"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/coop_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/grey_to_orange"
+            android:drawableTop="@drawable/ic_hands_helping_solid"
+            android:paddingTop="5dp"
+            android:enabled="true" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/easy_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_round"
+            android:drawableTop="@drawable/icon_easy"
+            android:paddingTop="7dp"
+            android:enabled="true"
+            app:backgroundTint = "@color/grey_to_green"
+            />
+            android:enabled="true" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/medium_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_round"
+            android:drawableTop="@drawable/icon_medium"
+            android:paddingTop="9dp"
+            android:enabled="true"
+            app:backgroundTint = "@color/grey_to_orange" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+
+        <Button
+            android:id="@+id/hard_filter"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button_round"
+            android:drawableTop="@drawable/icon_hard"
+            android:paddingTop="-5dp"
+            android:enabled="true"
+            app:backgroundTint = "@color/grey_to_red" />
+            android:enabled="true" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" >
+        </Space>
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/poly_blue"
+            android:drawableTop="@drawable/icon_refresh_black_40dp"
+            android:paddingTop="-30dip" />
+
+    </LinearLayout>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="20dp">
+    </Space>
+    <EditText
+        android:id="@+id/searchgame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/connexion"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="10dp"
+        android:autofillHints="@string/search_game"
+        android:background="@drawable/edittext_rounded_grey"
+        android:gravity="left|center_vertical"
+        android:hint="@string/search_game"
+        android:inputType="textEmailAddress"
+        android:maxLength="126"
+        android:paddingLeft="10dp"
+        android:selectAllOnFocus="true" />
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="10dp">
+    </Space>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp" />
+
+</LinearLayout>

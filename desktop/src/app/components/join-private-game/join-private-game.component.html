@@ -1,0 +1,9 @@
+<div id="content">
+    <h1>Entrer l'identifiant de la partie</h1>
+    <div id="form-container">
+        <form [formGroup]="gameIdForm" class="search-form">
+            <input type="text" placeholder="Identifiant" formControlName="id">
+        </form>
+        <button mat-dialog-close (click)="joinGame()"><span class="material-icons">check_circle</span></button>
+    </div>
+</div>
