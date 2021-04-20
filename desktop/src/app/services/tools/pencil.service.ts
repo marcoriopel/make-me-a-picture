@@ -49,7 +49,6 @@ export class PencilService extends Tool {
             this.mouseDownCoord = this.getPositionFromMouse(event);
             this.pathData.push(this.mouseDownCoord);
             this.updatePencilData();
-
             let stroke: Stroke = {
                 lineColor: this.pencilData.lineColor,
                 lineOpacity: this.pencilData.lineOpacity,
@@ -168,6 +167,9 @@ export class PencilService extends Tool {
     }
 
     private updatePencilData(): void {
+        if(this.drawingService.opacity == null){
+            this.drawingService.opacity = 1;
+        }
         this.pencilData = {
             path: this.pathData,
             isEraser: this.isCurrentToolEraser,

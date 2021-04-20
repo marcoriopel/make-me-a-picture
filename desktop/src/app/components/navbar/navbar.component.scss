@@ -36,3 +36,14 @@ button {
     color: white;
     font-size: 20px;
 }
+
+#username {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+app-avatar-icon {
+    margin-top: 8px;
+}

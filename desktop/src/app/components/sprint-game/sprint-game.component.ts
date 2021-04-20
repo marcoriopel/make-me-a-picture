@@ -113,12 +113,19 @@ export class SprintGameComponent implements OnInit, OnDestroy {
   }
 
   onGuessSubmit(): void {
-    if(this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
-    const body = {
-      "gameId": this.gameService.gameId,
-      "guess": this.guessForm.value.guess,
+    if (this.gameService.isGuessAvailable) {
+      this.gameService.isGuessAvailable = false;
+      setTimeout(() => {
+        this.gameService.isGuessAvailable = true;
+      }, 400);
+      if (this.guessForm.value.guess == "" || !this.guessForm.value.guess) return;
+      const body = {
+        "gameId": this.gameService.gameId,
+        "guess": this.guessForm.value.guess,
+      }
+      this.socketService.emit("guessDrawing", body);
+
     }
-    this.socketService.emit("guessDrawing", body);
     this.guessForm.reset();
   }
 
