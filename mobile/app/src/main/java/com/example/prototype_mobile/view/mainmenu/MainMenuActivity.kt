@@ -115,6 +115,7 @@ class MainMenuActivity : AppCompatActivity() {
 
         mainMenuViewModel.logout.observe(this@MainMenuActivity) {
             val mStartActivity = Intent(applicationContext, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             val mPendingIntentId = 123456
             val mPendingIntent = PendingIntent.getActivity(applicationContext, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT)
             val mgr = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
