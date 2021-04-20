@@ -32,6 +32,7 @@ const val DRAWING_TIMER_EVENT = "drawingTimer"
 const val GAME_TIMER_EVENT = "gameTimer"
 const val GUESS_CALL_BACK_EVENT = "guessCallback"
 const val USER_DISCONNECT_EVENT = "userDisconnect"
+const val MAX_SCORE_EVENT = "maxScore"
 
 class GameRepository {
     companion object {
@@ -259,6 +260,10 @@ class GameRepository {
         EndGameRepository.getInstance()!!.addGameResult("Partie nule", "Un joueur s'est déconnecté", EndGameResult(false, null))
     }
 
+    private var onMaxScore = Emitter.Listener {
+        EndGameRepository.getInstance()!!.addGameResult("Bravo, Vous avez eu un score de ${_teamScore.value!!.score[0]}", "*Vous avez épuisé les dessins disponibles pour cette difficulté (pour le moment). Il risque d'y avoir plus de dessins la prochaine fois!*", EndGameResult(true, null))
+    }
+
     fun setIsPlayerDrawing(isDrawing: Boolean) {
         if (isDrawing)
             drawingPlayer = LoginRepository.getInstance()!!.user!!.username
@@ -346,6 +351,7 @@ class GameRepository {
         socket.on(GAME_TIMER_EVENT, onGameTimerEvent)
         socket.on(GUESS_CALL_BACK_EVENT, guessCallBack)
         socket.on(USER_DISCONNECT_EVENT, onUserDisconnect)
+        socket.on(MAX_SCORE_EVENT, onMaxScore)
     }
 
 }

@@ -97,6 +97,7 @@
             android:paddingEnd="10dp"
             android:paddingBottom="0dp"
             android:textColor="@color/black"
+            android:imeOptions="actionSend"
             android:textSize="17dp" />
 
         <ImageView

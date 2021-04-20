@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -382,6 +383,5 @@ class GameActivity : AppCompatActivity(), ColorPickerDialogListener {
                 Toast.LENGTH_LONG
         ).show()
     }
-
 
 }
