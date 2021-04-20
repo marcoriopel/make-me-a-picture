@@ -62,7 +62,7 @@ export class ClassicGame extends Game {
             }
         }
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + this.drawingTeam + " de dessiner";
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#000000", chatId: this.id });
         const basicUser = { username: "System", avatar: -1 };
         const incomingMessage = {
             token: "0",
@@ -279,7 +279,7 @@ export class ClassicGame extends Game {
         clearInterval(this.transitionInterval);
         this.transitionTimerCount = 5;
         const roundInfoMessage = "C'est au tour de " + this.drawingPlayer[this.drawingTeam].username + " de l'équipe " + (this.drawingTeam + 1) + " de dessiner";
-        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+        this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": roundInfoMessage, "timestamp": 0, "textColor": "#000000", chatId: this.id });
         const basicUser = { username: "System", avatar: -1 };
         const incomingMessage = {
             token: "0",
@@ -315,7 +315,7 @@ export class ClassicGame extends Game {
             this.sendVPlayerEndGameMessage();
             this.uploadRandomFeedImage();
             this.socketService.getSocket().to(this.id).emit('endGame', { "finalScore": this.score, "virtualPlayerDrawings": this.pastVirtualDrawings, "virtualPlayerIds": this.pastVirtualDrawingsId });
-            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#2065d4", chatId: this.id });
+            this.socketService.getSocket().to(this.id).emit('message', { "user": { username: "System", avatar: -1 }, "text": "La partie est maintenant terminée!", "timestamp": 0, "textColor": "#000000", chatId: this.id });
             const basicUser = { username: "System", avatar: -1 };
             const incomingMessage = {
                 token: "0",

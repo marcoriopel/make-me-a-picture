@@ -146,7 +146,7 @@ export class VirtualPlayer {
         else {
             const timestamp = new Date();
             const message = "Indice: " + this.currentDrawing.hints[this.nextHintIndex];
-            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp.getTime(), "textColor": "#2065d4", chatId: this.gameId });
+            this.socketService.getSocket().to(this.gameId).emit('message', { "user": this.getBasicUser(), "text": message, "timestamp": timestamp.getTime(), "textColor": "#000000", chatId: this.gameId });
             const incomingMessage = {
                 token: "0",
                 text: message,
